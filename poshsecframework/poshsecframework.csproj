@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>poshsecframework</RootNamespace>
+    <AssemblyName>poshsecframework</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\psficon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\RichTextBoxCaret.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Interface\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmMain.Designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\frmParams.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmParams.Designer.cs">
+      <DependentUpon>frmParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interface\frmSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmSettings.Designer.cs">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Network\NetworkBrowser.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Interface\frmMain.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmParams.resx">
+      <DependentUpon>frmParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmSettings.resx">
+      <DependentUpon>frmSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="PShell\pscript.cs" />
+    <Compile Include="PShell\pseventargs.cs" />
+    <Compile Include="PShell\psexception.cs" />
+    <Compile Include="PShell\pshell.cs" />
+    <Compile Include="PShell\psmethods.cs" />
+    <Compile Include="PShell\psparameter.cs" />
+    <Compile Include="PShell\psparamtype.cs" />
+    <Compile Include="PShell\psvariables.cs" />
+    <Compile Include="Structures\computer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Diagram.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ServerExecute.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Server.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Server1.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Images\psficon.ico" />
+    <None Include="Resources\dialog-cancel-5.png" />
+    <None Include="Resources\system-settings.png" />
+    <None Include="Resources\document-open-folder.png" />
+    <None Include="Resources\run.png" />
+    <None Include="Resources\document-open-7.png" />
+    <None Include="Resources\caret_underline.png" />
+    <None Include="Resources\test.png" />
+    <None Include="Resources\dialog-error-4.png" />
+    <None Include="Resources\dialog-error-3.png" />
+    <None Include="Resources\dialog-information-4.png" />
+    <None Include="Resources\dialog-warning-3.png" />
+    <None Include="Resources\dialog-warning-2.png" />
+    <None Include="Resources\exclamation.png" />
+    <None Include="Resources\dialog-accept.png" />
+    <None Include="Resources\tag-green.png" />
+    <None Include="Resources\tag-blue.png" />
+    <None Include="Resources\tag-red.png" />
+    <None Include="Resources\edit-clear-list.png" />
+    <None Include="Resources\view-refresh-7.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
