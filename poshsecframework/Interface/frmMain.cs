@@ -273,20 +273,27 @@ namespace psframework
 
         private void ViewScript()
         {
-            if (lvwScripts.SelectedItems.Count > 0)
+            try
             {
-                ListViewItem lvw = lvwScripts.SelectedItems[0];
-                String script = (String)lvw.Tag;
-                if (File.Exists(script))
+                if (lvwScripts.SelectedItems.Count > 0)
                 {
-                    System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
-                    psi.UseShellExecute = true;
-                    psi.Verb = "open";
-                    System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                    prc.StartInfo = psi;
-                    prc.Start();
-                    prc = null;
+                    ListViewItem lvw = lvwScripts.SelectedItems[0];
+                    String script = (String)lvw.Tag;
+                    if (File.Exists(script))
+                    {
+                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
+                        psi.UseShellExecute = true;
+                        psi.Verb = "open";
+                        System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                        prc.StartInfo = psi;
+                        prc.Start();
+                        prc = null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+               DisplayError(e);
             }
         }
         #endregion
