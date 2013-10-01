@@ -482,10 +482,6 @@ namespace psframework
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
             String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
-            if (poshsecframework.Properties.Settings.Default.ScriptDefaultAction == null)
-            {
-                poshsecframework.Properties.Settings.Default["ScriptDefaultAction"] = 0;
-            }
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
