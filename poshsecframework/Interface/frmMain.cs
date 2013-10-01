@@ -689,10 +689,19 @@ namespace psframework
 
         private void lvwCommands_DoubleClick(object sender, EventArgs e)
         {
-            if (lvwCommands.SelectedItems.Count > 0)
+            if (lvwCommands.SelectedItems.Count > 0 && !txtPShellOutput.ReadOnly)
             {
                 ListViewItem lvw = lvwCommands.SelectedItems[0];
+                txtPShellOutput.ReadOnly = true;
                 psf.Run(lvw.Text, true);
+            }
+            else if (txtPShellOutput.ReadOnly)
+            {
+                txtPShellOutput.AppendText(Environment.NewLine + "A command is already running. Please wait, or cancel the command and try again." + Environment.NewLine + Environment.NewLine);
+                txtPShellOutput.AppendText("psf > ");
+                mincurpos = txtPShellOutput.Text.Length;
+                txtPShellOutput.SelectionStart = mincurpos;
+                tcMain.SelectedTab = tbpPowerShell;
             }
         }
 
