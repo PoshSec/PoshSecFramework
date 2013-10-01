@@ -434,6 +434,23 @@ namespace psframework
             }
         }
 
+        private void LaunchWinUpdate()
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("wuapp");
+                psi.UseShellExecute = true;
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
+        }
+
         private void ProcessCommand(String cmd)
         {
             try
@@ -446,6 +463,12 @@ namespace psframework
                         txtPShellOutput.Text = "psf > ";
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
+                        break;
+                    case "APT-GET UPDATE":
+                        txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                        txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                        mincurpos = txtPShellOutput.Text.Length;
+                        LaunchWinUpdate();
                         break;
                     case "RELOAD":
                         if (lvwActiveScripts.Items.Count == 0)
