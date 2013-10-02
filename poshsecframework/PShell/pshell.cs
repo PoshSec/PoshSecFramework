@@ -15,6 +15,7 @@ namespace psframework.PShell
         private frmMain frm;
         private pscript ps;
         private bool clicked;
+        private bool scroll;
         #endregion
 
         #region " Public Methods "
@@ -39,9 +40,10 @@ namespace psframework.PShell
             thd.Start();
         }
         
-        public void Run(string ScriptCommand, bool IsCommand = false, bool Clicked = true)
+        public void Run(string ScriptCommand, bool IsCommand = false, bool Clicked = true, bool Scroll = false)
         {
             clicked = Clicked;
+            scroll = Scroll;
             String spath = "";
             if (!IsCommand)
             {
@@ -89,7 +91,7 @@ namespace psframework.PShell
         private void ScriptCompleted(object sender, EventArgs e)
         {
             pseventargs rslts = (pseventargs)e;
-            frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled);
+            frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled, scroll);
         }
         #endregion
 

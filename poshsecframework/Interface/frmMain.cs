@@ -273,20 +273,27 @@ namespace psframework
 
         private void ViewScript()
         {
-            if (lvwScripts.SelectedItems.Count > 0)
+            try
             {
-                ListViewItem lvw = lvwScripts.SelectedItems[0];
-                String script = (String)lvw.Tag;
-                if (File.Exists(script))
+                if (lvwScripts.SelectedItems.Count > 0)
                 {
-                    System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
-                    psi.UseShellExecute = true;
-                    psi.Verb = "open";
-                    System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                    prc.StartInfo = psi;
-                    prc.Start();
-                    prc = null;
+                    ListViewItem lvw = lvwScripts.SelectedItems[0];
+                    String script = (String)lvw.Tag;
+                    if (File.Exists(script))
+                    {
+                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
+                        psi.UseShellExecute = true;
+                        psi.Verb = "open";
+                        System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                        prc.StartInfo = psi;
+                        prc.Start();
+                        prc = null;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
             }
         }
         #endregion
@@ -320,13 +327,13 @@ namespace psframework
         #endregion
 
         #region "PowerShell"
-        public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false)
+        public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false)
         {
             if (this.InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    DisplayOutput(output, lvw, clicked, cancelled);
+                    DisplayOutput(output, lvw, clicked, cancelled, scroll);
                 };
                 this.Invoke(del);
             }
@@ -340,12 +347,13 @@ namespace psframework
                 txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
-                if (clicked || cancelled)
+                if (clicked || cancelled || scroll)
                 {
                     //Not sure why this happens, but if you type the command the scroll to caret isn't needed.
                     //If you initiate a script or command by double clicking, or you abort the thread, you do.
                     txtPShellOutput.ScrollToCaret();
                 }
+                txtPShellOutput.Select();
                 txtPShellOutput.ReadOnly = false;
                 if (lvw != null)
                 {
@@ -427,6 +435,23 @@ namespace psframework
             }
         }
 
+        private void LaunchWinUpdate()
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("wuapp");
+                psi.UseShellExecute = true;
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
+        } 
+
         private void ProcessCommand(String cmd)
         {
             try
@@ -440,6 +465,12 @@ namespace psframework
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         break;
+                    case "APT-GET UPDATE":
+                        txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                        txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                        mincurpos = txtPShellOutput.Text.Length;
+                        LaunchWinUpdate();
+                        break; 
                     case "RELOAD":
                         if (lvwActiveScripts.Items.Count == 0)
                         {
@@ -475,10 +506,6 @@ namespace psframework
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
             String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
-            if (poshsecframework.Properties.Settings.Default.ScriptDefaultAction == null)
-            {
-                poshsecframework.Properties.Settings.Default["ScriptDefaultAction"] = 0;
-            }
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
@@ -682,11 +709,20 @@ namespace psframework
 
         private void lvwCommands_DoubleClick(object sender, EventArgs e)
         {
-            if (lvwCommands.SelectedItems.Count > 0)
+            if (lvwCommands.SelectedItems.Count > 0 && !txtPShellOutput.ReadOnly)
             {
                 ListViewItem lvw = lvwCommands.SelectedItems[0];
+                txtPShellOutput.ReadOnly = true;
                 psf.Run(lvw.Text, true);
             }
+            else if (txtPShellOutput.ReadOnly)
+            {
+                txtPShellOutput.AppendText(Environment.NewLine + "A command is already running. Please wait, or cancel the command and try again." + Environment.NewLine + Environment.NewLine);
+                txtPShellOutput.AppendText("psf > ");
+                mincurpos = txtPShellOutput.Text.Length;
+                txtPShellOutput.SelectionStart = mincurpos;
+                tcMain.SelectedTab = tbpPowerShell;
+            } 
         }
 
         private void lvwScripts_SelectedIndexChanged(object sender, EventArgs e)
@@ -807,8 +843,12 @@ namespace psframework
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                                 txtPShellOutput.ScrollToCaret();
                                 break;
-                            default:
+                            case Keys.V:
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                                e.Handled = false;
+                                e.SuppressKeyPress = false;
+                                break;
+                            default:
                                 e.Handled = false;
                                 e.SuppressKeyPress = false;
                                 break;
@@ -826,6 +866,7 @@ namespace psframework
                     }
                     break;
             }
+            txtPShellOutput.DrawCaret();
         }
         #endregion
 
@@ -932,6 +973,32 @@ namespace psframework
         {
             cancelscan = true;
         }
+
+        private void mnuCmdGetHelp_Click(object sender, EventArgs e)
+        {
+            if (lvwCommands.SelectedItems.Count > 0)
+            {
+                ListViewItem lvw = lvwCommands.SelectedItems[0];
+                String ghcmd = "Get-Help " + lvw.Text + " -full | Out-String";
+                txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
+                txtPShellOutput.ReadOnly = true;
+                psf.Run(ghcmd, true, false, true);
+                tcMain.SelectedTab = tbpPowerShell;
+            }
+        }
+
+        private void mnuScriptGetHelp_Click(object sender, EventArgs e)
+        {
+            if (lvwScripts.SelectedItems.Count > 0)
+            {
+                ListViewItem lvw = lvwScripts.SelectedItems[0];
+                String ghcmd = "Get-Help \"" + Path.Combine(poshsecframework.Properties.Settings.Default.ScriptPath, lvw.Text) + "\" -full | Out-String";
+                txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
+                txtPShellOutput.ReadOnly = true;
+                psf.Run(ghcmd, true, false, true);
+                tcMain.SelectedTab = tbpPowerShell;
+            }
+        }
         #endregion
 
         #region ComboBox Events
@@ -946,6 +1013,7 @@ namespace psframework
             if (e.TabPage == tbpPowerShell)
             {
                 txtPShellOutput.Select();
+                txtPShellOutput.DrawCaret();
             }
         }
 
@@ -957,6 +1025,7 @@ namespace psframework
             get { return cancelscan; }
         }
         #endregion
+
 
     }
 }
