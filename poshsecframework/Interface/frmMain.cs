@@ -823,8 +823,12 @@ namespace psframework
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                                 txtPShellOutput.ScrollToCaret();
                                 break;
-                            default:
+                            case Keys.V:
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                                e.Handled = false;
+                                e.SuppressKeyPress = false;
+                                break;
+                            default:                                
                                 e.Handled = false;
                                 e.SuppressKeyPress = false;
                                 break;
