@@ -4,6 +4,7 @@
 PoshSec Framework
 ========
 For the Scripts and Modules to work, please refer to the below documentation.
+Note: Minimum of PowerShell 3.0 is required at this time.
 --
 If you are using the source code:
 ==
