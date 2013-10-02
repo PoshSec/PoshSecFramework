@@ -857,6 +857,9 @@ namespace psframework
                 case Keys.Tab:
                     e.Handled = true;
                     break;
+                case Keys.ShiftKey:
+                    e.Handled = false;
+                    break;
                 default:
                     if (txtPShellOutput.SelectionStart < mincurpos)
                     {
