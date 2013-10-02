@@ -434,6 +434,23 @@ namespace psframework
             }
         }
 
+        private void LaunchWinUpdate()
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("wuapp");
+                psi.UseShellExecute = true;
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
+        }
+
         private void ProcessCommand(String cmd)
         {
             try
@@ -446,6 +463,12 @@ namespace psframework
                         txtPShellOutput.Text = "psf > ";
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
+                        break;
+                    case "APT-GET UPDATE":
+                        txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                        txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                        mincurpos = txtPShellOutput.Text.Length;
+                        LaunchWinUpdate();
                         break;
                     case "RELOAD":
                         if (lvwActiveScripts.Items.Count == 0)
@@ -482,10 +505,6 @@ namespace psframework
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
             String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
-            if (poshsecframework.Properties.Settings.Default.ScriptDefaultAction == null)
-            {
-                poshsecframework.Properties.Settings.Default["ScriptDefaultAction"] = 0;
-            }
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
