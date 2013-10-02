@@ -2,7 +2,7 @@
 .DESCRIPTION
 Tests the import function for the PoshSec Framework.
 
-.AUTHOR
+AUTHOR
 Ben0xA
 #>
 
@@ -10,5 +10,4 @@ Ben0xA
 Import-Module $PSFramework
 
 Write-Output "Hello World!"
-Get-Drives
 #End Script

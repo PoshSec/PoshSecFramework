@@ -61,7 +61,7 @@ namespace psframework.PShell
                 rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
                 rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
                 rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
-            }            
+            }
         }
         #endregion
 
