@@ -47,18 +47,21 @@ namespace psframework.PShell
 
         private void InitializeSessionVars()
         {
-            PSAlert = new psmethods.PSAlert(frm);
-            PSRoot = new psvariables.PSRoot("PSRoot");
-            PSStatus = new psmethods.PSStatus(frm, scriptlvw);
-            PSModRoot = new psvariables.PSModRoot("PSModRoot");
-            PSFramework = new psvariables.PSFramework("PSFramework");
-            PSMessageBox = new psmethods.PSMessageBox();
-            rspace.SessionStateProxy.PSVariable.Set(PSRoot);
-            rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
-            rspace.SessionStateProxy.PSVariable.Set(PSFramework);
-            rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
-            rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
-            rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
+            if (rspace.RunspaceAvailability == RunspaceAvailability.Available)
+            {
+                PSAlert = new psmethods.PSAlert(frm);
+                PSRoot = new psvariables.PSRoot("PSRoot");
+                PSStatus = new psmethods.PSStatus(frm, scriptlvw);
+                PSModRoot = new psvariables.PSModRoot("PSModRoot");
+                PSFramework = new psvariables.PSFramework("PSFramework");
+                PSMessageBox = new psmethods.PSMessageBox();
+                rspace.SessionStateProxy.PSVariable.Set(PSRoot);
+                rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
+                rspace.SessionStateProxy.PSVariable.Set(PSFramework);
+                rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
+                rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
+                rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
+            }
         }
         #endregion
 

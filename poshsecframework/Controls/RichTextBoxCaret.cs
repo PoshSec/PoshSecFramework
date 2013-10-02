@@ -37,6 +37,24 @@ namespace poshsecframework.Controls
             this.DrawCaret();
         }
 
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            this.DrawCaret();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            this.DrawCaret();
+        }
+
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+            this.DrawCaret();
+        }
+
         private void this_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Tab)
@@ -84,6 +102,7 @@ namespace poshsecframework.Controls
                 {
                     tbidx = 0;
                 }
+                this.DrawCaret();
             }
         }
 

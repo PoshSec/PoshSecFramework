@@ -2,7 +2,7 @@
 .DESCRIPTION
 Tests the import function for the PoshSec Framework.
 
-.AUTHOR
+AUTHOR
 Ben0xA
 #>
 
@@ -17,7 +17,15 @@ $PSAlert.Add("This is a Warning alert.", 2)
 $PSAlert.Add("This is a Severe alert.", 3)
 $PSAlert.Add("This is a Critical alert.", 4)
 Write-Output ""
-Write-Output "This is the results of the Get-Drives module imported with PSFramework"
-Get-Drives
-Write-Output "Rolando is $Rolando"
+
+$PSStatus.Update("This updates the status item for this script")
+
+$PSMessageBox.Show("This shows a message box.", "This is the title")
+
+Write-Output "This is the PSFramework variable for the main framework script location."
+Write-Output $PSFramework
+Write-Output "This is the PSModRood variable for the Modules root folder."
+Write-Output $PSModRoot
+Write-Output "This is the PSRoot variable for the Scripts root folder."
+Write-Output $PSRoot
 #End Script

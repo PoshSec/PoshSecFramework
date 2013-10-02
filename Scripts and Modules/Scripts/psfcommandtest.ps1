@@ -1,7 +1,8 @@
 <#
 .DESCRIPTION
 Tests the ability to call PoshSec Framework Commands.
-.AUTHOR
+
+AUTHOR
 Ben0xA
 #>
 
