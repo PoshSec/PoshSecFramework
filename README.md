@@ -4,8 +4,9 @@
 PoshSec Framework
 ========
 For the Scripts and Modules to work, please refer to the below documentation.
-Note: Minimum of PowerShell 3.0 is required at this time.
---
+
+<b>Note: Minimum of PowerShell 3.0 is required at this time.</b>
+
 If you are using the source code:
 ==
 Open the poshsecframework.sln in Visual Studio 2012+ and build the project (F7). This will create the bin\Release folder at {your github repodirectory}\poshsecframework\poshsecframework\bin\Release.
@@ -26,6 +27,27 @@ Copy the Modules and the Scripts folder from the "Scripts and Modules" folder to
 C:\Program Files\PoshSecFramework\Modules\
 
 C:\Program Files\PoshSecFramework\Scripts\
+
+Execution-Policy
+==
+You will need to issue the following command in a PowerShell console running as Administrator if you have never run scripts on your system previously.
+```
+Set-ExecutionPolicy RemoteSigned
+```
+Then type "Y" when prompted.
+
+Unblocking Files
+==
+For some systems, you may need to "unblock" the files. We are working on putting this directly into psf, but for now you need only to type the following command in a PowerShell console:
+```
+Get-ChildItem -recurse <path to poshsecframework> | Unblock-File
+```
+Example:
+```
+Get-ChildItem -recurse "C:\github\poshsecframework\poshsecframework" | Unblock-File
+~or~
+Get-ChildItem -recurse "C:\Program Files\PoshSecFramework\ | Unblock-File"
+```
 
 
 About PoshSec
