@@ -16,6 +16,11 @@ C:\github\poshsecframework\poshsecframework\bin\Release\Modules\
 
 C:\github\poshsecframework\poshsecframework\bin\Release\Scripts\
 
+If you are using the Binary:
+==
+The binary folder has poshsecframework.zip.<br />
+Extact the zip file to a directory of your choosing and just run the poshsecframework.exe. <br />You do not need to move the Scripts\ or Modules\ folder.
+
 
 If you are using the Installer:
 ==
