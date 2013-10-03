@@ -1,6 +1,3 @@
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/5629ba33057907958b34e4e40bbefff0 "githalytics.com")](http://githalytics.com/PoshSec/PoshSec)
-
-
 PoshSec Framework
 ========
 For the Scripts and Modules to work, please refer to the below documentation.
@@ -80,3 +77,5 @@ Contact
 * You can offer your support by emailing team@poshsec.com
 * Twitter: @poshsec
 * #PoshSec on FREENODE
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/5629ba33057907958b34e4e40bbefff0 "githalytics.com")](http://githalytics.com/PoshSec/PoshSec)
