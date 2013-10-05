@@ -30,6 +30,7 @@ namespace psframework.PShell
         private psmethods.PSMessageBox PSMessageBox;
         private psmethods.PSAlert PSAlert;
         private psmethods.PSStatus PSStatus;
+        private psmethods.PSHosts PSHosts;
         #endregion
 
         #region " Public Events "
@@ -55,12 +56,14 @@ namespace psframework.PShell
                 PSModRoot = new psvariables.PSModRoot("PSModRoot");
                 PSFramework = new psvariables.PSFramework("PSFramework");
                 PSMessageBox = new psmethods.PSMessageBox();
+                PSHosts = new psmethods.PSHosts(frm);
                 rspace.SessionStateProxy.PSVariable.Set(PSRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSFramework);
                 rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
                 rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
                 rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
+                rspace.SessionStateProxy.SetVariable("PSHosts", PSHosts);
             }
         }
         #endregion

@@ -418,6 +418,68 @@ namespace psframework
             }
         }
 
+        public Collection<PSObject> GetCheckedHosts()
+        {            
+            if (this.InvokeRequired)
+            {
+                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>) delegate 
+                {
+                    return GetCheckedHosts();
+                });
+            }
+            else
+            {
+                Collection<PSObject> hosts = new Collection<PSObject>();
+                ListView.CheckedListViewItemCollection lvwitms = lvwSystems.CheckedItems;
+                if (lvwitms != null && lvwitms.Count > 0)
+                {
+                    foreach (ListViewItem lvw in lvwitms)
+                    {
+                        PSObject pobj = new PSObject();
+                        int idx = -1;
+                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        {
+                            idx++;
+                            pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
+                        }                        
+                        hosts.Add(pobj);
+                    }
+                }
+                return hosts;
+            }
+        }
+
+        public Collection<PSObject> GetHosts()
+        {
+            if (this.InvokeRequired)
+            {
+                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>)delegate
+                {
+                    return GetHosts();
+                });
+            }
+            else
+            {
+                Collection<PSObject> hosts = new Collection<PSObject>();
+                ListView.ListViewItemCollection lvwitms = lvwSystems.Items;
+                if (lvwitms != null && lvwitms.Count > 0)
+                {
+                    foreach (ListViewItem lvw in lvwitms)
+                    {
+                        PSObject pobj = new PSObject();
+                        int idx = -1;
+                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        {
+                            idx++;
+                            pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
+                        }
+                        hosts.Add(pobj);
+                    }
+                }
+                return hosts;
+            }
+        }
+
         public void AddActiveScript(ListViewItem lvw)
         {
             if (this.InvokeRequired)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
 
@@ -61,6 +63,28 @@ namespace psframework.PShell
             public void Update(String StatusMessage)
             {
                 frm.UpdateStatus(StatusMessage, lvw);
+            }
+        }
+
+        public class PSHosts
+        {
+            private frmMain frm = null;
+
+            public PSHosts(frmMain ParentForm)
+            {
+                frm = ParentForm;
+            }
+
+            public Collection<PSObject> GetHosts(bool AllHosts = false)
+            {
+                if (AllHosts)
+                {
+                    return frm.GetHosts();
+                }
+                else
+                {
+                    return frm.GetCheckedHosts();
+                }
             }
         }
     }

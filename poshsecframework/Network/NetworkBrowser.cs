@@ -131,11 +131,11 @@ namespace psframework.Network
                     //Limit to IPv4 for now
                     if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     {
-                        ipadr += addr.ToString();
+                        ipadr += addr.ToString() + ",";
                         Application.DoEvents();
-                    }
-                    
+                    }                    
                 }
+                ipadr = ipadr.Substring(0, ipadr.Length - 1);
             }
             catch
             {
