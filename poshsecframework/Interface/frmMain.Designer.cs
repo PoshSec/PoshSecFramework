@@ -638,7 +638,7 @@ namespace psframework
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
             this.btnCancelScan.ToolTipText = "Cancel Scan";
-            this.btnCancelScan.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
             // pnlSystems
             // 

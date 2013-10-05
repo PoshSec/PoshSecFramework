@@ -128,22 +128,23 @@ namespace psframework
             {
                 //Add Local IP/Host to Local Network
                 String localHost = Dns.GetHostName();
-                String localIP = scnr.GetIP(localHost);
+                String[] localIPs = scnr.GetIP(localHost).Split(',');
+                foreach (String localIP in localIPs)
+                {
+                    ListViewItem lvwItm = new ListViewItem();
 
-                ListViewItem lvwItm = new ListViewItem();
+                    lvwItm.Text = localHost;
+                    lvwItm.SubItems.Add(localIP);
+                    lvwItm.SubItems.Add("00-00-00-00-00-00");
+                    lvwItm.SubItems.Add("Up");
+                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add("0");
+                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
 
-                lvwItm.Text = localHost;
-                lvwItm.SubItems.Add(localIP);
-                lvwItm.SubItems.Add("00-00-00-00-00-00");
-                lvwItm.SubItems.Add("Up");
-                lvwItm.SubItems.Add("Not Installed");
-                lvwItm.SubItems.Add("0");
-                lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
-
-                lvwItm.ImageIndex = 2;
-                lvwSystems.Items.Add(lvwItm);
-                lvwSystems.Refresh();
-
+                    lvwItm.ImageIndex = 2;
+                    lvwSystems.Items.Add(lvwItm);
+                    lvwSystems.Refresh();
+                }
                 tvwNetworks.Nodes[0].Expand();
             }
             catch (Exception e)
@@ -158,7 +159,6 @@ namespace psframework
 
         private void Scan()
         {
-            lvwSystems.Items.Clear();
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
                 SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
@@ -184,6 +184,7 @@ namespace psframework
             ArrayList rslts = scnr.ScanActiveDirectory(domain);
             if (rslts.Count > 0)
             {
+                lvwSystems.Items.Clear();
                 foreach (DirectoryEntry system in rslts)
                 {
                     ListViewItem lvwItm = new ListViewItem();
@@ -220,14 +221,14 @@ namespace psframework
         }
 
         private void ScanbyIP()
-        {
-            lvwSystems.Items.Clear();
+        {            
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
             ArrayList rslts = scnr.ScanbyIP();
             if (rslts.Count > 0 && !cancelscan)
             {
+                lvwSystems.Items.Clear();
                 SetProgress(0, rslts.Count);
                 foreach (String system in rslts)
                 {
@@ -251,10 +252,9 @@ namespace psframework
                     Application.DoEvents();
                 }
             }
-
             rslts = null;
             HideProgress();
-            btnCancelScan.Enabled = true;
+            btnCancelScan.Enabled = false;
             lblStatus.Text = "Ready";            
         }
 
@@ -996,6 +996,11 @@ namespace psframework
             }
         }
 
+        private void btnCancelScan_Click(object sender, EventArgs e)
+        {
+            cancelscan = true;
+        }
+
         private void btnRefreshScripts_Click(object sender, EventArgs e)
         {
             GetLibrary();
@@ -1029,11 +1034,6 @@ namespace psframework
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Not implemented yet. Soon!");
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            cancelscan = true;
         }
 
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)
@@ -1087,7 +1087,5 @@ namespace psframework
             get { return cancelscan; }
         }
         #endregion
-
-
     }
 }
