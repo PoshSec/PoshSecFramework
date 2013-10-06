@@ -102,6 +102,8 @@ namespace psframework
         #region Network
         private void GetNetworks()
         {
+            tvwNetworks.Nodes[0].Nodes.Clear();
+            tvwNetworks.Nodes[0].Nodes.Add(new TreeNode("Local Network"));
             try
             {
                 //Get Domain Name
@@ -127,6 +129,7 @@ namespace psframework
             try
             {
                 //Add Local IP/Host to Local Network
+                lvwSystems.Items.Clear();
                 String localHost = Dns.GetHostName();
                 String[] localIPs = scnr.GetIP(localHost).Split(',');
                 foreach (String localIP in localIPs)
@@ -1001,6 +1004,11 @@ namespace psframework
             cancelscan = true;
         }
 
+        private void btnRefreshNetworks_Click(object sender, EventArgs e)
+        {
+            GetNetworks();
+        }
+
         private void btnRefreshScripts_Click(object sender, EventArgs e)
         {
             GetLibrary();
@@ -1087,5 +1095,6 @@ namespace psframework
             get { return cancelscan; }
         }
         #endregion
+
     }
 }

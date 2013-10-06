@@ -628,6 +628,7 @@ namespace psframework
             this.btnRefreshNetworks.Name = "btnRefreshNetworks";
             this.btnRefreshNetworks.Size = new System.Drawing.Size(23, 22);
             this.btnRefreshNetworks.ToolTipText = "Refresh Networks";
+            this.btnRefreshNetworks.Click += new System.EventHandler(this.btnRefreshNetworks_Click);
             // 
             // btnCancelScan
             // 
