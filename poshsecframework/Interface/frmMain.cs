@@ -284,13 +284,7 @@ namespace psframework
                     String script = (String)lvw.Tag;
                     if (File.Exists(script))
                     {
-                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
-                        psi.UseShellExecute = true;
-                        psi.Verb = "open";
-                        System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                        prc.StartInfo = psi;
-                        prc.Start();
-                        prc = null;
+                        ShellOpenCommand(script);
                     }
                 }
             }
@@ -500,12 +494,13 @@ namespace psframework
             }
         }
 
-        private void LaunchWinUpdate()
+        private void ShellOpenCommand(String cmd)
         {
             try
             {
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("wuapp");
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(cmd);
                 psi.UseShellExecute = true;
+                psi.Verb = "open";
                 System.Diagnostics.Process prc = new System.Diagnostics.Process();
                 prc.StartInfo = psi;
                 prc.Start();
@@ -515,7 +510,7 @@ namespace psframework
             {
                 DisplayError(e);
             }
-        } 
+        }
 
         private void ProcessCommand(String cmd)
         {
@@ -534,7 +529,7 @@ namespace psframework
                         txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
-                        LaunchWinUpdate();
+                        ShellOpenCommand("wuapp");
                         break; 
                     case "RELOAD":
                         if (lvwActiveScripts.Items.Count == 0)
@@ -728,13 +723,7 @@ namespace psframework
             try
             {
                 String wurl = "https://github.com/PoshSec/PoshSecFramework/commits/master";
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(wurl);
-                psi.UseShellExecute = true;
-                psi.Verb = "open";
-                System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                prc.StartInfo = psi;
-                prc.Start();
-                prc = null;
+                ShellOpenCommand(wurl);
             }
             catch (Exception ex)
             {
@@ -747,13 +736,7 @@ namespace psframework
             try
             {
                 String wurl = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(wurl);
-                psi.UseShellExecute = true;
-                psi.Verb = "open";
-                System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                prc.StartInfo = psi;
-                prc.Start();
-                prc = null;
+                ShellOpenCommand(wurl);
             }
             catch (Exception ex)
             {
