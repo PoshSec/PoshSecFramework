@@ -103,7 +103,13 @@ namespace psframework
         private void GetNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
-            tvwNetworks.Nodes[0].Nodes.Add(new TreeNode("Local Network"));
+            TreeNode lnode = new TreeNode();
+            lnode.Text = "Local Network";
+            lnode.ImageIndex = 3;
+            lnode.SelectedImageIndex = 3;
+            lnode.Tag = 1;
+            tvwNetworks.Nodes[0].Nodes.Add(lnode);
+
             try
             {
                 //Get Domain Name
