@@ -725,12 +725,40 @@ namespace psframework
 
         private void mnuCheckforUpdates_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            try
+            {
+                String wurl = "https://github.com/PoshSec/PoshSecFramework/commits/master";
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(wurl);
+                psi.UseShellExecute = true;
+                psi.Verb = "open";
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception ex)
+            {
+                DisplayError(ex);
+            }
         }
 
         private void mnuPSFWiki_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            try
+            {
+                String wurl = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(wurl);
+                psi.UseShellExecute = true;
+                psi.Verb = "open";
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception ex)
+            {
+                DisplayError(ex);
+            }
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)
