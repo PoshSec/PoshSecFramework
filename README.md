@@ -73,7 +73,7 @@ In alphabetical order:
 * Nick Jacob - @MortiousPrime 
 * Rich Cassara - @rjcassara
 
-PoshSec is about community, Power Shell, and completely comfortable "man on man" sexual innuendos
+PoshSec is about supporting the community, empowering the community, and strengthening the security posture of organizations.
 
 
 Contact
