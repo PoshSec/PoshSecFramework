@@ -58,18 +58,21 @@ namespace poshsecframework.Controls
                     foreach (PSNoteProperty prop in pobj.Properties)
                     {
                         sidx++;
-                        if (sidx == 0)
+                        if (prop != null)
                         {
-                            lvw.Text = prop.Value.ToString();
-                        }
-                        else
-                        {
-                            lvw.SubItems.Add(prop.Value.ToString());
+                            if (sidx == 0)
+                            {
+                                lvw.Text = (prop.Value ?? "").ToString();
+                            }
+                            else
+                            {
+                                lvw.SubItems.Add((prop.Value ?? "").ToString());
+                            }
                         }
                     }
-                    this.Items.Add(lvw);                    
+                    this.Items.Add(lvw);
                 }
-            }
+            }           
         }
 
         private void CreateHeaders(PSObject pobj)
