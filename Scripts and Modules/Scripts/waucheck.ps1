@@ -101,8 +101,6 @@ Function Get-KBs([string]$pcname){
 }
 
 # Begin Program Flow
-
-#Clear-Host
 Write-Output "WAUCheck"
 Write-Output "Written By: @Ben0xA"
 Write-Output "Huge thanks to @mwjcomputing!`r`n"
@@ -131,7 +129,6 @@ if(-not $computer){
 		$pcname = $pc.Properties.name
 		
 		if($pcname){
-			#Write-Output "Querying $pcname, please wait..."
       $PSStatus.Update("Querying $pcname [$idx of $len]")
       if($showintab) {
         $results += Get-KBs($pcname)
@@ -143,7 +140,6 @@ if(-not $computer){
 	}
 }
 else{
-	#Write-Output "Querying $computer, please wait..."
   $PSStatus.Update("Querying $computer, please wait...")
   if($showintab) {
     $results += Get-KBs($computer)
@@ -154,7 +150,6 @@ else{
 }
 
 if(-not $outputFile){
-	#Clear-Host
   if($showintab) {
     $PSTab.AddObjectGrid($results, "Windows KB ($kbs) Results")
   }
