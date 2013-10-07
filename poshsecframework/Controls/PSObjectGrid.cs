@@ -13,6 +13,13 @@ namespace poshsecframework.Controls
         #region Private Variables
         private ToolStrip parstrip = null;
         Collection<PSObject> psobj = null;
+
+        private enum FilterType
+        { 
+            XML = 1,
+            CSV,
+            TXT
+        }
         #endregion
 
         #region Public Methods
@@ -26,7 +33,18 @@ namespace poshsecframework.Controls
 
         public void Export(object sender, EventArgs e)
         {
-            MessageBox.Show("Export button clicked. Not implemented yet.");
+            String expfilter = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
+            SaveFileDialog dlgExport = new SaveFileDialog();
+            dlgExport.Filter = expfilter;
+            dlgExport.CheckFileExists = false;
+            dlgExport.CheckPathExists = true;
+            dlgExport.Title = "Export As...";
+            if (dlgExport.ShowDialog() == DialogResult.OK)
+            {
+                ExportObject((FilterType)dlgExport.FilterIndex, dlgExport.FileName);
+            }
+            dlgExport.Dispose();
+            dlgExport = null;
         }
         #endregion
 
@@ -83,6 +101,27 @@ namespace poshsecframework.Controls
                 col.Text = prop.Name;
                 col.Width = -2;
                 this.Columns.Add(col);
+            }
+        }
+
+        private void ExportObject(FilterType type, String filename)
+        {
+            if (psobj != null && psobj.Count > 0)
+            {
+                Utility.ExportObject exobj = new Utility.ExportObject();
+                switch (type)
+                { 
+                    case FilterType.XML:
+                        exobj.XML(psobj, filename);
+                        break;
+                    case FilterType.CSV:
+                        exobj.CSV(psobj, filename);
+                        break;
+                    case FilterType.TXT:
+                        exobj.TXT(psobj, filename);
+                        break;
+                }
+                exobj = null;
             }
         }
         #endregion

@@ -87,6 +87,7 @@
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ExportObject.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
     </EmbeddedResource>
