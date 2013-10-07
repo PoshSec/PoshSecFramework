@@ -366,6 +366,29 @@ namespace psframework
             }            
         }
 
+        public void AddTabPage(TabPage NewTabPage)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    AddTabPage(NewTabPage);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                try
+                {
+                    tcMain.TabPages.Add(NewTabPage);
+                }
+                catch (Exception e)
+                {
+                    DisplayError(e);
+                }
+            }            
+        }
+
         public void AddAlert(String message, PShell.psmethods.PSAlert.AlertType alerttype, String scriptname)
         {
             if (this.InvokeRequired)
@@ -1058,7 +1081,7 @@ namespace psframework
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            MessageBox.Show("Not implemented yet. Soon!");           
         }
 
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)

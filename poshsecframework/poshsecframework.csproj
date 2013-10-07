@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\PSObjectGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PSTabItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\RichTextBoxCaret.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -81,6 +87,9 @@
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\PSTabItem.resx">
+      <DependentUpon>PSTabItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -139,6 +148,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\table-save.png" />
+    <None Include="Resources\tab-close-3.png" />
     <None Include="Resources\dialog-cancel-5.png" />
     <None Include="Resources\system-settings.png" />
     <None Include="Resources\document-open-folder.png" />

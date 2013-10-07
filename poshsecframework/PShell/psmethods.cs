@@ -87,5 +87,23 @@ namespace psframework.PShell
                 }
             }
         }
+
+        public class PSTab
+        {
+            private frmMain frm = null;
+            
+            public PSTab(frmMain ParentForm)
+            {
+                frm = ParentForm;
+            }
+
+            public void AddObjectGrid(Collection<PSObject> CustomObject, String TabTitle)
+            {
+                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                ptitm.Text = TabTitle;
+                ptitm.AddGrid(CustomObject);
+                frm.AddTabPage(ptitm);
+            }
+        }
     }
 }
