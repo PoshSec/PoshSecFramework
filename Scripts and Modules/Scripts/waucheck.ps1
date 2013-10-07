@@ -131,7 +131,10 @@ if(-not $computer){
 		if($pcname){
       $PSStatus.Update("Querying $pcname [$idx of $len]")
       if($showintab) {
-        $results += Get-KBs($pcname)
+        $rsp = Get-KBs($pcname)
+        if($rsp -and $rsp -ne "") {
+          $results += $rsp
+        }
       }
 			else {
         $wumaster += Get-KBs($pcname)
@@ -142,7 +145,10 @@ if(-not $computer){
 else{
   $PSStatus.Update("Querying $computer, please wait...")
   if($showintab) {
-    $results += Get-KBs($computer)
+    $rsp = Get-KBs($computer)
+    if($rsp -and $rsp -ne "") {
+      $results += $rsp
+    }    
   }
 	else {
     $wumaster += Get-KBs($computer)
