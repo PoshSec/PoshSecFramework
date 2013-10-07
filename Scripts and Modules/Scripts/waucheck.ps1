@@ -8,13 +8,16 @@ With Help from mwjcomputing!
 Comma separated values of KB numbers.
 
 .PARAMETER outputFile
-The output file to save results.
+The output file to save results. This will override showintab.
 
 .PARAMETER omitInstalled
 Omits output if the KB is installed.
 
 .PARAMETER computer
 Specifies a single computer to scan.
+
+.PARAMETER showintab
+Specifies whether to show the results in a PoshSec Framework Tab.
 #>
 
 Param(
@@ -28,7 +31,10 @@ Param(
 	[boolean]$omitInstalled,
 	
 	[Parameter(Mandatory=$false,Position=4)]
-	[string]$computer
+	[string]$computer,
+	
+	[Parameter(Mandatory=$false,Position=5)]
+	[boolean]$showintab
 )
 
 Function Get-Pcs{
@@ -43,7 +49,7 @@ Function Get-Pcs{
 	return $rslts
 }
 
-Function Get-KBs($pcname){
+Function Get-KBs([string]$pcname){
 	$rslt = ""
 	$qfe = Get-WmiObject -Class Win32_QuickFixEngineering -Computer $pcname -ErrorVariable myerror -ErrorAction SilentlyContinue
 	if($myerror.count -eq 0) {
@@ -55,16 +61,40 @@ Function Get-KBs($pcname){
 			}
 			if($omitInstalled){
 				if(-not $installed){
-					$rslt += "$pcname,$kb,$installed`r`n"
+          if($showintab) {
+            $rslt = New-Object PSObject
+            $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
+            $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
+            $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value $installed
+          }
+          else {
+            $rslt += "$pcname,$kb,$installed`r`n"
+          }					
 				}
 			}
 			else {
-				$rslt += "$pcname,$kb,$installed`r`n"
+        if($showintab) {
+          $rslt = New-Object PSObject
+          $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
+          $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
+          $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value $installed
+        }
+        else {
+          $rslt += "$pcname,$kb,$installed`r`n"  
+        }				
 			}		
 		}
 	}
 	else{
-		$rslt += "$pcname,$kb,RPC_Error`r`n"
+    if($showintab) {
+      $rslt = New-Object PSObject
+      $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
+      $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
+      $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value "RPC_Error"
+    }
+    else {
+      $rslt += "$pcname,$kb,RPC_Error`r`n"
+    }		
     $PSAlert.Add("$pcname is inaccessible. RPC_Error", 1)
 	}
 	return $rslt
@@ -77,6 +107,7 @@ Write-Output "WAUCheck"
 Write-Output "Written By: @Ben0xA"
 Write-Output "Huge thanks to @mwjcomputing!`r`n"
 Write-Output "Looking for KBs $kbs"
+$results = @()
 if($omitInstalled){
 	Write-Output "Omitting entries where the KB is installed."
 }
@@ -102,19 +133,34 @@ if(-not $computer){
 		if($pcname){
 			#Write-Output "Querying $pcname, please wait..."
       $PSStatus.Update("Querying $pcname [$idx of $len]")
-			$wumaster += Get-KBs($pcname)
+      if($showintab) {
+        $results += Get-KBs($pcname)
+      }
+			else {
+        $wumaster += Get-KBs($pcname)
+      }
 		}	
 	}
 }
 else{
 	#Write-Output "Querying $computer, please wait..."
   $PSStatus.Update("Querying $computer, please wait...")
-	$wumaster += Get-KBs($computer)
+  if($showintab) {
+    $results += Get-KBs($computer)
+  }
+	else {
+    $wumaster += Get-KBs($computer)
+  }
 }
 
 if(-not $outputFile){
 	#Clear-Host
-	$wumaster
+  if($showintab) {
+    $PSTab.AddObjectGrid($results, "Windows KB ($kbs) Results")
+  }
+  else {
+    $wumaster
+  }	
 }
 else {
 	$wumaster| Out-File $outputFile

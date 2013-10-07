@@ -328,6 +328,7 @@ namespace psframework.PShell
             {
                 Interface.frmParams frm = new Interface.frmParams();
                 frm.SetParameters(parm);
+                frm.TopMost = true;
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     parms = parm.Properties;
