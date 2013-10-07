@@ -27,6 +27,7 @@ namespace poshsecframework.Controls
         {
             this.Dock = DockStyle.Fill;
             this.View = System.Windows.Forms.View.Details;
+            this.FullRowSelect = true;
             psobj = CustomObject;
             BuildGrid();
         }
