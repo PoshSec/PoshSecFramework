@@ -153,12 +153,13 @@ namespace psframework.PShell
                     pline = rspace.CreatePipeline();
                     if (iscommand)
                     {
-                        String cmdscript = "Import-Module \"$PSFramework\"" + Environment.NewLine + scriptcommand + cmdparams + " | Out-String";
+                        String cmdscript = "Import-Module \"$PSFramework\"" + Environment.NewLine + scriptcommand + cmdparams;
                         if (clicked)
                         {
                             rslts.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
+                        pline.Commands.Add("Out-String");
                     }
                     else
                     {
