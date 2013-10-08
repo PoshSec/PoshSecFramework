@@ -33,7 +33,7 @@ namespace poshsecframework.Controls
             this.Controls.Add(tbTools);
         }
 
-        public void AddGrid(Collection<PSObject> CustomObject)
+        public void AddGrid(System.Object[] CustomObject)
         {
             PSObjectGrid pgrid = new PSObjectGrid(CustomObject);
             pgrid.ParentStrip = tbTools;

@@ -12,7 +12,7 @@ namespace poshsecframework.Controls
     {
         #region Private Variables
         private ToolStrip parstrip = null;
-        Collection<PSObject> psobj = null;
+        System.Object[] psobj = null;
 
         private enum FilterType
         { 
@@ -23,13 +23,11 @@ namespace poshsecframework.Controls
         #endregion
 
         #region Public Methods
-        public PSObjectGrid(Collection<PSObject> CustomObject)
+
+        public PSObjectGrid(System.Object[] CustomObject)
         {
-            this.Dock = DockStyle.Fill;
-            this.View = System.Windows.Forms.View.Details;
-            this.FullRowSelect = true;
             psobj = CustomObject;
-            BuildGrid();
+            Init();
         }
 
         public void Export(object sender, EventArgs e)
@@ -50,6 +48,14 @@ namespace poshsecframework.Controls
         #endregion
 
         #region Private Methods
+        private void Init()
+        {
+            this.Dock = DockStyle.Fill;
+            this.View = System.Windows.Forms.View.Details;
+            this.FullRowSelect = true;
+            BuildGrid();
+        }
+
         private void AddButtons()
         {
             if (parstrip != null)
@@ -67,47 +73,70 @@ namespace poshsecframework.Controls
 
         private void BuildGrid()
         {
-            if (psobj != null && psobj.Count > 0)
+            if (psobj != null && psobj.Count() > 0)
             {
                 CreateHeaders(psobj[0]);
-                foreach (PSObject pobj in psobj)
+                if (psobj[0].GetType() == typeof(PSObject))
                 {
-                    ListViewItem lvw = new ListViewItem();
-                    int sidx = -1;
-                    foreach (PSNoteProperty prop in pobj.Properties)
+                    foreach (PSObject pobj in psobj)
                     {
-                        sidx++;
-                        if (prop != null)
+                        ListViewItem lvw = new ListViewItem();
+                        int sidx = -1;
+                        foreach (PSPropertyInfo prop in pobj.Properties)
                         {
-                            if (sidx == 0)
+                            sidx++;
+                            if (prop != null)
                             {
-                                lvw.Text = (prop.Value ?? "").ToString();
-                            }
-                            else
-                            {
-                                lvw.SubItems.Add((prop.Value ?? "").ToString());
+                                if (sidx == 0)
+                                {
+                                    try
+                                    {
+                                        lvw.Text = (prop.Value ?? "").ToString();
+                                    }
+                                    catch (GetValueException)
+                                    {
+                                        lvw.Text = "";
+                                    }
+
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        lvw.SubItems.Add((prop.Value ?? "").ToString());
+                                    }
+                                    catch (GetValueInvocationException)
+                                    {
+                                        lvw.SubItems.Add("");
+                                    }
+
+                                }
                             }
                         }
+                        this.Items.Add(lvw);
                     }
-                    this.Items.Add(lvw);
-                }
-            }           
+                }                
+            }            
         }
 
-        private void CreateHeaders(PSObject pobj)
+        private void CreateHeaders(Object pobj)
         {
-            foreach (PSNoteProperty prop in pobj.Properties)
+            if (pobj.GetType() == typeof(PSObject))
             {
-                ColumnHeader col = new ColumnHeader();
-                col.Text = prop.Name;
-                col.Width = -2;
-                this.Columns.Add(col);
-            }
+                PSObject p = (PSObject)pobj;
+                foreach (PSPropertyInfo prop in p.Properties)
+                {
+                    ColumnHeader col = new ColumnHeader();
+                    col.Text = prop.Name;
+                    col.Width = -2;
+                    this.Columns.Add(col);
+                }
+            }            
         }
 
         private void ExportObject(FilterType type, String filename)
         {
-            if (psobj != null && psobj.Count > 0)
+            if (psobj != null && psobj.Count() > 0)
             {
                 Utility.ExportObject exobj = new Utility.ExportObject();
                 switch (type)
