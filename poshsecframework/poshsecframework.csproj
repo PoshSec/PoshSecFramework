@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\PSObjectGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\PSTabItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\RichTextBoxCaret.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -66,6 +72,12 @@
     <Compile Include="Interface\frmParams.Designer.cs">
       <DependentUpon>frmParams.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\frmScan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmScan.Designer.cs">
+      <DependentUpon>frmScan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\frmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,12 +87,19 @@
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ExportObject.cs" />
+    <EmbeddedResource Include="Controls\PSTabItem.resx">
+      <DependentUpon>PSTabItem.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmMain.resx">
       <SubType>Designer</SubType>
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmParams.resx">
       <DependentUpon>frmParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmScan.resx">
+      <DependentUpon>frmScan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmSettings.resx">
       <DependentUpon>frmSettings.cs</DependentUpon>
@@ -130,6 +149,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\table-save.png" />
+    <None Include="Resources\tab-close-3.png" />
     <None Include="Resources\dialog-cancel-5.png" />
     <None Include="Resources\system-settings.png" />
     <None Include="Resources\document-open-folder.png" />

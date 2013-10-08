@@ -102,6 +102,14 @@ namespace psframework
         #region Network
         private void GetNetworks()
         {
+            tvwNetworks.Nodes[0].Nodes.Clear();
+            TreeNode lnode = new TreeNode();
+            lnode.Text = "Local Network";
+            lnode.ImageIndex = 3;
+            lnode.SelectedImageIndex = 3;
+            lnode.Tag = 1;
+            tvwNetworks.Nodes[0].Nodes.Add(lnode);
+
             try
             {
                 //Get Domain Name
@@ -127,23 +135,25 @@ namespace psframework
             try
             {
                 //Add Local IP/Host to Local Network
+                lvwSystems.Items.Clear();
                 String localHost = Dns.GetHostName();
-                String localIP = scnr.GetIP(localHost);
+                String[] localIPs = scnr.GetIP(localHost).Split(',');
+                foreach (String localIP in localIPs)
+                {
+                    ListViewItem lvwItm = new ListViewItem();
 
-                ListViewItem lvwItm = new ListViewItem();
+                    lvwItm.Text = localHost;
+                    lvwItm.SubItems.Add(localIP);
+                    lvwItm.SubItems.Add("00-00-00-00-00-00");
+                    lvwItm.SubItems.Add("Up");
+                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add("0");
+                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
 
-                lvwItm.Text = localHost;
-                lvwItm.SubItems.Add(localIP);
-                lvwItm.SubItems.Add("00-00-00-00-00-00");
-                lvwItm.SubItems.Add("Up");
-                lvwItm.SubItems.Add("Not Installed");
-                lvwItm.SubItems.Add("0");
-                lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
-
-                lvwItm.ImageIndex = 2;
-                lvwSystems.Items.Add(lvwItm);
-                lvwSystems.Refresh();
-
+                    lvwItm.ImageIndex = 2;
+                    lvwSystems.Items.Add(lvwItm);
+                    lvwSystems.Refresh();
+                }
                 tvwNetworks.Nodes[0].Expand();
             }
             catch (Exception e)
@@ -158,7 +168,6 @@ namespace psframework
 
         private void Scan()
         {
-            lvwSystems.Items.Clear();
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
                 SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
@@ -184,6 +193,7 @@ namespace psframework
             ArrayList rslts = scnr.ScanActiveDirectory(domain);
             if (rslts.Count > 0)
             {
+                lvwSystems.Items.Clear();
                 foreach (DirectoryEntry system in rslts)
                 {
                     ListViewItem lvwItm = new ListViewItem();
@@ -220,14 +230,14 @@ namespace psframework
         }
 
         private void ScanbyIP()
-        {
-            lvwSystems.Items.Clear();
+        {            
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
             ArrayList rslts = scnr.ScanbyIP();
             if (rslts.Count > 0 && !cancelscan)
             {
+                lvwSystems.Items.Clear();
                 SetProgress(0, rslts.Count);
                 foreach (String system in rslts)
                 {
@@ -251,10 +261,9 @@ namespace psframework
                     Application.DoEvents();
                 }
             }
-
             rslts = null;
             HideProgress();
-            btnCancelScan.Enabled = true;
+            btnCancelScan.Enabled = false;
             lblStatus.Text = "Ready";            
         }
 
@@ -281,13 +290,7 @@ namespace psframework
                     String script = (String)lvw.Tag;
                     if (File.Exists(script))
                     {
-                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(script);
-                        psi.UseShellExecute = true;
-                        psi.Verb = "open";
-                        System.Diagnostics.Process prc = new System.Diagnostics.Process();
-                        prc.StartInfo = psi;
-                        prc.Start();
-                        prc = null;
+                        ShellOpenCommand(script);
                     }
                 }
             }
@@ -363,6 +366,29 @@ namespace psframework
             }            
         }
 
+        public void AddTabPage(TabPage NewTabPage)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    AddTabPage(NewTabPage);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                try
+                {
+                    tcMain.TabPages.Add(NewTabPage);
+                }
+                catch (Exception e)
+                {
+                    DisplayError(e);
+                }
+            }            
+        }
+
         public void AddAlert(String message, PShell.psmethods.PSAlert.AlertType alerttype, String scriptname)
         {
             if (this.InvokeRequired)
@@ -418,6 +444,68 @@ namespace psframework
             }
         }
 
+        public Collection<PSObject> GetCheckedHosts()
+        {            
+            if (this.InvokeRequired)
+            {
+                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>) delegate 
+                {
+                    return GetCheckedHosts();
+                });
+            }
+            else
+            {
+                Collection<PSObject> hosts = new Collection<PSObject>();
+                ListView.CheckedListViewItemCollection lvwitms = lvwSystems.CheckedItems;
+                if (lvwitms != null && lvwitms.Count > 0)
+                {
+                    foreach (ListViewItem lvw in lvwitms)
+                    {
+                        PSObject pobj = new PSObject();
+                        int idx = -1;
+                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        {
+                            idx++;
+                            pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
+                        }                        
+                        hosts.Add(pobj);
+                    }
+                }
+                return hosts;
+            }
+        }
+
+        public Collection<PSObject> GetHosts()
+        {
+            if (this.InvokeRequired)
+            {
+                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>)delegate
+                {
+                    return GetHosts();
+                });
+            }
+            else
+            {
+                Collection<PSObject> hosts = new Collection<PSObject>();
+                ListView.ListViewItemCollection lvwitms = lvwSystems.Items;
+                if (lvwitms != null && lvwitms.Count > 0)
+                {
+                    foreach (ListViewItem lvw in lvwitms)
+                    {
+                        PSObject pobj = new PSObject();
+                        int idx = -1;
+                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        {
+                            idx++;
+                            pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
+                        }
+                        hosts.Add(pobj);
+                    }
+                }
+                return hosts;
+            }
+        }
+
         public void AddActiveScript(ListViewItem lvw)
         {
             if (this.InvokeRequired)
@@ -435,12 +523,13 @@ namespace psframework
             }
         }
 
-        private void LaunchWinUpdate()
+        private void ShellOpenCommand(String cmd)
         {
             try
             {
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("wuapp");
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(cmd);
                 psi.UseShellExecute = true;
+                psi.Verb = "open";
                 System.Diagnostics.Process prc = new System.Diagnostics.Process();
                 prc.StartInfo = psi;
                 prc.Start();
@@ -450,7 +539,7 @@ namespace psframework
             {
                 DisplayError(e);
             }
-        } 
+        }
 
         private void ProcessCommand(String cmd)
         {
@@ -469,7 +558,7 @@ namespace psframework
                         txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
-                        LaunchWinUpdate();
+                        ShellOpenCommand("wuapp");
                         break; 
                     case "RELOAD":
                         if (lvwActiveScripts.Items.Count == 0)
@@ -660,12 +749,28 @@ namespace psframework
 
         private void mnuCheckforUpdates_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            try
+            {
+                String wurl = "https://github.com/PoshSec/PoshSecFramework/commits/master";
+                ShellOpenCommand(wurl);
+            }
+            catch (Exception ex)
+            {
+                DisplayError(ex);
+            }
         }
 
         private void mnuPSFWiki_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            try
+            {
+                String wurl = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
+                ShellOpenCommand(wurl);
+            }
+            catch (Exception ex)
+            {
+                DisplayError(ex);
+            }
         }
 
         private void mnuOptions_Click(object sender, EventArgs e)
@@ -934,6 +1039,16 @@ namespace psframework
             }
         }
 
+        private void btnCancelScan_Click(object sender, EventArgs e)
+        {
+            cancelscan = true;
+        }
+
+        private void btnRefreshNetworks_Click(object sender, EventArgs e)
+        {
+            GetNetworks();
+        }
+
         private void btnRefreshScripts_Click(object sender, EventArgs e)
         {
             GetLibrary();
@@ -966,12 +1081,7 @@ namespace psframework
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
-        }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            cancelscan = true;
+            MessageBox.Show("Not implemented yet. Soon!");           
         }
 
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)
@@ -1025,7 +1135,6 @@ namespace psframework
             get { return cancelscan; }
         }
         #endregion
-
 
     }
 }

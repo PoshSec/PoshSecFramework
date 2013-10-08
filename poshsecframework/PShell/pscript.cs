@@ -30,6 +30,8 @@ namespace psframework.PShell
         private psmethods.PSMessageBox PSMessageBox;
         private psmethods.PSAlert PSAlert;
         private psmethods.PSStatus PSStatus;
+        private psmethods.PSHosts PSHosts;
+        private psmethods.PSTab PSTab;
         #endregion
 
         #region " Public Events "
@@ -55,12 +57,16 @@ namespace psframework.PShell
                 PSModRoot = new psvariables.PSModRoot("PSModRoot");
                 PSFramework = new psvariables.PSFramework("PSFramework");
                 PSMessageBox = new psmethods.PSMessageBox();
+                PSTab = new psmethods.PSTab(frm);
+                PSHosts = new psmethods.PSHosts(frm);
                 rspace.SessionStateProxy.PSVariable.Set(PSRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSFramework);
                 rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
                 rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
                 rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
+                rspace.SessionStateProxy.SetVariable("PSHosts", PSHosts);
+                rspace.SessionStateProxy.SetVariable("PSTab", PSTab);
             }
         }
         #endregion
@@ -153,6 +159,7 @@ namespace psframework.PShell
                             rslts.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
+                        pline.Commands.Add("Out-String");
                     }
                     else
                     {
@@ -322,6 +329,7 @@ namespace psframework.PShell
             {
                 Interface.frmParams frm = new Interface.frmParams();
                 frm.SetParameters(parm);
+                frm.TopMost = true;
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     parms = parm.Properties;

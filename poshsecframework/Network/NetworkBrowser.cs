@@ -48,8 +48,19 @@ namespace psframework.Network
         public ArrayList ScanbyIP()
         {
             ArrayList systems = new ArrayList();
-            String localIP = GetIP(Dns.GetHostName());
-
+            String[] localIPs = GetIP(Dns.GetHostName()).Split(',');
+            String localIP = localIPs[0];
+            if (localIPs.Length > 1)
+            {
+                poshsecframework.Interface.frmScan frm = new poshsecframework.Interface.frmScan();
+                frm.IPs = localIPs;
+                if (frm.ShowDialog() == DialogResult.OK)
+                {
+                    localIP = frm.SelectedIP;
+                }
+                frm.Dispose();
+                frm = null;
+            }
             if (localIP != "" && localIP != null)
             {
                 String[] ipparts = localIP.Split('.');
@@ -131,11 +142,11 @@ namespace psframework.Network
                     //Limit to IPv4 for now
                     if (addr.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                     {
-                        ipadr += addr.ToString();
+                        ipadr += addr.ToString() + ",";
                         Application.DoEvents();
-                    }
-                    
+                    }                    
                 }
+                ipadr = ipadr.Substring(0, ipadr.Length - 1);
             }
             catch
             {
