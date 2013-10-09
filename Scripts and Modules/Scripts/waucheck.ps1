@@ -94,6 +94,7 @@ Write-Output "Written By: @Ben0xA"
 Write-Output "Huge thanks to @mwjcomputing!`r`n"
 Write-Output "Looking for KBs $kbs"
 $results = @()
+$pcs = @()
 if($omitInstalled){
 	Write-Output "Omitting entries where the KB is installed."
 }
@@ -108,13 +109,24 @@ else {
 $wumaster = ""
 $kbItems = $kbs.Split(",")
 if(-not $computer){
-	$pcs = Get-PCs
-	
+  $hosts = $PSHosts.GetHosts()
+  if(!$hosts) {
+    $hosts = Get-PCs    
+    foreach($h in $hosts) {
+      $pcs += $h.Properties.name
+    }
+  }
+  else {
+    foreach($h in $hosts) {
+      $pcs += $h.Name
+    }
+  }
+  
   $idx = 0
   $len = $pcs.length
 	foreach($pc in $pcs){
     $idx += 1
-		$pcname = $pc.Properties.name
+		$pcname = $pc
 		
 		if($pcname){
       $PSStatus.Update("Querying $pcname [$idx of $len]")
@@ -125,7 +137,7 @@ if(-not $computer){
         }
       }
 			else {
-        $wumaster += Get-KBs($pcname)
+        $wumaster += Get-KBs($pcname) | Out-String
       }
 		}	
 	}
@@ -139,7 +151,7 @@ else{
     }    
   }
 	else {
-    $wumaster += Get-KBs($computer) | Out-String
+    $wumaster += Get-KBs($computer) | Out-String 
   }
 }
 
@@ -148,7 +160,7 @@ if(-not $outputFile){
     $PSTab.AddObjectGrid($results, "Windows KB ($kbs) Results")
   }
   else {
-    $wumaster
+    $wumaster | Out-String
   }	
 }
 else {
