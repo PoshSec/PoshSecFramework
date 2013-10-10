@@ -48,6 +48,7 @@ namespace psframework
             InitializeComponent();
             Initialize();
             GetNetworks();
+            scnr.ScanComplete += scnr_ScanComplete;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -144,7 +145,7 @@ namespace psframework
 
                     lvwItm.Text = localHost;
                     lvwItm.SubItems.Add(localIP);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
+                    lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
                     lvwItm.SubItems.Add("Up");
                     lvwItm.SubItems.Add("Not Installed");
                     lvwItm.SubItems.Add("0");
@@ -194,6 +195,7 @@ namespace psframework
             if (rslts.Count > 0)
             {
                 lvwSystems.Items.Clear();
+                lvwSystems.BeginUpdate();
                 foreach (DirectoryEntry system in rslts)
                 {
                     ListViewItem lvwItm = new ListViewItem();
@@ -201,7 +203,7 @@ namespace psframework
 
                     String ipadr = scnr.GetIP(system.Name);
                     lvwItm.SubItems.Add(ipadr);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
+                    lvwItm.SubItems.Add(scnr.GetMac(ipadr));
                     bool isup = false;
                     if (ipadr != "0.0.0.0 (unknown host)")
                     {
@@ -224,6 +226,7 @@ namespace psframework
                     lvwSystems.Refresh();
                     Application.DoEvents();
                 }
+                lvwSystems.EndUpdate();
             }
 
             rslts = null;
@@ -234,37 +237,59 @@ namespace psframework
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
-            ArrayList rslts = scnr.ScanbyIP();
-            if (rslts.Count > 0 && !cancelscan)
+            Thread thd = new Thread(scnr.ScanbyIP);
+            thd.Start();
+        }
+
+        private void scnr_ScanComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        {
+            if (this.InvokeRequired)
             {
-                lvwSystems.Items.Clear();
-                SetProgress(0, rslts.Count);
-                foreach (String system in rslts)
+                MethodInvoker del = delegate
                 {
-                    ListViewItem lvwItm = new ListViewItem();
-                    
-                    SetStatus("Adding " + system + ", please wait...");
-                    
-                    lvwItm.Text = scnr.GetHostname(system);
-                    lvwItm.SubItems.Add(system);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
-                    lvwItm.SubItems.Add("Up");
-                    lvwItm.SubItems.Add("Not Installed");
-                    lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
-
-                    lvwItm.ImageIndex = 2;
-                    lvwSystems.Items.Add(lvwItm);
-                    lvwSystems.Refresh();
-
-                    pbStatus.Value += 1;
-                    Application.DoEvents();
-                }
+                    scnr_ScanComplete(sender, e);
+                };
+                this.Invoke(del);
             }
-            rslts = null;
-            HideProgress();
-            btnCancelScan.Enabled = false;
-            lblStatus.Text = "Ready";            
+            else
+            {
+                ArrayList rslts = e.Systems;
+                if (rslts.Count > 0 && !cancelscan)
+                {
+                    lvwSystems.Items.Clear();
+                    SetProgress(0, rslts.Count);
+                    lvwSystems.BeginUpdate();
+                    foreach (String system in rslts)
+                    {
+                        if (system != null && system != "")
+                        {
+                            ListViewItem lvwItm = new ListViewItem();
+
+                            SetStatus("Adding " + system + ", please wait...");
+
+                            String[] ipinfo = system.Split('|');
+                            lvwItm.Text = ipinfo[1];
+                            lvwItm.SubItems.Add(ipinfo[2]);
+                            lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
+                            lvwItm.SubItems.Add("Up");
+                            lvwItm.SubItems.Add("Not Installed");
+                            lvwItm.SubItems.Add("0");
+                            lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+
+                            lvwItm.ImageIndex = 2;
+                            lvwSystems.Items.Add(lvwItm);
+                            lvwSystems.Refresh();
+
+                            pbStatus.Value += 1;
+                        }
+                    }
+                    lvwSystems.EndUpdate();
+                }
+                rslts = null;
+                HideProgress();
+                btnCancelScan.Enabled = false;
+                lblStatus.Text = "Ready"; 
+            }            
         }
 
         private void RunScript()
@@ -304,28 +329,60 @@ namespace psframework
         #region Status
         public void SetStatus(String message)
         {
-            lblStatus.Text = message;
-            Application.DoEvents();
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    SetStatus(message);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                lblStatus.Text = message;
+            }
         }
         #endregion
 
         #region ProgressBar
         public void SetProgress(int Value, int Maximum)
         {
-            pbStatus.Visible = true;
-            if (pbStatus.Maximum != Maximum)
+            if (this.InvokeRequired)
             {
-                pbStatus.Maximum = Maximum;
+                MethodInvoker del = delegate
+                {
+                    SetProgress(Value, Maximum);
+                };
+                this.Invoke(del);
             }
-            if (Value <= Maximum)
+            else
             {
-                pbStatus.Value = Value;            
-            }
+                pbStatus.Visible = true;
+                if (pbStatus.Maximum != Maximum)
+                {
+                    pbStatus.Maximum = Maximum;
+                }
+                if (Value <= Maximum)
+                {
+                    pbStatus.Value = Value;
+                }
+            }            
         }
 
         public void HideProgress()
         {
-            pbStatus.Visible = false;
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    HideProgress();
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                pbStatus.Visible = false;
+            }            
         }
         #endregion
 

@@ -85,6 +85,8 @@
       <DependentUpon>frmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Network\NetworkBrowser.cs" />
+    <Compile Include="Network\ScanEventArgs.cs" />
+    <Compile Include="Network\ScanIP.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ExportObject.cs" />
