@@ -42,9 +42,8 @@ namespace psframework.Network
         #region Scan
         public ArrayList ScanActiveDirectory(String domain)
         {
-            systems.Clear();
             ClearArpTable();
-            ArrayList systems = new ArrayList();
+            systems.Clear();
             DirectoryEntry hostPC = new DirectoryEntry();
             hostPC.Path = "WinNT://" + domain;
 
