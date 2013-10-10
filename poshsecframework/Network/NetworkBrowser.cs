@@ -42,6 +42,7 @@ namespace psframework.Network
         #region Scan
         public ArrayList ScanActiveDirectory(String domain)
         {
+            systems.Clear();
             ClearArpTable();
             ArrayList systems = new ArrayList();
             DirectoryEntry hostPC = new DirectoryEntry();
@@ -60,7 +61,8 @@ namespace psframework.Network
         }
 
         public void ScanbyIP()
-        {            
+        {
+            systems.Clear();
             ClearArpTable();
             String[] localIPs = GetIP(Dns.GetHostName()).Split(',');
             String localIP = localIPs[0];
