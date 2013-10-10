@@ -49,6 +49,7 @@ namespace psframework
             Initialize();
             GetNetworks();
             scnr.ScanComplete += scnr_ScanComplete;
+            scnr.ScanCancelled += scnr_ScanCancelled;
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -268,8 +269,8 @@ namespace psframework
                             SetStatus("Adding " + system + ", please wait...");
 
                             String[] ipinfo = system.Split('|');
-                            lvwItm.Text = ipinfo[1];
-                            lvwItm.SubItems.Add(ipinfo[2]);
+                            lvwItm.Text = ipinfo[2];
+                            lvwItm.SubItems.Add(ipinfo[1]);
                             lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
                             lvwItm.SubItems.Add("Up");
                             lvwItm.SubItems.Add("Not Installed");
@@ -286,9 +287,27 @@ namespace psframework
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
+            }
+            HideProgress();
+            btnCancelScan.Enabled = false;
+            lblStatus.Text = "Ready";
+        }
+
+        private void scnr_ScanCancelled(object sender, EventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    scnr_ScanCancelled(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
                 HideProgress();
                 btnCancelScan.Enabled = false;
-                lblStatus.Text = "Ready"; 
+                lblStatus.Text = "Ready";
             }            
         }
 

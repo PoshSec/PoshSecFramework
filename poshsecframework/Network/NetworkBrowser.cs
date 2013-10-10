@@ -20,11 +20,11 @@ namespace psframework.Network
         String arp = "";
         ArrayList systems = new ArrayList();
         Collection<Thread> thds = new Collection<Thread>();
-        bool waiting = false;
         #endregion
 
         #region Public Events
         public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanComplete;
+        public event EventHandler<EventArgs> ScanCancelled;
         #endregion
 
         #region Initialize
@@ -89,7 +89,6 @@ namespace psframework.Network
                 {
                     frm.SetProgress(0, 255);
                     int ip = 1;
-                    waiting = false;
                     do
                     {
                         String host = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip.ToString();
@@ -104,7 +103,7 @@ namespace psframework.Network
                         thds.Add(thd);
                         thd.Start();
                         ip++;
-                    } while(ip < 255 && !frm.CancelIPScan);
+                    } while (ip < 255 && !frm.CancelIPScan);
                     frm.SetStatus("Waiting for hostname responses, please wait...");
                     do
                     {
@@ -118,7 +117,11 @@ namespace psframework.Network
 
                     OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
                 }
-            }            
+            }
+            else
+            {
+                OnScanCancelled(new EventArgs());
+            }
         }
 
         void scn_ScanIPComplete(object sender, poshsecframework.Network.ScanEventArgs e)
@@ -354,6 +357,17 @@ namespace psframework.Network
         private void OnScanComplete(poshsecframework.Network.ScanEventArgs e)
         {
             EventHandler<poshsecframework.Network.ScanEventArgs> handler = ScanComplete;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        #endregion
+
+        #region ScanCancelled
+        private void OnScanCancelled(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = ScanCancelled;
             if (handler != null)
             {
                 handler(this, e);
