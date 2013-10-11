@@ -353,6 +353,9 @@ namespace psframework.PShell
                 case "<boolean>":
                     rtn = typeof(Boolean);
                     break;
+                case "<int32>":
+                    rtn = typeof(int);
+                    break;
                 default:
                     rtn = typeof(Object);
                     break;

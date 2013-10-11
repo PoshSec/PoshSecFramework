@@ -74,6 +74,8 @@ function Get-RemoteRegistryValue {
         $value = $reg.GetStringValue($hkeyint, $path, $val)
         if($value){
           $regval = New-Object PSObject
+          $regval | Add-Member -MemberType NoteProperty -Name "Computer" -Value $computer
+          $regval | Add-Member -MemberType NoteProperty -Name "Path" -Value $path
           $regval | Add-Member -MemberType NoteProperty -Name "Name" -Value $val
           $regval | Add-Member -MemberType NoteProperty -Name "Value" -Value $value.sValue
           $rtn += $regval
