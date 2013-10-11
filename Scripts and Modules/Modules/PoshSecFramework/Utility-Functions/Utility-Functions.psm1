@@ -1,1 +1,6 @@
 ﻿. (Join-Path $PSScriptRoot Confirm-SecIsAdministrator.ps1)
+. (Join-Path $PSScriptRoot Set-PSRemoting.ps1)
+. (Join-Path $PSScriptRoot Get-RemoteRegistry.ps1)
+. (Join-Path $PSScriptRoot Get-RemoteRegistryValue.ps1)
+. (Join-Path $PSScriptRoot Get-RemoteRegistryKey.ps1)
+. (Join-Path $PSScriptRoot Get-RemotePSVersion.ps1)
