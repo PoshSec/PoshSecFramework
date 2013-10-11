@@ -72,6 +72,8 @@ function Get-RemoteRegistryKey {
     if($keys) {
       foreach($key in $keys) {
         $regval = New-Object PSObject
+        $regval | Add-Member -MemberType NoteProperty -Name "Computer" -Value $computer
+        $regval | Add-Member -MemberType NoteProperty -Name "Path" -Value $path
         $regval | Add-Member -MemberType NoteProperty -Name "Key" -Value $key
         $rtn += $regval        
       }
