@@ -26,5 +26,5 @@ function Get-RemoteRegistry {
     [string]$computer
   )
   
-  return Get-WmiObject -List -Namespace root\default -ComputerName $computer | Where-Object { $_.Name -eq "StdRegProv" }
+  return Get-WmiObject -Class StdRegProv -List -Namespace root\default -ComputerName $computer
 }
