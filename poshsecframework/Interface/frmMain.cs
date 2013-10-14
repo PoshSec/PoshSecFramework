@@ -769,7 +769,7 @@ namespace psframework
         {
             try
             {
-                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString(); ; // Get this variable from Settings.
+                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
                     String[] scpaths = Directory.GetFiles(scriptroot, "*.ps1", SearchOption.TopDirectoryOnly);
