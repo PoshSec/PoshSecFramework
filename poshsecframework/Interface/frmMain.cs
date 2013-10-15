@@ -621,7 +621,10 @@ namespace psframework
         {
             try
             {
-                cmdhist.Add(cmd);
+                if (cmd.Trim() != "")
+                {
+                    cmdhist.Add(cmd);
+                }                
                 cmdhistidx = cmdhist.Count;
                 switch (cmd.ToUpper())
                 { 
