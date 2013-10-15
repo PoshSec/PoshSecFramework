@@ -220,7 +220,7 @@ namespace psframework.Network
                 String[] ips = ipaddr.Split(',');
                 foreach (String ip in ips)
                 {
-                    int ipidx = arp.IndexOf(ip, 0);
+                    int ipidx = arp.IndexOf(ip + " ", 0);
                     if (ipidx > -1)
                     {
                         String mac = arp.Substring(ipidx, 39).Replace(ip, "").Trim();
