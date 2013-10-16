@@ -319,7 +319,14 @@ namespace psframework
                 //This needs to be a separate runspace.
                 PShell.pshell ps = new PShell.pshell();
                 ps.ParentForm = this;
-                ps.Run(lvw.Text);
+                if (lvw.Group.Header != null && lvw.Group.Header != "General")
+                {
+                    ps.Run(Path.Combine(lvw.Group.Header, lvw.Text));
+                }
+                else
+                {
+                    ps.Run(lvw.Text);
+                }                
                 ps = null;
             }
         }
@@ -772,33 +779,51 @@ namespace psframework
         {
             try
             {
+                lvwScripts.BeginUpdate();
+                lvwScripts.Items.Clear();
                 String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
-                    String[] scpaths = Directory.GetFiles(scriptroot, "*.ps1", SearchOption.TopDirectoryOnly);
-                    if (scpaths != null)
-                    {
-                        lvwScripts.BeginUpdate();
-                        lvwScripts.Items.Clear();
-                        foreach (String scpath in scpaths)
-                        {
-                            ListViewItem lvw = new ListViewItem();
-                            lvw.Text = new FileInfo(scpath).Name;
-                            lvw.ImageIndex = 4;
-                            lvw.Tag = scpath;
-                            lvwScripts.Items.Add(lvw);
-                        }
-                        lvwScripts.EndUpdate();
-                    }
+                    AddLibraryItem(scriptroot);
                 }
                 else
                 { 
                     AddAlert("Unable to find the Script Path. Check your settings", PShell.psmethods.PSAlert.AlertType.Error, "PoshSec Framework");
                 }
+                lvwScripts.EndUpdate();
             }
             catch (Exception e)
             {
                 DisplayError(e);
+            }
+        }
+
+        private void AddLibraryItem(String scriptroot, String group = "General")
+        {
+            String[] scpaths = Directory.GetFiles(scriptroot, "*.ps1", SearchOption.TopDirectoryOnly);
+            if (scpaths != null)
+            {
+                ListViewGroup lvwg = new ListViewGroup(group);
+                lvwScripts.Groups.Add(lvwg);
+                foreach (String scpath in scpaths)
+                {
+                    ListViewItem lvw = new ListViewItem();
+                    lvw.Text = new FileInfo(scpath).Name;
+                    lvw.ImageIndex = 4;
+                    lvw.Tag = scpath;
+                    lvw.Group = lvwg;
+                    lvwScripts.Items.Add(lvw);
+                }
+            }
+            String[] folders = Directory.GetDirectories(scriptroot);
+            if (folders != null && folders.Length > 0)
+            {
+                foreach (String folder in folders)
+                { 
+                    DirectoryInfo diri = new DirectoryInfo(folder);
+                    AddLibraryItem(folder, diri.Name);
+                    diri = null;
+                }
             }
         }
         #endregion
@@ -808,6 +833,31 @@ namespace psframework
         {
             DisplayOutput(Environment.NewLine + "Unhandled exception." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, true);
             tcMain.SelectedTab = tbpPowerShell;
+        }
+        #endregion
+
+        #endregion
+
+        #region Public Methods
+
+        #region Interface
+        public System.Windows.Forms.DialogResult ShowParams(psframework.PShell.psparamtype parm)
+        {
+            if (this.InvokeRequired)
+            {
+                return (System.Windows.Forms.DialogResult)this.Invoke((Func<System.Windows.Forms.DialogResult>)delegate
+                {
+                    return ShowParams(parm);
+                });
+            }
+            else
+            {
+                DialogResult rslt = System.Windows.Forms.DialogResult.Cancel;
+                Interface.frmParams frmi = new Interface.frmParams();
+                frmi.SetParameters(parm);
+                rslt = frmi.ShowDialog(this);
+                return rslt;
+            }
         }
         #endregion
 
