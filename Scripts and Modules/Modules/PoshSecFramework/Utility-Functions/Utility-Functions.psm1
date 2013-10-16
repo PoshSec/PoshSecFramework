@@ -8,3 +8,4 @@
 . (Join-Path $PSScriptRoot Get-RemoteArchitecture.ps1)
 . (Join-Path $PSScriptRoot Get-RemoteNETVersion.ps1)
 . (Join-Path $PSScriptRoot Get-RemoteProcess.ps1)
+. (Join-Path $PSScriptRoot Set-PSRemoting.ps1)
