@@ -48,9 +48,9 @@ function Execute-RemoteProcess{
   
   if($process) {
     if($arguments) {
-      $command = $command + " " + $arguments
+      $command = $command + " " + '"' + $arguments + '"'
     }
     
-    return $process.Create($command, $null, $psi)
+    return $process.Create($command)
   }
 }
