@@ -327,10 +327,7 @@ namespace psframework.PShell
             GC.Collect();
             if (parm.Properties.Count > 0)
             {
-                Interface.frmParams frm = new Interface.frmParams();
-                frm.SetParameters(parm);
-                frm.TopMost = true;
-                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (frm.ShowParams(parm) == System.Windows.Forms.DialogResult.OK)
                 {
                     parms = parm.Properties;
                 }
