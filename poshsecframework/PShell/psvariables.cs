@@ -43,6 +43,18 @@ namespace psframework.PShell
                 get { return psf; }
             }
         }
+
+        public class PSExec : PSVariable
+        {
+            private String psexec = poshsecframework.Properties.Settings.Default.PSExecPath;
+
+            public PSExec(string name) : base(name) { }
+
+            public override Object Value
+            {
+                get { return psexec; }
+            }
+        }
     }
 
 }

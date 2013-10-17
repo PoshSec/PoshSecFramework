@@ -27,6 +27,7 @@ namespace poshsecframework.Interface
             txtScriptDirectory.Text = Properties.Settings.Default.ScriptPath;
             txtFrameworkFile.Text = Properties.Settings.Default.FrameworkPath;
             txtModuleDirectory.Text = Properties.Settings.Default.ModulePath;
+            txtPSExecPath.Text = Properties.Settings.Default.PSExecPath;
             cmbScriptDefAction.SelectedIndex = Properties.Settings.Default.ScriptDefaultAction;
         }
 
@@ -38,6 +39,7 @@ namespace poshsecframework.Interface
                 Properties.Settings.Default["FrameworkPath"] = txtFrameworkFile.Text;
                 Properties.Settings.Default["ModulePath"] = txtModuleDirectory.Text;
                 Properties.Settings.Default["ScriptDefaultAction"] = cmbScriptDefAction.SelectedIndex;
+                Properties.Settings.Default["PSExecPath"] = txtPSExecPath.Text;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -94,6 +96,20 @@ namespace poshsecframework.Interface
             if (dlgFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 txtModuleDirectory.Text = dlgFolder.SelectedPath;
+            }
+        }
+
+        private void btnBrowsePSExec_Click(object sender, EventArgs e)
+        {
+            dlgFile.Title = "Select the PSExec File.";
+            dlgFile.FileName = "*psexec.exe";
+            if (File.Exists(txtPSExecPath.Text))
+            {
+                dlgFile.InitialDirectory = new FileInfo(txtPSExecPath.Text).Directory.ToString();
+            }                        
+            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtPSExecPath.Text = dlgFile.FileName;
             }
         }
     }

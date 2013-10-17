@@ -27,6 +27,7 @@ namespace psframework.PShell
         private psvariables.PSRoot PSRoot;
         private psvariables.PSModRoot PSModRoot;
         private psvariables.PSFramework PSFramework;
+        private psvariables.PSExec PSExec;
         private psmethods.PSMessageBox PSMessageBox;
         private psmethods.PSAlert PSAlert;
         private psmethods.PSStatus PSStatus;
@@ -56,12 +57,14 @@ namespace psframework.PShell
                 PSStatus = new psmethods.PSStatus(frm, scriptlvw);
                 PSModRoot = new psvariables.PSModRoot("PSModRoot");
                 PSFramework = new psvariables.PSFramework("PSFramework");
+                PSExec = new psvariables.PSExec("PSExec");
                 PSMessageBox = new psmethods.PSMessageBox();
                 PSTab = new psmethods.PSTab(frm);
                 PSHosts = new psmethods.PSHosts(frm);
                 rspace.SessionStateProxy.PSVariable.Set(PSRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSFramework);
+                rspace.SessionStateProxy.PSVariable.Set(PSExec);
                 rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
                 rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
                 rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);

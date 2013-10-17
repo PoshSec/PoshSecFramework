@@ -32,11 +32,6 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbpGeneral = new System.Windows.Forms.TabPage();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.gbScriptSetting = new System.Windows.Forms.GroupBox();
-            this.cmbScriptDefAction = new System.Windows.Forms.ComboBox();
-            this.lblScriptDefAction = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtModuleDirectory = new System.Windows.Forms.TextBox();
             this.btnBrowseModule = new System.Windows.Forms.Button();
@@ -50,14 +45,24 @@
             this.btnBrowseScript = new System.Windows.Forms.Button();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.txtPSExecPath = new System.Windows.Forms.TextBox();
+            this.btnBrowsePSExec = new System.Windows.Forms.Button();
+            this.lblPSExecPath = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.gbScriptSetting = new System.Windows.Forms.GroupBox();
+            this.cmbScriptDefAction = new System.Windows.Forms.ComboBox();
+            this.lblScriptDefAction = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
-            this.panel6.SuspendLayout();
-            this.gbScriptSetting.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.gbScriptSetting.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -65,7 +70,7 @@
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 210);
+            this.panel1.Location = new System.Drawing.Point(0, 232);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(460, 34);
             this.panel1.TabIndex = 0;
@@ -94,68 +99,17 @@
             // 
             this.tbpGeneral.Controls.Add(this.panel6);
             this.tbpGeneral.Controls.Add(this.panel5);
+            this.tbpGeneral.Controls.Add(this.panel7);
             this.tbpGeneral.Controls.Add(this.panel4);
             this.tbpGeneral.Controls.Add(this.panel3);
             this.tbpGeneral.Controls.Add(this.panel2);
             this.tbpGeneral.Location = new System.Drawing.Point(4, 22);
             this.tbpGeneral.Name = "tbpGeneral";
             this.tbpGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpGeneral.Size = new System.Drawing.Size(452, 184);
+            this.tbpGeneral.Size = new System.Drawing.Size(452, 206);
             this.tbpGeneral.TabIndex = 0;
             this.tbpGeneral.Text = "General";
             this.tbpGeneral.UseVisualStyleBackColor = true;
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.gbScriptSetting);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(3, 100);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(446, 79);
-            this.panel6.TabIndex = 4;
-            // 
-            // gbScriptSetting
-            // 
-            this.gbScriptSetting.Controls.Add(this.cmbScriptDefAction);
-            this.gbScriptSetting.Controls.Add(this.lblScriptDefAction);
-            this.gbScriptSetting.Dock = System.Windows.Forms.DockStyle.Left;
-            this.gbScriptSetting.Location = new System.Drawing.Point(0, 0);
-            this.gbScriptSetting.Name = "gbScriptSetting";
-            this.gbScriptSetting.Size = new System.Drawing.Size(200, 79);
-            this.gbScriptSetting.TabIndex = 0;
-            this.gbScriptSetting.TabStop = false;
-            this.gbScriptSetting.Text = "Scripts";
-            // 
-            // cmbScriptDefAction
-            // 
-            this.cmbScriptDefAction.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cmbScriptDefAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbScriptDefAction.FormattingEnabled = true;
-            this.cmbScriptDefAction.Items.AddRange(new object[] {
-            "Run Script",
-            "View Script"});
-            this.cmbScriptDefAction.Location = new System.Drawing.Point(3, 40);
-            this.cmbScriptDefAction.Name = "cmbScriptDefAction";
-            this.cmbScriptDefAction.Size = new System.Drawing.Size(194, 21);
-            this.cmbScriptDefAction.TabIndex = 1;
-            // 
-            // lblScriptDefAction
-            // 
-            this.lblScriptDefAction.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblScriptDefAction.Location = new System.Drawing.Point(3, 17);
-            this.lblScriptDefAction.Name = "lblScriptDefAction";
-            this.lblScriptDefAction.Size = new System.Drawing.Size(194, 23);
-            this.lblScriptDefAction.TabIndex = 0;
-            this.lblScriptDefAction.Text = "Double Click Default Action:";
-            this.lblScriptDefAction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel5
-            // 
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(3, 81);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(446, 19);
-            this.panel5.TabIndex = 3;
             // 
             // panel4
             // 
@@ -284,15 +238,107 @@
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
-            this.tcSettings.Size = new System.Drawing.Size(460, 210);
+            this.tcSettings.Size = new System.Drawing.Size(460, 232);
             this.tcSettings.TabIndex = 1;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.txtPSExecPath);
+            this.panel7.Controls.Add(this.btnBrowsePSExec);
+            this.panel7.Controls.Add(this.lblPSExecPath);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(3, 81);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(446, 26);
+            this.panel7.TabIndex = 5;
+            // 
+            // txtPSExecPath
+            // 
+            this.txtPSExecPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPSExecPath.Location = new System.Drawing.Point(111, 0);
+            this.txtPSExecPath.Name = "txtPSExecPath";
+            this.txtPSExecPath.Size = new System.Drawing.Size(309, 21);
+            this.txtPSExecPath.TabIndex = 2;
+            // 
+            // btnBrowsePSExec
+            // 
+            this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowsePSExec.Name = "btnBrowsePSExec";
+            this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowsePSExec.TabIndex = 1;
+            this.btnBrowsePSExec.UseVisualStyleBackColor = true;
+            this.btnBrowsePSExec.Click += new System.EventHandler(this.btnBrowsePSExec_Click);
+            // 
+            // lblPSExecPath
+            // 
+            this.lblPSExecPath.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblPSExecPath.Location = new System.Drawing.Point(0, 0);
+            this.lblPSExecPath.Name = "lblPSExecPath";
+            this.lblPSExecPath.Size = new System.Drawing.Size(111, 26);
+            this.lblPSExecPath.TabIndex = 0;
+            this.lblPSExecPath.Text = "PSExec Path:";
+            this.lblPSExecPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel5
+            // 
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(3, 107);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(446, 19);
+            this.panel5.TabIndex = 6;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.gbScriptSetting);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel6.Location = new System.Drawing.Point(3, 126);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(446, 79);
+            this.panel6.TabIndex = 7;
+            // 
+            // gbScriptSetting
+            // 
+            this.gbScriptSetting.Controls.Add(this.cmbScriptDefAction);
+            this.gbScriptSetting.Controls.Add(this.lblScriptDefAction);
+            this.gbScriptSetting.Dock = System.Windows.Forms.DockStyle.Left;
+            this.gbScriptSetting.Location = new System.Drawing.Point(0, 0);
+            this.gbScriptSetting.Name = "gbScriptSetting";
+            this.gbScriptSetting.Size = new System.Drawing.Size(200, 79);
+            this.gbScriptSetting.TabIndex = 0;
+            this.gbScriptSetting.TabStop = false;
+            this.gbScriptSetting.Text = "Scripts";
+            // 
+            // cmbScriptDefAction
+            // 
+            this.cmbScriptDefAction.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cmbScriptDefAction.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbScriptDefAction.FormattingEnabled = true;
+            this.cmbScriptDefAction.Items.AddRange(new object[] {
+            "Run Script",
+            "View Script"});
+            this.cmbScriptDefAction.Location = new System.Drawing.Point(3, 40);
+            this.cmbScriptDefAction.Name = "cmbScriptDefAction";
+            this.cmbScriptDefAction.Size = new System.Drawing.Size(194, 21);
+            this.cmbScriptDefAction.TabIndex = 1;
+            // 
+            // lblScriptDefAction
+            // 
+            this.lblScriptDefAction.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblScriptDefAction.Location = new System.Drawing.Point(3, 17);
+            this.lblScriptDefAction.Name = "lblScriptDefAction";
+            this.lblScriptDefAction.Size = new System.Drawing.Size(194, 23);
+            this.lblScriptDefAction.TabIndex = 0;
+            this.lblScriptDefAction.Text = "Double Click Default Action:";
+            this.lblScriptDefAction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(460, 244);
+            this.ClientSize = new System.Drawing.Size(460, 266);
             this.ControlBox = false;
             this.Controls.Add(this.tcSettings);
             this.Controls.Add(this.panel1);
@@ -307,8 +353,6 @@
             this.Text = "Settings";
             this.panel1.ResumeLayout(false);
             this.tbpGeneral.ResumeLayout(false);
-            this.panel6.ResumeLayout(false);
-            this.gbScriptSetting.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -316,6 +360,10 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tcSettings.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.gbScriptSetting.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -329,11 +377,6 @@
         private System.Windows.Forms.TextBox txtScriptDirectory;
         private System.Windows.Forms.Button btnBrowseScript;
         private System.Windows.Forms.Label lblScriptDirectory;
-        private System.Windows.Forms.Panel panel6;
-        private System.Windows.Forms.GroupBox gbScriptSetting;
-        private System.Windows.Forms.ComboBox cmbScriptDefAction;
-        private System.Windows.Forms.Label lblScriptDefAction;
-        private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.TextBox txtModuleDirectory;
         private System.Windows.Forms.Button btnBrowseModule;
@@ -344,5 +387,14 @@
         private System.Windows.Forms.Label lblFrameworkDirectory;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.GroupBox gbScriptSetting;
+        private System.Windows.Forms.ComboBox cmbScriptDefAction;
+        private System.Windows.Forms.Label lblScriptDefAction;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.TextBox txtPSExecPath;
+        private System.Windows.Forms.Button btnBrowsePSExec;
+        private System.Windows.Forms.Label lblPSExecPath;
     }
 }
