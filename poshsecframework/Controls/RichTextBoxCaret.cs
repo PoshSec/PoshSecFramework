@@ -125,8 +125,15 @@ namespace poshsecframework.Controls
             //Adjust as necessary.
             sz.Width = 8;
             sz.Height = 13;
-            CreateCaret(this.Handle, bmp.GetHbitmap(Color.White), sz.Width, sz.Height);
-            ShowCaret(this.Handle);
+            try
+            {
+                CreateCaret(this.Handle, bmp.GetHbitmap(Color.White), sz.Width, sz.Height);
+                ShowCaret(this.Handle);
+            }
+            catch (Exception)
+            { 
+                //fail silently
+            }
         }
 
         public List<String> AutoCompleteCommands
