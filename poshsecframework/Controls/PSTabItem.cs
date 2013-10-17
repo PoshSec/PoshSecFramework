@@ -24,7 +24,7 @@ namespace poshsecframework.Controls
             tbTools.GripStyle = ToolStripGripStyle.Hidden;
             ToolStripButton tbClose = new ToolStripButton();
             tbClose.Text = "Close";
-            tbClose.Image = Properties.Resources.tab_close_3;
+            tbClose.Image = Properties.Resources.tabclose3;
             tbClose.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             tbClose.ToolTipText = "Close Tab";
             tbClose.Alignment = ToolStripItemAlignment.Right;

@@ -179,7 +179,7 @@
             // btnBrowseModule
             // 
             this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.document_open_folder;
+            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
             this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
             this.btnBrowseModule.Name = "btnBrowseModule";
             this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
@@ -219,7 +219,7 @@
             // btnBrowseFramework
             // 
             this.btnBrowseFramework.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseFramework.Image = global::poshsecframework.Properties.Resources.document_open_folder;
+            this.btnBrowseFramework.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
             this.btnBrowseFramework.Location = new System.Drawing.Point(420, 0);
             this.btnBrowseFramework.Name = "btnBrowseFramework";
             this.btnBrowseFramework.Size = new System.Drawing.Size(26, 26);
@@ -259,7 +259,7 @@
             // btnBrowseScript
             // 
             this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.document_open_folder;
+            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
             this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
             this.btnBrowseScript.Name = "btnBrowseScript";
             this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);

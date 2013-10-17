@@ -30,9 +30,9 @@ namespace psframework
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Local Network");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Local Network");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
+            treeNode1});
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScan = new System.Windows.Forms.ToolStripMenuItem();
@@ -197,9 +197,9 @@ namespace psframework
             // 
             // mnuOptions
             // 
-            this.mnuOptions.Image = global::poshsecframework.Properties.Resources.system_settings;
+            this.mnuOptions.Image = global::poshsecframework.Properties.Resources.systemsettings;
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(152, 22);
+            this.mnuOptions.Size = new System.Drawing.Size(125, 22);
             this.mnuOptions.Text = "Options...";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
             // 
@@ -399,7 +399,7 @@ namespace psframework
             // btnRefreshScripts
             // 
             this.btnRefreshScripts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshScripts.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnRefreshScripts.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnRefreshScripts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshScripts.Name = "btnRefreshScripts";
             this.btnRefreshScripts.Size = new System.Drawing.Size(23, 22);
@@ -421,7 +421,7 @@ namespace psframework
             // 
             this.btnViewScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnViewScript.Enabled = false;
-            this.btnViewScript.Image = global::poshsecframework.Properties.Resources.document_open_7;
+            this.btnViewScript.Image = global::poshsecframework.Properties.Resources.documentopen7;
             this.btnViewScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnViewScript.Name = "btnViewScript";
             this.btnViewScript.Size = new System.Drawing.Size(23, 22);
@@ -538,7 +538,7 @@ namespace psframework
             // 
             this.btnLibraryRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnLibraryRefresh.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnLibraryRefresh.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnLibraryRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnLibraryRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLibraryRefresh.Name = "btnLibraryRefresh";
             this.btnLibraryRefresh.Size = new System.Drawing.Size(23, 22);
@@ -551,7 +551,7 @@ namespace psframework
             this.btnShowAliases.Checked = true;
             this.btnShowAliases.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowAliases.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowAliases.Image = global::poshsecframework.Properties.Resources.tag_red;
+            this.btnShowAliases.Image = global::poshsecframework.Properties.Resources.tagred;
             this.btnShowAliases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowAliases.Name = "btnShowAliases";
             this.btnShowAliases.Size = new System.Drawing.Size(23, 22);
@@ -563,7 +563,7 @@ namespace psframework
             this.btnShowFunctions.Checked = true;
             this.btnShowFunctions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowFunctions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowFunctions.Image = global::poshsecframework.Properties.Resources.tag_blue;
+            this.btnShowFunctions.Image = global::poshsecframework.Properties.Resources.tagblue;
             this.btnShowFunctions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowFunctions.Name = "btnShowFunctions";
             this.btnShowFunctions.Size = new System.Drawing.Size(23, 22);
@@ -576,7 +576,7 @@ namespace psframework
             this.btnShowCmdlets.Checked = true;
             this.btnShowCmdlets.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowCmdlets.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowCmdlets.Image = global::poshsecframework.Properties.Resources.tag_green;
+            this.btnShowCmdlets.Image = global::poshsecframework.Properties.Resources.taggreen;
             this.btnShowCmdlets.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowCmdlets.Name = "btnShowCmdlets";
             this.btnShowCmdlets.Size = new System.Drawing.Size(23, 22);
@@ -594,15 +594,15 @@ namespace psframework
             this.tvwNetworks.ImageList = this.imgList16;
             this.tvwNetworks.Location = new System.Drawing.Point(0, 25);
             this.tvwNetworks.Name = "tvwNetworks";
-            treeNode3.ImageKey = "Diagram.png";
-            treeNode3.Name = "ndNone";
-            treeNode3.SelectedImageKey = "Diagram.png";
-            treeNode3.Tag = "1";
-            treeNode3.Text = "Local Network";
-            treeNode4.Name = "ndNetwork";
-            treeNode4.Text = "Networks";
+            treeNode1.ImageKey = "Diagram.png";
+            treeNode1.Name = "ndNone";
+            treeNode1.SelectedImageKey = "Diagram.png";
+            treeNode1.Tag = "1";
+            treeNode1.Text = "Local Network";
+            treeNode2.Name = "ndNetwork";
+            treeNode2.Text = "Networks";
             this.tvwNetworks.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode4});
+            treeNode2});
             this.tvwNetworks.SelectedImageIndex = 1;
             this.tvwNetworks.ShowPlusMinus = false;
             this.tvwNetworks.ShowRootLines = false;
@@ -623,7 +623,7 @@ namespace psframework
             // btnRefreshNetworks
             // 
             this.btnRefreshNetworks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshNetworks.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnRefreshNetworks.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnRefreshNetworks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshNetworks.Name = "btnRefreshNetworks";
             this.btnRefreshNetworks.Size = new System.Drawing.Size(23, 22);
@@ -634,7 +634,7 @@ namespace psframework
             // 
             this.btnCancelScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnCancelScan.Enabled = false;
-            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialog_cancel_5;
+            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialogcancel;
             this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
@@ -875,7 +875,7 @@ namespace psframework
             // btnClearAlerts
             // 
             this.btnClearAlerts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClearAlerts.Image = global::poshsecframework.Properties.Resources.edit_clear_list;
+            this.btnClearAlerts.Image = global::poshsecframework.Properties.Resources.editclearlist;
             this.btnClearAlerts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClearAlerts.Name = "btnClearAlerts";
             this.btnClearAlerts.Size = new System.Drawing.Size(23, 22);
@@ -886,7 +886,7 @@ namespace psframework
             // btnAlert_MarkResolved
             // 
             this.btnAlert_MarkResolved.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_MarkResolved.Image = global::poshsecframework.Properties.Resources.dialog_accept;
+            this.btnAlert_MarkResolved.Image = global::poshsecframework.Properties.Resources.dialogaccept;
             this.btnAlert_MarkResolved.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_MarkResolved.Name = "btnAlert_MarkResolved";
             this.btnAlert_MarkResolved.Size = new System.Drawing.Size(23, 22);
@@ -909,7 +909,7 @@ namespace psframework
             this.btnAlert_Delete.Checked = true;
             this.btnAlert_Delete.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Delete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Delete.Image = global::poshsecframework.Properties.Resources.dialog_information_4;
+            this.btnAlert_Delete.Image = global::poshsecframework.Properties.Resources.dialoginformation4;
             this.btnAlert_Delete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Delete.Name = "btnAlert_Delete";
             this.btnAlert_Delete.Size = new System.Drawing.Size(23, 22);
@@ -921,7 +921,7 @@ namespace psframework
             this.toolStripButton6.Checked = true;
             this.toolStripButton6.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton6.Image = global::poshsecframework.Properties.Resources.dialog_error_4;
+            this.toolStripButton6.Image = global::poshsecframework.Properties.Resources.dialogerror4;
             this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton6.Name = "toolStripButton6";
             this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
@@ -932,7 +932,7 @@ namespace psframework
             this.toolStripButton7.Checked = true;
             this.toolStripButton7.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton7.Image = global::poshsecframework.Properties.Resources.dialog_warning_3;
+            this.toolStripButton7.Image = global::poshsecframework.Properties.Resources.dialogwarning3;
             this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton7.Name = "toolStripButton7";
             this.toolStripButton7.Size = new System.Drawing.Size(23, 22);
@@ -943,7 +943,7 @@ namespace psframework
             this.toolStripButton8.Checked = true;
             this.toolStripButton8.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton8.Image = global::poshsecframework.Properties.Resources.dialog_warning_2;
+            this.toolStripButton8.Image = global::poshsecframework.Properties.Resources.dialogwarning2;
             this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton8.Name = "toolStripButton8";
             this.toolStripButton8.Size = new System.Drawing.Size(23, 22);
