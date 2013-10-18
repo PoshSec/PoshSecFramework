@@ -1100,7 +1100,6 @@ namespace psframework
                     }
                     break;
             }
-            txtPShellOutput.DrawCaret();
         }
         #endregion
 

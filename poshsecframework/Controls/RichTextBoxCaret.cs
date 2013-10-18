@@ -19,7 +19,11 @@ namespace poshsecframework.Controls
         List<String> cmds = null;
         List<String> acmds = null;
         int cmdstart = 0;
-        int cmdstop = 0; 
+        int cmdstop = 0;
+        const int WM_USER = 0x0400;
+        const int WM_NOTIFY = 0x004E;
+        const int WM_REFLECT = WM_USER + 0x1C00;
+        const int WM_PAINT = 0xF;
 
         public RichTextBoxCaret()
         {
@@ -31,28 +35,20 @@ namespace poshsecframework.Controls
             this.KeyDown += this_KeyDown;
         }
 
-        protected override void OnMouseHover(EventArgs e)
-        {
-            base.OnMouseHover(e);
-            this.DrawCaret();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            this.DrawCaret();
-        }
-
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            this.DrawCaret();
+            DrawCaret();
         }
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
+        protected override void WndProc(ref Message m)
         {
-            base.OnKeyPress(e);
-            this.DrawCaret();
+            base.WndProc(ref m);
+
+            if ((m.Msg == (WM_REFLECT + WM_NOTIFY)) || (m.Msg == WM_PAINT))
+            {
+                DrawCaret();
+            }
         }
 
         private void this_KeyDown(object sender, KeyEventArgs e)
@@ -71,7 +67,6 @@ namespace poshsecframework.Controls
                 tbidx = 0;
                 filter = true;
             }
-            this.DrawCaret();
         }
 
         private void AutoComplete()
@@ -102,7 +97,6 @@ namespace poshsecframework.Controls
                 {
                     tbidx = 0;
                 }
-                this.DrawCaret();
             }
         }
 
