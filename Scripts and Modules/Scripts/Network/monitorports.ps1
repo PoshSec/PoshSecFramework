@@ -2,13 +2,13 @@
 .DESCRIPTION
 This script is for active monitoring of ports on a specified machine.
 
-.FRAMEWORK
+FRAMEWORK
 PoshSec Framework
 
-.FRAMEWORKVERSION
+FRAMEWORKVERSION
 0.2.0.0
 
-.AUTHOR
+AUTHOR
 Ben0xA
 #>
 
