@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     [TypeConverter(typeof(psparamtype.psparamobject))]
     public class psparamtype

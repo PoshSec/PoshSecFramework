@@ -14,8 +14,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework
+namespace poshsecframework
 {
     public partial class frmMain : Form
     {
@@ -58,7 +59,7 @@ namespace psframework
             {
                 if (lvwActiveScripts.Items.Count > 0)
                 {
-                    if (MessageBox.Show("You have active scripts running. If you exit, all running scripts will be terminated. Are you sure you want to exit?", "Active Scripts", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBox.Show(StringValue.ActiveScriptsRunning, "Active Scripts", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
                         foreach (ListViewItem lvw in lvwActiveScripts.Items)
                         {
@@ -91,7 +92,7 @@ namespace psframework
         {
             CheckSettings();
             psf = new PShell.pshell();
-            txtPShellOutput.Text = "psf > ";
+            txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
             scnr.ParentForm = this;
@@ -106,7 +107,7 @@ namespace psframework
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
             TreeNode lnode = new TreeNode();
-            lnode.Text = "Local Network";
+            lnode.Text = StringValue.LocalNetwork;
             lnode.ImageIndex = 3;
             lnode.SelectedImageIndex = 3;
             lnode.Tag = 1;
@@ -147,10 +148,10 @@ namespace psframework
                     lvwItm.Text = localHost;
                     lvwItm.SubItems.Add(localIP);
                     lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
-                    lvwItm.SubItems.Add("Up");
-                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add(StringValue.Up);
+                    lvwItm.SubItems.Add(StringValue.NotInstalled);
                     lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                     lvwItm.ImageIndex = 2;
                     lvwSystems.Items.Add(lvwItm);
@@ -185,7 +186,7 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("Please select a network first.");
+                MessageBox.Show(StringValue.SelectNetwork);
             }
         }
 
@@ -212,15 +213,15 @@ namespace psframework
                     }
                     if (isup)
                     {
-                        lvwItm.SubItems.Add("Up");
+                        lvwItm.SubItems.Add(StringValue.Up);
                     }
                     else
                     {
-                        lvwItm.SubItems.Add("Down");
+                        lvwItm.SubItems.Add(StringValue.Down);
                     }
-                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add(StringValue.NotInstalled);
                     lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                     lvwItm.ImageIndex = 2;
                     lvwSystems.Items.Add(lvwItm);
@@ -272,10 +273,10 @@ namespace psframework
                             lvwItm.Text = ipinfo[2];
                             lvwItm.SubItems.Add(ipinfo[1]);
                             lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                            lvwItm.SubItems.Add("Up");
-                            lvwItm.SubItems.Add("Not Installed");
+                            lvwItm.SubItems.Add(StringValue.Up);
+                            lvwItm.SubItems.Add(StringValue.NotInstalled);
                             lvwItm.SubItems.Add("0");
-                            lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                            lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                             lvwItm.ImageIndex = 2;
                             lvwSystems.Items.Add(lvwItm);
@@ -290,7 +291,7 @@ namespace psframework
             }
             HideProgress();
             btnCancelScan.Enabled = false;
-            lblStatus.Text = "Ready";
+            lblStatus.Text = StringValue.Ready;
         }
 
         private void scnr_ScanCancelled(object sender, EventArgs e)
@@ -307,7 +308,7 @@ namespace psframework
             {
                 HideProgress();
                 btnCancelScan.Enabled = false;
-                lblStatus.Text = "Ready";
+                lblStatus.Text = StringValue.Ready;
             }            
         }
 
@@ -425,12 +426,12 @@ namespace psframework
             }
             else
             {
-                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + "psf > ").Length) > txtPShellOutput.MaxLength)
+                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + StringValue.psf).Length) > txtPShellOutput.MaxLength)
                 {
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 if (clicked || cancelled || scroll)
@@ -444,7 +445,7 @@ namespace psframework
                 if (lvw != null)
                 {
                     lvw.Remove();
-                    tbpScripts.Text = "Active Scripts (" + lvwActiveScripts.Items.Count.ToString() + ")";
+                    tbpScripts.Text = StringValue.ActiveScripts + " (" + lvwActiveScripts.Items.Count.ToString() + ")";
                 }                
             }            
         }
@@ -490,7 +491,7 @@ namespace psframework
                     lvwitm.Text = alerttype.ToString();
                     lvwitm.ImageIndex = (int)alerttype;
                     lvwitm.SubItems.Add(message);
-                    lvwitm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt"));
+                    lvwitm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
                     lvwitm.SubItems.Add(scriptname);                    
                     lvwAlerts.Items.Add(lvwitm);                    
                     lvwAlerts_Update();
@@ -602,7 +603,7 @@ namespace psframework
             else
             {
                 lvwActiveScripts.Items.Add(lvw);
-                tbpScripts.Text = "Active Scripts (" + lvwActiveScripts.Items.Count.ToString() + ")";
+                tbpScripts.Text = StringValue.ActiveScripts + "(" + lvwActiveScripts.Items.Count.ToString() + ")";
             }
         }
 
@@ -635,30 +636,30 @@ namespace psframework
                 cmdhistidx = cmdhist.Count;
                 switch (cmd.ToUpper())
                 { 
-                    case "CLS": case "CLEAR":
-                        txtPShellOutput.Text = "psf > ";
+                    case StringValue.CLS: case StringValue.Clear:
+                        txtPShellOutput.Text = StringValue.psf;
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         break;
-                    case "APT-GET UPDATE":
-                        txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                    case StringValue.AptGetUpdate:
+                        txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         ShellOpenCommand("wuapp");
                         break; 
-                    case "RELOAD":
+                    case StringValue.Reload:
                         if (lvwActiveScripts.Items.Count == 0)
                         {
                             Initialize();
                         }
                         else 
                         {
-                            txtPShellOutput.AppendText(Environment.NewLine + "Can not reload the framework because there are scripts running. Please stop all scripts before issuing the reload command again." + Environment.NewLine);
-                            txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                            txtPShellOutput.AppendText(Environment.NewLine + StringValue.ReloadScriptsRunning + Environment.NewLine);
+                            txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                             mincurpos = txtPShellOutput.Text.Length;
                         }
                         break;
-                    case "EXIT":
+                    case StringValue.Exit:
                         this.Close();
                         break;
                     default:
@@ -788,7 +789,7 @@ namespace psframework
                 }
                 else
                 { 
-                    AddAlert("Unable to find the Script Path. Check your settings", PShell.psmethods.PSAlert.AlertType.Error, "PoshSec Framework");
+                    AddAlert(StringValue.ScriptPathError, PShell.psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
                 }
                 lvwScripts.EndUpdate();
             }
@@ -841,7 +842,7 @@ namespace psframework
         #region Public Methods
 
         #region Interface
-        public System.Windows.Forms.DialogResult ShowParams(psframework.PShell.psparamtype parm)
+        public System.Windows.Forms.DialogResult ShowParams(poshsecframework.PShell.psparamtype parm)
         {
             if (this.InvokeRequired)
             {
@@ -880,7 +881,7 @@ namespace psframework
         {
             try
             {
-                String wurl = "https://github.com/PoshSec/PoshSecFramework/commits/master";
+                String wurl = StringValue.UpdateURI;
                 ShellOpenCommand(wurl);
             }
             catch (Exception ex)
@@ -893,7 +894,7 @@ namespace psframework
         {
             try
             {
-                String wurl = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
+                String wurl = StringValue.WikiURI;
                 ShellOpenCommand(wurl);
             }
             catch (Exception ex)
@@ -917,7 +918,7 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("You can not change the settings while scripts or commands are running. Please stop any commands or scripts and then try again.");
+                MessageBox.Show(StringValue.SettingScriptsRunning);
             }
         }
         #endregion 
@@ -951,8 +952,8 @@ namespace psframework
             }
             else if (txtPShellOutput.ReadOnly)
             {
-                txtPShellOutput.AppendText(Environment.NewLine + "A command is already running. Please wait, or cancel the command and try again." + Environment.NewLine + Environment.NewLine);
-                txtPShellOutput.AppendText("psf > ");
+                txtPShellOutput.AppendText(Environment.NewLine + StringValue.CommandRunning + Environment.NewLine + Environment.NewLine);
+                txtPShellOutput.AppendText(StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 tcMain.SelectedTab = tbpPowerShell;
@@ -1072,7 +1073,7 @@ namespace psframework
                                 //Ctrl+L for CLS!
                                 e.Handled = true;
                                 e.SuppressKeyPress = true;
-                                txtPShellOutput.Text = "psf > ";
+                                txtPShellOutput.Text = StringValue.psf;
                                 mincurpos = txtPShellOutput.Text.Length;
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                                 txtPShellOutput.ScrollToCaret();
@@ -1154,13 +1155,13 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("Please select an active script.");
+                MessageBox.Show(StringValue.SelectActiveScript);
             }
         }
 
         private void btnClearAlerts_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to clear all of the alerts?", "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(StringValue.ClearAlerts, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
                 lvwAlerts.Items.Clear();
                 lvwAlerts_Update();
@@ -1204,12 +1205,12 @@ namespace psframework
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            MessageBox.Show(StringValue.NotImplemented);
         }
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");           
+            MessageBox.Show(StringValue.NotImplemented);           
         }
 
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)
@@ -1217,7 +1218,7 @@ namespace psframework
             if (lvwCommands.SelectedItems.Count > 0)
             {
                 ListViewItem lvw = lvwCommands.SelectedItems[0];
-                String ghcmd = "Get-Help " + lvw.Text + " -full | Out-String";
+                String ghcmd = StringValue.GetHelpFull.Replace("{0}", lvw.Text);
                 txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);
@@ -1230,7 +1231,7 @@ namespace psframework
             if (lvwScripts.SelectedItems.Count > 0)
             {
                 ListViewItem lvw = lvwScripts.SelectedItems[0];
-                String ghcmd = "Get-Help \"" + Path.Combine(poshsecframework.Properties.Settings.Default.ScriptPath, lvw.Text) + "\" -full | Out-String";
+                String ghcmd = StringValue.GetHelpFull.Replace("{0}","\"" + lvw.Tag + "\"");
                 txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);

@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework.Interface
+namespace poshsecframework.Interface
 {
     public partial class frmParams : Form
     {
@@ -40,7 +41,7 @@ namespace psframework.Interface
             }
             else
             {
-                MessageBox.Show("There are required paramaters that are missing values. Please fill in all of the required parameters before proceeding.");
+                MessageBox.Show(StringValue.RequireParams);
             }
         }
     }

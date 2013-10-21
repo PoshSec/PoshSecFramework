@@ -1,4 +1,4 @@
-namespace psframework
+namespace poshsecframework
 {
     partial class frmMain
     {
@@ -93,6 +93,7 @@ namespace psframework
             this.chAlerts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastScan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
+            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.tbpSchedScripts = new System.Windows.Forms.TabPage();
             this.tcSystem = new System.Windows.Forms.TabControl();
             this.tbpAlerts = new System.Windows.Forms.TabPage();
@@ -123,7 +124,6 @@ namespace psframework
             this.powerShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waucheckps1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -756,6 +756,23 @@ namespace psframework
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
+            // txtPShellOutput
+            // 
+            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
+            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
+            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.txtPShellOutput.Name = "txtPShellOutput";
+            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.TabIndex = 0;
+            this.txtPShellOutput.Text = "psf > ";
+            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
+            // 
             // tbpSchedScripts
             // 
             this.tbpSchedScripts.ImageIndex = 5;
@@ -1037,23 +1054,6 @@ namespace psframework
             this.waucheckps1ToolStripMenuItem.Name = "waucheckps1ToolStripMenuItem";
             this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.waucheckps1ToolStripMenuItem.Text = "waucheck.ps1";
-            // 
-            // txtPShellOutput
-            // 
-            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
-            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
-            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
-            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.txtPShellOutput.Name = "txtPShellOutput";
-            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
-            this.txtPShellOutput.TabIndex = 0;
-            this.txtPShellOutput.Text = "psf > ";
-            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
             // frmMain
             // 

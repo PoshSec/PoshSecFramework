@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
 namespace poshsecframework.Controls
 {
@@ -32,7 +33,7 @@ namespace poshsecframework.Controls
 
         public void Export(object sender, EventArgs e)
         {
-            String expfilter = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
+            String expfilter = StringValue.ExportFormats;
             SaveFileDialog dlgExport = new SaveFileDialog();
             dlgExport.Filter = expfilter;
             dlgExport.CheckFileExists = false;

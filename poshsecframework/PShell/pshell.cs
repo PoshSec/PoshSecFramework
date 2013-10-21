@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class pshell
     {
@@ -30,14 +31,8 @@ namespace psframework.PShell
             catch (Exception e)
             { 
                 //Base Exception Handler
-                MessageBox.Show("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
             }            
-        }
-
-        public void Test()
-        {
-            Thread thd = new Thread(ps.Test);
-            thd.Start();
         }
         
         public void Run(string ScriptCommand, bool IsCommand = false, bool Clicked = true, bool Scroll = false)
@@ -80,7 +75,7 @@ namespace psframework.PShell
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                    MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
                 }
                               
             }

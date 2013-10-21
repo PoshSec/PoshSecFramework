@@ -8,9 +8,9 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using psframework.Structures;
+using poshsecframework.Strings;
 
-namespace psframework.Network
+namespace poshsecframework.Network
 {
     class NetworkBrowser
     {
@@ -104,7 +104,7 @@ namespace psframework.Network
                         thd.Start();
                         ip++;
                     } while (ip < 255 && !frm.CancelIPScan);
-                    frm.SetStatus("Waiting for hostname responses, please wait...");
+                    frm.SetStatus(StringValue.WaitingForHostResp);
                     do
                     {
                         System.Threading.Thread.Sleep(100);
@@ -113,7 +113,7 @@ namespace psframework.Network
                     BuildArpTable();
 
                     frm.HideProgress();
-                    frm.SetStatus("Ready");
+                    frm.SetStatus(StringValue.Ready);
 
                     OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
                 }
@@ -205,7 +205,7 @@ namespace psframework.Network
             }
             catch
             {
-                ipadr = "0.0.0.0 (unknown host)";
+                ipadr = StringValue.UnknownHost;
             }
             return ipadr;
         }
@@ -242,14 +242,14 @@ namespace psframework.Network
             }
             if (rtn == "")
             {
-                rtn = "00-00-00-00-00-00";
+                rtn = StringValue.BlankMAC;
             }
             return rtn;
         }
 
         public String GetMyMac(String ipaddr)
         {
-            String rtn = "00-00-00-00-00-00";
+            String rtn = StringValue.BlankMAC;
             try
             {
                 if(ipconfig == "")
@@ -281,7 +281,7 @@ namespace psframework.Network
             }
             catch (Exception)
             {
-                rtn = "00-00-00-00-00-00";
+                rtn = StringValue.BlankMAC;
             }
             return rtn;
         }
@@ -299,7 +299,7 @@ namespace psframework.Network
             }
             catch
             {
-                host = "N/A";
+                host = StringValue.NAHost;
             }
             return host;
         }

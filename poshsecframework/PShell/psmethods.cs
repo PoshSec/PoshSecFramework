@@ -6,7 +6,7 @@ using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     public class psmethods
     {

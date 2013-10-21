@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
 namespace poshsecframework.Interface
 {
@@ -47,15 +48,15 @@ namespace poshsecframework.Interface
             }
             else if (!Directory.Exists(txtScriptDirectory.Text))
             {
-                MessageBox.Show("The specified script directory does not exist. Please check the path.");
+                MessageBox.Show(StringValue.ScriptPathError);
             }
             else if (!File.Exists(txtFrameworkFile.Text))
             {
-                MessageBox.Show("The specified Framework file does not exist. Please check the path.");
+                MessageBox.Show(StringValue.FrameworkFileError);
             }
             else if (!Directory.Exists(txtModuleDirectory.Text))
             {
-                MessageBox.Show("The specified module directory does not exist. Please check the path.");
+                MessageBox.Show(StringValue.ModulePathError);
             }
         }
 

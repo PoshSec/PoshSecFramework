@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
 namespace poshsecframework.Interface
 {
@@ -34,7 +35,7 @@ namespace poshsecframework.Interface
             }
             else
             {
-                MessageBox.Show("Please select an IP to scan.");
+                MessageBox.Show(StringValue.SelectIPScan);
             }
         }
         #endregion

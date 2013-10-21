@@ -89,6 +89,7 @@
     <Compile Include="Network\ScanIP.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strings\StringValue.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
@@ -134,7 +135,6 @@
     <Compile Include="PShell\psparameter.cs" />
     <Compile Include="PShell\psparamtype.cs" />
     <Compile Include="PShell\psvariables.cs" />
-    <Compile Include="Structures\computer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Diagram.png" />

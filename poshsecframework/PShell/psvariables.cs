@@ -4,7 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class psvariables
     {

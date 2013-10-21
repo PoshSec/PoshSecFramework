@@ -7,8 +7,9 @@ using System.Management.Automation.Runspaces;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class pscript
     {
@@ -75,11 +76,6 @@ namespace psframework.PShell
         #endregion
 
         #region " Public Methods "
-        public void Test()
-        {
-            OnScriptComplete(new pseventargs("It worked!", null, false));
-        }
-
         public pscript()
         {            
             try
@@ -89,7 +85,7 @@ namespace psframework.PShell
             catch (Exception e)
             {
                 //Base Exception Handler
-                OnScriptComplete(new pseventargs("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
+                OnScriptComplete(new pseventargs(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
             } 
         }
 
@@ -107,13 +103,13 @@ namespace psframework.PShell
             Pipeline pline = rspace.CreatePipeline();
             if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
             {                
-                scrpt = "Import-Module \"$PSFramework\"" + Environment.NewLine;
+                scrpt = StringValue.ImportPSFramework + Environment.NewLine;
             }
             else
             {
-                frm.AddAlert("Can not locate the Framework file. Check your settings.", psmethods.PSAlert.AlertType.Error, "PoshSec Framework");
+                frm.AddAlert(StringValue.FrameworkFileError, psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
             }
-            scrpt += "Get-Command";
+            scrpt += StringValue.GetCommand;
             pline.Commands.AddScript(scrpt);
             rslt = pline.Invoke();
             pline.Dispose();
@@ -156,13 +152,13 @@ namespace psframework.PShell
                     pline = rspace.CreatePipeline();
                     if (iscommand)
                     {
-                        String cmdscript = "Import-Module \"$PSFramework\"" + Environment.NewLine + scriptcommand + cmdparams;
+                        String cmdscript = StringValue.ImportPSFramework + Environment.NewLine + scriptcommand + cmdparams;
                         if (clicked)
                         {
                             rslts.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
-                        pline.Commands.Add("Out-String");
+                        pline.Commands.Add(StringValue.OutString);
                     }
                     else
                     {
@@ -185,7 +181,7 @@ namespace psframework.PShell
                 }
                 else
                 {
-                    rslts.AppendLine("Script cancelled by user.");
+                    rslts.AppendLine(StringValue.ScriptCancelled);
                 }
             }
             catch (ThreadAbortException thde)
@@ -200,11 +196,11 @@ namespace psframework.PShell
                 cancelled = true;
                 if (iscommand)
                 {
-                    rslts.AppendLine("Command cancelled by user." + Environment.NewLine + thde.Message);
+                    rslts.AppendLine(StringValue.CommandCancelled + Environment.NewLine + thde.Message);
                 }
                 else
                 {
-                    rslts.AppendLine("Script cancelled by user." + Environment.NewLine + thde.Message);
+                    rslts.AppendLine(StringValue.ScriptCancelled + Environment.NewLine + thde.Message);
                 }                
             }
             catch (Exception e)
@@ -234,17 +230,17 @@ namespace psframework.PShell
 
             Pipeline pline = rspace.CreatePipeline();
 
-            String scrpt = "Get-Help ";
+            String scrpt = "";
             if (iscommand)
             {
-                scrpt = "Import-Module \"$PSFramework\"" + Environment.NewLine + scrpt + scriptcommand + " -full";
+                scrpt = StringValue.ImportPSFramework + Environment.NewLine + StringValue.GetHelpFull.Replace("{0}", scriptcommand);
             }
             else
             {
-                scrpt += "\"" + scriptcommand + "\" -full";
+                scrpt = StringValue.GetHelpFull.Replace("{0}", "\"" + scriptcommand + "\"");
             }
             pline.Commands.AddScript(scrpt);
-            pline.Commands.Add("Out-String");
+            pline.Commands.Add(StringValue.OutString);
 
             Collection<PSObject> rslt = pline.Invoke();
             if (rslt != null)

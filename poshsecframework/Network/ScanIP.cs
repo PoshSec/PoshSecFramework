@@ -2,24 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using poshsecframework.Strings;
 
 namespace poshsecframework.Network
 {
     class ScanIP
     {
         private String ipaddr = "";
-        psframework.Network.NetworkBrowser scnr = null;
+        poshsecframework.Network.NetworkBrowser scnr = null;
         int idx = 0;
 
         public event EventHandler<ScanEventArgs> ScanIPComplete;
 
         public void Scan()
         {
-            String host = "N/A";
+            String host = StringValue.NAHost;
             bool isup = false;
             if (ipaddr != "")
             {
-                scnr = new psframework.Network.NetworkBrowser();
+                scnr = new poshsecframework.Network.NetworkBrowser();
                 if (scnr.Ping(ipaddr, 1, 100))
                 {
                     isup = true;
