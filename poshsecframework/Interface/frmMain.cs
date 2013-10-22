@@ -207,7 +207,7 @@ namespace poshsecframework
                     lvwItm.SubItems.Add(ipadr);
                     lvwItm.SubItems.Add(scnr.GetMac(ipadr));
                     bool isup = false;
-                    if (ipadr != "0.0.0.0 (unknown host)")
+                    if (ipadr != StringValue.UnknownHost)
                     {
                         isup = scnr.Ping(system.Name, 1, 500);
                     }
