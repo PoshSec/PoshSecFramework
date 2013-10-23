@@ -29,5 +29,5 @@ function Get-RemoteProcess {
     [string]$computer
   )
   
-  return Get-WmiObject -Class Win32_Process -List -Namespace root\cimv2 -ComputerName $computer
+  return Get-WmiObject -Class Win32_Process -List -Namespace root\cimv2 -ComputerName $computer -ErrorAction SilentlyContinue
 }
