@@ -14,18 +14,17 @@ AUTHOR
 .PARAMETER command
   The application or command to execute on the remote system.
   
-.PARAMETER redirectoutput
-  Redirects the output to a temporary file for reading after the
-  process completes. Default is true.
+.PARAMETER noredirect
+  Will not redirect the output to a temporary file.
   
-.PARAMETER waitforexit
-  Wait for the process to exit before returning. Default is true.
-  
-.EXAMPLE
-  PS> $output = Execute-RemoteWmiProcess -computer REMOTEPC -command "C:\Windows6.1-KB2506143-x64.msu /quiet /norestart" -redirectoutput $false
+.PARAMETER nowait
+  Will not wait for the process to exit before returning.
   
 .EXAMPLE
-  PS> $output = Execute-RemoteWmiProcess REMOTEPC "C:\Windows6.1-KB2506143-x64.msu /quiet /norestart" $false
+  PS> $output = Execute-RemoteWmiProcess -computer REMOTEPC -command "C:\Windows6.1-KB2506143-x64.msu /quiet /norestart" -noredirect
+  
+.EXAMPLE
+  PS> $output = Execute-RemoteWmiProcess REMOTEPC "C:\Windows6.1-KB2506143-x64.msu /quiet /norestart" -noredirect -nowait
   
 .EXAMPLE
   PS> $output = Execute-RemoteWmiProcess REMOTEPC "netstat -on"
@@ -45,10 +44,10 @@ function Execute-RemoteWmiProcess{
     [string]$command,
     
     [Parameter(Mandatory=$false,Position=3)]
-    [boolean]$redirectoutput=$true,
+    [switch]$noredirect,
     
     [Parameter(Mandatory=$false,Position=4)]
-    [boolean]$waitforexit=$true
+    [switch]$nowait
   )
   
   $rtn = New-Object PSObject
@@ -63,7 +62,7 @@ function Execute-RemoteWmiProcess{
   $content = ""
   $errors = ""
   
-  if($redirectoutput) {
+  if(-not $noredirect) {
     $command = "cmd /c $command > $tmpfile"
   }  
   if($process) {
@@ -74,7 +73,7 @@ function Execute-RemoteWmiProcess{
       $running = $true
       $taskrslt = ""
       
-      if($waitforexit) {
+      if(-not $nowait) {
         #Wait for the cmd /c process to exit before getting results from the file
         do
         {
