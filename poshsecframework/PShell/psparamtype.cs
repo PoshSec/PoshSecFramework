@@ -125,6 +125,18 @@ namespace poshsecframework.PShell
             {
                 return psparam.Value ?? psparam.DefaultValue ; 
             }
+
+            public override object GetEditor(Type editorBaseType)
+            {
+                if (psparam.IsFileName)
+                {
+                    return new psfilenameeditor();
+                }
+                else
+                {
+                    return base.GetEditor(editorBaseType);
+                }                
+            }
         }
     }
 }

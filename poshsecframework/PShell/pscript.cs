@@ -252,6 +252,25 @@ namespace poshsecframework.PShell
                     {
                         int idx = 0;
                         bool found = false;
+                        List<String> fileparams = new List<string>();
+                        if (rslt[0].ToString().Contains("psfilename="))
+                        {
+                            int fnidx = rslt[0].ToString().IndexOf("psfilename=");
+                            int fnendidx = rslt[0].ToString().IndexOf(" ", fnidx);
+                            String fnparms = rslt[0].ToString().Substring(fnidx, fnendidx - fnidx);
+                            fnparms = fnparms.Replace("\r\n", "").Replace("psfilename=", "");
+                            if (fnparms.Trim() != "")
+                            {
+                                String[] prms = fnparms.Split(',');
+                                if (prms != null && prms.Length > 0)
+                                {
+                                    foreach (String prm in prms)
+                                    {
+                                        fileparams.Add(prm);
+                                    }
+                                }
+                            }
+                        }
                         do
                         {
                             String line = lines[idx];
@@ -311,8 +330,16 @@ namespace poshsecframework.PShell
                                                 prm.DefaultValue = defval;
                                             }
                                         }
-                                    }                                    
+                                    }
+                                    if (fileparams.Contains(prm.Name))
+                                    {
+                                        prm.IsFileName = true;
+                                    }
                                     parm.Properties.Add(prm);
+                                }
+                                else if (line.Trim() != "" && line.Trim().Contains("filename="))
+                                { 
+                                    
                                 }
                                 idx++;
                             }while(line.Substring(0,1) == " " && idx < lines.Length);

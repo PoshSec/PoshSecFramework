@@ -21,6 +21,7 @@ namespace poshsecframework.PShell
         public String Category { get; set; }
         public Object Value { get; set; }
         public Object DefaultValue { get; set; }
+        public Boolean IsFileName { get; set; }
         Type type;
 
         public Type Type
