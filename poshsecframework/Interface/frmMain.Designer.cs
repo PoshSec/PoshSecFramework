@@ -30,9 +30,9 @@ namespace poshsecframework
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Local Network");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Local Network");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
+            treeNode3});
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScan = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,7 +93,6 @@ namespace poshsecframework
             this.chAlerts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastScan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.tbpSchedScripts = new System.Windows.Forms.TabPage();
             this.tcSystem = new System.Windows.Forms.TabControl();
             this.tbpAlerts = new System.Windows.Forms.TabPage();
@@ -124,6 +123,12 @@ namespace poshsecframework
             this.powerShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waucheckps1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
+            this.lvwSchedule = new System.Windows.Forms.ListView();
+            this.chSchScriptName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchParams = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchSchedule = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchRunAs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -145,6 +150,7 @@ namespace poshsecframework
             this.tcMain.SuspendLayout();
             this.tbpSystems.SuspendLayout();
             this.tbpPowerShell.SuspendLayout();
+            this.tbpSchedScripts.SuspendLayout();
             this.tcSystem.SuspendLayout();
             this.tbpAlerts.SuspendLayout();
             this.toolStrip3.SuspendLayout();
@@ -596,15 +602,15 @@ namespace poshsecframework
             this.tvwNetworks.ImageList = this.imgList16;
             this.tvwNetworks.Location = new System.Drawing.Point(0, 25);
             this.tvwNetworks.Name = "tvwNetworks";
-            treeNode1.ImageKey = "Diagram.png";
-            treeNode1.Name = "ndNone";
-            treeNode1.SelectedImageKey = "Diagram.png";
-            treeNode1.Tag = "1";
-            treeNode1.Text = "Local Network";
-            treeNode2.Name = "ndNetwork";
-            treeNode2.Text = "Networks";
+            treeNode3.ImageKey = "Diagram.png";
+            treeNode3.Name = "ndNone";
+            treeNode3.SelectedImageKey = "Diagram.png";
+            treeNode3.Tag = "1";
+            treeNode3.Text = "Local Network";
+            treeNode4.Name = "ndNetwork";
+            treeNode4.Text = "Networks";
             this.tvwNetworks.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode4});
             this.tvwNetworks.SelectedImageIndex = 1;
             this.tvwNetworks.ShowPlusMinus = false;
             this.tvwNetworks.ShowRootLines = false;
@@ -756,26 +762,9 @@ namespace poshsecframework
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
-            // txtPShellOutput
-            // 
-            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
-            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtPShellOutput.DetectUrls = false;
-            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
-            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
-            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.txtPShellOutput.Name = "txtPShellOutput";
-            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
-            this.txtPShellOutput.TabIndex = 0;
-            this.txtPShellOutput.Text = "psf > ";
-            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
-            // 
             // tbpSchedScripts
             // 
+            this.tbpSchedScripts.Controls.Add(this.lvwSchedule);
             this.tbpSchedScripts.ImageIndex = 5;
             this.tbpSchedScripts.Location = new System.Drawing.Point(4, 23);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
@@ -1056,6 +1045,60 @@ namespace poshsecframework
             this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.waucheckps1ToolStripMenuItem.Text = "waucheck.ps1";
             // 
+            // txtPShellOutput
+            // 
+            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
+            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtPShellOutput.DetectUrls = false;
+            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
+            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.txtPShellOutput.Name = "txtPShellOutput";
+            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.TabIndex = 0;
+            this.txtPShellOutput.Text = "psf > ";
+            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
+            // 
+            // lvwSchedule
+            // 
+            this.lvwSchedule.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chSchScriptName,
+            this.chSchParams,
+            this.chSchSchedule,
+            this.chSchRunAs});
+            this.lvwSchedule.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
+            this.lvwSchedule.Name = "lvwSchedule";
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 307);
+            this.lvwSchedule.SmallImageList = this.imgList16;
+            this.lvwSchedule.TabIndex = 0;
+            this.lvwSchedule.UseCompatibleStateImageBehavior = false;
+            this.lvwSchedule.View = System.Windows.Forms.View.Details;
+            // 
+            // chSchScriptName
+            // 
+            this.chSchScriptName.Text = "Script Name";
+            this.chSchScriptName.Width = 150;
+            // 
+            // chSchParams
+            // 
+            this.chSchParams.Text = "Parameters";
+            this.chSchParams.Width = 150;
+            // 
+            // chSchSchedule
+            // 
+            this.chSchSchedule.Text = "Schedule";
+            this.chSchSchedule.Width = 210;
+            // 
+            // chSchRunAs
+            // 
+            this.chSchRunAs.Text = "Run As";
+            this.chSchRunAs.Width = 150;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1102,6 +1145,7 @@ namespace poshsecframework
             this.tcMain.ResumeLayout(false);
             this.tbpSystems.ResumeLayout(false);
             this.tbpPowerShell.ResumeLayout(false);
+            this.tbpSchedScripts.ResumeLayout(false);
             this.tcSystem.ResumeLayout(false);
             this.tbpAlerts.ResumeLayout(false);
             this.tbpAlerts.PerformLayout();
@@ -1210,6 +1254,11 @@ namespace poshsecframework
         private System.Windows.Forms.ToolStripMenuItem mnuScriptGetHelp;
         private System.Windows.Forms.ContextMenuStrip cmnuCommands;
         private System.Windows.Forms.ToolStripMenuItem mnuCmdGetHelp;
+        private System.Windows.Forms.ListView lvwSchedule;
+        private System.Windows.Forms.ColumnHeader chSchScriptName;
+        private System.Windows.Forms.ColumnHeader chSchParams;
+        private System.Windows.Forms.ColumnHeader chSchSchedule;
+        private System.Windows.Forms.ColumnHeader chSchRunAs;
     }
 }
 
