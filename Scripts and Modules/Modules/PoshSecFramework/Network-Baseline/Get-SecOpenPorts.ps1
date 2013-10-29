@@ -1,10 +1,25 @@
  function Get-SecOpenPorts
 {
-  [string]$computer = Get-Content env:ComputerName
+  Param(
+    [Parameter(Mandatory=$false,Position=1)]
+    [string]$computer=""
+  )
+  
+  $netstat = $null
+  $remote = $false
+  
+  if($computer -eq "") {
+    $computer = Get-Content env:ComputerName
+    $netstat = netstat -ano
+  }
+  else {
+    $netstat = $(Execute-RemoteWmiProcess $computer "netstat -ano").Details
+    $remote = $true
+  }
    
   $properties = @()
-   
-  netstat -ano | Select-String -Pattern '\s+(TCP)' | ForEach-Object {
+  
+  $netstat | Select-String -Pattern '\s+(TCP)' | ForEach-Object {
    
     $item = $_.line.split(" ",[System.StringSplitOptions]::RemoveEmptyEntries)
      
@@ -36,7 +51,12 @@
     $props | Add-Member -MemberType NoteProperty -Name "RemoteAddress" -Value $remoteAddress
     $props | Add-Member -MemberType NoteProperty -Name "RemotePort" -Value $remotePort
     $props | Add-Member -MemberType NoteProperty -Name "State" -Value $(if($item[0] -eq 'tcp') {$item[3]} else {$null})
-    $props | Add-Member -MemberType NoteProperty -Name "ProcessName" -Value $((Get-Process -Id $item[-1] -ErrorAction SilentlyContinue).Name)
+    if($remote) {
+      $props | Add-Member -MemberType NoteProperty -Name "ProcessName" -Value $item[-1]
+    }
+    else {
+      $props | Add-Member -MemberType NoteProperty -Name "ProcessName" -Value $((Get-Process -Id $item[-1] -ErrorAction SilentlyContinue).Name)
+    }    
     $properties += $props
   }
   Write-Output $properties
