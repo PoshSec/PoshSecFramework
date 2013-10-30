@@ -55,6 +55,18 @@ namespace poshsecframework.PShell
                 get { return psexec; }
             }
         }
+
+        public class PSScheduleFile : PSVariable
+        {
+            private String schedulefile = poshsecframework.Properties.Settings.Default.ScheduleFile;
+
+            public PSScheduleFile(string name) : base(name) { }
+
+            public override Object Value
+            {
+                get { return schedulefile; }
+            }
+        }
     }
 
 }

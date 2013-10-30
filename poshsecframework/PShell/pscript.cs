@@ -116,7 +116,7 @@ namespace poshsecframework.PShell
             GC.Collect();            
             return rslt;
         }
-        
+
         public void RunScript()
         {
             InitializeSessionVars();
@@ -133,7 +133,7 @@ namespace poshsecframework.PShell
                 {
                     //Only run this if the user double clicked a script or command.
                     //If they typed the command then they should have passed params.
-                    scriptparams = CheckForParams(rspace, scriptcommand);
+                    scriptparams = CheckForParams(scriptcommand);
                 }                
                 if (!cancel)
                 {
@@ -219,10 +219,8 @@ namespace poshsecframework.PShell
                 rslts.Clear();
             }            
         }
-        #endregion
 
-        #region " Private Methods "
-        private List<psparameter>CheckForParams(Runspace rspace, String scriptcommand)
+        public List<psparameter> CheckForParams(String scriptcommand)
         {
             cancel = false;
             List<psparameter> parms = null;
@@ -274,12 +272,12 @@ namespace poshsecframework.PShell
                         do
                         {
                             String line = lines[idx];
-                            if(line == "PARAMETERS")
+                            if (line == "PARAMETERS")
                             {
                                 found = true;
                             }
                             idx++;
-                        }while( found == false && idx < lines.Length);
+                        } while (found == false && idx < lines.Length);
 
                         if (found)
                         {
@@ -307,7 +305,7 @@ namespace poshsecframework.PShell
                                     idx += 2;
                                     line = lines[idx];
                                     if (line.Contains("true"))
-                                    { 
+                                    {
                                         prm.Category = "Required";
                                     }
                                     else
@@ -338,11 +336,11 @@ namespace poshsecframework.PShell
                                     parm.Properties.Add(prm);
                                 }
                                 else if (line.Trim() != "" && line.Trim().Contains("filename="))
-                                { 
-                                    
+                                {
+
                                 }
                                 idx++;
-                            }while(line.Substring(0,1) == " " && idx < lines.Length);
+                            } while (line.Substring(0, 1) == " " && idx < lines.Length);
                         }
                     }
                 }
@@ -361,10 +359,12 @@ namespace poshsecframework.PShell
                 {
                     cancel = true;
                 }
-            }            
+            }
             return parms;
         }
+        #endregion
 
+        #region " Private Methods "
         private Type GetTypeFromString(String typename)
         {
             Type rtn = null;

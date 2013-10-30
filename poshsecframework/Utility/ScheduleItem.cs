@@ -7,7 +7,7 @@ using poshsecframework.PShell;
 
 namespace poshsecframework.Utility
 {
-    class ScheduleItem
+    public class ScheduleItem
     {
         String scriptname = "";
         String scriptpath = "";

@@ -27,6 +27,7 @@ namespace poshsecframework
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
+        private Utility.Schedule schedule = new Utility.Schedule();
 
         enum SystemType
         { 
@@ -100,6 +101,7 @@ namespace poshsecframework
             psf.ParentForm = this;
             GetLibrary();
             GetCommand();
+            LoadSchedule();
         }
 
         #region Network
@@ -310,6 +312,42 @@ namespace poshsecframework
                 btnCancelScan.Enabled = false;
                 lblStatus.Text = StringValue.Ready;
             }            
+        }
+
+        private void ScheduleScript()
+        {
+            try
+            {
+                List<PShell.psparameter> scriptparams;
+                ListViewItem lvw = lvwScripts.SelectedItems[0];
+                PShell.pscript psc = new PShell.pscript();
+                psc.ParentForm = this;
+                scriptparams = psc.CheckForParams(lvw.Tag.ToString());
+
+                Utility.ScheduleItem sitm = new Utility.ScheduleItem();
+                sitm.ScriptName = lvw.Text;
+                sitm.ScriptPath = lvw.Tag.ToString();
+                sitm.RunAs = Enums.EnumValues.RunAs.CurrentUser;
+                if (scriptparams != null && scriptparams.Count > 0)
+                {
+                    foreach (PShell.psparameter prm in scriptparams)
+                    {
+                        sitm.Parameters.Properties.Add(prm);
+                    }
+                }                
+                Utility.ScheduleTime tm = new Utility.ScheduleTime();
+                tm.StartTime = DateTime.Now;
+                sitm.ScheduledTime = tm;
+                schedule.ScheduleItems.Add(sitm);
+                if (schedule.Save())
+                {
+                    LoadSchedule();
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
         }
 
         private void RunScript()
@@ -673,6 +711,45 @@ namespace poshsecframework
             catch (Exception e)
             {
                 MessageBox.Show("ProcessCommand Unhandled Exception: " + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine);
+            }
+        }
+
+        private void LoadSchedule()
+        {
+            if (schedule.Load())
+            {
+                if (schedule.ScheduleItems != null && schedule.ScheduleItems.Count > 0)
+                {
+                    lvwSchedule.Items.Clear();
+                    lvwSchedule.BeginUpdate();
+                    foreach (Utility.ScheduleItem sitm in schedule.ScheduleItems)
+                    {
+                        ListViewItem lvw = new ListViewItem();
+                        lvw.ImageIndex = 5;
+                        lvw.Text = sitm.ScriptName;
+                        String parms = "";
+                        if (sitm.Parameters.Properties != null && sitm.Parameters.Properties.Count > 0)
+                        {
+                            foreach (PShell.psparameter prop in sitm.Parameters.Properties)
+                            {
+                                parms += prop.Name + "=" + (prop.Value ?? prop.DefaultValue ?? "").ToString() + ", ";
+                            }
+                            parms = parms.Substring(0, parms.Length - 2);
+                        }
+                        lvw.SubItems.Add(parms);
+                        if (sitm.ScheduledTime != null)
+                        {
+                            lvw.SubItems.Add(sitm.ScheduledTime.Frequency.ToString() + " at " + sitm.ScheduledTime.StartTime.ToString("hh:mm tt"));
+                        }
+                        else
+                        {
+                            lvw.SubItems.Add("");
+                        }
+                        lvw.SubItems.Add(sitm.RunAs.ToString());
+                        lvwSchedule.Items.Add(lvw);
+                    }
+                    lvwSchedule.EndUpdate();
+                }
             }
         }
 
@@ -1193,6 +1270,11 @@ namespace poshsecframework
             RunScript();
         }
 
+        private void cmbtnSchedScript_Click(object sender, EventArgs e)
+        {
+            ScheduleScript();
+        }
+
         private void cmbtnRunScript_Click(object sender, EventArgs e)
         {
             RunScript();
@@ -1264,6 +1346,5 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
-
     }
 }

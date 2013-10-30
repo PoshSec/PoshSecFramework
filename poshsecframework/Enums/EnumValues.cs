@@ -5,12 +5,20 @@ using System.Text;
 
 namespace poshsecframework.Enums
 {
-    internal static class EnumValues
+    public static class EnumValues
     {
         public enum RunAs
         { 
             CurrentUser = 0,
             DifferentUser
+        }
+
+        public enum TimeFrequency
+        { 
+            Daily = 0,
+            Weekly,
+            Monthly,
+            Yearly
         }
     }
 }
