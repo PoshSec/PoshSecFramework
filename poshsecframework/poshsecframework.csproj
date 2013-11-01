@@ -95,6 +95,7 @@
     <Compile Include="Strings\StringValue.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />
+    <Compile Include="Utility\ScheduleEventArgs.cs" />
     <Compile Include="Utility\ScheduleItem.cs" />
     <Compile Include="Utility\ScheduleTime.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">

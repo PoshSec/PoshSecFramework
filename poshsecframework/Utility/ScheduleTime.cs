@@ -10,5 +10,8 @@ namespace poshsecframework.Utility
     {
         public DateTime StartTime { get; set; }
         public poshsecframework.Enums.EnumValues.TimeFrequency Frequency { get; set; }
+        public List<int> DaysofWeek { get; set; }
+        public List<int> Months { get; set; }
+        public List<int> Dates { get; set; }
     }
 }

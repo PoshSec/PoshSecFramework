@@ -27,7 +27,7 @@ namespace poshsecframework
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
-        private Utility.Schedule schedule = new Utility.Schedule();
+        private Utility.Schedule schedule = new Utility.Schedule(1000);
 
         enum SystemType
         { 
@@ -48,10 +48,12 @@ namespace poshsecframework
         public frmMain()
         {
             InitializeComponent();
-            Initialize();
-            GetNetworks();
             scnr.ScanComplete += scnr_ScanComplete;
             scnr.ScanCancelled += scnr_ScanCancelled;
+            schedule.ItemUpdated += schedule_ItemUpdated;
+
+            Initialize();
+            GetNetworks();            
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -312,6 +314,11 @@ namespace poshsecframework
                 btnCancelScan.Enabled = false;
                 lblStatus.Text = StringValue.Ready;
             }            
+        }
+
+        private void schedule_ItemUpdated(object sender, Utility.ScheduleEventArgs e)
+        {
+            MessageBox.Show(e.Schedule.LastRunTime);
         }
 
         private void ScheduleScript()

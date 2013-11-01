@@ -16,17 +16,24 @@ namespace poshsecframework.Utility
         private int interval = 1000;
         private Timer tmr = new Timer();
         List<ScheduleItem> schedule = new List<ScheduleItem>();
+        bool ischecking = false;
+        #endregion
+
+        #region Public Events
+        [XmlIgnore]
+        public EventHandler<ScheduleEventArgs> ItemUpdated;
         #endregion
 
         #region Public Methods
         public Schedule()
         {
-            
+            tmr.Elapsed += tmr_Elapsed;
         }
 
         public Schedule(int Interval)
         {
-            interval = Interval;            
+            interval = Interval;
+            tmr.Elapsed += tmr_Elapsed;
         }
 
         public bool Save()
@@ -56,6 +63,7 @@ namespace poshsecframework.Utility
 
         public bool Load()
         {
+            tmr.Enabled = false;
             bool rtn = false;
             String schfile = poshsecframework.Properties.Settings.Default.ScheduleFile;
             if (File.Exists(schfile))
@@ -75,18 +83,134 @@ namespace poshsecframework.Utility
                     rtn = false;
                 }
             }
+            tmr.Enabled = rtn;
             return rtn;
         }
         #endregion
 
         #region Private Methods
+        private bool IsScheduledTime(ScheduleItem sched)
+        {
+            bool rtn = false;
+            switch (sched.ScheduledTime.Frequency)
+            { 
+                case Enums.EnumValues.TimeFrequency.Daily:
+                    //Only compare the time ignoring the seconds.
+                    rtn = isittime(sched);
+                    break;
+                case Enums.EnumValues.TimeFrequency.Weekly:
+                    //Check Day(s) then check time.
+                    int didx = -1;
+                    int today = (int)DateTime.Now.DayOfWeek;                    
+                    if (sched.ScheduledTime.DaysofWeek.Count > 0)
+                    {
+                        bool found = false;
+                        do
+                        {
+                            didx++;
+                            if (sched.ScheduledTime.DaysofWeek[didx] == today)
+                            {
+                                found = true;
+                            }
+                        } while (didx < sched.ScheduledTime.DaysofWeek.Count && !found);
+                        if (found)
+                        {
+                            rtn = isittime(sched);
+                        }
+                    }
+                    break;
+                case Enums.EnumValues.TimeFrequency.Monthly:
+                    //Check Month, then dates, then time.
+                    if (isthemonth(sched) && isthedate(sched))
+                    {
+                        rtn = isittime(sched);
+                    }
+                    break;
+            }
+            return rtn;
+        }
 
+        private bool isthemonth(ScheduleItem sched)
+        {
+            bool rtn = false;
+            if (sched.ScheduledTime.Months.Count > 0)
+            {
+                int midx = -1;
+                do
+                {
+                    midx++;
+                    if (sched.ScheduledTime.Months[midx] == DateTime.Now.Month)
+                    {
+                        rtn = true;
+                    }
+                } while (midx < sched.ScheduledTime.Months.Count && !rtn);
+            }
+            return rtn;
+        }
+
+        private bool isthedate(ScheduleItem sched)
+        {
+            bool rtn = false;
+            if (sched.ScheduledTime.Dates.Count > 0)
+            {
+                int didx = -1;
+                do
+                {
+                    didx++;
+                    if (sched.ScheduledTime.Dates[didx] == DateTime.Now.Day)
+                    {
+                        rtn = true;
+                    }
+                } while (didx < sched.ScheduledTime.Months.Count && !rtn);
+            }
+            return rtn;
+        }
+
+        private bool isittime(ScheduleItem sched)
+        {
+            bool rtn = false;
+            if (DateTime.Now.ToString("HH:mm") == sched.ScheduledTime.StartTime.ToString("HH:mm"))
+            {
+                rtn = true;
+            }
+            return rtn;
+        }
+
+        private void RunScheduleScript(ScheduleItem sched)
+        {
+            sched.LastRunTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+            Save();
+            OnItemUpdated(new ScheduleEventArgs(sched));
+        }
+
+        private void OnItemUpdated(ScheduleEventArgs e)
+        {
+            EventHandler<ScheduleEventArgs> handler = ItemUpdated;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
         #endregion
 
         #region Private Events
         private void tmr_Elapsed(object sender, ElapsedEventArgs e)
         {
-
+            if (!ischecking)
+            {
+                ischecking = true;
+                if (schedule.Count > 0)
+                {
+                    foreach (ScheduleItem sched in schedule)
+                    {
+                        if (IsScheduledTime(sched) && sched.LastRunTime != DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"))
+                        {
+                            RunScheduleScript(sched);
+                        }
+                    }
+                }
+                ischecking = false;
+            }
         }
         #endregion
 
