@@ -42,6 +42,16 @@ namespace poshsecframework
             Command,
             Alias
         }
+
+        enum ScheduleColumns
+        { 
+            ScriptName = 0,
+            Parameters,
+            Schedule,
+            RunAs,
+            LastRun,
+            Message
+        }
         #endregion
 
         #region Form
@@ -318,7 +328,39 @@ namespace poshsecframework
 
         private void schedule_ItemUpdated(object sender, Utility.ScheduleEventArgs e)
         {
-            MessageBox.Show(e.Schedule.LastRunTime);
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    schedule_ItemUpdated(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                int idx = -1;
+                bool found = false;
+                ListViewItem lvw = null;
+                if (lvwSchedule.Items.Count > 0)
+                {
+                    do
+                    {
+                        idx++;
+                        lvw = lvwSchedule.Items[idx];
+                        if (lvw.Tag != null)
+                        {
+                            if ((int)lvw.Tag == e.Schedule.Index)
+                            {
+                                found = true;
+                            }
+                        }                        
+                    } while (idx < lvwSchedule.Items.Count && !found);
+                    if (found && lvw != null)
+                    {
+                        lvw.SubItems[(int)ScheduleColumns.LastRun].Text = e.Schedule.LastRunTime;
+                    }
+                }                
+            }
         }
 
         private void ScheduleScript()
@@ -343,8 +385,9 @@ namespace poshsecframework
                     }
                 }                
                 Utility.ScheduleTime tm = new Utility.ScheduleTime();
-                tm.StartTime = DateTime.Now;
+                tm.StartTime = DateTime.Now.AddMinutes(1);
                 sitm.ScheduledTime = tm;
+                sitm.Index = lvwSchedule.Items.Count;
                 schedule.ScheduleItems.Add(sitm);
                 if (schedule.Save())
                 {
@@ -734,6 +777,7 @@ namespace poshsecframework
                         ListViewItem lvw = new ListViewItem();
                         lvw.ImageIndex = 5;
                         lvw.Text = sitm.ScriptName;
+                        lvw.Tag = sitm.Index;
                         String parms = "";
                         if (sitm.Parameters.Properties != null && sitm.Parameters.Properties.Count > 0)
                         {

@@ -15,7 +15,8 @@ namespace poshsecframework.Utility
         private ScheduleTime schedtime = null;
         private EnumValues.RunAs runas = EnumValues.RunAs.CurrentUser;
         private String lastrun = "Never";
-        private String msg = ""; 
+        private String msg = "";
+        private int idx;
 
         public String ScriptName
         {
@@ -57,6 +58,12 @@ namespace poshsecframework.Utility
         {
             get { return msg; }
             set { msg = value; }
+        }
+
+        public int Index
+        {
+            get { return idx; }
+            set { idx = value; }
         }
     }
 }
