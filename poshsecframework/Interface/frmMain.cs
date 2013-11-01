@@ -761,6 +761,7 @@ namespace poshsecframework
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
             String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
+            String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
@@ -772,6 +773,10 @@ namespace poshsecframework
             if (modpath.StartsWith(".") || modpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
+            }
+            if (schpath.StartsWith(".") || modpath.Trim() == "")
+            {
+                poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
             }
             poshsecframework.Properties.Settings.Default.Save();
             poshsecframework.Properties.Settings.Default.Reload();

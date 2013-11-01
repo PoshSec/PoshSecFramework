@@ -41,14 +41,18 @@
             this.txtPSExecPath = new System.Windows.Forms.TextBox();
             this.btnBrowsePSExec = new System.Windows.Forms.Button();
             this.lblPSExecPath = new System.Windows.Forms.Label();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.txtModuleDirectory = new System.Windows.Forms.TextBox();
-            this.btnBrowseModule = new System.Windows.Forms.Button();
-            this.lblModuleDirectory = new System.Windows.Forms.Label();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.txtSchFile = new System.Windows.Forms.TextBox();
+            this.btnBrowseSchFile = new System.Windows.Forms.Button();
+            this.lblSchFile = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.txtFrameworkFile = new System.Windows.Forms.TextBox();
             this.btnBrowseFramework = new System.Windows.Forms.Button();
             this.lblFrameworkDirectory = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.txtModuleDirectory = new System.Windows.Forms.TextBox();
+            this.btnBrowseModule = new System.Windows.Forms.Button();
+            this.lblModuleDirectory = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.txtScriptDirectory = new System.Windows.Forms.TextBox();
             this.btnBrowseScript = new System.Windows.Forms.Button();
@@ -59,8 +63,9 @@
             this.panel6.SuspendLayout();
             this.gbScriptSetting.SuspendLayout();
             this.panel7.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
             this.SuspendLayout();
@@ -70,7 +75,7 @@
             this.panel1.Controls.Add(this.btnOK);
             this.panel1.Controls.Add(this.btnCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 232);
+            this.panel1.Location = new System.Drawing.Point(0, 249);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(460, 34);
             this.panel1.TabIndex = 0;
@@ -80,7 +85,7 @@
             this.btnOK.Location = new System.Drawing.Point(297, 6);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 3;
+            this.btnOK.TabIndex = 8;
             this.btnOK.Text = "&OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -91,7 +96,7 @@
             this.btnCancel.Location = new System.Drawing.Point(378, 6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 9;
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -100,13 +105,14 @@
             this.tbpGeneral.Controls.Add(this.panel6);
             this.tbpGeneral.Controls.Add(this.panel5);
             this.tbpGeneral.Controls.Add(this.panel7);
-            this.tbpGeneral.Controls.Add(this.panel4);
+            this.tbpGeneral.Controls.Add(this.panel8);
             this.tbpGeneral.Controls.Add(this.panel3);
+            this.tbpGeneral.Controls.Add(this.panel4);
             this.tbpGeneral.Controls.Add(this.panel2);
             this.tbpGeneral.Location = new System.Drawing.Point(4, 22);
             this.tbpGeneral.Name = "tbpGeneral";
             this.tbpGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpGeneral.Size = new System.Drawing.Size(452, 206);
+            this.tbpGeneral.Size = new System.Drawing.Size(452, 223);
             this.tbpGeneral.TabIndex = 0;
             this.tbpGeneral.Text = "General";
             this.tbpGeneral.UseVisualStyleBackColor = true;
@@ -115,9 +121,9 @@
             // 
             this.panel6.Controls.Add(this.gbScriptSetting);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(3, 126);
+            this.panel6.Location = new System.Drawing.Point(3, 152);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(446, 79);
+            this.panel6.Size = new System.Drawing.Size(446, 70);
             this.panel6.TabIndex = 7;
             // 
             // gbScriptSetting
@@ -127,7 +133,7 @@
             this.gbScriptSetting.Dock = System.Windows.Forms.DockStyle.Left;
             this.gbScriptSetting.Location = new System.Drawing.Point(0, 0);
             this.gbScriptSetting.Name = "gbScriptSetting";
-            this.gbScriptSetting.Size = new System.Drawing.Size(200, 79);
+            this.gbScriptSetting.Size = new System.Drawing.Size(200, 70);
             this.gbScriptSetting.TabIndex = 0;
             this.gbScriptSetting.TabStop = false;
             this.gbScriptSetting.Text = "Scripts";
@@ -143,7 +149,7 @@
             this.cmbScriptDefAction.Location = new System.Drawing.Point(3, 40);
             this.cmbScriptDefAction.Name = "cmbScriptDefAction";
             this.cmbScriptDefAction.Size = new System.Drawing.Size(194, 21);
-            this.cmbScriptDefAction.TabIndex = 1;
+            this.cmbScriptDefAction.TabIndex = 7;
             // 
             // lblScriptDefAction
             // 
@@ -158,7 +164,7 @@
             // panel5
             // 
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(3, 107);
+            this.panel5.Location = new System.Drawing.Point(3, 133);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(446, 19);
             this.panel5.TabIndex = 6;
@@ -169,7 +175,7 @@
             this.panel7.Controls.Add(this.btnBrowsePSExec);
             this.panel7.Controls.Add(this.lblPSExecPath);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(3, 81);
+            this.panel7.Location = new System.Drawing.Point(3, 107);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(446, 26);
             this.panel7.TabIndex = 5;
@@ -180,7 +186,7 @@
             this.txtPSExecPath.Location = new System.Drawing.Point(111, 0);
             this.txtPSExecPath.Name = "txtPSExecPath";
             this.txtPSExecPath.Size = new System.Drawing.Size(309, 21);
-            this.txtPSExecPath.TabIndex = 2;
+            this.txtPSExecPath.TabIndex = 6;
             // 
             // btnBrowsePSExec
             // 
@@ -203,45 +209,45 @@
             this.lblPSExecPath.Text = "PSExec Path:";
             this.lblPSExecPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panel4
+            // panel8
             // 
-            this.panel4.Controls.Add(this.txtModuleDirectory);
-            this.panel4.Controls.Add(this.btnBrowseModule);
-            this.panel4.Controls.Add(this.lblModuleDirectory);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel4.Location = new System.Drawing.Point(3, 55);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(446, 26);
-            this.panel4.TabIndex = 2;
+            this.panel8.Controls.Add(this.txtSchFile);
+            this.panel8.Controls.Add(this.btnBrowseSchFile);
+            this.panel8.Controls.Add(this.lblSchFile);
+            this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel8.Location = new System.Drawing.Point(3, 81);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(446, 26);
+            this.panel8.TabIndex = 8;
             // 
-            // txtModuleDirectory
+            // txtSchFile
             // 
-            this.txtModuleDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtModuleDirectory.Location = new System.Drawing.Point(111, 0);
-            this.txtModuleDirectory.Name = "txtModuleDirectory";
-            this.txtModuleDirectory.Size = new System.Drawing.Size(309, 21);
-            this.txtModuleDirectory.TabIndex = 2;
+            this.txtSchFile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSchFile.Location = new System.Drawing.Point(111, 0);
+            this.txtSchFile.Name = "txtSchFile";
+            this.txtSchFile.Size = new System.Drawing.Size(309, 21);
+            this.txtSchFile.TabIndex = 5;
             // 
-            // btnBrowseModule
+            // btnBrowseSchFile
             // 
-            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseModule.Name = "btnBrowseModule";
-            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseModule.TabIndex = 1;
-            this.btnBrowseModule.UseVisualStyleBackColor = true;
-            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
+            this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseSchFile.Name = "btnBrowseSchFile";
+            this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseSchFile.TabIndex = 1;
+            this.btnBrowseSchFile.UseVisualStyleBackColor = true;
+            this.btnBrowseSchFile.Click += new System.EventHandler(this.btnBrowseSchFile_Click);
             // 
-            // lblModuleDirectory
+            // lblSchFile
             // 
-            this.lblModuleDirectory.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblModuleDirectory.Location = new System.Drawing.Point(0, 0);
-            this.lblModuleDirectory.Name = "lblModuleDirectory";
-            this.lblModuleDirectory.Size = new System.Drawing.Size(111, 26);
-            this.lblModuleDirectory.TabIndex = 0;
-            this.lblModuleDirectory.Text = "Module Directory:";
-            this.lblModuleDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblSchFile.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblSchFile.Location = new System.Drawing.Point(0, 0);
+            this.lblSchFile.Name = "lblSchFile";
+            this.lblSchFile.Size = new System.Drawing.Size(111, 26);
+            this.lblSchFile.TabIndex = 0;
+            this.lblSchFile.Text = "Schedule File:";
+            this.lblSchFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel3
             // 
@@ -249,7 +255,7 @@
             this.panel3.Controls.Add(this.btnBrowseFramework);
             this.panel3.Controls.Add(this.lblFrameworkDirectory);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 29);
+            this.panel3.Location = new System.Drawing.Point(3, 55);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(446, 26);
             this.panel3.TabIndex = 1;
@@ -260,7 +266,7 @@
             this.txtFrameworkFile.Location = new System.Drawing.Point(111, 0);
             this.txtFrameworkFile.Name = "txtFrameworkFile";
             this.txtFrameworkFile.Size = new System.Drawing.Size(309, 21);
-            this.txtFrameworkFile.TabIndex = 2;
+            this.txtFrameworkFile.TabIndex = 4;
             // 
             // btnBrowseFramework
             // 
@@ -282,6 +288,46 @@
             this.lblFrameworkDirectory.TabIndex = 0;
             this.lblFrameworkDirectory.Text = "Framework File:";
             this.lblFrameworkDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.txtModuleDirectory);
+            this.panel4.Controls.Add(this.btnBrowseModule);
+            this.panel4.Controls.Add(this.lblModuleDirectory);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(3, 29);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(446, 26);
+            this.panel4.TabIndex = 2;
+            // 
+            // txtModuleDirectory
+            // 
+            this.txtModuleDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtModuleDirectory.Location = new System.Drawing.Point(111, 0);
+            this.txtModuleDirectory.Name = "txtModuleDirectory";
+            this.txtModuleDirectory.Size = new System.Drawing.Size(309, 21);
+            this.txtModuleDirectory.TabIndex = 3;
+            // 
+            // btnBrowseModule
+            // 
+            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseModule.Name = "btnBrowseModule";
+            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseModule.TabIndex = 1;
+            this.btnBrowseModule.UseVisualStyleBackColor = true;
+            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
+            // 
+            // lblModuleDirectory
+            // 
+            this.lblModuleDirectory.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblModuleDirectory.Location = new System.Drawing.Point(0, 0);
+            this.lblModuleDirectory.Name = "lblModuleDirectory";
+            this.lblModuleDirectory.Size = new System.Drawing.Size(111, 26);
+            this.lblModuleDirectory.TabIndex = 0;
+            this.lblModuleDirectory.Text = "Module Directory:";
+            this.lblModuleDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel2
             // 
@@ -330,7 +376,7 @@
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
-            this.tcSettings.Size = new System.Drawing.Size(460, 232);
+            this.tcSettings.Size = new System.Drawing.Size(460, 249);
             this.tcSettings.TabIndex = 1;
             // 
             // frmSettings
@@ -338,7 +384,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(460, 266);
+            this.ClientSize = new System.Drawing.Size(460, 283);
             this.ControlBox = false;
             this.Controls.Add(this.tcSettings);
             this.Controls.Add(this.panel1);
@@ -357,10 +403,12 @@
             this.gbScriptSetting.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tcSettings.ResumeLayout(false);
@@ -396,5 +444,9 @@
         private System.Windows.Forms.TextBox txtPSExecPath;
         private System.Windows.Forms.Button btnBrowsePSExec;
         private System.Windows.Forms.Label lblPSExecPath;
+        private System.Windows.Forms.Panel panel8;
+        private System.Windows.Forms.TextBox txtSchFile;
+        private System.Windows.Forms.Button btnBrowseSchFile;
+        private System.Windows.Forms.Label lblSchFile;
     }
 }
