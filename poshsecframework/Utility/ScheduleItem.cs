@@ -9,11 +9,13 @@ namespace poshsecframework.Utility
 {
     public class ScheduleItem
     {
-        String scriptname = "";
-        String scriptpath = "";
-        psparamtype param = new psparamtype();
-        ScheduleTime schedtime = null;
-        EnumValues.RunAs runas = EnumValues.RunAs.CurrentUser;
+        private String scriptname = "";
+        private String scriptpath = "";
+        private psparamtype param = new psparamtype();
+        private ScheduleTime schedtime = null;
+        private EnumValues.RunAs runas = EnumValues.RunAs.CurrentUser;
+        private String lastrun = "Never";
+        private String msg = ""; 
 
         public String ScriptName
         {
@@ -43,6 +45,18 @@ namespace poshsecframework.Utility
         {
             get { return runas; }
             set { runas = value; }
+        }
+
+        public String LastRunTime
+        {
+            get { return lastrun; }
+            set { lastrun = value; }
+        }
+
+        public String Message
+        {
+            get { return msg; }
+            set { msg = value; }
         }
     }
 }

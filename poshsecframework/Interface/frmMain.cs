@@ -746,6 +746,8 @@ namespace poshsecframework
                             lvw.SubItems.Add("");
                         }
                         lvw.SubItems.Add(sitm.RunAs.ToString());
+                        lvw.SubItems.Add(sitm.LastRunTime);
+                        lvw.SubItems.Add(sitm.Message);
                         lvwSchedule.Items.Add(lvw);
                     }
                     lvwSchedule.EndUpdate();
@@ -1043,11 +1045,13 @@ namespace poshsecframework
             {
                 btnViewScript.Enabled = true;
                 btnRunScript.Enabled = true;
+                btnSchedScript.Enabled = true;
             }
             else
             {
                 btnViewScript.Enabled = false;
                 btnRunScript.Enabled = false;
+                btnSchedScript.Enabled = false;
             }
         }
         #endregion
@@ -1268,6 +1272,11 @@ namespace poshsecframework
         private void btnRunScript_Click(object sender, EventArgs e)
         {
             RunScript();
+        }
+
+        private void btnSchedScript_Click(object sender, EventArgs e)
+        {
+            ScheduleScript();
         }
 
         private void cmbtnSchedScript_Click(object sender, EventArgs e)

@@ -18,7 +18,8 @@ namespace poshsecframework.Enums
             Daily = 0,
             Weekly,
             Monthly,
-            Yearly
+            Yearly,
+            Every
         }
     }
 }
