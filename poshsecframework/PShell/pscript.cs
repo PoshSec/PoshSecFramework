@@ -379,6 +379,9 @@ namespace poshsecframework.PShell
                 case "<int32>":
                     rtn = typeof(int);
                     break;
+                case "[<switchparameter>]":
+                    rtn = typeof(bool);
+                    break;
                 default:
                     rtn = typeof(Object);
                     break;
