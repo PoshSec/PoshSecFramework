@@ -11,6 +11,9 @@ Ben0xA
 .PARAMETER destination
   The share name and folder on the remote host.
   
+.PARAMETER force
+  This will attempt to copy the file even if the host appears down.
+  
 .NOTES
   psfilename=sourcefile
 #>
@@ -20,7 +23,10 @@ Param(
 	[string]$sourcefile,
   
   [Parameter(Mandatory=$false,Position=2)]
-	[string]$destination="C$\Windows\Temp\"
+	[string]$destination="C$\Windows\Temp\",
+  
+  [Parameter(Mandatory=$false,Position=3)]
+  [switch]$force
 )
 
 # Begin Script Flow
@@ -36,21 +42,27 @@ $results = @()
 if($hosts.Count -gt 0) {
   if(Test-Path $sourcefile) {
     foreach($h in $hosts) {
+      $PSStatus.Update("Copying file to $($h.Name), please wait...")
       $rmtfolder = "\\$($h.Name)\$($destination)\"
       $copyitm = New-Object PSObject
       $copyitm | Add-Member -MemberType NoteProperty -Name "Computer" -Value $h.Name
       $copyitm | Add-Member -MemberType NoteProperty -Name "Source File" -Value $sourcefile
       $copyitm | Add-Member -MemberType NoteProperty -Name "Destination" -Value $rmtfolder
-      try
-      {
-        if(!(Test-Path -path $rmtfolder)) {
-          New-Item $rmtfolder -Type Directory
+      if($force -or $h.Status -eq "Up"){
+        try
+        {
+          if(!(Test-Path -path $rmtfolder)) {
+            New-Item $rmtfolder -Type Directory
+          }
+          Copy-Item $sourcefile $rmtfolder -recurse -force
+          $copyitm | Add-Member -MemberType NoteProperty -Name "Result" -Value "Copied"
         }
-        Copy-Item $sourcefile $rmtfolder -recurse -force
-        $copyitm | Add-Member -MemberType NoteProperty -Name "Result" -Value "Copied"
+        catch {
+          $copyitm | Add-Member -MemberType NoteProperty -Name "Result" -Value "Failed!"
+        }
       }
-      catch {
-        $copyitm | Add-Member -MemberType NoteProperty -Name "Result" -Value "Failed!"
+      else {
+        $copyitm | Add-Member -MemberType NoteProperty -Name "Result" -Value "Host is down."
       }
       $results += $copyitm
     }
