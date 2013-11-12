@@ -72,17 +72,21 @@ namespace poshsecframework.Interface
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
+                EnableControls();
             }
-            lvwSystems.UseWaitCursor = false;
         }
 
         void scnr_ScanCancelled(object sender, EventArgs e)
         {
-            lvwSystems.UseWaitCursor = false;
+            EnableControls();
         }
 
         private void cmbNetworks_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cmbNetworks.Enabled = false;
+            btnRefresh.Enabled = false;
+            btnOK.Enabled = false;
+            btnCancel.Enabled = false;
             if (cmbNetworks.SelectedIndex == 0)
             {
                 ScanbyIP();
@@ -142,7 +146,26 @@ namespace poshsecframework.Interface
             {
                 //fail silently because it's not on A/D   
             }
-            cmbNetworks.SelectedIndex = 0;
+        }
+
+        private void EnableControls()
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    EnableControls();
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                lvwSystems.UseWaitCursor = false;
+                cmbNetworks.Enabled = true;
+                btnRefresh.Enabled = true;
+                btnOK.Enabled = true;
+                btnCancel.Enabled = true;
+            }
         }
 
         private void ScanbyIP()
@@ -199,7 +222,7 @@ namespace poshsecframework.Interface
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
-                lvwSystems.UseWaitCursor = false;
+                EnableControls();
             }
         }
 
