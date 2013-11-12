@@ -20,6 +20,7 @@ namespace poshsecframework.Network
         String arp = "";
         ArrayList systems = new ArrayList();
         Collection<Thread> thds = new Collection<Thread>();
+        bool shstatus = true;
         #endregion
 
         #region Public Events
@@ -87,13 +88,14 @@ namespace poshsecframework.Network
                 String[] ipparts = localIP.Split('.');
                 if (ipparts != null && ipparts.Length == 4)
                 {
-                    frm.SetProgress(0, 255);
+                    if (shstatus) { frm.SetProgress(0, 255); }                    
                     int ip = 1;
+                    bool cancel = false;
                     do
                     {
                         String host = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip.ToString();
-                        frm.SetStatus("Scanning " + host + ", please wait...");
-                        frm.SetProgress(ip, 255);
+                        if (shstatus) { frm.SetStatus("Scanning " + host + ", please wait...");}
+                        if (shstatus) { frm.SetProgress(ip, 255);}
 
                         poshsecframework.Network.ScanIP scn = new poshsecframework.Network.ScanIP();
                         scn.IPAddress = host;
@@ -103,8 +105,9 @@ namespace poshsecframework.Network
                         thds.Add(thd);
                         thd.Start();
                         ip++;
-                    } while (ip < 255 && !frm.CancelIPScan);
-                    frm.SetStatus(StringValue.WaitingForHostResp);
+                        if (shstatus) { cancel = frm.CancelIPScan; }
+                    } while (ip < 255 && !cancel);
+                    if (shstatus) { frm.SetStatus(StringValue.WaitingForHostResp); }
                     do
                     {
                         System.Threading.Thread.Sleep(100);
@@ -112,8 +115,8 @@ namespace poshsecframework.Network
                     systems.Sort();
                     BuildArpTable();
 
-                    frm.HideProgress();
-                    frm.SetStatus(StringValue.Ready);
+                    if (shstatus) { frm.HideProgress();}
+                    if (shstatus) { frm.SetStatus(StringValue.Ready);}
 
                     OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
                 }
@@ -381,6 +384,11 @@ namespace poshsecframework.Network
         public frmMain ParentForm
         {
             set { frm = value; }
+        }
+
+        public bool ShowStatus
+        {
+            set { shstatus = value; }
         }
         #endregion
     }
