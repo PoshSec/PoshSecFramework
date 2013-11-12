@@ -1,18 +1,27 @@
 <#
 .DESCRIPTION
-Lists all of the applications that are set to starup in the \Run
-folder of the registry.
+  Lists all of the applications that are set to starup in the \Run
+  folder of the registry.
 
 AUTHOR
 Ben0xA
 
 .PARAMETER showintab
-Specifies whether to show the results in a PoshSec Framework Tab.
+  Specifies whether to show the results in a PoshSec Framework Tab.
+
+.PARAMETER storedhosts
+  This is for storing hosts from the framework for scheduling.
+
+.NOTES
+  pshosts=storedhosts
 #>
 
 Param(	
 	[Parameter(Mandatory=$false,Position=1)]
-	[boolean]$showintab=$True
+	[boolean]$showintab=$True,
+  
+  [Parameter(Mandatory=$false,Position=2)]
+	[string]$storedhosts
 )
 # Begin Script Flow
 
@@ -22,7 +31,14 @@ Import-Module $PSFramework
 #Start your code here.
 $progs = @()
 
-$hosts = $PSHosts.GetHosts()
+if($storedhosts) {
+  #The storedhosts have been serialized as a string
+  #Before we use them we need to deserialize.
+  $hosts = $PSHosts.DeserializeHosts($storedhosts)
+}
+else {
+  $hosts = $PSHosts.GetHosts()
+}
 
 if($hosts) {
   foreach($h in $hosts) {
