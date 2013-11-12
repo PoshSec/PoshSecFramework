@@ -449,6 +449,11 @@ namespace poshsecframework.PShell
         {
             set { scriptlvw = value; }
         }
+
+        public bool ParamSelectionCancelled
+        {
+            get { return cancel; }
+        }
         #endregion
     }
 }

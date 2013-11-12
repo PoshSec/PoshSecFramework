@@ -17,6 +17,7 @@ namespace poshsecframework.PShell
         private pscript ps;
         private bool clicked;
         private bool scroll;
+        private bool scheduled = false;
         #endregion
 
         #region " Public Methods "
@@ -39,6 +40,7 @@ namespace poshsecframework.PShell
         {
             clicked = false;
             scroll = false;
+            scheduled = true;
             if (File.Exists(sched.ScriptPath))
             {
                 try
@@ -122,7 +124,14 @@ namespace poshsecframework.PShell
         private void ScriptCompleted(object sender, EventArgs e)
         {
             pseventargs rslts = (pseventargs)e;
-            frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled, scroll);
+            if (!scheduled)
+            {                
+                frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled, scroll);
+            }
+            else
+            {
+                frm.RemoveActiveScript(rslts.ScriptListView);
+            }
         }
         #endregion
 

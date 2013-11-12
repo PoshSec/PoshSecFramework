@@ -391,33 +391,36 @@ namespace poshsecframework
                 psc.ParentForm = this;
                 scriptparams = psc.CheckForParams(lvw.Tag.ToString());
 
-                Utility.ScheduleItem sitm = new Utility.ScheduleItem();
-                sitm.ScriptName = lvw.Text;
-                sitm.ScriptPath = lvw.Tag.ToString();
-                sitm.RunAs = Enums.EnumValues.RunAs.CurrentUser;
-                if (scriptparams != null && scriptparams.Count > 0)
+                if (!psc.ParamSelectionCancelled)
                 {
-                    foreach (PShell.psparameter prm in scriptparams)
+                    Utility.ScheduleItem sitm = new Utility.ScheduleItem();
+                    sitm.ScriptName = lvw.Text;
+                    sitm.ScriptPath = lvw.Tag.ToString();
+                    sitm.RunAs = Enums.EnumValues.RunAs.CurrentUser;
+                    if (scriptparams != null && scriptparams.Count > 0)
                     {
-                        sitm.Parameters.Properties.Add(prm);
+                        foreach (PShell.psparameter prm in scriptparams)
+                        {
+                            sitm.Parameters.Properties.Add(prm);
+                        }
                     }
-                }
-                Interface.frmSchedule sched = new Interface.frmSchedule();
-                if (sched.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    sitm.ScheduledTime = sched.ScheduledTime;
-                    sitm.Index = GetScheduleIndex();
-                    schedule.ScheduleItems.Add(sitm);
-                    if (schedule.Save())
+                    Interface.frmSchedule sched = new Interface.frmSchedule();
+                    if (sched.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        LoadSchedule();
+                        sitm.ScheduledTime = sched.ScheduledTime;
+                        sitm.Index = GetScheduleIndex();
+                        schedule.ScheduleItems.Add(sitm);
+                        if (schedule.Save())
+                        {
+                            LoadSchedule();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error saving schedule: " + schedule.LastException.Message);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Error saving schedule: " + schedule.LastException.Message);
-                    }
-                }
-                sched = null;
+                    sched = null;
+                }                
             }
             catch (Exception e)
             {
@@ -649,6 +652,25 @@ namespace poshsecframework
         #endregion
 
         #region "PowerShell"
+        public void RemoveActiveScript(ListViewItem lvw)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    RemoveActiveScript(lvw);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                if (lvw != null)
+                {
+                    lvw.Remove();
+                    tbpScripts.Text = StringValue.ActiveScripts + " (" + lvwActiveScripts.Items.Count.ToString() + ")";
+                }
+            }
+        }
         public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false)
         {
             if (this.InvokeRequired)
@@ -677,11 +699,7 @@ namespace poshsecframework
                 }
                 txtPShellOutput.Select();
                 txtPShellOutput.ReadOnly = false;
-                if (lvw != null)
-                {
-                    lvw.Remove();
-                    tbpScripts.Text = StringValue.ActiveScripts + " (" + lvwActiveScripts.Items.Count.ToString() + ")";
-                }                
+                RemoveActiveScript(lvw);                
             }            
         }
 
