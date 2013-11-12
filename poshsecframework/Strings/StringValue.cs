@@ -20,6 +20,10 @@ namespace poshsecframework.Strings
         public const string ModulePathError = "The specified module directory does not exist. Please check the path.";
         public const String ClearAlerts = "Are you sure you want to clear all of the alerts?";
         public const String UnhandledException = "Unhandled exception in script function.";
+        public const String ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
+        public const String SelectWeekdays = "Please select the days of the week to schedule this script.";
+        public const String SelectMonths = "Please select the months of the year and the dates to schedule this script.";
+        public const String SelectSystems = "Please select some systems first.";
 
         public const String ScriptCancelled = "Script cancelled by user.";
         public const String CommandCancelled = "Command cancelled by user.";

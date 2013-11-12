@@ -132,6 +132,10 @@ namespace poshsecframework.PShell
                 {
                     return new psfilenameeditor();
                 }
+                else if (psparam.IsHostList)
+                {
+                    return new pshosteditor();
+                }
                 else
                 {
                     return base.GetEditor(editorBaseType);

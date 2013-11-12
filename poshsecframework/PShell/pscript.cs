@@ -19,7 +19,8 @@ namespace poshsecframework.PShell
         private String scriptcommand;
         private bool iscommand = false;
         private bool clicked = true;
-        private List<psparameter> scriptparams;
+        private bool scheduled = false;
+        private List<psparameter> scriptparams = new List<psparameter>();
         private StringBuilder rslts = new StringBuilder();
         private psexception psexec = new psexception();
         private bool cancel = false;
@@ -120,19 +121,16 @@ namespace poshsecframework.PShell
         public void RunScript()
         {
             InitializeSessionVars();
-            PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
-            if (scriptparams != null)
-            {
-                scriptparams.Clear();
-            }
+            PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");            
             Pipeline pline = null;
             bool cancelled = false;
             try
             {
-                if (clicked)
+                if (clicked && !scheduled)
                 {
                     //Only run this if the user double clicked a script or command.
                     //If they typed the command then they should have passed params.
+                    //If it was scheduled and there were params, they should be passed.
                     scriptparams = CheckForParams(scriptcommand);
                 }                
                 if (!cancel)
@@ -250,25 +248,8 @@ namespace poshsecframework.PShell
                     {
                         int idx = 0;
                         bool found = false;
-                        List<String> fileparams = new List<string>();
-                        if (rslt[0].ToString().Contains("psfilename="))
-                        {
-                            int fnidx = rslt[0].ToString().IndexOf("psfilename=");
-                            int fnendidx = rslt[0].ToString().IndexOf(" ", fnidx);
-                            String fnparms = rslt[0].ToString().Substring(fnidx, fnendidx - fnidx);
-                            fnparms = fnparms.Replace("\r\n", "").Replace("psfilename=", "");
-                            if (fnparms.Trim() != "")
-                            {
-                                String[] prms = fnparms.Split(',');
-                                if (prms != null && prms.Length > 0)
-                                {
-                                    foreach (String prm in prms)
-                                    {
-                                        fileparams.Add(prm);
-                                    }
-                                }
-                            }
-                        }
+                        List<String> fileparams = GetEditorParams(rslt[0].ToString(), "psfilename");
+                        List<String> hostparams = GetEditorParams(rslt[0].ToString(), "pshosts");                        
                         do
                         {
                             String line = lines[idx];
@@ -333,11 +314,11 @@ namespace poshsecframework.PShell
                                     {
                                         prm.IsFileName = true;
                                     }
+                                    if (hostparams.Contains(prm.Name))
+                                    {
+                                        prm.IsHostList = true;
+                                    }
                                     parm.Properties.Add(prm);
-                                }
-                                else if (line.Trim() != "" && line.Trim().Contains("filename="))
-                                {
-
                                 }
                                 idx++;
                             } while (line.Substring(0, 1) == " " && idx < lines.Length);
@@ -379,12 +360,40 @@ namespace poshsecframework.PShell
                 case "<int32>":
                     rtn = typeof(int);
                     break;
+                case "<psobject>":
+                    rtn = typeof(PSObject);
+                    break;
                 case "[<switchparameter>]":
                     rtn = typeof(bool);
                     break;
                 default:
                     rtn = typeof(Object);
                     break;
+            }
+            return rtn;
+        }
+
+        private List<String> GetEditorParams(String helptext, String identifier)
+        {
+            List<String> rtn = new List<string>();
+            identifier += "=";
+            if (helptext.Contains(identifier))
+            {
+                int fnidx = helptext.IndexOf(identifier);
+                int fnendidx = helptext.IndexOf(" ", fnidx);
+                String fnparms = helptext.Substring(fnidx, fnendidx - fnidx);
+                fnparms = fnparms.Replace("\r\n", "").Replace(identifier, "");
+                if (fnparms.Trim() != "")
+                {
+                    String[] prms = fnparms.Split(',');
+                    if (prms != null && prms.Length > 0)
+                    {
+                        foreach (String prm in prms)
+                        {
+                            rtn.Add(prm);
+                        }
+                    }
+                }
             }
             return rtn;
         }
@@ -410,6 +419,11 @@ namespace poshsecframework.PShell
             set { this.iscommand = value; }
         }
 
+        public bool IsScheduled
+        {
+            set { this.scheduled = value; }
+        }
+
         public bool Clicked
         {
             set { this.clicked = value; }
@@ -418,6 +432,7 @@ namespace poshsecframework.PShell
         public List<psparameter> Parameters
         {
             set { this.scriptparams = value; }
+            get { return this.scriptparams; }
         }
 
         public String Results

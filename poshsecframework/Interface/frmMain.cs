@@ -7,6 +7,7 @@ using System.Data;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
+using System.Globalization;
 using System.Management.Automation;
 using System.Net;
 using System.IO;
@@ -61,6 +62,7 @@ namespace poshsecframework
             scnr.ScanComplete += scnr_ScanComplete;
             scnr.ScanCancelled += scnr_ScanCancelled;
             schedule.ItemUpdated += schedule_ItemUpdated;
+            schedule.ScriptInvoked += schedule_ScriptInvoked;
 
             Initialize();
             GetNetworks();            
@@ -363,6 +365,22 @@ namespace poshsecframework
             }
         }
 
+        private void schedule_ScriptInvoked(object sender, Utility.ScheduleEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    schedule_ScriptInvoked(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                RunScript(e.Schedule);
+            }
+        }
+
         private void ScheduleScript()
         {
             try
@@ -383,20 +401,139 @@ namespace poshsecframework
                     {
                         sitm.Parameters.Properties.Add(prm);
                     }
-                }                
-                Utility.ScheduleTime tm = new Utility.ScheduleTime();
-                tm.StartTime = DateTime.Now.AddMinutes(1);
-                sitm.ScheduledTime = tm;
-                sitm.Index = lvwSchedule.Items.Count;
-                schedule.ScheduleItems.Add(sitm);
-                if (schedule.Save())
-                {
-                    LoadSchedule();
                 }
+                Interface.frmSchedule sched = new Interface.frmSchedule();
+                if (sched.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    sitm.ScheduledTime = sched.ScheduledTime;
+                    sitm.Index = GetScheduleIndex();
+                    schedule.ScheduleItems.Add(sitm);
+                    if (schedule.Save())
+                    {
+                        LoadSchedule();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error saving schedule: " + schedule.LastException.Message);
+                    }
+                }
+                sched = null;
             }
             catch (Exception e)
             {
                 DisplayError(e);
+            }
+        }
+
+        private int GetScheduleIndex()
+        {
+            int idx = 0;
+            if (lvwSchedule.Items.Count > 0)
+            {
+                foreach (ListViewItem itm in lvwSchedule.Items)
+                {
+                    if ((int)itm.Tag > idx)
+                    { 
+                        idx = (int)itm.Tag;
+                    }
+                }
+            }
+            idx++;
+            return idx;
+        }
+
+        private String GetScheduleText(Utility.ScheduleTime schedtime)
+        { 
+            String rtn = "";
+            switch(schedtime.Frequency)
+            {
+                case Enums.EnumValues.TimeFrequency.Daily:
+                    rtn = schedtime.Frequency.ToString();
+                    break;
+                case Enums.EnumValues.TimeFrequency.Weekly:
+                    String daystr = "Every ";
+                    if (schedtime.DaysofWeek.Count > 0)
+                    {
+                        foreach (DayOfWeek dayidx in schedtime.DaysofWeek)
+                        {
+                            daystr += dayidx.ToString() + ", ";
+                        }
+                        daystr = daystr.Substring(0, daystr.Length - 2);
+                    }
+                    rtn += daystr;
+                    break;
+                case Enums.EnumValues.TimeFrequency.Monthly:
+                    String monstr = "Every ";
+                    if (schedtime.Months.Count > 0)
+                    {
+                        foreach (int monidx in schedtime.Months)
+                        {
+                            monstr += DateTimeFormatInfo.CurrentInfo.GetMonthName(monidx) + ", ";
+                        }
+                        monstr = monstr.Substring(0, monstr.Length - 2);
+                    }
+                    monstr += " on the ";
+                    if (schedtime.Dates.Count > 0)
+                    {
+                        foreach (int day in schedtime.Dates)
+                        {
+                            if (day == 32)
+                            {
+                                monstr += "Last Day, ";
+                            }
+                            else
+                            {
+                                monstr += day.ToString() + GetOrdinalSuffix(day) + ", ";
+                            }
+                        }
+                        monstr = monstr.Substring(0, monstr.Length - 2);
+                    }
+                    rtn += monstr;
+                    break;
+            }
+            rtn += " at " + schedtime.StartTime.ToString("hh:mm tt");
+            return rtn;
+        }
+
+        private String GetOrdinalSuffix(int day)
+        {
+            String rtn = "th";
+            switch (day)
+            { 
+                case 1: case 21: case 31:
+                    rtn = "st";
+                    break;
+                case 2: case 22:
+                    rtn = "nd";
+                    break;
+                case 3: case 23:
+                    rtn = "rd";
+                    break;
+            }
+            return rtn;
+        }
+
+        private void DeleteScheduleItems()
+        {
+            if (MessageBox.Show(StringValue.ConfirmScheduleDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                foreach (ListViewItem lvw in lvwSchedule.SelectedItems)
+                {
+                    schedule.Remove((int)lvw.Tag);
+                }
+                schedule.Save();
+                int idx = 0;
+                do
+                {
+                    if (lvwSchedule.Items[idx].Selected)
+                    {
+                        lvwSchedule.Items.RemoveAt(idx);
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+                } while (idx < lvwSchedule.Items.Count);
             }
         }
 
@@ -417,6 +554,16 @@ namespace poshsecframework
                     ps.Run(lvw.Text);
                 }                
                 ps = null;
+            }
+        }
+
+        private void RunScript(Utility.ScheduleItem sched)
+        {
+            if (sched != null)
+            {
+                PShell.pshell ps = new PShell.pshell();
+                ps.ParentForm = this;
+                ps.Run(sched);
             }
         }
 
@@ -790,7 +937,7 @@ namespace poshsecframework
                         lvw.SubItems.Add(parms);
                         if (sitm.ScheduledTime != null)
                         {
-                            lvw.SubItems.Add(sitm.ScheduledTime.Frequency.ToString() + " at " + sitm.ScheduledTime.StartTime.ToString("hh:mm tt"));
+                            lvw.SubItems.Add(GetScheduleText(sitm.ScheduledTime));
                         }
                         else
                         {
@@ -803,6 +950,13 @@ namespace poshsecframework
                     }
                     lvwSchedule.EndUpdate();
                 }
+            }
+            else
+            {
+                if (schedule.LastException != null)
+                {
+                    MessageBox.Show("Error loading schedule: " + schedule.LastException.Message);
+                }                
             }
         }
 
@@ -1056,6 +1210,11 @@ namespace poshsecframework
                 MessageBox.Show(StringValue.SettingScriptsRunning);
             }
         }
+
+        private void mnuDeleteScheduleItem_Click(object sender, EventArgs e)
+        {
+            DeleteScheduleItems();
+        }
         #endregion 
 
         #region List View
@@ -1108,6 +1267,14 @@ namespace poshsecframework
                 btnViewScript.Enabled = false;
                 btnRunScript.Enabled = false;
                 btnSchedScript.Enabled = false;
+            }
+        }
+
+        private void lvwSchedule_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lvwSchedule.SelectedItems.Count > 0)
+            {
+                DeleteScheduleItems();
             }
         }
         #endregion
@@ -1268,6 +1435,14 @@ namespace poshsecframework
         private void cmnuActiveScripts_Opening(object sender, CancelEventArgs e)
         {
             if (lvwActiveScripts.SelectedItems.Count == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void cmnuScheduleCommands_Opening(object sender, CancelEventArgs e)
+        {
+            if (lvwSchedule.Items.Count == 0)
             {
                 e.Cancel = true;
             }

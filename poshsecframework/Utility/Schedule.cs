@@ -17,11 +17,14 @@ namespace poshsecframework.Utility
         private Timer tmr = new Timer();
         List<ScheduleItem> schedule = new List<ScheduleItem>();
         bool ischecking = false;
+        private Exception lastexception;
         #endregion
 
         #region Public Events
         [XmlIgnore]
         public EventHandler<ScheduleEventArgs> ItemUpdated;
+        [XmlIgnore]
+        public EventHandler<ScheduleEventArgs> ScriptInvoked;
         #endregion
 
         #region Public Methods
@@ -54,8 +57,9 @@ namespace poshsecframework.Utility
                     rtn = true;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                lastexception = e;
                 rtn = false;    
             }
             return rtn;
@@ -78,13 +82,37 @@ namespace poshsecframework.Utility
                         rtn = true;
                     }
                 }
-                catch (Exception)
-                { 
+                catch (Exception e)
+                {
+                    lastexception = e;
                     rtn = false;
                 }
             }
             tmr.Enabled = rtn;
             return rtn;
+        }
+
+        public void Remove(int Index)
+        {
+            if (this.ScheduleItems != null && this.ScheduleItems.Count > 0)
+            {
+                int idx = -1;
+                bool found = false;
+                ScheduleItem itm = null;
+                do
+                {
+                    idx++;
+                    if (this.schedule[idx].Index == Index)
+                    {
+                        found = true;
+                        itm = this.schedule[idx];
+                    }
+                } while (idx < this.ScheduleItems.Count - 1 && !found);
+                if (found)
+                {
+                    this.ScheduleItems.Remove(itm);
+                }
+            }
         }
         #endregion
 
@@ -112,7 +140,7 @@ namespace poshsecframework.Utility
                             {
                                 found = true;
                             }
-                        } while (didx < sched.ScheduledTime.DaysofWeek.Count && !found);
+                        } while (didx < sched.ScheduledTime.DaysofWeek.Count - 1 && !found);
                         if (found)
                         {
                             rtn = isittime(sched);
@@ -143,7 +171,7 @@ namespace poshsecframework.Utility
                     {
                         rtn = true;
                     }
-                } while (midx < sched.ScheduledTime.Months.Count && !rtn);
+                } while (midx < sched.ScheduledTime.Months.Count - 1 && !rtn);
             }
             return rtn;
         }
@@ -161,7 +189,12 @@ namespace poshsecframework.Utility
                     {
                         rtn = true;
                     }
-                } while (didx < sched.ScheduledTime.Months.Count && !rtn);
+                    else if ((sched.ScheduledTime.Dates[didx] == 32) && DateTime.Now.Day == DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month))
+                    {
+                        //Last day of month
+                        rtn = true;
+                    }
+                } while (didx < sched.ScheduledTime.Dates.Count - 1 && !rtn);
             }
             return rtn;
         }
@@ -181,11 +214,21 @@ namespace poshsecframework.Utility
             sched.LastRunTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             Save();
             OnItemUpdated(new ScheduleEventArgs(sched));
+            OnScriptInvoked(new ScheduleEventArgs(sched));
         }
 
         private void OnItemUpdated(ScheduleEventArgs e)
         {
             EventHandler<ScheduleEventArgs> handler = ItemUpdated;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        private void OnScriptInvoked(ScheduleEventArgs e)
+        {
+            EventHandler<ScheduleEventArgs> handler = ScriptInvoked;
             if (handler != null)
             {
                 handler(this, e);
@@ -219,6 +262,11 @@ namespace poshsecframework.Utility
         {
             get { return schedule; }
             set { schedule = value; }
+        }
+
+        public Exception LastException
+        {
+            get { return lastexception; }
         }
         #endregion
     }

@@ -86,6 +86,12 @@ namespace poshsecframework.PShell
                     return frm.GetCheckedHosts();
                 }
             }
+
+            public PSObject DeserializeHosts(String serializedhosts)
+            {
+                PSObject hosts = (PSObject)PSSerializer.Deserialize(serializedhosts);
+                return hosts;
+            }
         }
 
         public class PSTab

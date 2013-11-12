@@ -34,6 +34,41 @@ namespace poshsecframework.PShell
                 MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
             }            
         }
+
+        public void Run(Utility.ScheduleItem sched)
+        {
+            clicked = false;
+            scroll = false;
+            if (File.Exists(sched.ScriptPath))
+            {
+                try
+                {
+                    ListViewItem lvw = new ListViewItem();
+                    lvw.Text = "Scheduled Script: " + sched.ScriptName;
+                    lvw.SubItems.Add("Running...");
+                    lvw.ImageIndex = 4;
+
+                    ps.ParentForm = frm;
+                    ps.Script = sched.ScriptPath;
+                    ps.IsCommand = false;
+                    ps.Clicked = false;
+                    ps.IsScheduled = true;
+                    ps.ScriptListView = lvw;
+                    ps.Parameters = sched.Parameters.Properties;
+
+                    Thread thd = new Thread(ps.RunScript);
+                    thd.SetApartmentState(ApartmentState.STA);
+                    lvw.Tag = thd;
+
+                    frm.AddActiveScript(lvw);
+                    thd.Start();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                }
+            }
+        }
         
         public void Run(string ScriptCommand, bool IsCommand = false, bool Clicked = true, bool Scroll = false)
         {
@@ -64,7 +99,8 @@ namespace poshsecframework.PShell
                     }
                     ps.IsCommand = IsCommand;
                     ps.Clicked = clicked;
-                    ps.ScriptListView = lvw;                    
+                    ps.ScriptListView = lvw;
+                    ps.Parameters.Clear();
                     
                     Thread thd = new Thread(ps.RunScript);
                     thd.SetApartmentState(ApartmentState.STA);
