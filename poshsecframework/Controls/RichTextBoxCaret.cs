@@ -14,6 +14,7 @@ namespace poshsecframework.Controls
         static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
         [DllImport("user32.dll")]
         static extern bool ShowCaret(IntPtr hWnd);
+        IntPtr caret;
         int tbidx = 0;
         bool filter = true;
         List<String> cmds = null;
@@ -28,6 +29,8 @@ namespace poshsecframework.Controls
         public RichTextBoxCaret()
         {
             InitializeComponent();
+            Bitmap bmp = Properties.Resources.caret_underline;
+            caret = bmp.GetHbitmap(Color.White);
         }
 
         private void InitializeComponent()
@@ -113,15 +116,9 @@ namespace poshsecframework.Controls
 
         public void DrawCaret()
         {
-            Bitmap bmp = Properties.Resources.caret_underline;
-            Size sz = new Size(0, 0);
-            //This size matches the Lucidia Console 9.75pt font.
-            //Adjust as necessary.
-            sz.Width = 8;
-            sz.Height = 13;
             try
             {
-                CreateCaret(this.Handle, bmp.GetHbitmap(Color.White), sz.Width, sz.Height);
+                CreateCaret(this.Handle, caret, 8, 13);
                 ShowCaret(this.Handle);
             }
             catch (Exception)
