@@ -7,8 +7,6 @@ Ben0xA
 #>
 
 # Begin Script Flow
-Import-Module $PSFramework
-
 Write-Output "This is the infinite loop script."
 
 $v = $False

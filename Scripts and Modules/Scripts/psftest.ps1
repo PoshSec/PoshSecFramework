@@ -7,7 +7,6 @@ Ben0xA
 #>
 
 # Begin Script Flow
-Import-Module $PSFramework
 
 Write-Output "This is the test script for PoshSec Framework"
 Write-Output "There should be 5 alerts listed."
@@ -20,12 +19,13 @@ Write-Output ""
 
 $PSStatus.Update("This updates the status item for this script")
 
-$PSMessageBox.Show("This shows a message box.", "This is the title")
-
 Write-Output "This is the PSFramework variable for the main framework script location."
 Write-Output $PSFramework
 Write-Output "This is the PSModRood variable for the Modules root folder."
 Write-Output $PSModRoot
 Write-Output "This is the PSRoot variable for the Scripts root folder."
 Write-Output $PSRoot
+
+Get-Drives
+
 #End Script

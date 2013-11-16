@@ -31,8 +31,6 @@ param(
   [int]$poll = 10
 )
 
-Import-Module $PSframework
-
 while($true){
   if([System.Net.IPAddress]::TryParse($IP,[ref] $null)){
      Get-SECIISlog -path $path -filter $filter -limit $limit | ForEach-Object {

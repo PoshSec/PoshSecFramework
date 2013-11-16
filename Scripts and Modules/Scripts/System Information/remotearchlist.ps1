@@ -13,10 +13,6 @@ Param(
 	[Parameter(Mandatory=$false,Position=1)]
 	[boolean]$showintab=$True
 )
-# Begin Script Flow
-
-#Leave this here for things to play nicely!
-Import-Module $PSFramework
 
 #Start your code here.
 $archs = @()

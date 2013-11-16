@@ -16,10 +16,6 @@ Param(
     [string]$computer=""
   )
   
-
-# Begin Script Flow
-Import-Module $PSFramework
-
 [boolean]$scan = $True;
 $baseline = @()
 $active = @()

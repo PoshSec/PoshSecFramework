@@ -23,10 +23,6 @@ Param(
   [Parameter(Mandatory=$false,Position=2)]
 	[string]$storedhosts
 )
-# Begin Script Flow
-
-#Leave this here for things to play nicely!
-Import-Module $PSFramework
 
 #Start your code here.
 $progs = @()

@@ -26,9 +26,6 @@ Param(
 
 # Begin Script Flow
 
-#Leave this here for things to play nicely!
-Import-Module $PSFramework
-
 #Start your code here.
 [PSObject]$hosts = $null
 
