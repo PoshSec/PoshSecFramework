@@ -74,6 +74,22 @@ namespace poshsecframework.PShell
                 rspace.SessionStateProxy.SetVariable("PSTab", PSTab);
             }
         }
+
+        private void ImportPSFramework()
+        {
+            if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
+            {
+                Pipeline pline = rspace.CreatePipeline();
+                pline.Commands.AddScript(StringValue.ImportPSFramework);
+                Collection<PSObject> rslt = pline.Invoke();
+                pline.Dispose();
+                pline = null;
+            }
+            else
+            {
+                frm.AddAlert(StringValue.FrameworkFileError, psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
+            }            
+        }
         #endregion
 
         #region " Public Methods "
@@ -82,6 +98,7 @@ namespace poshsecframework.PShell
             try
             {
                 InitializeScript();
+                ImportPSFramework();
             }
             catch (Exception e)
             {
@@ -102,15 +119,7 @@ namespace poshsecframework.PShell
             Collection<PSObject> rslt = null;
             String scrpt = "";
             Pipeline pline = rspace.CreatePipeline();
-            if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
-            {                
-                scrpt = StringValue.ImportPSFramework + Environment.NewLine;
-            }
-            else
-            {
-                frm.AddAlert(StringValue.FrameworkFileError, psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
-            }
-            scrpt += StringValue.GetCommand;
+            scrpt = StringValue.GetCommand;
             pline.Commands.AddScript(scrpt);
             rslt = pline.Invoke();
             pline.Dispose();
@@ -150,7 +159,8 @@ namespace poshsecframework.PShell
                     pline = rspace.CreatePipeline();
                     if (iscommand)
                     {
-                        String cmdscript = StringValue.ImportPSFramework + Environment.NewLine + scriptcommand + cmdparams;
+                        //String cmdscript = StringValue.ImportPSFramework + Environment.NewLine + scriptcommand + cmdparams;
+                        String cmdscript = scriptcommand + cmdparams;
                         if (clicked)
                         {
                             rslts.AppendLine(scriptcommand + cmdparams);
@@ -229,7 +239,8 @@ namespace poshsecframework.PShell
             String scrpt = "";
             if (iscommand)
             {
-                scrpt = StringValue.ImportPSFramework + Environment.NewLine + StringValue.GetHelpFull.Replace("{0}", scriptcommand);
+                //scrpt = StringValue.ImportPSFramework + Environment.NewLine + StringValue.GetHelpFull.Replace("{0}", scriptcommand);
+                scrpt = StringValue.GetHelpFull.Replace("{0}", scriptcommand);
             }
             else
             {
