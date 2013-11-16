@@ -14,5 +14,11 @@
     <Setting Name="ScriptDefaultAction" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="PSExecPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ScheduleFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Scripts\schedule.xml</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

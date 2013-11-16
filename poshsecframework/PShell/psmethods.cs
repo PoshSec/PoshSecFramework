@@ -6,7 +6,7 @@ using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     public class psmethods
     {
@@ -85,6 +85,12 @@ namespace psframework.PShell
                 {
                     return frm.GetCheckedHosts();
                 }
+            }
+
+            public PSObject DeserializeHosts(String serializedhosts)
+            {
+                PSObject hosts = (PSObject)PSSerializer.Deserialize(serializedhosts);
+                return hosts;
             }
         }
 

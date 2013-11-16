@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class pshell
     {
@@ -16,6 +17,7 @@ namespace psframework.PShell
         private pscript ps;
         private bool clicked;
         private bool scroll;
+        private bool scheduled = false;
         #endregion
 
         #region " Public Methods "
@@ -30,14 +32,44 @@ namespace psframework.PShell
             catch (Exception e)
             { 
                 //Base Exception Handler
-                MessageBox.Show("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
             }            
         }
 
-        public void Test()
+        public void Run(Utility.ScheduleItem sched)
         {
-            Thread thd = new Thread(ps.Test);
-            thd.Start();
+            clicked = false;
+            scroll = false;
+            scheduled = true;
+            if (File.Exists(sched.ScriptPath))
+            {
+                try
+                {
+                    ListViewItem lvw = new ListViewItem();
+                    lvw.Text = "Scheduled Script: " + sched.ScriptName;
+                    lvw.SubItems.Add("Running...");
+                    lvw.ImageIndex = 4;
+
+                    ps.ParentForm = frm;
+                    ps.Script = sched.ScriptPath;
+                    ps.IsCommand = false;
+                    ps.Clicked = false;
+                    ps.IsScheduled = true;
+                    ps.ScriptListView = lvw;
+                    ps.Parameters = sched.Parameters.Properties;
+
+                    Thread thd = new Thread(ps.RunScript);
+                    thd.SetApartmentState(ApartmentState.STA);
+                    lvw.Tag = thd;
+
+                    frm.AddActiveScript(lvw);
+                    thd.Start();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                }
+            }
         }
         
         public void Run(string ScriptCommand, bool IsCommand = false, bool Clicked = true, bool Scroll = false)
@@ -69,7 +101,8 @@ namespace psframework.PShell
                     }
                     ps.IsCommand = IsCommand;
                     ps.Clicked = clicked;
-                    ps.ScriptListView = lvw;                    
+                    ps.ScriptListView = lvw;
+                    ps.Parameters.Clear();
                     
                     Thread thd = new Thread(ps.RunScript);
                     thd.SetApartmentState(ApartmentState.STA);
@@ -80,7 +113,7 @@ namespace psframework.PShell
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
+                    MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
                 }
                               
             }
@@ -91,7 +124,14 @@ namespace psframework.PShell
         private void ScriptCompleted(object sender, EventArgs e)
         {
             pseventargs rslts = (pseventargs)e;
-            frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled, scroll);
+            if (!scheduled)
+            {                
+                frm.DisplayOutput(rslts.Results, rslts.ScriptListView, clicked, rslts.Cancelled, scroll);
+            }
+            else
+            {
+                frm.RemoveActiveScript(rslts.ScriptListView);
+            }
         }
         #endregion
 

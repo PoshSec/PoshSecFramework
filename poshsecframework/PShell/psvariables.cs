@@ -4,7 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class psvariables
     {
@@ -41,6 +41,30 @@ namespace psframework.PShell
             public override Object Value
             {
                 get { return psf; }
+            }
+        }
+
+        public class PSExec : PSVariable
+        {
+            private String psexec = poshsecframework.Properties.Settings.Default.PSExecPath;
+
+            public PSExec(string name) : base(name) { }
+
+            public override Object Value
+            {
+                get { return psexec; }
+            }
+        }
+
+        public class PSScheduleFile : PSVariable
+        {
+            private String schedulefile = poshsecframework.Properties.Settings.Default.ScheduleFile;
+
+            public PSScheduleFile(string name) : base(name) { }
+
+            public override Object Value
+            {
+                get { return schedulefile; }
             }
         }
     }

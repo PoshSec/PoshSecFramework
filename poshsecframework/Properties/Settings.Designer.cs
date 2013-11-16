@@ -70,5 +70,29 @@ namespace poshsecframework.Properties {
                 this["ScriptDefaultAction"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PSExecPath {
+            get {
+                return ((string)(this["PSExecPath"]));
+            }
+            set {
+                this["PSExecPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\Scripts\\schedule.xml")]
+        public string ScheduleFile {
+            get {
+                return ((string)(this["ScheduleFile"]));
+            }
+            set {
+                this["ScheduleFile"] = value;
+            }
+        }
     }
 }

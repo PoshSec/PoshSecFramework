@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class psexception
     {

@@ -50,7 +50,7 @@ Function Get-Pcs{
 }
 
 Function Get-KBs([string]$pcname){
-	$rslt = ""
+	$rslts = @()
 	$qfe = Get-WmiObject -Class Win32_QuickFixEngineering -Computer $pcname -ErrorVariable myerror -ErrorAction SilentlyContinue
 	if($myerror.count -eq 0) {
 		foreach($kb in $kbItems){
@@ -61,43 +61,31 @@ Function Get-KBs([string]$pcname){
 			}
 			if($omitInstalled){
 				if(-not $installed){
-          if($showintab) {
-            $rslt = New-Object PSObject
-            $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
-            $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
-            $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value $installed
-          }
-          else {
-            $rslt += "$pcname,$kb,$installed`r`n"
-          }					
-				}
-			}
-			else {
-        if($showintab) {
           $rslt = New-Object PSObject
           $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
           $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
           $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value $installed
-        }
-        else {
-          $rslt += "$pcname,$kb,$installed`r`n"  
-        }				
+          $rslts += $rslt
+				}
+			}
+			else {
+        $rslt = New-Object PSObject
+        $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
+        $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
+        $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value $installed
+        $rslts += $rslt
 			}		
 		}
 	}
 	else{
-    if($showintab) {
-      $rslt = New-Object PSObject
-      $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
-      $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
-      $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value "RPC_Error"
-    }
-    else {
-      $rslt += "$pcname,$kb,RPC_Error`r`n"
-    }		
+    $rslt = New-Object PSObject
+    $rslt | Add-Member -MemberType NoteProperty -Name "PC_Name" -Value $pcname
+    $rslt | Add-Member -MemberType NoteProperty -Name "KB" -Value $kb
+    $rslt | Add-Member -MemberType NoteProperty -Name "Installed" -Value "RPC_Error"
+    $rslts += $rslt
     $PSAlert.Add("$pcname is inaccessible. RPC_Error", 1)
 	}
-	return $rslt
+	return $rslts
 }
 
 # Begin Program Flow
@@ -106,6 +94,7 @@ Write-Output "Written By: @Ben0xA"
 Write-Output "Huge thanks to @mwjcomputing!`r`n"
 Write-Output "Looking for KBs $kbs"
 $results = @()
+$pcs = @()
 if($omitInstalled){
 	Write-Output "Omitting entries where the KB is installed."
 }
@@ -117,16 +106,27 @@ else {
 	Write-Output "Will save csv results to $outputFile. Query messages will only appear on the screen.`r`n"
 }
 
-$wumaster = "PC Name,KB,Installed`r`n"
+$wumaster = ""
 $kbItems = $kbs.Split(",")
 if(-not $computer){
-	$pcs = Get-PCs
-	
+  $hosts = $PSHosts.GetHosts()
+  if(!$hosts) {
+    $hosts = Get-PCs    
+    foreach($h in $hosts) {
+      $pcs += $h.Properties.name
+    }
+  }
+  else {
+    foreach($h in $hosts) {
+      $pcs += $h.Name
+    }
+  }
+  
   $idx = 0
   $len = $pcs.length
 	foreach($pc in $pcs){
     $idx += 1
-		$pcname = $pc.Properties.name
+		$pcname = $pc
 		
 		if($pcname){
       $PSStatus.Update("Querying $pcname [$idx of $len]")
@@ -137,7 +137,7 @@ if(-not $computer){
         }
       }
 			else {
-        $wumaster += Get-KBs($pcname)
+        $wumaster += Get-KBs($pcname) | Out-String
       }
 		}	
 	}
@@ -151,7 +151,7 @@ else{
     }    
   }
 	else {
-    $wumaster += Get-KBs($computer)
+    $wumaster += Get-KBs($computer) | Out-String 
   }
 }
 
@@ -160,7 +160,7 @@ if(-not $outputFile){
     $PSTab.AddObjectGrid($results, "Windows KB ($kbs) Results")
   }
   else {
-    $wumaster
+    $wumaster | Out-String
   }	
 }
 else {

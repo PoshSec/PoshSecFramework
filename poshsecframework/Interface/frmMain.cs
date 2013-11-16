@@ -7,6 +7,7 @@ using System.Data;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
+using System.Globalization;
 using System.Management.Automation;
 using System.Net;
 using System.IO;
@@ -14,8 +15,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework
+namespace poshsecframework
 {
     public partial class frmMain : Form
     {
@@ -26,6 +28,7 @@ namespace psframework
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
+        private Utility.Schedule schedule = new Utility.Schedule(1000);
 
         enum SystemType
         { 
@@ -40,14 +43,29 @@ namespace psframework
             Command,
             Alias
         }
+
+        enum ScheduleColumns
+        { 
+            ScriptName = 0,
+            Parameters,
+            Schedule,
+            RunAs,
+            LastRun,
+            Message
+        }
         #endregion
 
         #region Form
         public frmMain()
         {
             InitializeComponent();
+            scnr.ScanComplete += scnr_ScanComplete;
+            scnr.ScanCancelled += scnr_ScanCancelled;
+            schedule.ItemUpdated += schedule_ItemUpdated;
+            schedule.ScriptInvoked += schedule_ScriptInvoked;
+
             Initialize();
-            GetNetworks();
+            GetNetworks();            
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -56,7 +74,7 @@ namespace psframework
             {
                 if (lvwActiveScripts.Items.Count > 0)
                 {
-                    if (MessageBox.Show("You have active scripts running. If you exit, all running scripts will be terminated. Are you sure you want to exit?", "Active Scripts", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    if (MessageBox.Show(StringValue.ActiveScriptsRunning, "Active Scripts", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                     {
                         foreach (ListViewItem lvw in lvwActiveScripts.Items)
                         {
@@ -89,7 +107,7 @@ namespace psframework
         {
             CheckSettings();
             psf = new PShell.pshell();
-            txtPShellOutput.Text = "psf > ";
+            txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
             scnr.ParentForm = this;
@@ -97,6 +115,7 @@ namespace psframework
             psf.ParentForm = this;
             GetLibrary();
             GetCommand();
+            LoadSchedule();
         }
 
         #region Network
@@ -104,7 +123,7 @@ namespace psframework
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
             TreeNode lnode = new TreeNode();
-            lnode.Text = "Local Network";
+            lnode.Text = StringValue.LocalNetwork;
             lnode.ImageIndex = 3;
             lnode.SelectedImageIndex = 3;
             lnode.Tag = 1;
@@ -144,11 +163,11 @@ namespace psframework
 
                     lvwItm.Text = localHost;
                     lvwItm.SubItems.Add(localIP);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
-                    lvwItm.SubItems.Add("Up");
-                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
+                    lvwItm.SubItems.Add(StringValue.Up);
+                    lvwItm.SubItems.Add(StringValue.NotInstalled);
                     lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                     lvwItm.ImageIndex = 2;
                     lvwSystems.Items.Add(lvwItm);
@@ -171,6 +190,7 @@ namespace psframework
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
                 SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
+                this.UseWaitCursor = true;
                 switch (typ)
                 {
                     case SystemType.Local:
@@ -183,7 +203,7 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("Please select a network first.");
+                MessageBox.Show(StringValue.SelectNetwork);
             }
         }
 
@@ -194,6 +214,7 @@ namespace psframework
             if (rslts.Count > 0)
             {
                 lvwSystems.Items.Clear();
+                lvwSystems.BeginUpdate();
                 foreach (DirectoryEntry system in rslts)
                 {
                     ListViewItem lvwItm = new ListViewItem();
@@ -201,29 +222,30 @@ namespace psframework
 
                     String ipadr = scnr.GetIP(system.Name);
                     lvwItm.SubItems.Add(ipadr);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
+                    lvwItm.SubItems.Add(scnr.GetMac(ipadr));
                     bool isup = false;
-                    if (ipadr != "0.0.0.0 (unknown host)")
+                    if (ipadr != StringValue.UnknownHost)
                     {
                         isup = scnr.Ping(system.Name, 1, 500);
                     }
                     if (isup)
                     {
-                        lvwItm.SubItems.Add("Up");
+                        lvwItm.SubItems.Add(StringValue.Up);
                     }
                     else
                     {
-                        lvwItm.SubItems.Add("Down");
+                        lvwItm.SubItems.Add(StringValue.Down);
                     }
-                    lvwItm.SubItems.Add("Not Installed");
+                    lvwItm.SubItems.Add(StringValue.NotInstalled);
                     lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
+                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                     lvwItm.ImageIndex = 2;
                     lvwSystems.Items.Add(lvwItm);
                     lvwSystems.Refresh();
                     Application.DoEvents();
                 }
+                lvwSystems.EndUpdate();
             }
 
             rslts = null;
@@ -234,37 +256,291 @@ namespace psframework
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
-            ArrayList rslts = scnr.ScanbyIP();
-            if (rslts.Count > 0 && !cancelscan)
+            Thread thd = new Thread(scnr.ScanbyIP);
+            thd.Start();
+        }
+
+        private void scnr_ScanComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        {
+            if (this.InvokeRequired)
             {
-                lvwSystems.Items.Clear();
-                SetProgress(0, rslts.Count);
-                foreach (String system in rslts)
+                MethodInvoker del = delegate
                 {
-                    ListViewItem lvwItm = new ListViewItem();
-                    
-                    SetStatus("Adding " + system + ", please wait...");
-                    
-                    lvwItm.Text = scnr.GetHostname(system);
-                    lvwItm.SubItems.Add(system);
-                    lvwItm.SubItems.Add("00-00-00-00-00-00");
-                    lvwItm.SubItems.Add("Up");
-                    lvwItm.SubItems.Add("Not Installed");
-                    lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"));
-
-                    lvwItm.ImageIndex = 2;
-                    lvwSystems.Items.Add(lvwItm);
-                    lvwSystems.Refresh();
-
-                    pbStatus.Value += 1;
-                    Application.DoEvents();
-                }
+                    scnr_ScanComplete(sender, e);
+                };
+                this.Invoke(del);
             }
-            rslts = null;
+            else
+            {
+                ArrayList rslts = e.Systems;
+                if (rslts.Count > 0 && !cancelscan)
+                {
+                    lvwSystems.Items.Clear();
+                    SetProgress(0, rslts.Count);
+                    lvwSystems.BeginUpdate();
+                    foreach (String system in rslts)
+                    {
+                        if (system != null && system != "")
+                        {
+                            ListViewItem lvwItm = new ListViewItem();
+
+                            SetStatus("Adding " + system + ", please wait...");
+
+                            String[] ipinfo = system.Split('|');
+                            lvwItm.Text = ipinfo[2];
+                            lvwItm.SubItems.Add(ipinfo[1]);
+                            lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
+                            lvwItm.SubItems.Add(StringValue.Up);
+                            lvwItm.SubItems.Add(StringValue.NotInstalled);
+                            lvwItm.SubItems.Add("0");
+                            lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
+
+                            lvwItm.ImageIndex = 2;
+                            lvwSystems.Items.Add(lvwItm);
+                            lvwSystems.Refresh();
+
+                            pbStatus.Value += 1;
+                        }
+                    }
+                    lvwSystems.EndUpdate();
+                }
+                rslts = null;
+            }
             HideProgress();
             btnCancelScan.Enabled = false;
-            lblStatus.Text = "Ready";            
+            this.UseWaitCursor = false;
+            lblStatus.Text = StringValue.Ready;
+        }
+
+        private void scnr_ScanCancelled(object sender, EventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    scnr_ScanCancelled(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                HideProgress();
+                btnCancelScan.Enabled = false;
+                this.UseWaitCursor = false;
+                lblStatus.Text = StringValue.Ready;
+            }            
+        }
+
+        private void schedule_ItemUpdated(object sender, Utility.ScheduleEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    schedule_ItemUpdated(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                int idx = -1;
+                bool found = false;
+                ListViewItem lvw = null;
+                if (lvwSchedule.Items.Count > 0)
+                {
+                    do
+                    {
+                        idx++;
+                        lvw = lvwSchedule.Items[idx];
+                        if (lvw.Tag != null)
+                        {
+                            if ((int)lvw.Tag == e.Schedule.Index)
+                            {
+                                found = true;
+                            }
+                        }                        
+                    } while (idx < lvwSchedule.Items.Count && !found);
+                    if (found && lvw != null)
+                    {
+                        lvw.SubItems[(int)ScheduleColumns.LastRun].Text = e.Schedule.LastRunTime;
+                    }
+                }                
+            }
+        }
+
+        private void schedule_ScriptInvoked(object sender, Utility.ScheduleEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    schedule_ScriptInvoked(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                RunScript(e.Schedule);
+            }
+        }
+
+        private void ScheduleScript()
+        {
+            try
+            {
+                List<PShell.psparameter> scriptparams;
+                ListViewItem lvw = lvwScripts.SelectedItems[0];
+                PShell.pscript psc = new PShell.pscript();
+                psc.ParentForm = this;
+                scriptparams = psc.CheckForParams(lvw.Tag.ToString());
+
+                if (!psc.ParamSelectionCancelled)
+                {
+                    Utility.ScheduleItem sitm = new Utility.ScheduleItem();
+                    sitm.ScriptName = lvw.Text;
+                    sitm.ScriptPath = lvw.Tag.ToString();
+                    sitm.RunAs = Enums.EnumValues.RunAs.CurrentUser;
+                    if (scriptparams != null && scriptparams.Count > 0)
+                    {
+                        foreach (PShell.psparameter prm in scriptparams)
+                        {
+                            sitm.Parameters.Properties.Add(prm);
+                        }
+                    }
+                    Interface.frmSchedule sched = new Interface.frmSchedule();
+                    if (sched.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        sitm.ScheduledTime = sched.ScheduledTime;
+                        sitm.Index = GetScheduleIndex();
+                        schedule.ScheduleItems.Add(sitm);
+                        if (schedule.Save())
+                        {
+                            LoadSchedule();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Error saving schedule: " + schedule.LastException.Message);
+                        }
+                    }
+                    sched = null;
+                }                
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
+        }
+
+        private int GetScheduleIndex()
+        {
+            int idx = 0;
+            if (lvwSchedule.Items.Count > 0)
+            {
+                foreach (ListViewItem itm in lvwSchedule.Items)
+                {
+                    if ((int)itm.Tag > idx)
+                    { 
+                        idx = (int)itm.Tag;
+                    }
+                }
+            }
+            idx++;
+            return idx;
+        }
+
+        private String GetScheduleText(Utility.ScheduleTime schedtime)
+        { 
+            String rtn = "";
+            switch(schedtime.Frequency)
+            {
+                case Enums.EnumValues.TimeFrequency.Daily:
+                    rtn = schedtime.Frequency.ToString();
+                    break;
+                case Enums.EnumValues.TimeFrequency.Weekly:
+                    String daystr = "Every ";
+                    if (schedtime.DaysofWeek.Count > 0)
+                    {
+                        foreach (DayOfWeek dayidx in schedtime.DaysofWeek)
+                        {
+                            daystr += dayidx.ToString() + ", ";
+                        }
+                        daystr = daystr.Substring(0, daystr.Length - 2);
+                    }
+                    rtn += daystr;
+                    break;
+                case Enums.EnumValues.TimeFrequency.Monthly:
+                    String monstr = "Every ";
+                    if (schedtime.Months.Count > 0)
+                    {
+                        foreach (int monidx in schedtime.Months)
+                        {
+                            monstr += DateTimeFormatInfo.CurrentInfo.GetMonthName(monidx) + ", ";
+                        }
+                        monstr = monstr.Substring(0, monstr.Length - 2);
+                    }
+                    monstr += " on the ";
+                    if (schedtime.Dates.Count > 0)
+                    {
+                        foreach (int day in schedtime.Dates)
+                        {
+                            if (day == 32)
+                            {
+                                monstr += "Last Day, ";
+                            }
+                            else
+                            {
+                                monstr += day.ToString() + GetOrdinalSuffix(day) + ", ";
+                            }
+                        }
+                        monstr = monstr.Substring(0, monstr.Length - 2);
+                    }
+                    rtn += monstr;
+                    break;
+            }
+            rtn += " at " + schedtime.StartTime.ToString("hh:mm tt");
+            return rtn;
+        }
+
+        private String GetOrdinalSuffix(int day)
+        {
+            String rtn = "th";
+            switch (day)
+            { 
+                case 1: case 21: case 31:
+                    rtn = "st";
+                    break;
+                case 2: case 22:
+                    rtn = "nd";
+                    break;
+                case 3: case 23:
+                    rtn = "rd";
+                    break;
+            }
+            return rtn;
+        }
+
+        private void DeleteScheduleItems()
+        {
+            if (MessageBox.Show(StringValue.ConfirmScheduleDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                foreach (ListViewItem lvw in lvwSchedule.SelectedItems)
+                {
+                    schedule.Remove((int)lvw.Tag);
+                }
+                schedule.Save();
+                int idx = 0;
+                do
+                {
+                    if (lvwSchedule.Items[idx].Selected)
+                    {
+                        lvwSchedule.Items.RemoveAt(idx);
+                    }
+                    else
+                    {
+                        idx++;
+                    }
+                } while (idx < lvwSchedule.Items.Count);
+            }
         }
 
         private void RunScript()
@@ -275,8 +551,25 @@ namespace psframework
                 //This needs to be a separate runspace.
                 PShell.pshell ps = new PShell.pshell();
                 ps.ParentForm = this;
-                ps.Run(lvw.Text);
+                if (lvw.Group.Header != null && lvw.Group.Header != "General")
+                {
+                    ps.Run(Path.Combine(lvw.Group.Header, lvw.Text));
+                }
+                else
+                {
+                    ps.Run(lvw.Text);
+                }                
                 ps = null;
+            }
+        }
+
+        private void RunScript(Utility.ScheduleItem sched)
+        {
+            if (sched != null)
+            {
+                PShell.pshell ps = new PShell.pshell();
+                ps.ParentForm = this;
+                ps.Run(sched);
             }
         }
 
@@ -304,32 +597,83 @@ namespace psframework
         #region Status
         public void SetStatus(String message)
         {
-            lblStatus.Text = message;
-            Application.DoEvents();
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    SetStatus(message);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                lblStatus.Text = message;
+            }
         }
         #endregion
 
         #region ProgressBar
         public void SetProgress(int Value, int Maximum)
         {
-            pbStatus.Visible = true;
-            if (pbStatus.Maximum != Maximum)
+            if (this.InvokeRequired)
             {
-                pbStatus.Maximum = Maximum;
+                MethodInvoker del = delegate
+                {
+                    SetProgress(Value, Maximum);
+                };
+                this.Invoke(del);
             }
-            if (Value <= Maximum)
+            else
             {
-                pbStatus.Value = Value;            
-            }
+                pbStatus.Visible = true;
+                if (pbStatus.Maximum != Maximum)
+                {
+                    pbStatus.Maximum = Maximum;
+                }
+                if (Value <= Maximum)
+                {
+                    pbStatus.Value = Value;
+                }
+            }            
         }
 
         public void HideProgress()
         {
-            pbStatus.Visible = false;
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    HideProgress();
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                pbStatus.Visible = false;
+            }            
         }
         #endregion
 
         #region "PowerShell"
+        public void RemoveActiveScript(ListViewItem lvw)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    RemoveActiveScript(lvw);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                if (lvw != null)
+                {
+                    lvw.Remove();
+                    tbpScripts.Text = StringValue.ActiveScripts + " (" + lvwActiveScripts.Items.Count.ToString() + ")";
+                }
+            }
+        }
         public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false)
         {
             if (this.InvokeRequired)
@@ -342,12 +686,12 @@ namespace psframework
             }
             else
             {
-                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + "psf > ").Length) > txtPShellOutput.MaxLength)
+                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + StringValue.psf).Length) > txtPShellOutput.MaxLength)
                 {
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 if (clicked || cancelled || scroll)
@@ -358,11 +702,7 @@ namespace psframework
                 }
                 txtPShellOutput.Select();
                 txtPShellOutput.ReadOnly = false;
-                if (lvw != null)
-                {
-                    lvw.Remove();
-                    tbpScripts.Text = "Active Scripts (" + lvwActiveScripts.Items.Count.ToString() + ")";
-                }                
+                RemoveActiveScript(lvw);                
             }            
         }
 
@@ -407,7 +747,7 @@ namespace psframework
                     lvwitm.Text = alerttype.ToString();
                     lvwitm.ImageIndex = (int)alerttype;
                     lvwitm.SubItems.Add(message);
-                    lvwitm.SubItems.Add(DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt"));
+                    lvwitm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
                     lvwitm.SubItems.Add(scriptname);                    
                     lvwAlerts.Items.Add(lvwitm);                    
                     lvwAlerts_Update();
@@ -519,7 +859,7 @@ namespace psframework
             else
             {
                 lvwActiveScripts.Items.Add(lvw);
-                tbpScripts.Text = "Active Scripts (" + lvwActiveScripts.Items.Count.ToString() + ")";
+                tbpScripts.Text = StringValue.ActiveScripts + "(" + lvwActiveScripts.Items.Count.ToString() + ")";
             }
         }
 
@@ -545,34 +885,37 @@ namespace psframework
         {
             try
             {
-                cmdhist.Add(cmd);
+                if (cmd.Trim() != "")
+                {
+                    cmdhist.Add(cmd);
+                }                
                 cmdhistidx = cmdhist.Count;
                 switch (cmd.ToUpper())
                 { 
-                    case "CLS": case "CLEAR":
-                        txtPShellOutput.Text = "psf > ";
+                    case StringValue.CLS: case StringValue.Clear:
+                        txtPShellOutput.Text = StringValue.psf;
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         break;
-                    case "APT-GET UPDATE":
-                        txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                    case StringValue.AptGetUpdate:
+                        txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         ShellOpenCommand("wuapp");
                         break; 
-                    case "RELOAD":
+                    case StringValue.Reload:
                         if (lvwActiveScripts.Items.Count == 0)
                         {
                             Initialize();
                         }
                         else 
                         {
-                            txtPShellOutput.AppendText(Environment.NewLine + "Can not reload the framework because there are scripts running. Please stop all scripts before issuing the reload command again." + Environment.NewLine);
-                            txtPShellOutput.AppendText(Environment.NewLine + "psf > ");
+                            txtPShellOutput.AppendText(Environment.NewLine + StringValue.ReloadScriptsRunning + Environment.NewLine);
+                            txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
                             mincurpos = txtPShellOutput.Text.Length;
                         }
                         break;
-                    case "EXIT":
+                    case StringValue.Exit:
                         this.Close();
                         break;
                     default:
@@ -589,12 +932,62 @@ namespace psframework
             }
         }
 
+        private void LoadSchedule()
+        {
+            if (schedule.Load())
+            {
+                if (schedule.ScheduleItems != null && schedule.ScheduleItems.Count > 0)
+                {
+                    lvwSchedule.Items.Clear();
+                    lvwSchedule.BeginUpdate();
+                    foreach (Utility.ScheduleItem sitm in schedule.ScheduleItems)
+                    {
+                        ListViewItem lvw = new ListViewItem();
+                        lvw.ImageIndex = 5;
+                        lvw.Text = sitm.ScriptName;
+                        lvw.Tag = sitm.Index;
+                        String parms = "";
+                        if (sitm.Parameters.Properties != null && sitm.Parameters.Properties.Count > 0)
+                        {
+                            foreach (PShell.psparameter prop in sitm.Parameters.Properties)
+                            {
+                                parms += prop.Name + "=" + (prop.Value ?? prop.DefaultValue ?? "").ToString() + ", ";
+                            }
+                            parms = parms.Substring(0, parms.Length - 2);
+                        }
+                        lvw.SubItems.Add(parms);
+                        if (sitm.ScheduledTime != null)
+                        {
+                            lvw.SubItems.Add(GetScheduleText(sitm.ScheduledTime));
+                        }
+                        else
+                        {
+                            lvw.SubItems.Add("");
+                        }
+                        lvw.SubItems.Add(sitm.RunAs.ToString());
+                        lvw.SubItems.Add(sitm.LastRunTime);
+                        lvw.SubItems.Add(sitm.Message);
+                        lvwSchedule.Items.Add(lvw);
+                    }
+                    lvwSchedule.EndUpdate();
+                }
+            }
+            else
+            {
+                if (schedule.LastException != null)
+                {
+                    MessageBox.Show("Error loading schedule: " + schedule.LastException.Message);
+                }                
+            }
+        }
+
         private void CheckSettings()
         {
             //Ensure we have settings and that if it's .\ to change to application path.
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
             String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
+            String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
@@ -606,6 +999,10 @@ namespace psframework
             if (modpath.StartsWith(".") || modpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
+            }
+            if (schpath.StartsWith(".") || modpath.Trim() == "")
+            {
+                poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
             }
             poshsecframework.Properties.Settings.Default.Save();
             poshsecframework.Properties.Settings.Default.Reload();
@@ -693,33 +1090,51 @@ namespace psframework
         {
             try
             {
-                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString(); ; // Get this variable from Settings.
+                lvwScripts.BeginUpdate();
+                lvwScripts.Items.Clear();
+                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
-                    String[] scpaths = Directory.GetFiles(scriptroot, "*.ps1", SearchOption.TopDirectoryOnly);
-                    if (scpaths != null)
-                    {
-                        lvwScripts.BeginUpdate();
-                        lvwScripts.Items.Clear();
-                        foreach (String scpath in scpaths)
-                        {
-                            ListViewItem lvw = new ListViewItem();
-                            lvw.Text = new FileInfo(scpath).Name;
-                            lvw.ImageIndex = 4;
-                            lvw.Tag = scpath;
-                            lvwScripts.Items.Add(lvw);
-                        }
-                        lvwScripts.EndUpdate();
-                    }
+                    AddLibraryItem(scriptroot);
                 }
                 else
                 { 
-                    AddAlert("Unable to find the Script Path. Check your settings", PShell.psmethods.PSAlert.AlertType.Error, "PoshSec Framework");
+                    AddAlert(StringValue.ScriptPathError, PShell.psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
                 }
+                lvwScripts.EndUpdate();
             }
             catch (Exception e)
             {
                 DisplayError(e);
+            }
+        }
+
+        private void AddLibraryItem(String scriptroot, String group = "General")
+        {
+            String[] scpaths = Directory.GetFiles(scriptroot, "*.ps1", SearchOption.TopDirectoryOnly);
+            if (scpaths != null)
+            {
+                ListViewGroup lvwg = new ListViewGroup(group);
+                lvwScripts.Groups.Add(lvwg);
+                foreach (String scpath in scpaths)
+                {
+                    ListViewItem lvw = new ListViewItem();
+                    lvw.Text = new FileInfo(scpath).Name;
+                    lvw.ImageIndex = 4;
+                    lvw.Tag = scpath;
+                    lvw.Group = lvwg;
+                    lvwScripts.Items.Add(lvw);
+                }
+            }
+            String[] folders = Directory.GetDirectories(scriptroot);
+            if (folders != null && folders.Length > 0)
+            {
+                foreach (String folder in folders)
+                { 
+                    DirectoryInfo diri = new DirectoryInfo(folder);
+                    AddLibraryItem(folder, diri.Name);
+                    diri = null;
+                }
             }
         }
         #endregion
@@ -729,6 +1144,31 @@ namespace psframework
         {
             DisplayOutput(Environment.NewLine + "Unhandled exception." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, true);
             tcMain.SelectedTab = tbpPowerShell;
+        }
+        #endregion
+
+        #endregion
+
+        #region Public Methods
+
+        #region Interface
+        public System.Windows.Forms.DialogResult ShowParams(poshsecframework.PShell.psparamtype parm)
+        {
+            if (this.InvokeRequired)
+            {
+                return (System.Windows.Forms.DialogResult)this.Invoke((Func<System.Windows.Forms.DialogResult>)delegate
+                {
+                    return ShowParams(parm);
+                });
+            }
+            else
+            {
+                DialogResult rslt = System.Windows.Forms.DialogResult.Cancel;
+                Interface.frmParams frmi = new Interface.frmParams();
+                frmi.SetParameters(parm);
+                rslt = frmi.ShowDialog(this);
+                return rslt;
+            }
         }
         #endregion
 
@@ -751,7 +1191,7 @@ namespace psframework
         {
             try
             {
-                String wurl = "https://github.com/PoshSec/PoshSecFramework/commits/master";
+                String wurl = StringValue.UpdateURI;
                 ShellOpenCommand(wurl);
             }
             catch (Exception ex)
@@ -764,7 +1204,7 @@ namespace psframework
         {
             try
             {
-                String wurl = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
+                String wurl = StringValue.WikiURI;
                 ShellOpenCommand(wurl);
             }
             catch (Exception ex)
@@ -788,8 +1228,13 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("You can not change the settings while scripts or commands are running. Please stop any commands or scripts and then try again.");
+                MessageBox.Show(StringValue.SettingScriptsRunning);
             }
+        }
+
+        private void mnuDeleteScheduleItem_Click(object sender, EventArgs e)
+        {
+            DeleteScheduleItems();
         }
         #endregion 
 
@@ -822,8 +1267,8 @@ namespace psframework
             }
             else if (txtPShellOutput.ReadOnly)
             {
-                txtPShellOutput.AppendText(Environment.NewLine + "A command is already running. Please wait, or cancel the command and try again." + Environment.NewLine + Environment.NewLine);
-                txtPShellOutput.AppendText("psf > ");
+                txtPShellOutput.AppendText(Environment.NewLine + StringValue.CommandRunning + Environment.NewLine + Environment.NewLine);
+                txtPShellOutput.AppendText(StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 tcMain.SelectedTab = tbpPowerShell;
@@ -836,11 +1281,21 @@ namespace psframework
             {
                 btnViewScript.Enabled = true;
                 btnRunScript.Enabled = true;
+                btnSchedScript.Enabled = true;
             }
             else
             {
                 btnViewScript.Enabled = false;
                 btnRunScript.Enabled = false;
+                btnSchedScript.Enabled = false;
+            }
+        }
+
+        private void lvwSchedule_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lvwSchedule.SelectedItems.Count > 0)
+            {
+                DeleteScheduleItems();
             }
         }
         #endregion
@@ -943,7 +1398,7 @@ namespace psframework
                                 //Ctrl+L for CLS!
                                 e.Handled = true;
                                 e.SuppressKeyPress = true;
-                                txtPShellOutput.Text = "psf > ";
+                                txtPShellOutput.Text = StringValue.psf;
                                 mincurpos = txtPShellOutput.Text.Length;
                                 txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                                 txtPShellOutput.ScrollToCaret();
@@ -971,7 +1426,6 @@ namespace psframework
                     }
                     break;
             }
-            txtPShellOutput.DrawCaret();
         }
         #endregion
 
@@ -1007,6 +1461,14 @@ namespace psframework
             }
         }
 
+        private void cmnuScheduleCommands_Opening(object sender, CancelEventArgs e)
+        {
+            if (lvwSchedule.Items.Count == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+
         private void cmnuScripts_Opening(object sender, CancelEventArgs e)
         {
             if (lvwScripts.SelectedItems.Count == 0)
@@ -1026,13 +1488,13 @@ namespace psframework
             }
             else
             {
-                MessageBox.Show("Please select an active script.");
+                MessageBox.Show(StringValue.SelectActiveScript);
             }
         }
 
         private void btnClearAlerts_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to clear all of the alerts?", "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            if (MessageBox.Show(StringValue.ClearAlerts, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
                 lvwAlerts.Items.Clear();
                 lvwAlerts_Update();
@@ -1064,6 +1526,16 @@ namespace psframework
             RunScript();
         }
 
+        private void btnSchedScript_Click(object sender, EventArgs e)
+        {
+            ScheduleScript();
+        }
+
+        private void cmbtnSchedScript_Click(object sender, EventArgs e)
+        {
+            ScheduleScript();
+        }
+
         private void cmbtnRunScript_Click(object sender, EventArgs e)
         {
             RunScript();
@@ -1076,12 +1548,12 @@ namespace psframework
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");
+            MessageBox.Show(StringValue.NotImplemented);
         }
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Not implemented yet. Soon!");           
+            MessageBox.Show(StringValue.NotImplemented);           
         }
 
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)
@@ -1089,7 +1561,7 @@ namespace psframework
             if (lvwCommands.SelectedItems.Count > 0)
             {
                 ListViewItem lvw = lvwCommands.SelectedItems[0];
-                String ghcmd = "Get-Help " + lvw.Text + " -full | Out-String";
+                String ghcmd = StringValue.GetHelpFull.Replace("{0}", lvw.Text);
                 txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);
@@ -1102,7 +1574,7 @@ namespace psframework
             if (lvwScripts.SelectedItems.Count > 0)
             {
                 ListViewItem lvw = lvwScripts.SelectedItems[0];
-                String ghcmd = "Get-Help \"" + Path.Combine(poshsecframework.Properties.Settings.Default.ScriptPath, lvw.Text) + "\" -full | Out-String";
+                String ghcmd = StringValue.GetHelpFull.Replace("{0}","\"" + lvw.Tag + "\"");
                 txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);
@@ -1135,6 +1607,5 @@ namespace psframework
             get { return cancelscan; }
         }
         #endregion
-
     }
 }

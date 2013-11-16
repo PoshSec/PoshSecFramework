@@ -7,7 +7,5 @@ Ben0xA
 #>
 
 # Begin Script Flow
-Import-Module $PSFramework
-
 Write-Output "Hello World!"
 #End Script

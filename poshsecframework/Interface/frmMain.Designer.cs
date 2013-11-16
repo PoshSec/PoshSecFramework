@@ -1,4 +1,4 @@
-namespace psframework
+namespace poshsecframework
 {
     partial class frmMain
     {
@@ -52,7 +52,9 @@ namespace psframework
             this.chScriptName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmnuScripts = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmbtnRunScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmbtnSchedScript = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbtnViewScript = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuScrHyphen1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuScriptGetHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.imgList16 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip4 = new System.Windows.Forms.ToolStrip();
@@ -81,7 +83,17 @@ namespace psframework
             this.chAlerts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastScan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
+            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.tbpSchedScripts = new System.Windows.Forms.TabPage();
+            this.lvwSchedule = new System.Windows.Forms.ListView();
+            this.chSchScriptName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchParams = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchSchedule = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchRunAs = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchLastRun = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chSchMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cmnuScheduleCommands = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuDeleteScheduleItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tcSystem = new System.Windows.Forms.TabControl();
             this.tbpAlerts = new System.Windows.Forms.TabPage();
             this.lvwAlerts = new System.Windows.Forms.ListView();
@@ -107,6 +119,7 @@ namespace psframework
             this.btnRefreshScripts = new System.Windows.Forms.ToolStripButton();
             this.btnRunScript = new System.Windows.Forms.ToolStripButton();
             this.btnViewScript = new System.Windows.Forms.ToolStripButton();
+            this.btnSchedScript = new System.Windows.Forms.ToolStripButton();
             this.btnLibraryRefresh = new System.Windows.Forms.ToolStripButton();
             this.btnShowAliases = new System.Windows.Forms.ToolStripButton();
             this.btnShowFunctions = new System.Windows.Forms.ToolStripButton();
@@ -123,7 +136,6 @@ namespace psframework
             this.btnAddNetwork = new System.Windows.Forms.ToolStripButton();
             this.btnAddSystem = new System.Windows.Forms.ToolStripButton();
             this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -145,6 +157,8 @@ namespace psframework
             this.tcMain.SuspendLayout();
             this.tbpSystems.SuspendLayout();
             this.tbpPowerShell.SuspendLayout();
+            this.tbpSchedScripts.SuspendLayout();
+            this.cmnuScheduleCommands.SuspendLayout();
             this.tcSystem.SuspendLayout();
             this.tbpAlerts.SuspendLayout();
             this.toolStrip3.SuspendLayout();
@@ -300,6 +314,7 @@ namespace psframework
             this.lvwScripts.FullRowSelect = true;
             this.lvwScripts.HideSelection = false;
             this.lvwScripts.Location = new System.Drawing.Point(0, 25);
+            this.lvwScripts.MultiSelect = false;
             this.lvwScripts.Name = "lvwScripts";
             this.lvwScripts.Size = new System.Drawing.Size(245, 210);
             this.lvwScripts.SmallImageList = this.imgList16;
@@ -318,30 +333,44 @@ namespace psframework
             // 
             this.cmnuScripts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmbtnRunScript,
+            this.cmbtnSchedScript,
             this.cmbtnViewScript,
+            this.mnuScrHyphen1,
             this.mnuScriptGetHelp});
             this.cmnuScripts.Name = "contextMenuStrip1";
-            this.cmnuScripts.Size = new System.Drawing.Size(133, 70);
+            this.cmnuScripts.Size = new System.Drawing.Size(156, 98);
             this.cmnuScripts.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuScripts_Opening);
             // 
             // cmbtnRunScript
             // 
             this.cmbtnRunScript.Name = "cmbtnRunScript";
-            this.cmbtnRunScript.Size = new System.Drawing.Size(132, 22);
+            this.cmbtnRunScript.Size = new System.Drawing.Size(155, 22);
             this.cmbtnRunScript.Text = "Run Script";
             this.cmbtnRunScript.Click += new System.EventHandler(this.cmbtnRunScript_Click);
+            // 
+            // cmbtnSchedScript
+            // 
+            this.cmbtnSchedScript.Name = "cmbtnSchedScript";
+            this.cmbtnSchedScript.Size = new System.Drawing.Size(155, 22);
+            this.cmbtnSchedScript.Text = "Schedule Script";
+            this.cmbtnSchedScript.Click += new System.EventHandler(this.cmbtnSchedScript_Click);
             // 
             // cmbtnViewScript
             // 
             this.cmbtnViewScript.Name = "cmbtnViewScript";
-            this.cmbtnViewScript.Size = new System.Drawing.Size(132, 22);
+            this.cmbtnViewScript.Size = new System.Drawing.Size(155, 22);
             this.cmbtnViewScript.Text = "View Script";
             this.cmbtnViewScript.Click += new System.EventHandler(this.cmbtnViewScript_Click);
+            // 
+            // mnuScrHyphen1
+            // 
+            this.mnuScrHyphen1.Name = "mnuScrHyphen1";
+            this.mnuScrHyphen1.Size = new System.Drawing.Size(152, 6);
             // 
             // mnuScriptGetHelp
             // 
             this.mnuScriptGetHelp.Name = "mnuScriptGetHelp";
-            this.mnuScriptGetHelp.Size = new System.Drawing.Size(132, 22);
+            this.mnuScriptGetHelp.Size = new System.Drawing.Size(155, 22);
             this.mnuScriptGetHelp.Text = "Get-Help";
             this.mnuScriptGetHelp.Click += new System.EventHandler(this.mnuScriptGetHelp_Click);
             // 
@@ -363,7 +392,8 @@ namespace psframework
             this.toolStrip4.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRefreshScripts,
             this.btnRunScript,
-            this.btnViewScript});
+            this.btnViewScript,
+            this.btnSchedScript});
             this.toolStrip4.Location = new System.Drawing.Point(0, 0);
             this.toolStrip4.Name = "toolStrip4";
             this.toolStrip4.Size = new System.Drawing.Size(245, 25);
@@ -408,6 +438,7 @@ namespace psframework
             this.lvwCommands.FullRowSelect = true;
             this.lvwCommands.HideSelection = false;
             this.lvwCommands.Location = new System.Drawing.Point(0, 25);
+            this.lvwCommands.MultiSelect = false;
             this.lvwCommands.Name = "lvwCommands";
             this.lvwCommands.ShowItemToolTips = true;
             this.lvwCommands.Size = new System.Drawing.Size(245, 156);
@@ -625,8 +656,27 @@ namespace psframework
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
+            // txtPShellOutput
+            // 
+            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
+            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtPShellOutput.DetectUrls = false;
+            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
+            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.txtPShellOutput.Name = "txtPShellOutput";
+            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.TabIndex = 0;
+            this.txtPShellOutput.Text = "psf > ";
+            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
+            // 
             // tbpSchedScripts
             // 
+            this.tbpSchedScripts.Controls.Add(this.lvwSchedule);
             this.tbpSchedScripts.ImageIndex = 5;
             this.tbpSchedScripts.Location = new System.Drawing.Point(4, 23);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
@@ -635,6 +685,72 @@ namespace psframework
             this.tbpSchedScripts.TabIndex = 2;
             this.tbpSchedScripts.Text = "Scheduled Scripts";
             this.tbpSchedScripts.UseVisualStyleBackColor = true;
+            // 
+            // lvwSchedule
+            // 
+            this.lvwSchedule.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chSchScriptName,
+            this.chSchParams,
+            this.chSchSchedule,
+            this.chSchRunAs,
+            this.chSchLastRun,
+            this.chSchMessage});
+            this.lvwSchedule.ContextMenuStrip = this.cmnuScheduleCommands;
+            this.lvwSchedule.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvwSchedule.FullRowSelect = true;
+            this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
+            this.lvwSchedule.Name = "lvwSchedule";
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 307);
+            this.lvwSchedule.SmallImageList = this.imgList16;
+            this.lvwSchedule.TabIndex = 0;
+            this.lvwSchedule.UseCompatibleStateImageBehavior = false;
+            this.lvwSchedule.View = System.Windows.Forms.View.Details;
+            this.lvwSchedule.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvwSchedule_KeyDown);
+            // 
+            // chSchScriptName
+            // 
+            this.chSchScriptName.Text = "Script Name";
+            this.chSchScriptName.Width = 150;
+            // 
+            // chSchParams
+            // 
+            this.chSchParams.Text = "Parameters";
+            this.chSchParams.Width = 150;
+            // 
+            // chSchSchedule
+            // 
+            this.chSchSchedule.Text = "Schedule";
+            this.chSchSchedule.Width = 210;
+            // 
+            // chSchRunAs
+            // 
+            this.chSchRunAs.Text = "Run As";
+            this.chSchRunAs.Width = 100;
+            // 
+            // chSchLastRun
+            // 
+            this.chSchLastRun.Text = "Last Run Timestamp";
+            this.chSchLastRun.Width = 130;
+            // 
+            // chSchMessage
+            // 
+            this.chSchMessage.Text = "Messages";
+            this.chSchMessage.Width = 175;
+            // 
+            // cmnuScheduleCommands
+            // 
+            this.cmnuScheduleCommands.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDeleteScheduleItem});
+            this.cmnuScheduleCommands.Name = "cmnuScheduleCommands";
+            this.cmnuScheduleCommands.Size = new System.Drawing.Size(108, 26);
+            this.cmnuScheduleCommands.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuScheduleCommands_Opening);
+            // 
+            // mnuDeleteScheduleItem
+            // 
+            this.mnuDeleteScheduleItem.Name = "mnuDeleteScheduleItem";
+            this.mnuDeleteScheduleItem.Size = new System.Drawing.Size(107, 22);
+            this.mnuDeleteScheduleItem.Text = "Delete";
+            this.mnuDeleteScheduleItem.Click += new System.EventHandler(this.mnuDeleteScheduleItem_Click);
             // 
             // tcSystem
             // 
@@ -833,7 +949,7 @@ namespace psframework
             // btnRefreshScripts
             // 
             this.btnRefreshScripts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshScripts.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnRefreshScripts.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnRefreshScripts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshScripts.Name = "btnRefreshScripts";
             this.btnRefreshScripts.Size = new System.Drawing.Size(23, 22);
@@ -855,18 +971,30 @@ namespace psframework
             // 
             this.btnViewScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnViewScript.Enabled = false;
-            this.btnViewScript.Image = global::poshsecframework.Properties.Resources.document_open_7;
+            this.btnViewScript.Image = global::poshsecframework.Properties.Resources.documentopen7;
             this.btnViewScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnViewScript.Name = "btnViewScript";
             this.btnViewScript.Size = new System.Drawing.Size(23, 22);
             this.btnViewScript.ToolTipText = "View Script";
             this.btnViewScript.Click += new System.EventHandler(this.btnViewScript_Click);
             // 
+            // btnSchedScript
+            // 
+            this.btnSchedScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSchedScript.Enabled = false;
+            this.btnSchedScript.Image = global::poshsecframework.Properties.Resources.viewcalendartasks;
+            this.btnSchedScript.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSchedScript.Name = "btnSchedScript";
+            this.btnSchedScript.Size = new System.Drawing.Size(23, 22);
+            this.btnSchedScript.Text = "toolStripButton1";
+            this.btnSchedScript.ToolTipText = "Schedule Script";
+            this.btnSchedScript.Click += new System.EventHandler(this.btnSchedScript_Click);
+            // 
             // btnLibraryRefresh
             // 
             this.btnLibraryRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnLibraryRefresh.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnLibraryRefresh.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnLibraryRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnLibraryRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLibraryRefresh.Name = "btnLibraryRefresh";
             this.btnLibraryRefresh.Size = new System.Drawing.Size(23, 22);
@@ -879,7 +1007,7 @@ namespace psframework
             this.btnShowAliases.Checked = true;
             this.btnShowAliases.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowAliases.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowAliases.Image = global::poshsecframework.Properties.Resources.tag_red;
+            this.btnShowAliases.Image = global::poshsecframework.Properties.Resources.tagred;
             this.btnShowAliases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowAliases.Name = "btnShowAliases";
             this.btnShowAliases.Size = new System.Drawing.Size(23, 22);
@@ -891,7 +1019,7 @@ namespace psframework
             this.btnShowFunctions.Checked = true;
             this.btnShowFunctions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowFunctions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowFunctions.Image = global::poshsecframework.Properties.Resources.tag_blue;
+            this.btnShowFunctions.Image = global::poshsecframework.Properties.Resources.tagblue;
             this.btnShowFunctions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowFunctions.Name = "btnShowFunctions";
             this.btnShowFunctions.Size = new System.Drawing.Size(23, 22);
@@ -904,7 +1032,7 @@ namespace psframework
             this.btnShowCmdlets.Checked = true;
             this.btnShowCmdlets.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowCmdlets.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowCmdlets.Image = global::poshsecframework.Properties.Resources.tag_green;
+            this.btnShowCmdlets.Image = global::poshsecframework.Properties.Resources.taggreen;
             this.btnShowCmdlets.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowCmdlets.Name = "btnShowCmdlets";
             this.btnShowCmdlets.Size = new System.Drawing.Size(23, 22);
@@ -915,7 +1043,7 @@ namespace psframework
             // btnRefreshNetworks
             // 
             this.btnRefreshNetworks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshNetworks.Image = global::poshsecframework.Properties.Resources.view_refresh_7;
+            this.btnRefreshNetworks.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
             this.btnRefreshNetworks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshNetworks.Name = "btnRefreshNetworks";
             this.btnRefreshNetworks.Size = new System.Drawing.Size(23, 22);
@@ -926,7 +1054,7 @@ namespace psframework
             // 
             this.btnCancelScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnCancelScan.Enabled = false;
-            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialog_cancel_5;
+            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialogcancel;
             this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
@@ -936,7 +1064,7 @@ namespace psframework
             // btnClearAlerts
             // 
             this.btnClearAlerts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClearAlerts.Image = global::poshsecframework.Properties.Resources.edit_clear_list;
+            this.btnClearAlerts.Image = global::poshsecframework.Properties.Resources.editclearlist;
             this.btnClearAlerts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClearAlerts.Name = "btnClearAlerts";
             this.btnClearAlerts.Size = new System.Drawing.Size(23, 22);
@@ -947,7 +1075,7 @@ namespace psframework
             // btnAlert_MarkResolved
             // 
             this.btnAlert_MarkResolved.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_MarkResolved.Image = global::poshsecframework.Properties.Resources.dialog_accept;
+            this.btnAlert_MarkResolved.Image = global::poshsecframework.Properties.Resources.dialogaccept;
             this.btnAlert_MarkResolved.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_MarkResolved.Name = "btnAlert_MarkResolved";
             this.btnAlert_MarkResolved.Size = new System.Drawing.Size(23, 22);
@@ -959,7 +1087,7 @@ namespace psframework
             this.btnAlert_Delete.Checked = true;
             this.btnAlert_Delete.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Delete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Delete.Image = global::poshsecframework.Properties.Resources.dialog_information_4;
+            this.btnAlert_Delete.Image = global::poshsecframework.Properties.Resources.dialoginformation4;
             this.btnAlert_Delete.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Delete.Name = "btnAlert_Delete";
             this.btnAlert_Delete.Size = new System.Drawing.Size(23, 22);
@@ -971,7 +1099,7 @@ namespace psframework
             this.toolStripButton6.Checked = true;
             this.toolStripButton6.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton6.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton6.Image = global::poshsecframework.Properties.Resources.dialog_error_4;
+            this.toolStripButton6.Image = global::poshsecframework.Properties.Resources.dialogerror4;
             this.toolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton6.Name = "toolStripButton6";
             this.toolStripButton6.Size = new System.Drawing.Size(23, 22);
@@ -982,7 +1110,7 @@ namespace psframework
             this.toolStripButton7.Checked = true;
             this.toolStripButton7.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton7.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton7.Image = global::poshsecframework.Properties.Resources.dialog_warning_3;
+            this.toolStripButton7.Image = global::poshsecframework.Properties.Resources.dialogwarning3;
             this.toolStripButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton7.Name = "toolStripButton7";
             this.toolStripButton7.Size = new System.Drawing.Size(23, 22);
@@ -993,7 +1121,7 @@ namespace psframework
             this.toolStripButton8.Checked = true;
             this.toolStripButton8.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButton8.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton8.Image = global::poshsecframework.Properties.Resources.dialog_warning_2;
+            this.toolStripButton8.Image = global::poshsecframework.Properties.Resources.dialogwarning2;
             this.toolStripButton8.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton8.Name = "toolStripButton8";
             this.toolStripButton8.Size = new System.Drawing.Size(23, 22);
@@ -1030,28 +1158,11 @@ namespace psframework
             // 
             // mnuOptions
             // 
-            this.mnuOptions.Image = global::poshsecframework.Properties.Resources.system_settings;
+            this.mnuOptions.Image = global::poshsecframework.Properties.Resources.systemsettings;
             this.mnuOptions.Name = "mnuOptions";
             this.mnuOptions.Size = new System.Drawing.Size(125, 22);
             this.mnuOptions.Text = "Options...";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
-            // 
-            // txtPShellOutput
-            // 
-            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
-            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
-            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
-            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.txtPShellOutput.Name = "txtPShellOutput";
-            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
-            this.txtPShellOutput.TabIndex = 0;
-            this.txtPShellOutput.Text = "psf > ";
-            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
             // frmMain
             // 
@@ -1099,6 +1210,8 @@ namespace psframework
             this.tcMain.ResumeLayout(false);
             this.tbpSystems.ResumeLayout(false);
             this.tbpPowerShell.ResumeLayout(false);
+            this.tbpSchedScripts.ResumeLayout(false);
+            this.cmnuScheduleCommands.ResumeLayout(false);
             this.tcSystem.ResumeLayout(false);
             this.tbpAlerts.ResumeLayout(false);
             this.tbpAlerts.PerformLayout();
@@ -1207,6 +1320,18 @@ namespace psframework
         private System.Windows.Forms.ToolStripMenuItem mnuScriptGetHelp;
         private System.Windows.Forms.ContextMenuStrip cmnuCommands;
         private System.Windows.Forms.ToolStripMenuItem mnuCmdGetHelp;
+        private System.Windows.Forms.ListView lvwSchedule;
+        private System.Windows.Forms.ColumnHeader chSchScriptName;
+        private System.Windows.Forms.ColumnHeader chSchParams;
+        private System.Windows.Forms.ColumnHeader chSchSchedule;
+        private System.Windows.Forms.ColumnHeader chSchRunAs;
+        private System.Windows.Forms.ToolStripMenuItem cmbtnSchedScript;
+        private System.Windows.Forms.ToolStripSeparator mnuScrHyphen1;
+        private System.Windows.Forms.ToolStripButton btnSchedScript;
+        private System.Windows.Forms.ColumnHeader chSchLastRun;
+        private System.Windows.Forms.ColumnHeader chSchMessage;
+        private System.Windows.Forms.ContextMenuStrip cmnuScheduleCommands;
+        private System.Windows.Forms.ToolStripMenuItem mnuDeleteScheduleItem;
     }
 }
 

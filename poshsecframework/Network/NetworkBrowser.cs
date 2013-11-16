@@ -1,18 +1,31 @@
 using System;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
-using psframework.Structures;
+using poshsecframework.Strings;
 
-namespace psframework.Network
+namespace poshsecframework.Network
 {
     class NetworkBrowser
     {
         #region Private Variables
         frmMain frm = null;
+        String ipconfig = "";
+        String arp = "";
+        ArrayList systems = new ArrayList();
+        Collection<Thread> thds = new Collection<Thread>();
+        bool shstatus = true;
+        #endregion
+
+        #region Public Events
+        public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanComplete;
+        public event EventHandler<EventArgs> ScanCancelled;
         #endregion
 
         #region Initialize
@@ -30,7 +43,8 @@ namespace psframework.Network
         #region Scan
         public ArrayList ScanActiveDirectory(String domain)
         {
-            ArrayList systems = new ArrayList();
+            ClearArpTable();
+            systems.Clear();
             DirectoryEntry hostPC = new DirectoryEntry();
             hostPC.Path = "WinNT://" + domain;
 
@@ -38,56 +52,100 @@ namespace psframework.Network
             {
                 if (netPC.Name != "Schema" && netPC.SchemaClassName == "Computer")
                 {
+                    Ping(netPC.Name, 1, 100);
                     systems.Add(netPC);                    
                 }
             }
-
+            BuildArpTable();
             return systems;
         }
 
-        public ArrayList ScanbyIP()
+        public void ScanbyIP()
         {
-            ArrayList systems = new ArrayList();
+            systems.Clear();
+            ClearArpTable();
             String[] localIPs = GetIP(Dns.GetHostName()).Split(',');
             String localIP = localIPs[0];
+            bool cancelled = false;
             if (localIPs.Length > 1)
             {
                 poshsecframework.Interface.frmScan frm = new poshsecframework.Interface.frmScan();
                 frm.IPs = localIPs;
+                frm.StartPosition = FormStartPosition.CenterScreen;
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
                     localIP = frm.SelectedIP;
                 }
+                else
+                {
+                    cancelled = true;
+                }
                 frm.Dispose();
                 frm = null;
             }
-            if (localIP != "" && localIP != null)
+            if (localIP != "" && localIP != null && !cancelled)
             {
                 String[] ipparts = localIP.Split('.');
                 if (ipparts != null && ipparts.Length == 4)
                 {
-                    frm.SetProgress(0, 255);
+                    if (shstatus) { frm.SetProgress(0, 255); }                    
                     int ip = 1;
+                    bool cancel = false;
                     do
                     {
                         String host = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip.ToString();
-                        frm.SetStatus("Scanning " + host + ", please wait...");
-                        frm.SetProgress(ip, 255);
-                        
-                        if (Ping(host, 1, 100))
-                        {
-                            systems.Add(host);
-                            Application.DoEvents();
-                        }
+                        if (shstatus) { frm.SetStatus("Scanning " + host + ", please wait...");}
+                        if (shstatus) { frm.SetProgress(ip, 255);}
+
+                        poshsecframework.Network.ScanIP scn = new poshsecframework.Network.ScanIP();
+                        scn.IPAddress = host;
+                        scn.Index = ip;
+                        scn.ScanIPComplete += scn_ScanIPComplete;
+                        System.Threading.Thread thd = new System.Threading.Thread(scn.Scan);
+                        thds.Add(thd);
+                        thd.Start();
                         ip++;
-                    } while(ip < 255 && !frm.CancelIPScan);
+                        if (shstatus) { cancel = frm.CancelIPScan; }
+                    } while (ip < 255 && !cancel);
+                    if (shstatus) { frm.SetStatus(StringValue.WaitingForHostResp); }
+                    do
+                    {
+                        System.Threading.Thread.Sleep(100);
+                    } while (ThreadsActive());
+                    systems.Sort();
+                    BuildArpTable();
+
+                    if (shstatus) { frm.HideProgress();}
+                    if (shstatus) { frm.SetStatus(StringValue.Ready);}
+
+                    OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
                 }
             }
+            else
+            {
+                OnScanCancelled(new EventArgs());
+            }
+        }
 
-            frm.HideProgress();
-            frm.SetStatus("Ready");
+        void scn_ScanIPComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        {
+            if (e.IsUp)
+            {
+                systems.Add(e.Index.ToString("000") + "|" + e.IPAddress + "|" + e.Hostname);
+            }
+        }
 
-            return systems;
+        private bool ThreadsActive()
+        {
+            bool rtn = false;
+            foreach (Thread thd in thds)
+            {
+                if (thd.ThreadState != ThreadState.Stopped)
+                {
+                    rtn = true;
+                }
+            }
+            return rtn;
         }
         #endregion
 
@@ -150,9 +208,85 @@ namespace psframework.Network
             }
             catch
             {
-                ipadr = "0.0.0.0 (unknown host)";
+                ipadr = StringValue.UnknownHost;
             }
             return ipadr;
+        }
+        #endregion
+
+        #region GetMac
+        public String GetMac(String ipaddr)
+        {
+            String rtn = "";
+            if (arp != null && arp != "")
+            {
+                String[] ips = ipaddr.Split(',');
+                foreach (String ip in ips)
+                {
+                    int ipidx = arp.IndexOf(ip + " ", 0);
+                    if (ipidx > -1)
+                    {
+                        String mac = arp.Substring(ipidx, 39).Replace(ip, "").Trim();
+                        if (mac.Contains("---"))
+                        {
+                            mac = GetMyMac(ip);
+                        }
+                        rtn += mac + ",";
+                    }
+                    else
+                    {
+                        rtn += GetMyMac(ip);
+                    }
+                }
+                if (rtn.EndsWith(","))
+                {
+                    rtn = rtn.Substring(0, rtn.Length - 1);
+                }
+            }
+            if (rtn == "")
+            {
+                rtn = StringValue.BlankMAC;
+            }
+            return rtn;
+        }
+
+        public String GetMyMac(String ipaddr)
+        {
+            String rtn = StringValue.BlankMAC;
+            try
+            {
+                if(ipconfig == "")
+                {
+                    System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("ipconfig");
+                    psi.UseShellExecute = false;
+                    psi.CreateNoWindow = true;
+                    psi.RedirectStandardOutput = true;
+                    psi.Arguments = "/all";
+                    System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                    prc.StartInfo = psi;
+                    prc.Start();
+                    ipconfig = prc.StandardOutput.ReadToEnd();
+                    prc.WaitForExit();
+                    prc = null;
+                }                
+                if (ipconfig != null && ipconfig != "")
+                {
+                    int ipidx = ipconfig.IndexOf(ipaddr, 0);
+                    if (ipidx > -1)
+                    {
+                        int paidx = ipconfig.ToLower().LastIndexOf("physical address", ipidx);
+                        if (paidx > -1)
+                        {
+                            rtn = ipconfig.Substring(paidx, 53).Replace("Physical Address. . . . . . . . . : ", "");
+                        }
+                    }                    
+                }
+            }
+            catch (Exception)
+            {
+                rtn = StringValue.BlankMAC;
+            }
+            return rtn;
         }
         #endregion
 
@@ -168,9 +302,79 @@ namespace psframework.Network
             }
             catch
             {
-                host = "N/A";
+                host = StringValue.NAHost;
             }
             return host;
+        }
+        #endregion
+
+        #endregion
+
+        #region Private Methods
+
+        #region Arp
+        private void ClearArpTable()
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("arp");
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.Arguments = "-d";
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc.WaitForExit();
+                prc = null;
+            }
+            catch (Exception)
+            { 
+                //do nothing
+            }
+        }
+
+        private void BuildArpTable()
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo("arp");
+                psi.UseShellExecute = false;
+                psi.CreateNoWindow = true;
+                psi.RedirectStandardOutput = true;
+                psi.Arguments = "-a";
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                arp = prc.StandardOutput.ReadToEnd();
+                prc.WaitForExit();
+                prc = null;
+            }
+            catch (Exception)
+            {
+                //do nothing
+            }
+        }
+        #endregion
+
+        #region ScanComplete
+        private void OnScanComplete(poshsecframework.Network.ScanEventArgs e)
+        {
+            EventHandler<poshsecframework.Network.ScanEventArgs> handler = ScanComplete;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+        #endregion
+
+        #region ScanCancelled
+        private void OnScanCancelled(EventArgs e)
+        {
+            EventHandler<EventArgs> handler = ScanCancelled;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
         #endregion
 
@@ -180,6 +384,11 @@ namespace psframework.Network
         public frmMain ParentForm
         {
             set { frm = value; }
+        }
+
+        public bool ShowStatus
+        {
+            set { shstatus = value; }
         }
         #endregion
     }

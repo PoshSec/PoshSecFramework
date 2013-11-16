@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
 namespace poshsecframework.Interface
 {
@@ -27,6 +28,8 @@ namespace poshsecframework.Interface
             txtScriptDirectory.Text = Properties.Settings.Default.ScriptPath;
             txtFrameworkFile.Text = Properties.Settings.Default.FrameworkPath;
             txtModuleDirectory.Text = Properties.Settings.Default.ModulePath;
+            txtPSExecPath.Text = Properties.Settings.Default.PSExecPath;
+            txtSchFile.Text = Properties.Settings.Default.ScheduleFile;
             cmbScriptDefAction.SelectedIndex = Properties.Settings.Default.ScriptDefaultAction;
         }
 
@@ -38,6 +41,8 @@ namespace poshsecframework.Interface
                 Properties.Settings.Default["FrameworkPath"] = txtFrameworkFile.Text;
                 Properties.Settings.Default["ModulePath"] = txtModuleDirectory.Text;
                 Properties.Settings.Default["ScriptDefaultAction"] = cmbScriptDefAction.SelectedIndex;
+                Properties.Settings.Default["PSExecPath"] = txtPSExecPath.Text;
+                Properties.Settings.Default["ScheduleFile"] = txtSchFile.Text;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -45,15 +50,15 @@ namespace poshsecframework.Interface
             }
             else if (!Directory.Exists(txtScriptDirectory.Text))
             {
-                MessageBox.Show("The specified script directory does not exist. Please check the path.");
+                MessageBox.Show(StringValue.ScriptPathError);
             }
             else if (!File.Exists(txtFrameworkFile.Text))
             {
-                MessageBox.Show("The specified Framework file does not exist. Please check the path.");
+                MessageBox.Show(StringValue.FrameworkFileError);
             }
             else if (!Directory.Exists(txtModuleDirectory.Text))
             {
-                MessageBox.Show("The specified module directory does not exist. Please check the path.");
+                MessageBox.Show(StringValue.ModulePathError);
             }
         }
 
@@ -72,6 +77,7 @@ namespace poshsecframework.Interface
 
         private void btnBrowseFramework_Click(object sender, EventArgs e)
         {
+            dlgFile.CheckFileExists = true;
             if (File.Exists(txtFrameworkFile.Text))
             {
                 dlgFile.FileName = txtFrameworkFile.Text;
@@ -94,6 +100,37 @@ namespace poshsecframework.Interface
             if (dlgFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 txtModuleDirectory.Text = dlgFolder.SelectedPath;
+            }
+        }
+
+        private void btnBrowsePSExec_Click(object sender, EventArgs e)
+        {
+            dlgFile.Title = "Select the PSExec File.";
+            dlgFile.FileName = "*psexec.exe";
+            dlgFile.CheckFileExists = true;
+            if (File.Exists(txtPSExecPath.Text))
+            {
+                dlgFile.InitialDirectory = new FileInfo(txtPSExecPath.Text).Directory.ToString();
+            }                        
+            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtPSExecPath.Text = dlgFile.FileName;
+            }
+        }
+
+        private void btnBrowseSchFile_Click(object sender, EventArgs e)
+        {
+            dlgFile.Title = "Set Schedule File";
+            dlgFile.FileName = "schedule.xml";
+            dlgFile.Filter = "Extensible Markup Language (*.xml)|*.xml";
+            dlgFile.CheckFileExists = false;
+            if (File.Exists(txtSchFile.Text))
+            {
+                dlgFile.InitialDirectory = new FileInfo(txtSchFile.Text).Directory.ToString();
+            }
+            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtSchFile.Text = dlgFile.FileName;
             }
         }
     }

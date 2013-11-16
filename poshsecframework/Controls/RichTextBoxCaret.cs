@@ -14,16 +14,23 @@ namespace poshsecframework.Controls
         static extern bool CreateCaret(IntPtr hWnd, IntPtr hBitmap, int nWidth, int nHeight);
         [DllImport("user32.dll")]
         static extern bool ShowCaret(IntPtr hWnd);
+        IntPtr caret;
         int tbidx = 0;
         bool filter = true;
         List<String> cmds = null;
         List<String> acmds = null;
         int cmdstart = 0;
-        int cmdstop = 0; 
+        int cmdstop = 0;
+        const int WM_USER = 0x0400;
+        const int WM_NOTIFY = 0x004E;
+        const int WM_REFLECT = WM_USER + 0x1C00;
+        const int WM_PAINT = 0xF;
 
         public RichTextBoxCaret()
         {
             InitializeComponent();
+            Bitmap bmp = Properties.Resources.caret_underline;
+            caret = bmp.GetHbitmap(Color.White);
         }
 
         private void InitializeComponent()
@@ -31,28 +38,20 @@ namespace poshsecframework.Controls
             this.KeyDown += this_KeyDown;
         }
 
-        protected override void OnMouseHover(EventArgs e)
-        {
-            base.OnMouseHover(e);
-            this.DrawCaret();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            this.DrawCaret();
-        }
-
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            this.DrawCaret();
+            DrawCaret();
         }
 
-        protected override void OnKeyPress(KeyPressEventArgs e)
+        protected override void WndProc(ref Message m)
         {
-            base.OnKeyPress(e);
-            this.DrawCaret();
+            base.WndProc(ref m);
+
+            if ((m.Msg == (WM_REFLECT + WM_NOTIFY)) || (m.Msg == WM_PAINT))
+            {
+                DrawCaret();
+            }
         }
 
         private void this_KeyDown(object sender, KeyEventArgs e)
@@ -71,7 +70,6 @@ namespace poshsecframework.Controls
                 tbidx = 0;
                 filter = true;
             }
-            this.DrawCaret();
         }
 
         private void AutoComplete()
@@ -102,7 +100,6 @@ namespace poshsecframework.Controls
                 {
                     tbidx = 0;
                 }
-                this.DrawCaret();
             }
         }
 
@@ -119,14 +116,15 @@ namespace poshsecframework.Controls
 
         public void DrawCaret()
         {
-            Bitmap bmp = Properties.Resources.caret_underline;
-            Size sz = new Size(0, 0);
-            //This size matches the Lucidia Console 9.75pt font.
-            //Adjust as necessary.
-            sz.Width = 8;
-            sz.Height = 13;
-            CreateCaret(this.Handle, bmp.GetHbitmap(Color.White), sz.Width, sz.Height);
-            ShowCaret(this.Handle);
+            try
+            {
+                CreateCaret(this.Handle, caret, 8, 13);
+                ShowCaret(this.Handle);
+            }
+            catch (Exception)
+            { 
+                //fail silently
+            }
         }
 
         public List<String> AutoCompleteCommands

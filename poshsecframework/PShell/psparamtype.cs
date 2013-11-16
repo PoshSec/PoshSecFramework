@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     [TypeConverter(typeof(psparamtype.psparamobject))]
     public class psparamtype
@@ -124,6 +124,22 @@ namespace psframework.PShell
             public override object GetValue(object component) 
             {
                 return psparam.Value ?? psparam.DefaultValue ; 
+            }
+
+            public override object GetEditor(Type editorBaseType)
+            {
+                if (psparam.IsFileName)
+                {
+                    return new psfilenameeditor();
+                }
+                else if (psparam.IsHostList)
+                {
+                    return new pshosteditor();
+                }
+                else
+                {
+                    return base.GetEditor(editorBaseType);
+                }                
             }
         }
     }

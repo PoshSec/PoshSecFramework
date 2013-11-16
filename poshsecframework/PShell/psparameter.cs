@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     public class psparameter
     {
@@ -21,8 +22,11 @@ namespace psframework.PShell
         public String Category { get; set; }
         public Object Value { get; set; }
         public Object DefaultValue { get; set; }
-        Type type;
+        public Boolean IsFileName { get; set; }
+        public Boolean IsHostList { get; set; }
+        private Type type;
 
+        [XmlIgnoreAttribute()]
         public Type Type
         {
             get { return type; }
@@ -30,6 +34,22 @@ namespace psframework.PShell
             {
                 type = value;
             }
+        }
+
+        public String TypeName
+        { 
+            get 
+            {
+                if (Value != null || DefaultValue != null)
+                {
+                    return (Value ?? DefaultValue).GetType().ToString();
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            set { type = System.Type.GetType(value); }
         }
         #endregion
 
