@@ -190,6 +190,7 @@ namespace poshsecframework
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
                 SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
+                this.UseWaitCursor = true;
                 switch (typ)
                 {
                     case SystemType.Local:
@@ -307,6 +308,7 @@ namespace poshsecframework
             }
             HideProgress();
             btnCancelScan.Enabled = false;
+            this.UseWaitCursor = false;
             lblStatus.Text = StringValue.Ready;
         }
 
@@ -324,6 +326,7 @@ namespace poshsecframework
             {
                 HideProgress();
                 btnCancelScan.Enabled = false;
+                this.UseWaitCursor = false;
                 lblStatus.Text = StringValue.Ready;
             }            
         }
