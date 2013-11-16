@@ -159,7 +159,6 @@ namespace poshsecframework.PShell
                     pline = rspace.CreatePipeline();
                     if (iscommand)
                     {
-                        //String cmdscript = StringValue.ImportPSFramework + Environment.NewLine + scriptcommand + cmdparams;
                         String cmdscript = scriptcommand + cmdparams;
                         if (clicked)
                         {
@@ -239,7 +238,6 @@ namespace poshsecframework.PShell
             String scrpt = "";
             if (iscommand)
             {
-                //scrpt = StringValue.ImportPSFramework + Environment.NewLine + StringValue.GetHelpFull.Replace("{0}", scriptcommand);
                 scrpt = StringValue.GetHelpFull.Replace("{0}", scriptcommand);
             }
             else
