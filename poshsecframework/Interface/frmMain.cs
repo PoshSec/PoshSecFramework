@@ -247,8 +247,8 @@ namespace poshsecframework
                 }
                 lvwSystems.EndUpdate();
             }
-
             rslts = null;
+            this.UseWaitCursor = false;
         }
 
         private void ScanbyIP()
@@ -305,11 +305,11 @@ namespace poshsecframework
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
-            }
-            HideProgress();
-            btnCancelScan.Enabled = false;
-            this.UseWaitCursor = false;
-            lblStatus.Text = StringValue.Ready;
+                HideProgress();
+                btnCancelScan.Enabled = false;
+                this.UseWaitCursor = false;
+                lblStatus.Text = StringValue.Ready;
+            }            
         }
 
         private void scnr_ScanCancelled(object sender, EventArgs e)
