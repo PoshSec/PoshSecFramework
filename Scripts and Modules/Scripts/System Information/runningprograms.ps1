@@ -14,8 +14,15 @@ Ben0xA
 .PARAMETER processname
   The name of the process.
 
+.PARAMETER ignoreprocesses
+  A comma separated list of processes to ignore.
+  
+.PARAMETER baselinepath
+  The path to the baseline xml for comparison.
+
 .NOTES
   pshosts=storedhosts
+  psfilename=baselinepath
 #>
 
 Param(	
@@ -26,10 +33,18 @@ Param(
 	[string]$storedhosts,
   
   [Parameter(Mandatory=$false,Position=3)]
-	[string]$processname
+	[string]$processname,
+  
+  [Parameter(Mandatory=$false,Position=4)]
+	[string]$ignoreprocesses,
+  
+  [Parameter(Mandatory=$false,Position=5)]
+	[string]$baselinepath
 )
 #Start your code here.
 $processes = @()
+$outprocs = @()
+$ignore = ($ignoreprocesses -split ",")
 
 if($storedhosts) {
   #The storedhosts have been serialized as a string
@@ -47,12 +62,40 @@ if($hosts) {
   }
   
   if($processes) {
-    if($showintab) {
-      $PSTab.AddObjectGrid($processes, "Running Programs")
-      Write-Output "Running Programs Tab Created."
+    foreach($proc in $processes) {
+      if($ignore -notcontains $proc.ProcessName) {
+        $outprocs += $proc        
+      }
+    }
+    if($baselinepath -ne "") {
+      if(Test-Path $baselinepath) {
+        $baseprocs = Import-Clixml -path $baselinepath
+        $results = Compare-Object $baseprocs $outprocs -property Computer, ProcessName
+        if($results) {
+          if($showintab) {
+            $PSTab.AddObjectGrid($results, "Process Comparison Results")
+            Write-Output "Process Comparison Results Tab Created."
+          }
+          else {
+            $results | Out-String
+          }
+          #overwrite baseline
+          $outprocs | Export-Clixml -path $baselinepath
+        }        
+      }
+      else {
+        $outprocs | Export-Clixml -path $baselinepath
+        Write-Output "Baseline file created."
+      }
     }
     else {
-      $processes | Out-String
+      if($showintab) {
+        $PSTab.AddObjectGrid($outprocs, "Running Programs")
+        Write-Output "Running Programs Tab Created."
+      }    
+      else {
+        $outprocs | Out-String
+      }    
     }    
   }
   else {
