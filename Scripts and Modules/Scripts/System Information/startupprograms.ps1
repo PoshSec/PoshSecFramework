@@ -23,6 +23,10 @@ Param(
   [Parameter(Mandatory=$false,Position=2)]
 	[string]$storedhosts
 )
+# Begin Script Flow
+
+#Leave this here for things to play nicely!
+Import-Module $PSFramework
 
 #Start your code here.
 $progs = @()
@@ -38,6 +42,7 @@ else {
 
 if($hosts) {
   foreach($h in $hosts) {
+    $PSStatus.Update("Querying $($h.Name), please wait...")
     $progs +=  Get-RemoteRegistryValue $h.Name 3 "Software\Microsoft\Windows\CurrentVersion\Run\"
     $progs +=  Get-RemoteRegistryValue $h.Name 3 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run\"
   }
