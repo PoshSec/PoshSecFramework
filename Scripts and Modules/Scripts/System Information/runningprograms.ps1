@@ -28,11 +28,6 @@ Param(
   [Parameter(Mandatory=$false,Position=3)]
 	[string]$processname
 )
-# Begin Script Flow
-
-#Leave this here for things to play nicely!
-Import-Module $PSFramework
-
 #Start your code here.
 $processes = @()
 
