@@ -36,7 +36,7 @@
         $proc | Add-Member -MemberType NoteProperty -Name "Computer" -Value $computer
         $proc | Add-Member -MemberType NoteProperty -Name "ProcessName" -Value $_.ProcessName
         $proc | Add-Member -MemberType NoteProperty -Name "PID" -Value $_.Id
-        $proc | Add-Member -MemberType NoteProperty -Name "MemoryUsage" -Value $_.WS
+        $proc | Add-Member -MemberType NoteProperty -Name "MemoryUsage" -Value "$($_.WS / 1KB) K"
         $properties += $proc
     }
   } 
