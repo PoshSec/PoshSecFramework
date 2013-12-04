@@ -4,6 +4,10 @@ For the Scripts and Modules to work, please refer to the below documentation.
 
 <b>Note: Minimum of PowerShell 3.0 is required at this time.</b>
 
+PowerShell 3.0 First Time Users
+==
+You need to make sure you run "Update-Help" in PowerShell Command Shell the first time you load. This is required for the framework to work properly!
+
 If you are using the source code:
 ==
 Open the poshsecframework.sln in Visual Studio 2012+ and build the project (F7). This will create the bin\Release folder at {your github repodirectory}\poshsecframework\poshsecframework\bin\Release.
