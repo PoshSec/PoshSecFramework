@@ -106,16 +106,37 @@ namespace poshsecframework
         private void Initialize()
         {
             CheckSettings();
-            psf = new PShell.pshell();
-            txtPShellOutput.Text = StringValue.psf;
-            mincurpos = txtPShellOutput.Text.Length;
-            txtPShellOutput.SelectionStart = mincurpos;
-            scnr.ParentForm = this;
-            cmbLibraryTypes.SelectedIndex = 1;
-            psf.ParentForm = this;
-            GetLibrary();
-            GetCommand();
-            LoadSchedule();
+            bool continueload = true;
+            if (poshsecframework.Properties.Settings.Default.FirstTime)
+            {
+                continueload = FirstTimeSetup();
+            }
+            if (continueload)
+            {
+                psf = new PShell.pshell();
+                txtPShellOutput.Text = StringValue.psf;
+                mincurpos = txtPShellOutput.Text.Length;
+                txtPShellOutput.SelectionStart = mincurpos;
+                scnr.ParentForm = this;
+                cmbLibraryTypes.SelectedIndex = 1;
+                psf.ParentForm = this;
+                GetLibrary();
+                GetCommand();
+                LoadSchedule();
+            }            
+        }
+
+        private bool FirstTimeSetup()
+        {
+            bool rtn = false;
+            Interface.frmFirstTime frm = new Interface.frmFirstTime();
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                rtn = true;
+            }
+            frm.Dispose();
+            frm = null;
+            return rtn;
         }
 
         #region Network

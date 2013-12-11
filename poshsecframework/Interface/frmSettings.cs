@@ -31,6 +31,15 @@ namespace poshsecframework.Interface
             txtPSExecPath.Text = Properties.Settings.Default.PSExecPath;
             txtSchFile.Text = Properties.Settings.Default.ScheduleFile;
             cmbScriptDefAction.SelectedIndex = Properties.Settings.Default.ScriptDefaultAction;
+            bool firsttime = Properties.Settings.Default.FirstTime;
+            if (firsttime)
+            {
+                cmbFirstTime.SelectedIndex = 0;
+            }
+            else
+            {
+                cmbFirstTime.SelectedIndex = 1;
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -43,6 +52,12 @@ namespace poshsecframework.Interface
                 Properties.Settings.Default["ScriptDefaultAction"] = cmbScriptDefAction.SelectedIndex;
                 Properties.Settings.Default["PSExecPath"] = txtPSExecPath.Text;
                 Properties.Settings.Default["ScheduleFile"] = txtSchFile.Text;
+                bool firsttime = false;
+                if(cmbFirstTime.SelectedIndex == 0) 
+                {
+                    firsttime = true;
+                }
+                Properties.Settings.Default["FirstTime"] = firsttime;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;

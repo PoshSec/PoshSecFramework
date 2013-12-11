@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -90,6 +91,37 @@ namespace poshsecframework.PShell
                 frm.AddAlert(StringValue.FrameworkFileError, psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
             }            
         }
+
+        private void InvokeCommand(string command)
+        {
+            Collection<PSObject> rslt = null;
+            Pipeline pline = rspace.CreatePipeline();
+            pline.Commands.AddScript(command);           
+            try
+            {
+                rslt = pline.Invoke();
+            }
+            catch (Exception e)
+            {
+                rslts.AppendLine(e.Message);
+            }
+            finally
+            {
+                pline.Dispose();
+                pline = null;
+                if (rslt != null)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                }
+                GC.Collect();
+            }            
+        }
         #endregion
 
         #region " Public Methods "
@@ -121,10 +153,95 @@ namespace poshsecframework.PShell
             Pipeline pline = rspace.CreatePipeline();
             scrpt = StringValue.GetCommand;
             pline.Commands.AddScript(scrpt);
-            rslt = pline.Invoke();
-            pline.Dispose();
-            GC.Collect();            
+            try
+            {
+                rslt = pline.Invoke();
+            }
+            catch (Exception e)
+            {
+                rslts.AppendLine(e.Message);
+            }
+            finally
+            {
+                pline.Dispose();
+                pline = null;
+                pline = null;
+                if (rslt != null)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                }
+                GC.Collect();
+            }                        
             return rslt;
+        }
+
+        public bool UnblockFiles(string FolderPath)
+        {
+            bool rtn = false;
+            rslts.Clear();
+
+            if (Directory.Exists(FolderPath))
+            {
+                string[] files = null;
+                try
+                {
+                    files = Directory.GetFiles(FolderPath, "*.ps*", SearchOption.AllDirectories);
+                }
+                catch (Exception e)
+                {
+                    rslts.AppendLine(e.Message);
+                }
+                if (files != null && files.Count() > 0)
+                {
+                    string script = "";
+                    foreach (string file in files)
+                    {
+                        script += "Unblock-File -path \"" + file + "\"\r\n";
+                    }
+                    InvokeCommand(script);
+                    if (rslts.ToString().Trim() == "")
+                    {
+                        rtn = true;
+                    }
+                }
+                else
+                {
+                    rslts.AppendLine("Unable to find any PowerShell files in the directory " + FolderPath + " or it's subdirectories.");
+                }
+            }
+            else
+            {
+                rslts.AppendLine("The path " + FolderPath + " does not exist.");
+            }
+            return rtn;
+        }
+
+        public bool SetExecutionPolicy()
+        {
+            bool rtn = false;
+            InvokeCommand(StringValue.SetExecutionPolicy);
+            if (rslts.ToString().Trim() == "")
+            {
+                rtn = true;
+            }
+            return rtn;
+        }
+
+        public bool UpdateHelp()
+        {
+            bool rtn = false;
+            InvokeCommand(StringValue.UpdateHelp);
+            if (rslts.ToString().Trim() == "")
+            {
+                rtn = true;
+            }
+            return rtn;
         }
 
         public void RunScript()

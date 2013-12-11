@@ -33,6 +33,9 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbpGeneral = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cmbFirstTime = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.gbScriptSetting = new System.Windows.Forms.GroupBox();
             this.cmbScriptDefAction = new System.Windows.Forms.ComboBox();
             this.lblScriptDefAction = new System.Windows.Forms.Label();
@@ -61,6 +64,7 @@
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.gbScriptSetting.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
@@ -119,12 +123,48 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.groupBox1);
             this.panel6.Controls.Add(this.gbScriptSetting);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel6.Location = new System.Drawing.Point(3, 152);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(446, 70);
             this.panel6.TabIndex = 7;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cmbFirstTime);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox1.Location = new System.Drawing.Point(200, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(123, 70);
+            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "First Time Utility";
+            // 
+            // cmbFirstTime
+            // 
+            this.cmbFirstTime.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cmbFirstTime.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFirstTime.FormattingEnabled = true;
+            this.cmbFirstTime.Items.AddRange(new object[] {
+            "True",
+            "False"});
+            this.cmbFirstTime.Location = new System.Drawing.Point(3, 40);
+            this.cmbFirstTime.Name = "cmbFirstTime";
+            this.cmbFirstTime.Size = new System.Drawing.Size(117, 21);
+            this.cmbFirstTime.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(3, 17);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(117, 23);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Show First Time Utility:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // gbScriptSetting
             // 
@@ -400,6 +440,7 @@
             this.panel1.ResumeLayout(false);
             this.tbpGeneral.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
             this.gbScriptSetting.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
@@ -448,5 +489,8 @@
         private System.Windows.Forms.TextBox txtSchFile;
         private System.Windows.Forms.Button btnBrowseSchFile;
         private System.Windows.Forms.Label lblSchFile;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.ComboBox cmbFirstTime;
+        private System.Windows.Forms.Label label1;
     }
 }

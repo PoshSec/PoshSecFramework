@@ -62,6 +62,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums\EnumValues.cs" />
+    <Compile Include="Interface\frmFirstTime.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmFirstTime.Designer.cs">
+      <DependentUpon>frmFirstTime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,6 +119,9 @@
     <Compile Include="Utility\ScheduleTime.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmFirstTime.resx">
+      <DependentUpon>frmFirstTime.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmMain.resx">
       <SubType>Designer</SubType>
