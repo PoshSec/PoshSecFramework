@@ -99,7 +99,7 @@ namespace poshsecframework.Interface
             poshsecframework.Properties.Settings.Default["FirstTime"] = false;
             poshsecframework.Properties.Settings.Default.Save();
             poshsecframework.Properties.Settings.Default.Reload();
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
 
@@ -148,6 +148,7 @@ namespace poshsecframework.Interface
             else
             {
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                this.Close();
             }
         }
 

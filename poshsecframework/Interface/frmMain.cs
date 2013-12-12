@@ -28,6 +28,7 @@ namespace poshsecframework
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
+        private bool restart = false;
         private Utility.Schedule schedule = new Utility.Schedule(1000);
 
         enum SystemType
@@ -65,7 +66,24 @@ namespace poshsecframework
             schedule.ScriptInvoked += schedule_ScriptInvoked;
 
             Initialize();
-            GetNetworks();            
+            if (poshsecframework.Properties.Settings.Default.FirstTime)
+            {
+                restart = true;
+                FirstTimeSetup();                
+            }
+            if (!restart)
+            {
+                GetNetworks();
+            }            
+        }
+
+        private void frmMain_Shown(object sender, EventArgs e)
+        {
+            if (restart)
+            {
+                Application.Restart();
+                this.Close();
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -106,37 +124,27 @@ namespace poshsecframework
         private void Initialize()
         {
             CheckSettings();
-            bool continueload = true;
-            if (poshsecframework.Properties.Settings.Default.FirstTime)
-            {
-                continueload = FirstTimeSetup();
-            }
-            if (continueload)
-            {
-                psf = new PShell.pshell();
-                txtPShellOutput.Text = StringValue.psf;
-                mincurpos = txtPShellOutput.Text.Length;
-                txtPShellOutput.SelectionStart = mincurpos;
-                scnr.ParentForm = this;
-                cmbLibraryTypes.SelectedIndex = 1;
-                psf.ParentForm = this;
-                GetLibrary();
-                GetCommand();
-                LoadSchedule();
-            }            
+            psf = new PShell.pshell();
+            txtPShellOutput.Text = StringValue.psf;
+            mincurpos = txtPShellOutput.Text.Length;
+            txtPShellOutput.SelectionStart = mincurpos;
+            scnr.ParentForm = this;
+            cmbLibraryTypes.SelectedIndex = 1;
+            psf.ParentForm = this;
+            GetLibrary();
+            GetCommand();
+            LoadSchedule();  
         }
 
-        private bool FirstTimeSetup()
+        private void FirstTimeSetup()
         {
-            bool rtn = false;
             Interface.frmFirstTime frm = new Interface.frmFirstTime();
-            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
-                rtn = true;
+                restart = false;
             }
             frm.Dispose();
             frm = null;
-            return rtn;
         }
 
         #region Network

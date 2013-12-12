@@ -30,9 +30,9 @@ namespace poshsecframework
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Local Network");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Local Network");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
+            treeNode3});
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScan = new System.Windows.Forms.ToolStripMenuItem();
@@ -637,15 +637,15 @@ namespace poshsecframework
             this.tvwNetworks.ImageList = this.imgList16;
             this.tvwNetworks.Location = new System.Drawing.Point(0, 25);
             this.tvwNetworks.Name = "tvwNetworks";
-            treeNode1.ImageKey = "Diagram.png";
-            treeNode1.Name = "ndNone";
-            treeNode1.SelectedImageKey = "Diagram.png";
-            treeNode1.Tag = "1";
-            treeNode1.Text = "Local Network";
-            treeNode2.Name = "ndNetwork";
-            treeNode2.Text = "Networks";
+            treeNode3.ImageKey = "Diagram.png";
+            treeNode3.Name = "ndNone";
+            treeNode3.SelectedImageKey = "Diagram.png";
+            treeNode3.Tag = "1";
+            treeNode3.Text = "Local Network";
+            treeNode4.Name = "ndNetwork";
+            treeNode4.Text = "Networks";
             this.tvwNetworks.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode4});
             this.tvwNetworks.SelectedImageIndex = 1;
             this.tvwNetworks.ShowPlusMinus = false;
             this.tvwNetworks.ShowRootLines = false;
@@ -1180,6 +1180,7 @@ namespace poshsecframework
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PoshSec Framework";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Shown += new System.EventHandler(this.frmMain_Shown);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.stsMain.ResumeLayout(false);
