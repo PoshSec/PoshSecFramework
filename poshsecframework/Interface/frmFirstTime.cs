@@ -317,6 +317,11 @@ namespace poshsecframework.Interface
                 err += "\r\n" + ps.Results;
                 rtn = rtn && false;
             }
+            if (!ps.UnblockFiles(Application.StartupPath))
+            {
+                err += "\r\n" + ps.Results;
+                rtn = rtn && false;
+            }
             ps.Dispose();
             ps = null;
             if (!rtn)

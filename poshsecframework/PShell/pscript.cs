@@ -191,7 +191,7 @@ namespace poshsecframework.PShell
                 string[] files = null;
                 try
                 {
-                    files = Directory.GetFiles(FolderPath, "*.ps*", SearchOption.AllDirectories);
+                    files = Directory.GetFiles(FolderPath, "*.*", SearchOption.AllDirectories);
                 }
                 catch (Exception e)
                 {
