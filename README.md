@@ -71,7 +71,7 @@ Current "Core" Developers are:
 * Ben Ten - @ben0xa - Primary Developer of the PoshSec Framework
 
 In alphabetical order:
-* Bryan Smith - @tweetbsmith
+* Bryan Smith - @securekomodo
 * J Wolfgang Goerlich - @jwgoerlich
 * Michael Ortega - @securitymoey
 * Nick Jacob - @MortiousPrime 
