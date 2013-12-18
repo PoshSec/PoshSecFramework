@@ -186,6 +186,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\network-transmit-receive-2.png" />
     <None Include="Resources\view-calendar-tasks.png" />
     <None Include="Resources\table-save.png" />
     <None Include="Resources\tab-close-3.png" />

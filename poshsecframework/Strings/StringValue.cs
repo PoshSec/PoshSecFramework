@@ -18,6 +18,7 @@ namespace poshsecframework.Strings
         public const string ScriptPathError = "The specified script directory does not exist. Please check the path.";
         public const string FrameworkFileError = "The specified Framework file does not exist. Please check the path.";
         public const string ModulePathError = "The specified module directory does not exist. Please check the path.";
+        public const string ImportError = "There was an error when importing the PoshSec Framework file.";
         public const string ClearAlerts = "Are you sure you want to clear all of the alerts?";
         public const string UnhandledException = "Unhandled exception in script function.";
         public const string ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
@@ -56,6 +57,7 @@ namespace poshsecframework.Strings
         public const string Ready = "Ready";
         public const string ImportPSFramework = "Import-Module \"$PSFramework\"";
         public const string NotImplemented = "Not implemented yet. Soon!";
+        public const string WriteError = "\r\nWrite-Output $error";
 
         public const string LocalNetwork = "Local Network";
         public const string Up = "Up";

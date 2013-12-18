@@ -36,6 +36,7 @@ namespace poshsecframework.PShell
         private psmethods.PSStatus PSStatus;
         private psmethods.PSHosts PSHosts;
         private psmethods.PSTab PSTab;
+        private String loaderrors = "";
         #endregion
 
         #region " Public Events "
@@ -81,14 +82,25 @@ namespace poshsecframework.PShell
             if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
             {
                 Pipeline pline = rspace.CreatePipeline();
-                pline.Commands.AddScript(StringValue.ImportPSFramework);
+                pline.Commands.AddScript(StringValue.ImportPSFramework + StringValue.WriteError);
                 Collection<PSObject> rslt = pline.Invoke();
                 pline.Dispose();
                 pline = null;
+                if (rslt != null && rslt.Count > 0)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                    loaderrors += rslts.ToString();
+                }
             }
             else
             {
-                frm.AddAlert(StringValue.FrameworkFileError, psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
+               loaderrors += StringValue.FrameworkFileError;
             }            
         }
 
@@ -579,6 +591,11 @@ namespace poshsecframework.PShell
         public bool ParamSelectionCancelled
         {
             get { return cancel; }
+        }
+
+        public String LoadErrors
+        {
+            get { return loaderrors; }
         }
         #endregion
     }
