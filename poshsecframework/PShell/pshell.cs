@@ -18,6 +18,7 @@ namespace poshsecframework.PShell
         private bool clicked;
         private bool scroll;
         private bool scheduled = false;
+        private string loaderrors = "";
         #endregion
 
         #region " Public Methods "
@@ -28,6 +29,10 @@ namespace poshsecframework.PShell
                 pspath = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 ps = new pscript();
                 ps.ScriptCompleted += new EventHandler<pseventargs>(ScriptCompleted);
+                if (ps.LoadErrors != "")
+                {
+                    loaderrors = ps.LoadErrors;
+                }
             }
             catch (Exception e)
             { 
@@ -139,6 +144,11 @@ namespace poshsecframework.PShell
         public frmMain ParentForm
         {
             set { frm = value; }
+        }
+
+        public string LoadErrors
+        {
+            get { return loaderrors; }
         }
         #endregion
     }

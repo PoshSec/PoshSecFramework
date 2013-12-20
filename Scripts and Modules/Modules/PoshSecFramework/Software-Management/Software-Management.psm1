@@ -7,3 +7,4 @@
 . (Join-Path $PSScriptRoot Compare-SecSoftwareVersion.ps1)
 . (Join-Path $PSScriptRoot Get-SecDriver.ps1)
 . (Join-Path $PSScriptRoot Get-SecFile.ps1)
+. (Join-Path $PSScriptRoot Get-SecRunningProcess.ps1)

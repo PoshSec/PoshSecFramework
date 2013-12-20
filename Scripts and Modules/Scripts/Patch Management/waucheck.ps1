@@ -18,6 +18,9 @@ Specifies a single computer to scan.
 
 .PARAMETER showintab
 Specifies whether to show the results in a PoshSec Framework Tab.
+
+.NOTES
+  pshosts=storedhosts
 #>
 
 Param(
@@ -34,7 +37,10 @@ Param(
 	[string]$computer,
 	
 	[Parameter(Mandatory=$false,Position=5)]
-	[boolean]$showintab
+	[boolean]$showintab,
+  
+  [Parameter(Mandatory=$false,Position=6)]
+	[string]$storedhosts
 )
 
 Function Get-Pcs{
@@ -108,8 +114,18 @@ else {
 
 $wumaster = ""
 $kbItems = $kbs.Split(",")
+[PSObject]$hosts = $null
+
 if(-not $computer){
-  $hosts = $PSHosts.GetHosts()
+  if($storedhosts) {
+    #The storedhosts have been serialized as a string
+    #Before we use them we need to deserialize.
+    $hosts = $PSHosts.DeserializeHosts($storedhosts)
+  }
+  else {
+    $hosts = $PSHosts.GetHosts()
+  }
+  
   if(!$hosts) {
     $hosts = Get-PCs    
     foreach($h in $hosts) {

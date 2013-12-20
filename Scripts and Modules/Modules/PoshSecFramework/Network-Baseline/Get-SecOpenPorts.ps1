@@ -13,7 +13,7 @@
     $netstat = netstat -ano
   }
   else {
-    $netstat = $(Execute-RemoteWmiProcess $computer "netstat -ano").Details
+    $netstat = $(Invoke-RemoteWmiProcess $computer "netstat -ano").Details
     $remote = $true
   }
    

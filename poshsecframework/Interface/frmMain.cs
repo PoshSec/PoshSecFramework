@@ -28,7 +28,9 @@ namespace poshsecframework
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
+        private bool restart = false;
         private Utility.Schedule schedule = new Utility.Schedule(1000);
+        private string loaderrors = "";
 
         enum SystemType
         { 
@@ -65,7 +67,28 @@ namespace poshsecframework
             schedule.ScriptInvoked += schedule_ScriptInvoked;
 
             Initialize();
-            GetNetworks();            
+            if (poshsecframework.Properties.Settings.Default.FirstTime)
+            {
+                restart = true;
+                FirstTimeSetup();                
+            }
+            if (!restart)
+            {
+                GetNetworks();
+            }            
+        }
+
+        private void frmMain_Shown(object sender, EventArgs e)
+        {
+            if (restart)
+            {
+                Application.Restart();
+                this.Close();
+            }
+            if (loaderrors != "")
+            {
+                DisplayOutput(StringValue.ImportError + Environment.NewLine + loaderrors, null, false, false, false, true);
+            }
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -107,6 +130,10 @@ namespace poshsecframework
         {
             CheckSettings();
             psf = new PShell.pshell();
+            if (psf.LoadErrors != "")
+            {
+                loaderrors += psf.LoadErrors;
+            }
             txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
@@ -115,7 +142,18 @@ namespace poshsecframework
             psf.ParentForm = this;
             GetLibrary();
             GetCommand();
-            LoadSchedule();
+            LoadSchedule();  
+        }
+
+        private void FirstTimeSetup()
+        {
+            Interface.frmFirstTime frm = new Interface.frmFirstTime();
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            {
+                restart = false;
+            }
+            frm.Dispose();
+            frm = null;
         }
 
         #region Network
@@ -209,6 +247,9 @@ namespace poshsecframework
 
         private void ScanAD()
         {
+            this.UseWaitCursor = true;
+            btnScan.Enabled = false;
+            mnuScan.Enabled = false;
             String domain = tvwNetworks.SelectedNode.Text;
             ArrayList rslts = scnr.ScanActiveDirectory(domain);
             if (rslts.Count > 0)
@@ -247,8 +288,10 @@ namespace poshsecframework
                 }
                 lvwSystems.EndUpdate();
             }
-
             rslts = null;
+            this.UseWaitCursor = false;
+            btnScan.Enabled = true;
+            mnuScan.Enabled = true;
         }
 
         private void ScanbyIP()
@@ -305,11 +348,11 @@ namespace poshsecframework
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
-            }
-            HideProgress();
-            btnCancelScan.Enabled = false;
-            this.UseWaitCursor = false;
-            lblStatus.Text = StringValue.Ready;
+                HideProgress();
+                btnCancelScan.Enabled = false;
+                this.UseWaitCursor = false;
+                lblStatus.Text = StringValue.Ready;
+            }            
         }
 
         private void scnr_ScanCancelled(object sender, EventArgs e)
@@ -674,7 +717,7 @@ namespace poshsecframework
                 }
             }
         }
-        public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false)
+        public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false, bool showtab = false)
         {
             if (this.InvokeRequired)
             {
@@ -702,6 +745,10 @@ namespace poshsecframework
                 }
                 txtPShellOutput.Select();
                 txtPShellOutput.ReadOnly = false;
+                if (showtab)
+                {
+                    tcMain.SelectedTab = tbpPowerShell;
+                }
                 RemoveActiveScript(lvw);                
             }            
         }
@@ -1501,6 +1548,11 @@ namespace poshsecframework
             }
         }
 
+        private void btnScan_Click(object sender, EventArgs e)
+        {
+            Scan();
+        }
+
         private void btnCancelScan_Click(object sender, EventArgs e)
         {
             cancelscan = true;
@@ -1607,5 +1659,7 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
+
+        
     }
 }

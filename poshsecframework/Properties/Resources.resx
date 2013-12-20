@@ -157,14 +157,14 @@
   <data name="systemsettings" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\system-settings.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="run" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\run.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="editclearlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\edit-clear-list.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="tagblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\tag-blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="run" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\run.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="viewcalendartasks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\view-calendar-tasks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ServerExecute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ServerExecute.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -178,6 +178,9 @@
   <data name="table_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\table-save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="dialogerror3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\dialog-error-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="dialogwarning3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dialog-warning-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -187,10 +190,10 @@
   <data name="exclamation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\exclamation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="dialogerror3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\dialog-error-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="tagblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\tag-blue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="viewcalendartasks" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\view-calendar-tasks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="networktransmitreceive2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\network-transmit-receive-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
