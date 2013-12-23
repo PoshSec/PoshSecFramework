@@ -20,6 +20,7 @@ namespace poshsecframework.Network
         String arp = "";
         ArrayList systems = new ArrayList();
         Collection<Thread> thds = new Collection<Thread>();
+        string domain = "";
         bool shstatus = true;
         #endregion
 
@@ -41,23 +42,39 @@ namespace poshsecframework.Network
         #region Public Methods
 
         #region Scan
-        public ArrayList ScanActiveDirectory(String domain)
+        public void ScanActiveDirectory()
         {
-            ClearArpTable();
             systems.Clear();
-            DirectoryEntry hostPC = new DirectoryEntry();
-            hostPC.Path = "WinNT://" + domain;
-
-            foreach (DirectoryEntry netPC in hostPC.Children)
+            if (domain != "" && domain != null)
             {
-                if (netPC.Name != "Schema" && netPC.SchemaClassName == "Computer")
+                ClearArpTable();
+                DirectoryEntry hostPC = new DirectoryEntry();
+                hostPC.Path = "LDAP://" + domain;
+                SearchResultCollection srslts = null;
+
+                using (DirectorySearcher srch = new DirectorySearcher(hostPC))
                 {
-                    Ping(netPC.Name, 1, 100);
-                    systems.Add(netPC);                    
+                    srch.Filter = "(&(objectClass=computer))";
+                    srch.SearchScope = SearchScope.Subtree;
+                    srch.PropertiesToLoad.Add("description");
+                    srslts = srch.FindAll();
                 }
-            }
-            BuildArpTable();
-            return systems;
+
+                if (srslts != null)
+                {
+                    foreach (SearchResult srslt in srslts)
+                    {
+                        DirectoryEntry netPC = srslt.GetDirectoryEntry();
+                        if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
+                        {
+                            Ping(netPC.Name.Replace("CN=", ""), 1, 100);
+                            systems.Add(netPC);
+                        }
+                    }
+                }
+                BuildArpTable();
+            }            
+            OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
         }
 
         public void ScanbyIP()
@@ -389,6 +406,16 @@ namespace poshsecframework.Network
         public bool ShowStatus
         {
             set { shstatus = value; }
+        }
+
+        public String Domain
+        {
+            set { domain = value; }
+        }
+
+        public ArrayList Systems
+        {
+            get { return systems; }
         }
         #endregion
     }

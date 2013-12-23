@@ -202,6 +202,7 @@ namespace poshsecframework
                     lvwItm.Text = localHost;
                     lvwItm.SubItems.Add(localIP);
                     lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
+                    lvwItm.SubItems.Add("");
                     lvwItm.SubItems.Add(StringValue.Up);
                     lvwItm.SubItems.Add(StringValue.NotInstalled);
                     lvwItm.SubItems.Add("0");
@@ -247,51 +248,16 @@ namespace poshsecframework
 
         private void ScanAD()
         {
+            btnCancelScan.Enabled = true;
+            scnr.ParentForm = this;
+            cancelscan = false;
             this.UseWaitCursor = true;
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
             String domain = tvwNetworks.SelectedNode.Text;
-            ArrayList rslts = scnr.ScanActiveDirectory(domain);
-            if (rslts.Count > 0)
-            {
-                lvwSystems.Items.Clear();
-                lvwSystems.BeginUpdate();
-                foreach (DirectoryEntry system in rslts)
-                {
-                    ListViewItem lvwItm = new ListViewItem();
-                    lvwItm.Text = system.Name.ToString();
-
-                    String ipadr = scnr.GetIP(system.Name);
-                    lvwItm.SubItems.Add(ipadr);
-                    lvwItm.SubItems.Add(scnr.GetMac(ipadr));
-                    bool isup = false;
-                    if (ipadr != StringValue.UnknownHost)
-                    {
-                        isup = scnr.Ping(system.Name, 1, 500);
-                    }
-                    if (isup)
-                    {
-                        lvwItm.SubItems.Add(StringValue.Up);
-                    }
-                    else
-                    {
-                        lvwItm.SubItems.Add(StringValue.Down);
-                    }
-                    lvwItm.SubItems.Add(StringValue.NotInstalled);
-                    lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                    lvwItm.ImageIndex = 2;
-                    lvwSystems.Items.Add(lvwItm);
-                    lvwSystems.Refresh();
-                    Application.DoEvents();
-                }
-                lvwSystems.EndUpdate();
-            }
-            rslts = null;
-            this.UseWaitCursor = false;
-            btnScan.Enabled = true;
-            mnuScan.Enabled = true;
+            Thread thd = new Thread(scnr.ScanActiveDirectory);
+            scnr.Domain = domain;
+            thd.Start();
         }
 
         private void ScanbyIP()
@@ -299,6 +265,9 @@ namespace poshsecframework
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
+            this.UseWaitCursor = true;
+            btnScan.Enabled = false;
+            mnuScan.Enabled = false;
             Thread thd = new Thread(scnr.ScanbyIP);
             thd.Start();
         }
@@ -321,19 +290,57 @@ namespace poshsecframework
                     lvwSystems.Items.Clear();
                     SetProgress(0, rslts.Count);
                     lvwSystems.BeginUpdate();
-                    foreach (String system in rslts)
+                    foreach (Object system in rslts)
                     {
-                        if (system != null && system != "")
+                        if (system.GetType() == typeof(String))
+                        {
+                            string sys = (string)system;
+                            if (sys != null && sys != "")
+                            {
+                                ListViewItem lvwItm = new ListViewItem();
+                                String[] ipinfo = system.ToString().Split('|');
+                                SetStatus("Adding " + ipinfo[2] + ", please wait...");
+
+                                lvwItm.Text = ipinfo[2];
+                                lvwItm.SubItems.Add(ipinfo[1]);
+                                lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
+                                lvwItm.SubItems.Add(StringValue.Up);
+                                lvwItm.SubItems.Add(StringValue.NotInstalled);
+                                lvwItm.SubItems.Add("0");
+                                lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
+
+                                lvwItm.ImageIndex = 2;
+                                lvwSystems.Items.Add(lvwItm);
+                                lvwSystems.Refresh();
+
+                                pbStatus.Value += 1;
+                            }
+                        }
+                        else
                         {
                             ListViewItem lvwItm = new ListViewItem();
+                            DirectoryEntry sys = (DirectoryEntry)system;
+                            SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
+                            lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
 
-                            SetStatus("Adding " + system + ", please wait...");
-
-                            String[] ipinfo = system.Split('|');
-                            lvwItm.Text = ipinfo[2];
-                            lvwItm.SubItems.Add(ipinfo[1]);
-                            lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                            lvwItm.SubItems.Add(StringValue.Up);
+                            String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
+                            lvwItm.SubItems.Add(ipadr);
+                            string macaddr = scnr.GetMac(ipadr);
+                            lvwItm.SubItems.Add(macaddr);
+                            lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
+                            bool isup = false;
+                            if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
+                            {
+                                isup = true;
+                            }
+                            if (isup)
+                            {
+                                lvwItm.SubItems.Add(StringValue.Up);
+                            }
+                            else
+                            {
+                                lvwItm.SubItems.Add(StringValue.Down);
+                            }
                             lvwItm.SubItems.Add(StringValue.NotInstalled);
                             lvwItm.SubItems.Add("0");
                             lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
@@ -348,9 +355,11 @@ namespace poshsecframework
                     lvwSystems.EndUpdate();
                 }
                 rslts = null;
-                HideProgress();
+                lvwSystems.Sorting = SortOrder.Ascending;
+                lvwSystems.Sort();                
                 btnCancelScan.Enabled = false;
                 this.UseWaitCursor = false;
+                HideProgress();
                 lblStatus.Text = StringValue.Ready;
             }            
         }

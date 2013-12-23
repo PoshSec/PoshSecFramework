@@ -83,8 +83,8 @@ namespace poshsecframework
             this.tvwNetworks = new System.Windows.Forms.TreeView();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.btnRefreshNetworks = new System.Windows.Forms.ToolStripButton();
-            this.btnCancelScan = new System.Windows.Forms.ToolStripButton();
             this.btnScan = new System.Windows.Forms.ToolStripButton();
+            this.btnCancelScan = new System.Windows.Forms.ToolStripButton();
             this.pnlSystems = new System.Windows.Forms.SplitContainer();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tbpSystems = new System.Windows.Forms.TabPage();
@@ -136,6 +136,7 @@ namespace poshsecframework
             this.powerShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waucheckps1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chDescription = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
@@ -675,17 +676,6 @@ namespace poshsecframework
             this.btnRefreshNetworks.ToolTipText = "Refresh Networks";
             this.btnRefreshNetworks.Click += new System.EventHandler(this.btnRefreshNetworks_Click);
             // 
-            // btnCancelScan
-            // 
-            this.btnCancelScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnCancelScan.Enabled = false;
-            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialogcancel;
-            this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnCancelScan.Name = "btnCancelScan";
-            this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
-            this.btnCancelScan.ToolTipText = "Cancel Scan";
-            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
-            // 
             // btnScan
             // 
             this.btnScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -696,6 +686,17 @@ namespace poshsecframework
             this.btnScan.Size = new System.Drawing.Size(23, 22);
             this.btnScan.Text = "Scan";
             this.btnScan.Click += new System.EventHandler(this.btnScan_Click);
+            // 
+            // btnCancelScan
+            // 
+            this.btnCancelScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancelScan.Enabled = false;
+            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialogcancel;
+            this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancelScan.Name = "btnCancelScan";
+            this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
+            this.btnCancelScan.ToolTipText = "Cancel Scan";
+            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
             // pnlSystems
             // 
@@ -750,6 +751,7 @@ namespace poshsecframework
             this.chName,
             this.chIP,
             this.chMAC,
+            this.chDescription,
             this.chStatus,
             this.chClientInstalled,
             this.chAlerts,
@@ -761,6 +763,7 @@ namespace poshsecframework
             this.lvwSystems.Name = "lvwSystems";
             this.lvwSystems.Size = new System.Drawing.Size(942, 307);
             this.lvwSystems.SmallImageList = this.imgList16;
+            this.lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvwSystems.TabIndex = 1;
             this.lvwSystems.UseCompatibleStateImageBehavior = false;
             this.lvwSystems.View = System.Windows.Forms.View.Details;
@@ -768,7 +771,7 @@ namespace poshsecframework
             // chName
             // 
             this.chName.Text = "Name";
-            this.chName.Width = 182;
+            this.chName.Width = 140;
             // 
             // chIP
             // 
@@ -1160,6 +1163,11 @@ namespace poshsecframework
             this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.waucheckps1ToolStripMenuItem.Text = "waucheck.ps1";
             // 
+            // chDescription
+            // 
+            this.chDescription.Text = "Description";
+            this.chDescription.Width = 125;
+            // 
             // txtPShellOutput
             // 
             this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
@@ -1348,6 +1356,7 @@ namespace poshsecframework
         private System.Windows.Forms.ContextMenuStrip cmnuScheduleCommands;
         private System.Windows.Forms.ToolStripMenuItem mnuDeleteScheduleItem;
         private System.Windows.Forms.ToolStripButton btnScan;
+        private System.Windows.Forms.ColumnHeader chDescription;
     }
 }
 

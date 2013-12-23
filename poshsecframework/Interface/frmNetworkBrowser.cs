@@ -228,7 +228,10 @@ namespace poshsecframework.Interface
 
         private void ScanAD()
         {
-            ArrayList rslts = scnr.ScanActiveDirectory(domain);
+            scnr.Domain = domain;
+            scnr.ScanActiveDirectory();
+
+            ArrayList rslts = scnr.Systems;
             OnScanADComplete(rslts);
         }
         #endregion
