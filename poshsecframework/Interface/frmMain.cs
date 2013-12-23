@@ -292,19 +292,58 @@ namespace poshsecframework
                     lvwSystems.BeginUpdate();
                     foreach (Object system in rslts)
                     {
-                        if (system.GetType() == typeof(String))
+                        if (system != null)
                         {
-                            string sys = (string)system;
-                            if (sys != null && sys != "")
+                            if (system.GetType() == typeof(String))
+                            {
+                                string sys = (string)system;
+                                if (sys != null && sys != "")
+                                {
+                                    ListViewItem lvwItm = new ListViewItem();
+                                    String[] ipinfo = system.ToString().Split('|');
+                                    SetStatus("Adding " + ipinfo[2] + ", please wait...");
+
+                                    lvwItm.Text = ipinfo[2];
+                                    lvwItm.SubItems.Add(ipinfo[1]);
+                                    lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
+                                    lvwItm.SubItems.Add("");
+                                    lvwItm.SubItems.Add(StringValue.Up);
+                                    lvwItm.SubItems.Add(StringValue.NotInstalled);
+                                    lvwItm.SubItems.Add("0");
+                                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
+
+                                    lvwItm.ImageIndex = 2;
+                                    lvwSystems.Items.Add(lvwItm);
+                                    lvwSystems.Refresh();
+
+                                    pbStatus.Value += 1;
+                                }
+                            }
+                            else
                             {
                                 ListViewItem lvwItm = new ListViewItem();
-                                String[] ipinfo = system.ToString().Split('|');
-                                SetStatus("Adding " + ipinfo[2] + ", please wait...");
+                                DirectoryEntry sys = (DirectoryEntry)system;
+                                SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
+                                lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
 
-                                lvwItm.Text = ipinfo[2];
-                                lvwItm.SubItems.Add(ipinfo[1]);
-                                lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                                lvwItm.SubItems.Add(StringValue.Up);
+                                String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
+                                lvwItm.SubItems.Add(ipadr);
+                                string macaddr = scnr.GetMac(ipadr);
+                                lvwItm.SubItems.Add(macaddr);
+                                lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
+                                bool isup = false;
+                                if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
+                                {
+                                    isup = true;
+                                }
+                                if (isup)
+                                {
+                                    lvwItm.SubItems.Add(StringValue.Up);
+                                }
+                                else
+                                {
+                                    lvwItm.SubItems.Add(StringValue.Down);
+                                }
                                 lvwItm.SubItems.Add(StringValue.NotInstalled);
                                 lvwItm.SubItems.Add("0");
                                 lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
@@ -315,42 +354,7 @@ namespace poshsecframework
 
                                 pbStatus.Value += 1;
                             }
-                        }
-                        else
-                        {
-                            ListViewItem lvwItm = new ListViewItem();
-                            DirectoryEntry sys = (DirectoryEntry)system;
-                            SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
-                            lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
-
-                            String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
-                            lvwItm.SubItems.Add(ipadr);
-                            string macaddr = scnr.GetMac(ipadr);
-                            lvwItm.SubItems.Add(macaddr);
-                            lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
-                            bool isup = false;
-                            if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
-                            {
-                                isup = true;
-                            }
-                            if (isup)
-                            {
-                                lvwItm.SubItems.Add(StringValue.Up);
-                            }
-                            else
-                            {
-                                lvwItm.SubItems.Add(StringValue.Down);
-                            }
-                            lvwItm.SubItems.Add(StringValue.NotInstalled);
-                            lvwItm.SubItems.Add("0");
-                            lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                            lvwItm.ImageIndex = 2;
-                            lvwSystems.Items.Add(lvwItm);
-                            lvwSystems.Refresh();
-
-                            pbStatus.Value += 1;
-                        }
+                        }                        
                     }
                     lvwSystems.EndUpdate();
                 }
@@ -358,6 +362,8 @@ namespace poshsecframework
                 lvwSystems.Sorting = SortOrder.Ascending;
                 lvwSystems.Sort();                
                 btnCancelScan.Enabled = false;
+                btnScan.Enabled = true;
+                mnuScan.Enabled = true;
                 this.UseWaitCursor = false;
                 HideProgress();
                 lblStatus.Text = StringValue.Ready;
