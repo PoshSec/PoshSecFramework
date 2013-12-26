@@ -27,6 +27,7 @@ namespace poshsecframework.Network
         #region Public Events
         public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanComplete;
         public event EventHandler<EventArgs> ScanCancelled;
+        public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanUpdate;
         #endregion
 
         #region Initialize
@@ -60,16 +61,20 @@ namespace poshsecframework.Network
                     srslts = srch.FindAll();
                 }
 
-                if (srslts != null)
+                if (srslts != null && srslts.Count > 0)
                 {
+                    int hostcnt = 0;
                     foreach (SearchResult srslt in srslts)
                     {
+                        hostcnt++;
                         DirectoryEntry netPC = srslt.GetDirectoryEntry();
+                        string scnmsg = "Scanning " + netPC.Name.Replace("CN=", "") + ", please wait...";
+                        OnScanUpdate(new poshsecframework.Network.ScanEventArgs(scnmsg, hostcnt, srslts.Count));
                         if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
                         {
                             Ping(netPC.Name.Replace("CN=", ""), 1, 100);
                             systems.Add(netPC);
-                        }
+                        }                       
                     }
                 }
                 BuildArpTable();
@@ -369,6 +374,17 @@ namespace poshsecframework.Network
             catch (Exception)
             {
                 //do nothing
+            }
+        }
+        #endregion
+
+        #region ScanUpdate
+        private void OnScanUpdate(poshsecframework.Network.ScanEventArgs e)
+        {
+            EventHandler<poshsecframework.Network.ScanEventArgs> handler = ScanUpdate;
+            if (handler != null)
+            {
+                handler(this, e);
             }
         }
         #endregion

@@ -12,6 +12,9 @@ namespace poshsecframework.Network
         ArrayList systems = null;
         String ipaddr = "";
         String hostname = "";
+        String status = "";
+        int curidx = 0;
+        int maxidx = 0;
         bool isup = false;
         int idx = 0;
         #endregion
@@ -27,6 +30,13 @@ namespace poshsecframework.Network
             hostname = Hostname;
             isup = IsUp;
             idx = Index;
+        }
+
+        public ScanEventArgs(String Status, int CurrentIndex, int MaxIndex)
+        {
+            status = Status;
+            curidx = CurrentIndex;
+            maxidx = MaxIndex;
         }
 
         public ArrayList Systems
@@ -52,6 +62,21 @@ namespace poshsecframework.Network
         public int Index
         {
             get { return idx; }
+        }
+
+        public String Status
+        {
+            get { return status; }
+        }
+
+        public int CurrentIndex
+        {
+            get { return curidx; }
+        }
+
+        public int MaxIndex
+        {
+            get { return maxidx; }
         }
     }
 }

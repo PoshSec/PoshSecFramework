@@ -63,6 +63,7 @@ namespace poshsecframework
             InitializeComponent();
             scnr.ScanComplete += scnr_ScanComplete;
             scnr.ScanCancelled += scnr_ScanCancelled;
+            scnr.ScanUpdate += scnr_ScanUpdate;
             schedule.ItemUpdated += schedule_ItemUpdated;
             schedule.ScriptInvoked += schedule_ScriptInvoked;
 
@@ -387,6 +388,23 @@ namespace poshsecframework
                 this.UseWaitCursor = false;
                 lblStatus.Text = StringValue.Ready;
             }            
+        }
+
+        void scnr_ScanUpdate(object sender, Network.ScanEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    scnr_ScanUpdate(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                SetProgress(e.CurrentIndex, e.MaxIndex);
+                SetStatus(e.Status);
+            }
         }
 
         private void schedule_ItemUpdated(object sender, Utility.ScheduleEventArgs e)
