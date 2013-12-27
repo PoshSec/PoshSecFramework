@@ -19,5 +19,12 @@ namespace poshsecframework.Enums
             Weekly,
             Monthly
         }
+
+        public enum FilterType
+        {
+            XML = 1,
+            CSV,
+            TXT
+        }
     }
 }

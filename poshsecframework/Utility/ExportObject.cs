@@ -7,6 +7,7 @@ using System.Management.Automation;
 using System.Xml;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Enums;
 
 namespace poshsecframework.Utility
 {

@@ -63,9 +63,49 @@ namespace poshsecframework.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap application_x_powershellscript {
+            get {
+                object obj = ResourceManager.GetObject("application-x-powershellscript", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap application_x_shellscript {
+            get {
+                object obj = ResourceManager.GetObject("application-x-shellscript", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap caret_underline {
             get {
                 object obj = ResourceManager.GetObject("caret_underline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap computer_add {
+            get {
+                object obj = ResourceManager.GetObject("computer-add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap computer_delete {
+            get {
+                object obj = ResourceManager.GetObject("computer-delete", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,6 +193,26 @@ namespace poshsecframework.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap document_export_4 {
+            get {
+                object obj = ResourceManager.GetObject("document-export-4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap document_import {
+            get {
+                object obj = ResourceManager.GetObject("document-import", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap documentopen7 {
             get {
                 object obj = ResourceManager.GetObject("documentopen7", resourceCulture);
@@ -196,6 +256,16 @@ namespace poshsecframework.Properties {
         internal static System.Drawing.Bitmap networktransmitreceive2 {
             get {
                 object obj = ResourceManager.GetObject("networktransmitreceive2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap psficon {
+            get {
+                object obj = ResourceManager.GetObject("psficon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

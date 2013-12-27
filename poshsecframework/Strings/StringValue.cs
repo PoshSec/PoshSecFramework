@@ -67,7 +67,7 @@ namespace poshsecframework.Strings
         public const string WaitingForHostResp = "Waiting for hostname responses, please wait...";
         public const string BlankMAC = "00-00-00-00-00-00";
         public const string NAHost = "N/A";
-        public const string UnknownHost = "0.0.0.0 (unknown host)";
+        public const string UnknownHost = "0.0.0.0";
 
         public const string CLS = "CLS";
         public const string Clear = "CLEAR";

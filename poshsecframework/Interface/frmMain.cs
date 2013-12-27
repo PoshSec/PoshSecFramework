@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using poshsecframework.Strings;
+using poshsecframework.Enums;
 
 namespace poshsecframework
 {
@@ -214,6 +215,7 @@ namespace poshsecframework
                     lvwSystems.Refresh();
                 }
                 tvwNetworks.Nodes[0].Expand();
+                UpdateSystemCount();
             }
             catch (Exception e)
             {
@@ -322,37 +324,43 @@ namespace poshsecframework
                             }
                             else
                             {
-                                ListViewItem lvwItm = new ListViewItem();
                                 DirectoryEntry sys = (DirectoryEntry)system;
-                                SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
-                                lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
-
                                 String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
-                                lvwItm.SubItems.Add(ipadr);
-                                string macaddr = scnr.GetMac(ipadr);
-                                lvwItm.SubItems.Add(macaddr);
-                                lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
-                                bool isup = false;
-                                if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
+                                String[] ips = ipadr.Split(',');
+                                if(ips != null && ips.Length > 0)
                                 {
-                                    isup = true;
-                                }
-                                if (isup)
-                                {
-                                    lvwItm.SubItems.Add(StringValue.Up);
-                                }
-                                else
-                                {
-                                    lvwItm.SubItems.Add(StringValue.Down);
-                                }
-                                lvwItm.SubItems.Add(StringValue.NotInstalled);
-                                lvwItm.SubItems.Add("0");
-                                lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
+                                    foreach(String ip in ips)
+                                    {
+                                        ListViewItem lvwItm = new ListViewItem();
+                                        SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
+                                        lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
 
-                                lvwItm.ImageIndex = 2;
-                                lvwSystems.Items.Add(lvwItm);
-                                lvwSystems.Refresh();
+                                        lvwItm.SubItems.Add(ip);
+                                        string macaddr = scnr.GetMac(ip);
+                                        lvwItm.SubItems.Add(macaddr);
+                                        lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
+                                        bool isup = false;
+                                        if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
+                                        {
+                                            isup = true;
+                                        }
+                                        if (isup)
+                                        {
+                                            lvwItm.SubItems.Add(StringValue.Up);
+                                        }
+                                        else
+                                        {
+                                            lvwItm.SubItems.Add(StringValue.Down);
+                                        }
+                                        lvwItm.SubItems.Add(StringValue.NotInstalled);
+                                        lvwItm.SubItems.Add("0");
+                                        lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
+                                        lvwItm.ImageIndex = 2;
+                                        lvwSystems.Items.Add(lvwItm);
+                                        lvwSystems.Refresh();
+                                    }
+                                }
                                 pbStatus.Value += 1;
                             }
                         }                        
@@ -367,6 +375,7 @@ namespace poshsecframework
                 mnuScan.Enabled = true;
                 this.UseWaitCursor = false;
                 HideProgress();
+                UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }            
         }
@@ -386,6 +395,7 @@ namespace poshsecframework
                 HideProgress();
                 btnCancelScan.Enabled = false;
                 this.UseWaitCursor = false;
+                UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }            
         }
@@ -593,6 +603,25 @@ namespace poshsecframework
                     break;
             }
             return rtn;
+        }
+
+        private void ShowOptions()
+        {
+            if (lvwActiveScripts.Items.Count == 0)
+            {
+                poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
+                System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
+                frm.Dispose();
+                frm = null;
+                if (rslt == System.Windows.Forms.DialogResult.OK)
+                {
+                    Initialize();
+                };
+            }
+            else
+            {
+                MessageBox.Show(StringValue.SettingScriptsRunning);
+            }
         }
 
         private void DeleteScheduleItems()
@@ -926,6 +955,37 @@ namespace poshsecframework
             }
         }
 
+        public System.Object[] GetHostsAsObject()
+        {
+            if (this.InvokeRequired)
+            {
+                return (System.Object[])this.Invoke((Func<System.Object[]>)delegate
+                {
+                    return GetHostsAsObject();
+                });
+            }
+            else
+            {
+                List<PSObject> hosts = new List<PSObject>();
+                ListView.ListViewItemCollection lvwitms = lvwSystems.Items;
+                if (lvwitms != null && lvwitms.Count > 0)
+                {
+                    foreach (ListViewItem lvw in lvwitms)
+                    {
+                        PSObject pobj = new PSObject();
+                        int idx = -1;
+                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        {
+                            idx++;
+                            pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
+                        }
+                        hosts.Add(pobj);
+                    }
+                }
+                return hosts.ToArray();
+            }
+        }
+
         public void AddActiveScript(ListViewItem lvw)
         {
             if (this.InvokeRequired)
@@ -1172,6 +1232,7 @@ namespace poshsecframework
             {
                 lvwScripts.BeginUpdate();
                 lvwScripts.Items.Clear();
+                lvwScripts_SelectedIndexChanged(null, null);
                 String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
@@ -1224,6 +1285,13 @@ namespace poshsecframework
         {
             DisplayOutput(Environment.NewLine + "Unhandled exception." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, true);
             tcMain.SelectedTab = tbpPowerShell;
+        }
+        #endregion
+
+        #region " Update System Count "
+        private void UpdateSystemCount()
+        {
+            tslSystemCount.Text = lvwSystems.Items.Count.ToString() + " Systems";
         }
         #endregion
 
@@ -1295,21 +1363,7 @@ namespace poshsecframework
 
         private void mnuOptions_Click(object sender, EventArgs e)
         {
-            if (lvwActiveScripts.Items.Count == 0)
-            {
-                poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
-                System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
-                frm.Dispose();
-                frm = null;
-                if (rslt == System.Windows.Forms.DialogResult.OK)
-                {
-                    Initialize();
-                };
-            }
-            else
-            {
-                MessageBox.Show(StringValue.SettingScriptsRunning);
-            }
+            ShowOptions();
         }
 
         private void mnuDeleteScheduleItem_Click(object sender, EventArgs e)
@@ -1641,6 +1695,58 @@ namespace poshsecframework
             MessageBox.Show(StringValue.NotImplemented);           
         }
 
+        private void btnLaunchPShellCmd_Click(object sender, EventArgs e)
+        {
+            ShellOpenCommand("powershell.exe");
+        }
+
+        private void btnLaunchCmd_Click(object sender, EventArgs e)
+        {
+            ShellOpenCommand("cmd.exe");
+        }
+
+        private void btnOptions_Click(object sender, EventArgs e)
+        {
+            ShowOptions();
+        }
+
+        private void btnExportSystems_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Object[] hosts = GetHostsAsObject();
+                String expfilter = StringValue.ExportFormats;
+                SaveFileDialog dlgExport = new SaveFileDialog();
+                dlgExport.Filter = expfilter;
+                dlgExport.CheckFileExists = false;
+                dlgExport.CheckPathExists = true;
+                dlgExport.Title = "Export As...";
+                if (dlgExport.ShowDialog() == DialogResult.OK)
+                {
+                    Utility.ExportObject exobj = new Utility.ExportObject();
+                    switch ((EnumValues.FilterType)dlgExport.FilterIndex)
+                    {
+                        case EnumValues.FilterType.XML:
+                            exobj.XML(hosts, dlgExport.FileName);
+                            break;
+                        case EnumValues.FilterType.CSV:
+                            exobj.CSV(hosts, dlgExport.FileName);
+                            break;
+                        case EnumValues.FilterType.TXT:
+                            exobj.TXT(hosts, dlgExport.FileName);
+                            break;
+                    }
+                    exobj = null;
+                }
+                dlgExport.Dispose();
+                dlgExport = null;
+            }
+            catch (Exception ex)
+            {
+                DisplayError(ex);
+            }
+        }
+
         private void mnuCmdGetHelp_Click(object sender, EventArgs e)
         {
             if (lvwCommands.SelectedItems.Count > 0)
@@ -1692,7 +1798,5 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
-
-        
     }
 }
