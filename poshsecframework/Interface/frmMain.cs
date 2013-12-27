@@ -1611,6 +1611,35 @@ namespace poshsecframework
             }
         }
 
+        private void cmnuPSFConsole_Opening(object sender, CancelEventArgs e)
+        {
+            cmbtnCopy.Enabled = false;
+            cmbtnPaste.Enabled = false;
+
+            if (txtPShellOutput.SelectedText.Length > 0)
+            {
+                cmbtnCopy.Enabled = true;
+            }
+
+            String cliptxt = Clipboard.GetText(TextDataFormat.Text);
+            if (cliptxt != null && cliptxt != "")
+            {
+                cmbtnPaste.Enabled = true;
+            }
+        }
+
+        private void cmbtnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(txtPShellOutput.SelectedText, TextDataFormat.Text);
+        }
+
+        private void cmbtnPaste_Click(object sender, EventArgs e)
+        {
+            //This gets rid of any formating and nontext data.
+            Clipboard.SetText(Clipboard.GetText(TextDataFormat.Text));
+            txtPShellOutput.Paste();
+        }
+
         private void cmbtnCancelScript_Click(object sender, EventArgs e)
         {
             if (lvwActiveScripts.SelectedItems.Count > 0)
