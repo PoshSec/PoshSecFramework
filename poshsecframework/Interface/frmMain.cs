@@ -24,14 +24,17 @@ namespace poshsecframework
     {
         #region Private Variables 
         Network.NetworkBrowser scnr = new Network.NetworkBrowser();
+        Interface.frmStartup stat = null;
         private int mincurpos = 6;
         private Collection<String> cmdhist = new Collection<string>();
         private int cmdhistidx = -1;
         private PShell.pshell psf;
         private bool cancelscan = false;
         private bool restart = false;
+        private bool shown = false;
         private Utility.Schedule schedule = new Utility.Schedule(1000);
         private string loaderrors = "";
+        private Collection<String> enabledmods = new Collection<string>();
 
         enum SystemType
         { 
@@ -62,35 +65,51 @@ namespace poshsecframework
         public frmMain()
         {
             InitializeComponent();
+            this.Enabled = false;
+            stat = new Interface.frmStartup();
+            stat.Show();
+            stat.Refresh();
+        }
+
+        private void frmMain_Shown(object sender, EventArgs e)
+        {            
+            stat.SetStatus("Initializing, please wait...");
             scnr.ScanComplete += scnr_ScanComplete;
             scnr.ScanCancelled += scnr_ScanCancelled;
             scnr.ScanUpdate += scnr_ScanUpdate;
             schedule.ItemUpdated += schedule_ItemUpdated;
             schedule.ScriptInvoked += schedule_ScriptInvoked;
 
-            Initialize();
+            stat.SetStatus("Checking Settings, please wait...");
+            CheckSettings();
             if (poshsecframework.Properties.Settings.Default.FirstTime)
             {
                 restart = true;
-                FirstTimeSetup();                
+                stat.Close();
+                FirstTimeSetup();
             }
-            if (!restart)
-            {
-                GetNetworks();
-            }            
-        }
-
-        private void frmMain_Shown(object sender, EventArgs e)
-        {
             if (restart)
             {
                 Application.Restart();
                 this.Close();
             }
+            else
+            {
+                Initialize();
+                stat.Show();
+                stat.SetStatus("Loading Networks, please wait...");
+                GetNetworks();
+            }
             if (loaderrors != "")
             {
                 DisplayOutput(StringValue.ImportError + Environment.NewLine + loaderrors, null, false, false, false, true);
             }
+            shown = true;
+            stat.Close();
+            stat.Dispose();
+            stat = null;
+            this.Enabled = true;
+            this.Focus();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -130,8 +149,14 @@ namespace poshsecframework
 
         private void Initialize()
         {
-            CheckSettings();
-            psf = new PShell.pshell();
+            stat.SetStatus("Looking for modules, please wait...");
+            BuildModuleFilter();
+            cmbLibraryTypes.SelectedIndex = 0;
+            stat.SetStatus("Initializing PowerShell, please wait...");
+            psf = new PShell.pshell(this);
+            psf.ImportPSModules(enabledmods);
+            psf.ParentForm = this;
+            scnr.ParentForm = this; 
             if (psf.LoadErrors != "")
             {
                 loaderrors += psf.LoadErrors;
@@ -139,11 +164,11 @@ namespace poshsecframework
             txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
-            scnr.ParentForm = this;
-            cmbLibraryTypes.SelectedIndex = 1;
-            psf.ParentForm = this;
+            stat.SetStatus("Loading script library, please wait...");
             GetLibrary();
+            stat.SetStatus("Getting commands, please wait...");
             GetCommand();
+            stat.SetStatus("Loading schedule library, please wait...");
             LoadSchedule();  
         }
 
@@ -476,11 +501,9 @@ namespace poshsecframework
             {
                 List<PShell.psparameter> scriptparams;
                 ListViewItem lvw = lvwScripts.SelectedItems[0];
-                PShell.pscript psc = new PShell.pscript();
-                psc.ParentForm = this;
-                scriptparams = psc.CheckForParams(lvw.Tag.ToString());
+                scriptparams = psf.CheckForParams(lvw.Tag.ToString());
 
-                if (!psc.ParamSelectionCancelled)
+                if (!psf.ParamSelectionCancelled)
                 {
                     Utility.ScheduleItem sitm = new Utility.ScheduleItem();
                     sitm.ScriptName = lvw.Text;
@@ -654,7 +677,7 @@ namespace poshsecframework
             {
                 ListViewItem lvw = lvwScripts.SelectedItems[0];
                 //This needs to be a separate runspace.
-                PShell.pshell ps = new PShell.pshell();
+                PShell.pshell ps = new PShell.pshell(this);
                 ps.ParentForm = this;
                 if (lvw.Group.Header != null && lvw.Group.Header != "General")
                 {
@@ -672,7 +695,7 @@ namespace poshsecframework
         {
             if (sched != null)
             {
-                PShell.pshell ps = new PShell.pshell();
+                PShell.pshell ps = new PShell.pshell(this);
                 ps.ParentForm = this;
                 ps.Run(sched);
             }
@@ -1148,14 +1171,45 @@ namespace poshsecframework
             poshsecframework.Properties.Settings.Default.Reload();
         }
 
+        private void BuildModuleFilter()
+        {
+            cmbLibraryTypes.Items.Clear();
+            cmbLibraryTypes.Items.Add("All");
+            String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
+            if (Directory.Exists(modpath))
+            {
+                try
+                {
+                    String[] modfolders = Directory.GetDirectories(modpath, "*", SearchOption.TopDirectoryOnly);
+                    if (modfolders != null && modfolders.Length > 0)
+                    {
+                        foreach (String modfolder in modfolders)
+                        {
+                            String[] modpsms = Directory.GetFiles(modfolder, "*.psd1", SearchOption.TopDirectoryOnly);
+                            if (modpsms != null & modpsms.Length > 0)
+                            {
+                                foreach (String modpsm in modpsms)
+                                { 
+                                    FileInfo psminfo = new FileInfo(modpsm);
+                                    enabledmods.Add(psminfo.FullName);
+                                    cmbLibraryTypes.Items.Add(psminfo.Name.Replace(psminfo.Extension, ""));
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    DisplayError(e);
+                }                
+            }
+        }
+
         private void GetCommand()
         {
             try
             {
-                PShell.pscript ps = new PShell.pscript();
-                ps.ParentForm = this;
-                Collection<PSObject> rslt = ps.GetCommand();
-                ps = null;
+                Collection<PSObject> rslt = psf.GetCommand();
                 if (rslt != null)
                 {
                     List<String> accmds = new List<String>();
@@ -1806,7 +1860,11 @@ namespace poshsecframework
         #region ComboBox Events
         private void cmbLibraryTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GetCommand();
+            if (shown)
+            {
+                GetCommand();
+            }
+            
         }
         #endregion
 

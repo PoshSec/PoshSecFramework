@@ -61,6 +61,10 @@
             this.btnBrowseScript = new System.Windows.Forms.Button();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
+            this.tbpModules = new System.Windows.Forms.TabPage();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -72,6 +76,7 @@
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
+            this.tbpModules.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -412,12 +417,46 @@
             // tcSettings
             // 
             this.tcSettings.Controls.Add(this.tbpGeneral);
+            this.tcSettings.Controls.Add(this.tbpModules);
             this.tcSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
+            this.tcSettings.Multiline = true;
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
             this.tcSettings.Size = new System.Drawing.Size(460, 249);
             this.tcSettings.TabIndex = 1;
+            // 
+            // tbpModules
+            // 
+            this.tbpModules.Controls.Add(this.listView1);
+            this.tbpModules.Controls.Add(this.toolStrip1);
+            this.tbpModules.Location = new System.Drawing.Point(4, 22);
+            this.tbpModules.Name = "tbpModules";
+            this.tbpModules.Padding = new System.Windows.Forms.Padding(3);
+            this.tbpModules.Size = new System.Drawing.Size(452, 223);
+            this.tbpModules.TabIndex = 1;
+            this.tbpModules.Text = "Modules";
+            this.tbpModules.UseVisualStyleBackColor = true;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Location = new System.Drawing.Point(3, 3);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(446, 25);
+            this.toolStrip1.TabIndex = 0;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // listView1
+            // 
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listView1.Location = new System.Drawing.Point(3, 28);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(446, 192);
+            this.listView1.TabIndex = 1;
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
             // 
             // frmSettings
             // 
@@ -453,6 +492,8 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tcSettings.ResumeLayout(false);
+            this.tbpModules.ResumeLayout(false);
+            this.tbpModules.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -492,5 +533,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cmbFirstTime;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabPage tbpModules;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ToolStrip toolStrip1;
     }
 }

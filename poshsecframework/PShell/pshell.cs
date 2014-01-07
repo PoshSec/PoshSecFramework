@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -19,15 +21,18 @@ namespace poshsecframework.PShell
         private bool scroll;
         private bool scheduled = false;
         private string loaderrors = "";
+        private bool paramcancelled = false;
         #endregion
 
         #region " Public Methods "
-        public pshell()
+        public pshell(frmMain ParentForm)
         {
             try
             {
                 pspath = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
                 ps = new pscript();
+                frm = ParentForm;
+                ps.ParentForm = frm;
                 ps.ScriptCompleted += new EventHandler<pseventargs>(ScriptCompleted);
                 if (ps.LoadErrors != "")
                 {
@@ -39,6 +44,24 @@ namespace poshsecframework.PShell
                 //Base Exception Handler
                 MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
             }            
+        }
+
+        public void ImportPSModules(Collection<String> enabledmods)
+        {        
+            ps.ImportPSModules(enabledmods);
+        }
+
+        public Collection<PSObject> GetCommand()
+        {
+            return ps.GetCommand();
+        }
+
+        public List<psparameter> CheckForParams(String scriptcommand)
+        {
+            paramcancelled = false;
+            List<psparameter> parms = ps.CheckForParams(scriptcommand);
+            paramcancelled = ps.ParamSelectionCancelled;
+            return parms;
         }
 
         public void Run(Utility.ScheduleItem sched)
@@ -149,6 +172,11 @@ namespace poshsecframework.PShell
         public string LoadErrors
         {
             get { return loaderrors; }
+        }
+
+        public bool ParamSelectionCancelled
+        {
+            get { return paramcancelled; }
         }
         #endregion
     }

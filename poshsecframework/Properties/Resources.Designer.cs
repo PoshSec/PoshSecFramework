@@ -263,6 +263,16 @@ namespace poshsecframework.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap psf_logo_rev1 {
+            get {
+                object obj = ResourceManager.GetObject("psf_logo_rev1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap psficon {
             get {
                 object obj = ResourceManager.GetObject("psficon", resourceCulture);
@@ -306,6 +316,26 @@ namespace poshsecframework.Properties {
         internal static System.Drawing.Bitmap ServerExecute {
             get {
                 object obj = ResourceManager.GetObject("ServerExecute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap system_run_3 {
+            get {
+                object obj = ResourceManager.GetObject("system-run-3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap system_run_31 {
+            get {
+                object obj = ResourceManager.GetObject("system-run-31", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

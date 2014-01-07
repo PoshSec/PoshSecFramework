@@ -77,12 +77,17 @@ namespace poshsecframework.PShell
             }
         }
 
-        private void ImportPSFramework()
+        public void ImportPSModules(Collection<String> enabledmods)
         {
-            if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
+            if (enabledmods != null & enabledmods.Count() > 0)
             {
                 Pipeline pline = rspace.CreatePipeline();
-                pline.Commands.AddScript(StringValue.ImportPSFramework + StringValue.WriteError);
+                String script = "";
+                foreach (String mod in enabledmods)
+                {
+                    script += "Import-Module \"" + mod + "\"\r\n";
+                }
+                pline.Commands.AddScript(script + StringValue.WriteError);
                 Collection<PSObject> rslt = pline.Invoke();
                 pline.Dispose();
                 pline = null;
@@ -142,7 +147,6 @@ namespace poshsecframework.PShell
             try
             {
                 InitializeScript();
-                ImportPSFramework();
             }
             catch (Exception e)
             {
@@ -160,6 +164,7 @@ namespace poshsecframework.PShell
 
         public Collection<PSObject> GetCommand()
         {
+            rslts.Clear();
             Collection<PSObject> rslt = null;
             String scrpt = "";
             Pipeline pline = rspace.CreatePipeline();
@@ -176,7 +181,6 @@ namespace poshsecframework.PShell
             finally
             {
                 pline.Dispose();
-                pline = null;
                 pline = null;
                 if (rslt != null)
                 {
@@ -258,6 +262,7 @@ namespace poshsecframework.PShell
 
         public void RunScript()
         {
+            rslts.Clear();
             InitializeSessionVars();
             PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");            
             Pipeline pline = null;

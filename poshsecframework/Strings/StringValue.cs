@@ -55,7 +55,7 @@ namespace poshsecframework.Strings
 
         public const string psf = "psf > ";
         public const string Ready = "Ready";
-        public const string ImportPSFramework = "Import-Module \"$PSFramework\"";
+        //public const string ImportPSFramework = "Import-Module \"$PSFramework\"";
         public const string NotImplemented = "Not implemented yet. Soon!";
         public const string WriteError = "\r\nWrite-Output $error";
 
