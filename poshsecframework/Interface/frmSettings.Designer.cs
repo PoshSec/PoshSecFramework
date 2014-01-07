@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSettings));
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -42,23 +43,18 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.txtPSExecPath = new System.Windows.Forms.TextBox();
-            this.btnBrowsePSExec = new System.Windows.Forms.Button();
             this.lblPSExecPath = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
             this.txtSchFile = new System.Windows.Forms.TextBox();
-            this.btnBrowseSchFile = new System.Windows.Forms.Button();
             this.lblSchFile = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.txtFrameworkFile = new System.Windows.Forms.TextBox();
-            this.btnBrowseFramework = new System.Windows.Forms.Button();
             this.lblFrameworkDirectory = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtModuleDirectory = new System.Windows.Forms.TextBox();
-            this.btnBrowseModule = new System.Windows.Forms.Button();
             this.lblModuleDirectory = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.txtScriptDirectory = new System.Windows.Forms.TextBox();
-            this.btnBrowseScript = new System.Windows.Forms.Button();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
             this.tbpModules = new System.Windows.Forms.TabPage();
@@ -67,6 +63,12 @@
             this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbModules = new System.Windows.Forms.ToolStrip();
+            this.btnBrowsePSExec = new System.Windows.Forms.Button();
+            this.btnBrowseSchFile = new System.Windows.Forms.Button();
+            this.btnBrowseFramework = new System.Windows.Forms.Button();
+            this.btnBrowseModule = new System.Windows.Forms.Button();
+            this.btnBrowseScript = new System.Windows.Forms.Button();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -79,6 +81,7 @@
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
             this.tbpModules.SuspendLayout();
+            this.tbModules.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -235,17 +238,6 @@
             this.txtPSExecPath.Size = new System.Drawing.Size(309, 21);
             this.txtPSExecPath.TabIndex = 6;
             // 
-            // btnBrowsePSExec
-            // 
-            this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowsePSExec.Name = "btnBrowsePSExec";
-            this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowsePSExec.TabIndex = 1;
-            this.btnBrowsePSExec.UseVisualStyleBackColor = true;
-            this.btnBrowsePSExec.Click += new System.EventHandler(this.btnBrowsePSExec_Click);
-            // 
             // lblPSExecPath
             // 
             this.lblPSExecPath.Dock = System.Windows.Forms.DockStyle.Left;
@@ -274,17 +266,6 @@
             this.txtSchFile.Name = "txtSchFile";
             this.txtSchFile.Size = new System.Drawing.Size(309, 21);
             this.txtSchFile.TabIndex = 5;
-            // 
-            // btnBrowseSchFile
-            // 
-            this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseSchFile.Name = "btnBrowseSchFile";
-            this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseSchFile.TabIndex = 1;
-            this.btnBrowseSchFile.UseVisualStyleBackColor = true;
-            this.btnBrowseSchFile.Click += new System.EventHandler(this.btnBrowseSchFile_Click);
             // 
             // lblSchFile
             // 
@@ -315,17 +296,6 @@
             this.txtFrameworkFile.Size = new System.Drawing.Size(309, 21);
             this.txtFrameworkFile.TabIndex = 4;
             // 
-            // btnBrowseFramework
-            // 
-            this.btnBrowseFramework.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseFramework.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseFramework.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseFramework.Name = "btnBrowseFramework";
-            this.btnBrowseFramework.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseFramework.TabIndex = 1;
-            this.btnBrowseFramework.UseVisualStyleBackColor = true;
-            this.btnBrowseFramework.Click += new System.EventHandler(this.btnBrowseFramework_Click);
-            // 
             // lblFrameworkDirectory
             // 
             this.lblFrameworkDirectory.Dock = System.Windows.Forms.DockStyle.Left;
@@ -355,17 +325,6 @@
             this.txtModuleDirectory.Size = new System.Drawing.Size(309, 21);
             this.txtModuleDirectory.TabIndex = 3;
             // 
-            // btnBrowseModule
-            // 
-            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseModule.Name = "btnBrowseModule";
-            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseModule.TabIndex = 1;
-            this.btnBrowseModule.UseVisualStyleBackColor = true;
-            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
-            // 
             // lblModuleDirectory
             // 
             this.lblModuleDirectory.Dock = System.Windows.Forms.DockStyle.Left;
@@ -394,17 +353,6 @@
             this.txtScriptDirectory.Name = "txtScriptDirectory";
             this.txtScriptDirectory.Size = new System.Drawing.Size(309, 21);
             this.txtScriptDirectory.TabIndex = 2;
-            // 
-            // btnBrowseScript
-            // 
-            this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseScript.Name = "btnBrowseScript";
-            this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseScript.TabIndex = 1;
-            this.btnBrowseScript.UseVisualStyleBackColor = true;
-            this.btnBrowseScript.Click += new System.EventHandler(this.btnBrowseScript_Click);
             // 
             // lblScriptDirectory
             // 
@@ -472,10 +420,76 @@
             // 
             // tbModules
             // 
+            this.tbModules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1});
             this.tbModules.Location = new System.Drawing.Point(3, 3);
             this.tbModules.Name = "tbModules";
             this.tbModules.Size = new System.Drawing.Size(446, 25);
             this.tbModules.TabIndex = 0;
+            // 
+            // btnBrowsePSExec
+            // 
+            this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowsePSExec.Name = "btnBrowsePSExec";
+            this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowsePSExec.TabIndex = 1;
+            this.btnBrowsePSExec.UseVisualStyleBackColor = true;
+            this.btnBrowsePSExec.Click += new System.EventHandler(this.btnBrowsePSExec_Click);
+            // 
+            // btnBrowseSchFile
+            // 
+            this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseSchFile.Name = "btnBrowseSchFile";
+            this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseSchFile.TabIndex = 1;
+            this.btnBrowseSchFile.UseVisualStyleBackColor = true;
+            this.btnBrowseSchFile.Click += new System.EventHandler(this.btnBrowseSchFile_Click);
+            // 
+            // btnBrowseFramework
+            // 
+            this.btnBrowseFramework.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseFramework.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseFramework.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseFramework.Name = "btnBrowseFramework";
+            this.btnBrowseFramework.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseFramework.TabIndex = 1;
+            this.btnBrowseFramework.UseVisualStyleBackColor = true;
+            this.btnBrowseFramework.Click += new System.EventHandler(this.btnBrowseFramework_Click);
+            // 
+            // btnBrowseModule
+            // 
+            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseModule.Name = "btnBrowseModule";
+            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseModule.TabIndex = 1;
+            this.btnBrowseModule.UseVisualStyleBackColor = true;
+            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
+            // 
+            // btnBrowseScript
+            // 
+            this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseScript.Name = "btnBrowseScript";
+            this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseScript.TabIndex = 1;
+            this.btnBrowseScript.UseVisualStyleBackColor = true;
+            this.btnBrowseScript.Click += new System.EventHandler(this.btnBrowseScript_Click);
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "toolStripButton1";
             // 
             // frmSettings
             // 
@@ -513,6 +527,8 @@
             this.tcSettings.ResumeLayout(false);
             this.tbpModules.ResumeLayout(false);
             this.tbpModules.PerformLayout();
+            this.tbModules.ResumeLayout(false);
+            this.tbModules.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -558,5 +574,6 @@
         private System.Windows.Forms.ToolStrip tbModules;
         private System.Windows.Forms.ColumnHeader chRepository;
         private System.Windows.Forms.ColumnHeader chBranch;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }
