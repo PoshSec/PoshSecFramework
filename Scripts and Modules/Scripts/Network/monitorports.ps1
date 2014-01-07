@@ -15,6 +15,9 @@ Param(
     [Parameter(Mandatory=$false,Position=1)]
     [string]$computer=""
   )
+
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
   
 [boolean]$scan = $True;
 $baseline = @()

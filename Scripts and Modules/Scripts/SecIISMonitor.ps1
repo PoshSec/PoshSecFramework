@@ -22,6 +22,8 @@
    Start-SecIISMonitor -filter "robots.txt"
 
 #>
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
 
 param(
   [String]$IP = "",

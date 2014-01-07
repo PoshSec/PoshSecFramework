@@ -13,6 +13,8 @@ Param(
 	[Parameter(Mandatory=$false,Position=1)]
 	[boolean]$showintab=$True
 )
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
 
 #Start your code here.
 $vers = @()

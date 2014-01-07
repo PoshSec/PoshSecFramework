@@ -41,6 +41,9 @@ Param(
   [Parameter(Mandatory=$false,Position=5)]
 	[string]$baselinepath
 )
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
+
 #Start your code here.
 $processes = @()
 $outprocs = @()

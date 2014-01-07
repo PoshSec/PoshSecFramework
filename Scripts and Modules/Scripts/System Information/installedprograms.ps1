@@ -22,6 +22,9 @@ Param(
   [Parameter(Mandatory=$false,Position=2)]
 	[string]$storedhosts
 )
+#Required to use PoshSec functions
+Import-Module $PSModRoot\PoshSec
+
 #Start your code here.
 $progs = @()
 $installedprogs = @()
