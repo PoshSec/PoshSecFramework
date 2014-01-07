@@ -127,7 +127,7 @@
   <data name="viewrefresh7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\view-refresh-7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="computer-add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="computeradd" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\computer-add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="documentopen7" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -139,7 +139,7 @@
   <data name="tabclose3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tab-close-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="document-import" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="documentimport" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-import.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dialoginformation4" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -160,7 +160,7 @@
   <data name="caret_underline" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\caret_underline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="application-x-shellscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="applicationxshellscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\application-x-shellscript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="editclearlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -172,7 +172,7 @@
   <data name="dialogaccept" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dialog-accept.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="computer-delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="computerdelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\computer-delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dialogwarning3" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -199,10 +199,10 @@
   <data name="ServerExecute" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ServerExecute.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="system-run-3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="systemrun3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\system-run-3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="system-run-31" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="systemrun31" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\system-run-31.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Diagram" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -217,10 +217,10 @@
   <data name="networktransmitreceive2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\network-transmit-receive-2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="document-export-4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="documentexport4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\document-export-4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="application-x-powershellscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="applicationxpowershellscript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\application-x-powershellscript.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="psf_logo_rev1" type="System.Resources.ResXFileRef, System.Windows.Forms">
