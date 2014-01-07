@@ -63,8 +63,10 @@
             this.tcSettings = new System.Windows.Forms.TabControl();
             this.tbpModules = new System.Windows.Forms.TabPage();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.chModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tbModules = new System.Windows.Forms.ToolStrip();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -429,7 +431,7 @@
             // tbpModules
             // 
             this.tbpModules.Controls.Add(this.listView1);
-            this.tbpModules.Controls.Add(this.toolStrip1);
+            this.tbpModules.Controls.Add(this.tbModules);
             this.tbpModules.Location = new System.Drawing.Point(4, 22);
             this.tbpModules.Name = "tbpModules";
             this.tbpModules.Padding = new System.Windows.Forms.Padding(3);
@@ -440,8 +442,11 @@
             // 
             // listView1
             // 
+            this.listView1.CheckBoxes = true;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
+            this.chModName,
+            this.chRepository,
+            this.chBranch});
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.Location = new System.Drawing.Point(3, 28);
             this.listView1.Name = "listView1";
@@ -450,13 +455,27 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
-            // toolStrip1
+            // chModName
             // 
-            this.toolStrip1.Location = new System.Drawing.Point(3, 3);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(446, 25);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
+            this.chModName.Text = "Module Name";
+            this.chModName.Width = 140;
+            // 
+            // chRepository
+            // 
+            this.chRepository.Text = "Repository";
+            this.chRepository.Width = 160;
+            // 
+            // chBranch
+            // 
+            this.chBranch.Text = "Branch";
+            this.chBranch.Width = 120;
+            // 
+            // tbModules
+            // 
+            this.tbModules.Location = new System.Drawing.Point(3, 3);
+            this.tbModules.Name = "tbModules";
+            this.tbModules.Size = new System.Drawing.Size(446, 25);
+            this.tbModules.TabIndex = 0;
             // 
             // frmSettings
             // 
@@ -535,7 +554,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tbpModules;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ColumnHeader chModName;
+        private System.Windows.Forms.ToolStrip tbModules;
+        private System.Windows.Forms.ColumnHeader chRepository;
+        private System.Windows.Forms.ColumnHeader chBranch;
     }
 }
