@@ -310,7 +310,7 @@ namespace poshsecframework
             // btnLaunchCmd
             // 
             this.btnLaunchCmd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLaunchCmd.Image = global::poshsecframework.Properties.Resources.application_x_shellscript;
+            this.btnLaunchCmd.Image = global::poshsecframework.Properties.Resources.applicationxshellscript;
             this.btnLaunchCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchCmd.Name = "btnLaunchCmd";
             this.btnLaunchCmd.Size = new System.Drawing.Size(23, 22);
@@ -320,7 +320,7 @@ namespace poshsecframework
             // btnLaunchPShellCmd
             // 
             this.btnLaunchPShellCmd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLaunchPShellCmd.Image = global::poshsecframework.Properties.Resources.application_x_powershellscript;
+            this.btnLaunchPShellCmd.Image = global::poshsecframework.Properties.Resources.applicationxpowershellscript;
             this.btnLaunchPShellCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchPShellCmd.Name = "btnLaunchPShellCmd";
             this.btnLaunchPShellCmd.Size = new System.Drawing.Size(23, 22);
@@ -859,7 +859,7 @@ namespace poshsecframework
             // btnAddSystem
             // 
             this.btnAddSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddSystem.Image = global::poshsecframework.Properties.Resources.computer_add;
+            this.btnAddSystem.Image = global::poshsecframework.Properties.Resources.computeradd;
             this.btnAddSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddSystem.Name = "btnAddSystem";
             this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
@@ -868,7 +868,7 @@ namespace poshsecframework
             // btnRemoveSystem
             // 
             this.btnRemoveSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRemoveSystem.Image = global::poshsecframework.Properties.Resources.computer_delete;
+            this.btnRemoveSystem.Image = global::poshsecframework.Properties.Resources.computerdelete;
             this.btnRemoveSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveSystem.Name = "btnRemoveSystem";
             this.btnRemoveSystem.Size = new System.Drawing.Size(23, 22);
@@ -882,7 +882,7 @@ namespace poshsecframework
             // btnExportSystems
             // 
             this.btnExportSystems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnExportSystems.Image = global::poshsecframework.Properties.Resources.document_export_4;
+            this.btnExportSystems.Image = global::poshsecframework.Properties.Resources.documentexport4;
             this.btnExportSystems.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExportSystems.Name = "btnExportSystems";
             this.btnExportSystems.Size = new System.Drawing.Size(23, 22);
@@ -892,7 +892,7 @@ namespace poshsecframework
             // btnImportSystems
             // 
             this.btnImportSystems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnImportSystems.Image = global::poshsecframework.Properties.Resources.document_import;
+            this.btnImportSystems.Image = global::poshsecframework.Properties.Resources.documentimport;
             this.btnImportSystems.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnImportSystems.Name = "btnImportSystems";
             this.btnImportSystems.Size = new System.Drawing.Size(23, 22);
