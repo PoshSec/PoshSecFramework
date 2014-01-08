@@ -148,5 +148,10 @@ namespace poshsecframework.Interface
                 txtSchFile.Text = dlgFile.FileName;
             }
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(Web.GithubClient.GetReadMe("PoshSec", "PoshSecFramework"));
+        }
     }
 }

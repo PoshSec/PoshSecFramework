@@ -84,6 +84,10 @@ namespace poshsecframework.Strings
 
         public const string UpdateURI = "https://github.com/PoshSec/PoshSecFramework/commits/master";
         public const string WikiURI = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
+        public const string GithubURI = "https://api.github.com/";
+        public const string FileFormat = "repos/{0}/{1}/{2}";
+        public const string ReadmeFormat = "repos/{0}/{1}/readme";
+        public const string ContentTypeJSON = "application/json; charset=utf-8";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
     }
