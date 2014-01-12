@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,6 +33,12 @@ namespace poshsecframework.Web
                 rtn = Decode(ghi.Content);
             }            
             return rtn;
+        }
+
+        public GithubRepository GetRepository(String OwnerName, String RepositoryName)
+        {
+            GithubRepository repo = null;
+            return repo;
         }
 
         public FileInfo SaveFile(String OwnerName, String RepositoryName, String FileName, String TargetDirectory)
