@@ -10,30 +10,71 @@ using poshsecframework.Strings;
 
 namespace poshsecframework.Web
 {
-    static class GithubClient
+    class GithubClient
     {
         #region Private Variables
-        static HttpWebRequest ghc = null;
+        HttpWebRequest ghc = null;
+        List<String> errors = new List<string>();
         #endregion
 
-        public static String GetReadMe(String OwnerName, String RepositoryName)
+        public String GetReadMe(String OwnerName, String RepositoryName)
         {
-            String rtn = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ReadmeFormat, OwnerName, RepositoryName)));            
-            return rtn;
+            return GetContent(OwnerName, RepositoryName, "readme");
         }
 
-        public static String GetContent(String OwnerName, String RepositoryName, String FileName)
+        public String GetContent(String OwnerName, String RepositoryName, String FileName)
         {
-            String rtn = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.FileFormat, OwnerName, RepositoryName, FileName)));
-            return rtn;
-        }
-
-        private static String Get(String uri)
-        {
+            errors.Clear();
             String rtn = "";
+            GithubJsonItem ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.FileFormat, OwnerName, RepositoryName, FileName)));
+            if (ghi != null)
+            {
+                rtn = Decode(ghi.Content);
+            }            
+            return rtn;
+        }
+
+        public FileInfo SaveFile(String OwnerName, String RepositoryName, String FileName, String TargetDirectory)
+        {
+            errors.Clear();
+            FileInfo rtn = null;
+            if (!Directory.Exists(TargetDirectory))
+            { 
+                Directory.CreateDirectory(TargetDirectory);
+            }
+            GithubJsonItem ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.FileFormat, OwnerName, RepositoryName, FileName)));
+            if (ghi != null)
+            {
+                String path = Path.Combine(TargetDirectory, ghi.Path);
+                StreamWriter sr = File.CreateText(path);
+                if (ghi.Encoding == "base64")
+                {
+                    sr.Write(Decode(ghi.Content));
+                }
+                else
+                {
+                    sr.Write(ghi.Content);
+                }
+                sr.Close();
+                rtn = new FileInfo(path);
+            }            
+            return rtn;
+        }
+
+        private GithubJsonItem Get(String uri)
+        {
+            GithubJsonItem rtn = null;
             ghc = (HttpWebRequest)WebRequest.Create(uri);
             ghc.UserAgent = StringValue.psftitle;
-            WebResponse ghr = ghc.GetResponse();
+            WebResponse ghr = null;
+            try
+            {
+                 ghr = ghc.GetResponse();
+            }
+            catch (Exception e)
+            {
+                errors.Add(uri + ":" + e.Message);
+            }       
             if (ghr != null)
             {
                 if (ghr.ContentType == StringValue.ContentTypeJSON)
@@ -45,7 +86,7 @@ namespace poshsecframework.Web
                         String response = ghrdr.ReadToEnd();
                         ghrdr.Close();
                         ghrdr = null;
-                        rtn = ParseJson(response);
+                        rtn = new GithubJsonItem(response);
                         ghrs.Close();
                         ghrs = null;
                     }
@@ -56,11 +97,29 @@ namespace poshsecframework.Web
             return rtn;
         }
 
-        private static String ParseJson(String json)
+        private String Decode(String encodedstring)
         {
             String rtn = "";
-
+            try
+            {
+                UTF8Encoding enc = new UTF8Encoding();
+                Decoder dec = enc.GetDecoder();
+                byte[] bytcode = Convert.FromBase64String(encodedstring.Replace("\\n",""));
+                char[] decchars = new char[dec.GetCharCount(bytcode, 0, bytcode.Length)];
+                dec.GetChars(bytcode, 0, bytcode.Length, decchars, 0);
+                rtn = new String(decchars);
+            }
+            catch (Exception e)
+            {
+                errors.Add("Decode failed: " + e.Message);
+                rtn = encodedstring;
+            }
             return rtn;
+        }
+
+        public List<String> Errors
+        {
+            get { return errors; }
         }
     }
 }

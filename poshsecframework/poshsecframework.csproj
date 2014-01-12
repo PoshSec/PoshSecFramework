@@ -129,6 +129,7 @@
     <Compile Include="Utility\ScheduleItem.cs" />
     <Compile Include="Utility\ScheduleTime.cs" />
     <Compile Include="Web\GithubClient.cs" />
+    <Compile Include="Web\GithubJsonItem.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,7 +169,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

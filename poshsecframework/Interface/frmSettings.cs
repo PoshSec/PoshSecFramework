@@ -151,7 +151,18 @@ namespace poshsecframework.Interface
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Web.GithubClient.GetReadMe("PoshSec", "PoshSecFramework"));
+            Web.GithubClient ghc = new Web.GithubClient();
+
+            FileInfo rtn = ghc.SaveFile("PoshSec", "PoshSecFramework", "readme", "C:\\psf\\");
+            if (rtn != null && ghc.Errors.Count() == 0)
+            {
+                MessageBox.Show("File saved successfully!");
+            }
+            else
+            {
+                MessageBox.Show(String.Join("\\n", ghc.Errors.ToArray()));
+            }
+            ghc = null;
         }
     }
 }
