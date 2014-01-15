@@ -129,7 +129,6 @@
     <Compile Include="Utility\ScheduleItem.cs" />
     <Compile Include="Utility\ScheduleTime.cs" />
     <Compile Include="Web\GithubClient.cs" />
-    <Compile Include="Web\GithubContentItem.cs" />
     <Compile Include="Web\GithubJsonItem.cs" />
     <Compile Include="Web\GithubRepository.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">

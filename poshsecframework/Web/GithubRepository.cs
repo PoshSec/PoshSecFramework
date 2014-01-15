@@ -10,7 +10,7 @@ namespace poshsecframework.Web
     {
         #region Private Variables
         private Collection<String> _branches = new Collection<string>();
-        private Collection<GithubContentItem> _content = new Collection<GithubContentItem>();
+        private Collection<GithubJsonItem> _content = new Collection<GithubJsonItem>();
         #endregion
 
         #region Public Properties
@@ -19,7 +19,7 @@ namespace poshsecframework.Web
             get { return _branches; }
         }
 
-        public Collection<GithubContentItem> Content
+        public Collection<GithubJsonItem> Content
         {
             get { return _content; }
         }

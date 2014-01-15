@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -153,16 +154,11 @@ namespace poshsecframework.Interface
         {
             Web.GithubClient ghc = new Web.GithubClient();
 
-            FileInfo rtn = ghc.SaveFile("PoshSec", "PoshSecFramework", "readme", "C:\\psf\\");
-            if (rtn != null && ghc.Errors.Count() == 0)
-            {
-                MessageBox.Show("File saved successfully!");
+            Web.GithubRepository ghrepo = ghc.GetRepository("PoshSec", "PoshSecFramework", "development");
+            if (ghrepo != null)
+            { 
+                
             }
-            else
-            {
-                MessageBox.Show(String.Join("\\n", ghc.Errors.ToArray()));
-            }
-            ghc = null;
         }
     }
 }

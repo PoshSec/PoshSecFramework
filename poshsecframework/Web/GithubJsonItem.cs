@@ -39,7 +39,8 @@ namespace poshsecframework.Web
         #region Private Methods
         private void AssignValue(string element)
         {
-            string[] elemvalue = element.Replace("\"", "").Split(':');
+            String[] split = new String[] { "\":" };
+            string[] elemvalue = element.Split(split, StringSplitOptions.None);
             if (elemvalue != null && elemvalue.Count() > 0)
             {
                 FieldInfo[] fields = typeof(GithubJsonItem).GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
@@ -50,11 +51,10 @@ namespace poshsecframework.Web
                     do
                     {
                         FieldInfo field = fields[idx];
-                        if (field.Name.Replace("_", "") == elemvalue[0].Replace("_", ""))
+                        if (field.Name.Replace("_", "") == elemvalue[0].Replace("_", "").Replace("\"", ""))
                         {
                             found = true;
-                            field.SetValue(this, elemvalue[1]);
-                            
+                            field.SetValue(this, elemvalue[1].Replace("\"", ""));
                         }
                         idx++;
                     } while (!found && idx < fields.Count());
