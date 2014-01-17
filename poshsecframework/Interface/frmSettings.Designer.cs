@@ -68,7 +68,9 @@
             this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbModules = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.btnAddModule = new System.Windows.Forms.ToolStripButton();
+            this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
+            this.lblStatus = new System.Windows.Forms.ToolStripLabel();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -476,21 +478,34 @@
             // tbModules
             // 
             this.tbModules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1});
+            this.btnAddModule,
+            this.pbStatus,
+            this.lblStatus});
             this.tbModules.Location = new System.Drawing.Point(3, 3);
             this.tbModules.Name = "tbModules";
             this.tbModules.Size = new System.Drawing.Size(446, 25);
             this.tbModules.TabIndex = 0;
             // 
-            // toolStripButton1
+            // btnAddModule
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.btnAddModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddModule.Image = ((System.Drawing.Image)(resources.GetObject("btnAddModule.Image")));
+            this.btnAddModule.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddModule.Name = "btnAddModule";
+            this.btnAddModule.Size = new System.Drawing.Size(23, 22);
+            this.btnAddModule.Click += new System.EventHandler(this.btnAddModule_Click);
+            // 
+            // pbStatus
+            // 
+            this.pbStatus.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(100, 22);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 22);
             // 
             // frmSettings
             // 
@@ -575,6 +590,8 @@
         private System.Windows.Forms.ToolStrip tbModules;
         private System.Windows.Forms.ColumnHeader chRepository;
         private System.Windows.Forms.ColumnHeader chBranch;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton btnAddModule;
+        private System.Windows.Forms.ToolStripProgressBar pbStatus;
+        private System.Windows.Forms.ToolStripLabel lblStatus;
     }
 }

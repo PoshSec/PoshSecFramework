@@ -150,15 +150,32 @@ namespace poshsecframework.Interface
             }
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private Collection<String> GetBranches(Web.GithubClient ghc, String Owner, String Repository)
         {
-            Web.GithubClient ghc = new Web.GithubClient();
+            lblStatus.Text = "Getting branches, please wait...";
+            Application.DoEvents();
+            return ghc.GetBranches(Owner, Repository);            
+        }
 
-            Web.GithubRepository ghrepo = ghc.GetRepository("PoshSec", "PoshSecFramework", "development");
-            if (ghrepo != null)
-            { 
-                
-            }
+        private void btnAddModule_Click(object sender, EventArgs e)
+        {
+            //Get Github Url to Project
+            String GithubUrl = "https://github.com/PoshSec/PoshSec";
+            String[] urlparts = GithubUrl.Replace("https://", "").Replace("http://", "").Replace("/", "|").Split('|');
+            if (urlparts != null && urlparts.Length >= 3)
+            {
+                String Owner = urlparts[1];
+                String Repository = urlparts[2];
+                Web.GithubClient ghc = new Web.GithubClient();
+                Collection<String> branches = GetBranches(ghc, Owner, Repository);
+                if (branches != null && branches.Count() > 0)
+                { 
+                    //select branch here
+                    String branch = branches[1];
+                    ghc.GetArchive(Owner, Repository, branch, Properties.Settings.Default.ModulePath);
+                }
+                ghc = null;
+            }            
         }
     }
 }

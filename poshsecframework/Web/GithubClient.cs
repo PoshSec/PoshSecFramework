@@ -19,72 +19,117 @@ namespace poshsecframework.Web
         #endregion
 
         #region Public Methods
-        public String GetReadMe(String OwnerName, String RepositoryName, String Branch = StringValue.DefaultBranch)
+        public Collection<String> GetBranches(String OwnerName, String RepositoryName)
         {
-            return GetContent(OwnerName, RepositoryName, "readme", Branch);
-        }
-
-        public String GetContent(String OwnerName, String RepositoryName, String PathtoFile, String Branch = StringValue.DefaultBranch)
-        {
-            errors.Clear();
-            String rtn = "";
-            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.FileFormat, OwnerName, RepositoryName, PathtoFile, Branch)));
+            Collection<String> rtn = new Collection<String>();
+            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, OwnerName, RepositoryName)));
             if (ghi != null)
             {
-                rtn = Decode(ghi[0].Content);
-            }
-            return rtn;
-        }
-
-        public GithubRepository GetRepository(String OwnerName, String RepositoryName, String Branch = StringValue.DefaultBranch)
-        {
-            GithubRepository repo = new GithubRepository();
-            Collection<GithubJsonItem> ghr = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ContentsFormat, OwnerName, RepositoryName, "/", Branch)));
-            if (ghr != null)
-            {
-                RecurseRepository(repo, ghr);
-            }
-            return repo;
-        }
-
-        public Collection<FileInfo> SaveFile(String GitURL, String TargetDirectory)
-        {
-            errors.Clear();
-            Collection<FileInfo> rtn = new Collection<FileInfo>();
-            if (!Directory.Exists(TargetDirectory))
-            {
-                Directory.CreateDirectory(TargetDirectory);
-            }
-            Collection<GithubJsonItem> ghi = Get(GitURL);
-            if (ghi != null)
-            {
-                foreach (GithubJsonItem ghitem in ghi)
+                foreach (GithubJsonItem gitem in ghi)
                 {
-                    String path = Path.Combine(TargetDirectory, ghitem.Path);
-                    StreamWriter sr = File.CreateText(path);
-                    if (ghitem.Encoding == "base64")
-                    {
-                        sr.Write(Decode(ghitem.Content));
-                    }
-                    else
-                    {
-                        sr.Write(ghitem.Content);
-                    }
-                    sr.Close();
-                    rtn.Add(new FileInfo(path));
+                    rtn.Add(gitem.Name);
                 }
             }
             return rtn;
         }
 
-        public Collection<FileInfo> SaveFile(String OwnerName, String RepositoryName, String PathToFile, String TargetDirectory, String Branch = StringValue.DefaultBranch)
+        public void GetArchive(String OwnerName, String RepositoryName, String Branch, String ModuleDirectory)
         {
-            String giturl = Path.Combine(StringValue.GithubURI, String.Format(StringValue.FileFormat, OwnerName, RepositoryName, PathToFile, Branch));
-            return SaveFile(giturl, TargetDirectory);
+            String tmpfile = Path.GetTempFileName();
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, Branch)), tmpfile);
+            if (savedfile != null)
+            {
+                try
+                {
+                    String target = Path.Combine(ModuleDirectory, RepositoryName);
+                    System.IO.Compression.ZipArchive za = System.IO.Compression.ZipFile.Open(savedfile.FullName, System.IO.Compression.ZipArchiveMode.Read);
+                    if (za != null && za.Entries.Count() > 0)
+                    {
+                        using (za)
+                        {
+                            String parentfolder = za.Entries[0].FullName;
+                            System.IO.Compression.ZipFile.ExtractToDirectory(savedfile.FullName, ModuleDirectory);
+                            String newfolder = Path.Combine(ModuleDirectory, parentfolder);
+                            if (Directory.Exists(newfolder))
+                            {
+                                DirectoryInfo di = new DirectoryInfo(newfolder);
+                                if (Directory.Exists(target))
+                                {
+                                    Directory.Delete(target, true);
+                                }
+                                di.MoveTo(target);
+                                di = null;
+                            }
+                        }                        
+                    }
+                    za = null; 
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(ex.Message);
+                }
+            } 
+            try
+            {
+                File.Delete(savedfile.FullName);
+            }
+            catch (Exception dex)
+            {
+                errors.Add(dex.Message);
+            
+            }
+            savedfile = null;
         }
         #endregion
 
         #region Private Methods
+        private FileInfo Download(String uri, String targetfile)
+        {
+            FileInfo rtn = null;
+            ghc = (HttpWebRequest)WebRequest.Create(uri);
+            ghc.UserAgent = StringValue.psftitle;
+            WebResponse ghr = null;
+            try
+            {
+                ghr = ghc.GetResponse();
+            }
+            catch (Exception e)
+            {
+                errors.Add(uri + ":" + e.Message);
+            }
+            if (ghr != null)
+            {
+                try
+                {
+                    Stream ghrs = ghr.GetResponseStream();
+                    int pos = 0;
+                    byte[] bytes = new byte[(ghr.ContentLength)];
+                    while (pos < bytes.Length)
+                    {
+                        int bytread = ghrs.Read(bytes, pos, bytes.Length - pos);
+                        pos += bytread;
+                        //UpdateProgressHere
+                    }
+                    ghrs.Close();
+
+                    Stream str = new FileStream(targetfile, FileMode.Create);
+                    BinaryWriter wtr = new BinaryWriter(str);
+                    wtr.Write(bytes);
+                    wtr.Flush();
+                    wtr.Close();
+                    str.Close();
+                    wtr = null;
+                    str = null;
+                    rtn = new FileInfo(targetfile);
+                }
+                catch (Exception wex)
+                {
+                    errors.Add(uri + ":" + wex.Message);
+                }
+            }
+            return rtn;
+        }
+
         private Collection<GithubJsonItem> Get(String uri)
         {
             Collection<GithubJsonItem> rtn = new Collection<GithubJsonItem>();
@@ -117,7 +162,7 @@ namespace poshsecframework.Web
                         {
                             foreach (String resp in items)
                             {
-                                if (resp != "[{")
+                                if (resp != "[{" && resp != "{")
                                 {
                                     GithubJsonItem gjson = new GithubJsonItem(name + resp);
                                     rtn.Add(gjson);
@@ -134,38 +179,19 @@ namespace poshsecframework.Web
             return rtn;
         }
 
-        private void RecurseRepository(GithubRepository repo, Collection<GithubJsonItem> ghi)
+        private byte[] Decode(String encodedstring)
         {
-            if (ghi != null && ghi.Count() > 0)
-            {
-                foreach (GithubJsonItem ghitem in ghi)
-                {
-                    repo.Content.Add(ghitem);
-                    if (ghitem.Type == "dir")
-                    {
-                        Collection<GithubJsonItem> ghdiritms = Get(ghitem.URL);
-                        RecurseRepository(repo, ghdiritms);
-                    }
-                }
-            }
-        }
-
-        private String Decode(String encodedstring)
-        {
-            String rtn = "";
+            byte[] rtn = null;
             try
             {
                 UTF8Encoding enc = new UTF8Encoding();
                 Decoder dec = enc.GetDecoder();
-                byte[] bytcode = Convert.FromBase64String(encodedstring.Replace("\\n", ""));
-                char[] decchars = new char[dec.GetCharCount(bytcode, 0, bytcode.Length)];
-                dec.GetChars(bytcode, 0, bytcode.Length, decchars, 0);
-                rtn = new String(decchars);
+                rtn = Convert.FromBase64String(encodedstring.Replace("\\n", ""));                
             }
             catch (Exception e)
             {
                 errors.Add("Decode failed: " + e.Message);
-                rtn = encodedstring;
+                rtn = null;
             }
             return rtn;
         }

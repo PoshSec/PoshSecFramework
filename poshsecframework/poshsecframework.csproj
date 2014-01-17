@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>poshsecframework</RootNamespace>
     <AssemblyName>poshsecframework</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -47,6 +47,8 @@
     <Reference Include="System.Design" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\3.0\System.Management.Automation.dll</HintPath>
@@ -130,7 +132,6 @@
     <Compile Include="Utility\ScheduleTime.cs" />
     <Compile Include="Web\GithubClient.cs" />
     <Compile Include="Web\GithubJsonItem.cs" />
-    <Compile Include="Web\GithubRepository.cs" />
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
     </EmbeddedResource>

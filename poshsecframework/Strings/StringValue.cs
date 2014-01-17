@@ -55,7 +55,6 @@ namespace poshsecframework.Strings
 
         public const string psf = "psf > ";
         public const string Ready = "Ready";
-        //public const string ImportPSFramework = "Import-Module \"$PSFramework\"";
         public const string NotImplemented = "Not implemented yet. Soon!";
         public const string WriteError = "\r\nWrite-Output $error";
 
@@ -85,8 +84,8 @@ namespace poshsecframework.Strings
         public const string UpdateURI = "https://github.com/PoshSec/PoshSecFramework/commits/master";
         public const string WikiURI = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
         public const string GithubURI = "https://api.github.com/";
-        public const string FileFormat = "repos/{0}/{1}/{2}?ref={3}";
-        public const string ContentsFormat = "repos/{0}/{1}/contents{2}?ref={3}";
+        public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
+        public const string BranchFormat = "repos/{0}/{1}/branches";
         public const string ContentTypeJSON = "application/json; charset=utf-8";
         public const String DefaultBranch = "master";
 
