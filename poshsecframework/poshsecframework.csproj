@@ -93,6 +93,12 @@
     <Compile Include="Interface\frmParams.Designer.cs">
       <DependentUpon>frmParams.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\frmRepository.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmRepository.Designer.cs">
+      <DependentUpon>frmRepository.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\frmScan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmParams.resx">
       <DependentUpon>frmParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmRepository.resx">
+      <DependentUpon>frmRepository.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmScan.resx">
       <DependentUpon>frmScan.cs</DependentUpon>

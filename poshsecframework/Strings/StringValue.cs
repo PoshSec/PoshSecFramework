@@ -84,10 +84,15 @@ namespace poshsecframework.Strings
         public const string UpdateURI = "https://github.com/PoshSec/PoshSecFramework/commits/master";
         public const string WikiURI = "https://github.com/PoshSec/PoshSecFramework/wiki/_pages";
         public const string GithubURI = "https://api.github.com/";
+        public const string GithubURL = "https://github.com/";
+        public const string RateLimitURL = "http://developer.github.com/v3/#rate-limiting";
         public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
         public const string BranchFormat = "repos/{0}/{1}/branches";
         public const string ContentTypeJSON = "application/json; charset=utf-8";
-        public const String DefaultBranch = "master";
+        public const string DefaultBranch = "master";
+        public const string RateLimitKey = "X-RateLimit-Remaining";
+        public const string InvalidPSModule = "The repository {0} in branch {1} does not have a valid .psd1 file. This is required for PowerShell modules. Please check the path, repository, and/or branch and try again.";
+        public const string InvalidRepositoryURL = "The URL specified is not a valid Github repository URL. Please enter the URL again.";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
     }

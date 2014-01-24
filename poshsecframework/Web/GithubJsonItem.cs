@@ -19,6 +19,7 @@ namespace poshsecframework.Web
         private string _type = "";
         private string _content = "";
         private string _encoding = "";
+        private string _date = "";
         #endregion
 
         #region Public Methods
@@ -74,6 +75,7 @@ namespace poshsecframework.Web
         public string Type { get { return _type; } }
         public string Content { get { return _content; } }
         public string Encoding { get { return _encoding; } }
+        public string Date { get { return _date; } }
         #endregion
     }
 }
