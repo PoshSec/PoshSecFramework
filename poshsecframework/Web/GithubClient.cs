@@ -147,6 +147,7 @@ namespace poshsecframework.Web
         {
             FileInfo rtn = null;
             ghc = (HttpWebRequest)WebRequest.Create(uri);
+            ghc.Timeout = 30000;
             ghc.UserAgent = StringValue.psftitle;
             WebResponse ghr = null;
             try
@@ -159,33 +160,24 @@ namespace poshsecframework.Web
             }
             if (ghr != null)
             {
-                try
+                Stream ghrs = ghr.GetResponseStream();
+                if (ghrs != null && ghrs.CanRead)
                 {
-                    Stream ghrs = ghr.GetResponseStream();
-                    int pos = 0;
-                    byte[] bytes = new byte[(ghr.ContentLength)];
-                    while (pos < bytes.Length)
-                    {
-                        int bytread = ghrs.Read(bytes, pos, bytes.Length - pos);
-                        pos += bytread;
-                        //UpdateProgressHere
-                    }
-                    ghrs.Close();
-
                     Stream str = new FileStream(targetfile, FileMode.Create);
-                    BinaryWriter wtr = new BinaryWriter(str);
-                    wtr.Write(bytes);
-                    wtr.Flush();
-                    wtr.Close();
+                    ghrs.CopyTo(str);
+                    str.Flush();
                     str.Close();
-                    wtr = null;
                     str = null;
                     rtn = new FileInfo(targetfile);
                 }
-                catch (Exception wex)
+                else
                 {
-                    errors.Add(uri + ":" + wex.Message);
+                    errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
                 }
+            }
+            else
+            {
+                errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
             }
             return rtn;
         }
@@ -200,6 +192,7 @@ namespace poshsecframework.Web
             Collection<GithubJsonItem> rtn = new Collection<GithubJsonItem>();
             ghc = (HttpWebRequest)WebRequest.Create(uri);
             ghc.UserAgent = StringValue.psftitle;
+            ghc.AllowAutoRedirect = true;
             WebResponse ghr = null;
             try
             {

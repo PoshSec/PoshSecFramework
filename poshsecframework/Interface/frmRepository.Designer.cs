@@ -42,9 +42,9 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.pnlBranch = new System.Windows.Forms.Panel();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.cmbBranch = new System.Windows.Forms.ComboBox();
             this.lblBranch = new System.Windows.Forms.Label();
-            this.btnRefresh = new System.Windows.Forms.Button();
             this.pnlURL.SuspendLayout();
             this.sbStatus.SuspendLayout();
             this.pnlControls.SuspendLayout();
@@ -196,6 +196,18 @@
             this.pnlBranch.Size = new System.Drawing.Size(439, 26);
             this.pnlBranch.TabIndex = 6;
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnRefresh.Enabled = false;
+            this.btnRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefresh.Location = new System.Drawing.Point(240, 0);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(35, 26);
+            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
             // cmbBranch
             // 
             this.cmbBranch.Dock = System.Windows.Forms.DockStyle.Left;
@@ -215,18 +227,6 @@
             this.lblBranch.TabIndex = 0;
             this.lblBranch.Text = "Branch:";
             this.lblBranch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnRefresh
-            // 
-            this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnRefresh.Enabled = false;
-            this.btnRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
-            this.btnRefresh.Location = new System.Drawing.Point(240, 0);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(35, 26);
-            this.btnRefresh.TabIndex = 4;
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // frmRepository
             // 
