@@ -149,6 +149,12 @@ namespace poshsecframework
 
         private void Initialize()
         {
+            if (stat == null)
+            {
+                stat = new Interface.frmStartup();
+                stat.Show();
+                stat.Refresh();
+            }
             stat.SetStatus("Looking for modules, please wait...");
             BuildModuleFilter();
             cmbLibraryTypes.SelectedIndex = 0;
@@ -632,6 +638,8 @@ namespace poshsecframework
         {
             if (lvwActiveScripts.Items.Count == 0)
             {
+                schedule.Pause();
+                psf.Close();
                 poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
                 System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
                 frm.Dispose();
@@ -639,7 +647,8 @@ namespace poshsecframework
                 if (rslt == System.Windows.Forms.DialogResult.OK)
                 {
                     Initialize();
-                };
+                }
+                schedule.Resume();
             }
             else
             {
@@ -1070,6 +1079,9 @@ namespace poshsecframework
                         if (lvwActiveScripts.Items.Count == 0)
                         {
                             Initialize();
+                            stat.Close();
+                            stat.Dispose();
+                            stat = null;
                         }
                         else 
                         {

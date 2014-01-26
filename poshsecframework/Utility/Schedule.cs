@@ -39,6 +39,16 @@ namespace poshsecframework.Utility
             tmr.Elapsed += tmr_Elapsed;
         }
 
+        public void Pause()
+        {
+            tmr.Enabled = false;
+        }
+
+        public void Resume()
+        {
+            tmr.Enabled = true;
+        }
+
         public bool Save()
         {
             bool rtn = false;

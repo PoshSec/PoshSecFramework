@@ -77,6 +77,18 @@ namespace poshsecframework.PShell
             }
         }
 
+        public void Close()
+        {
+            rspace.Close();
+            do
+            {
+                System.Threading.Thread.Sleep(100);
+            } while (rspace.RunspaceStateInfo.State != RunspaceState.Closed);
+            rspace.Dispose();
+            rspace = null;
+            GC.Collect();
+        }
+
         public void ImportPSModules(Collection<String> enabledmods)
         {
             if (enabledmods != null & enabledmods.Count() > 0)

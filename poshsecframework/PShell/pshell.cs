@@ -46,6 +46,13 @@ namespace poshsecframework.PShell
             }            
         }
 
+        public void Close()
+        {
+            ps.Close();
+            ps = null;
+            GC.Collect();
+        }
+
         public void ImportPSModules(Collection<String> enabledmods)
         {        
             ps.ImportPSModules(enabledmods);
