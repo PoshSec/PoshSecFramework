@@ -16,7 +16,6 @@ namespace poshsecframework.Strings
         public const string SelectIPScan = "Please select an IP to scan.";
         public const string SelectNetwork = "Please select a network first.";
         public const string ScriptPathError = "The specified script directory does not exist. Please check the path.";
-        public const string FrameworkFileError = "The specified Framework file does not exist. Please check the path.";
         public const string ModulePathError = "The specified module directory does not exist. Please check the path.";
         public const string ImportError = "There was an error when importing the PoshSec Framework file.";
         public const string ClearAlerts = "Are you sure you want to clear all of the alerts?";
@@ -57,6 +56,7 @@ namespace poshsecframework.Strings
         public const string Ready = "Ready";
         public const string NotImplemented = "Not implemented yet. Soon!";
         public const string WriteError = "\r\nWrite-Output $error";
+        public const string ModRestartFilename = "modrestart.psf";
 
         public const string LocalNetwork = "Local Network";
         public const string Up = "Up";
@@ -88,6 +88,7 @@ namespace poshsecframework.Strings
         public const string RateLimitURL = "http://developer.github.com/v3/#rate-limiting";
         public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
         public const string BranchFormat = "repos/{0}/{1}/branches";
+        public const string AccessToken = "?access_token={0}";
         public const string ContentTypeJSON = "application/json; charset=utf-8";
         public const string DefaultBranch = "master";
         public const string RateLimitKey = "X-RateLimit-Remaining";

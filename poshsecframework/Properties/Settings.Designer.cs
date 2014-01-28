@@ -37,13 +37,13 @@ namespace poshsecframework.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".\\Modules\\PoshSecFramework\\PoshSecFramework.psm1")]
-        public string FrameworkPath {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GithubAPIKey {
             get {
-                return ((string)(this["FrameworkPath"]));
+                return ((string)(this["GithubAPIKey"]));
             }
             set {
-                this["FrameworkPath"] = value;
+                this["GithubAPIKey"] = value;
             }
         }
         

@@ -213,6 +213,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\help.png" />
     <None Include="Resources\psf_logo_rev1.png" />
     <None Include="Resources\system-run-31.png" />
     <None Include="Resources\system-run-3.png" />

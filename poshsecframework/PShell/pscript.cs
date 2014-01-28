@@ -114,11 +114,7 @@ namespace poshsecframework.PShell
                     }
                     loaderrors += rslts.ToString();
                 }
-            }
-            else
-            {
-               loaderrors += StringValue.FrameworkFileError;
-            }            
+            }           
         }
 
         private void InvokeCommand(string command)

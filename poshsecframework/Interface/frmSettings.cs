@@ -16,6 +16,7 @@ namespace poshsecframework.Interface
     {
         private FolderBrowserDialog dlgFolder = new FolderBrowserDialog();
         private OpenFileDialog dlgFile = new OpenFileDialog();
+        private bool restart = false;
 
         public frmSettings()
         {
@@ -27,7 +28,7 @@ namespace poshsecframework.Interface
         private void LoadSettings()
         {
             txtScriptDirectory.Text = Properties.Settings.Default.ScriptPath;
-            txtFrameworkFile.Text = Properties.Settings.Default.FrameworkPath;
+            txtGithubAPIKey.Text = Properties.Settings.Default.GithubAPIKey;
             txtModuleDirectory.Text = Properties.Settings.Default.ModulePath;
             txtPSExecPath.Text = Properties.Settings.Default.PSExecPath;
             txtSchFile.Text = Properties.Settings.Default.ScheduleFile;
@@ -45,37 +46,45 @@ namespace poshsecframework.Interface
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists(txtScriptDirectory.Text) && File.Exists(txtFrameworkFile.Text) && Directory.Exists(txtModuleDirectory.Text))
+            if (Save())
+            {
+                this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                this.Close();
+            }
+        }
+
+        private bool Save()
+        {
+            bool rtn = true;
+            if (Directory.Exists(txtScriptDirectory.Text) && Directory.Exists(txtModuleDirectory.Text))
             {
                 Properties.Settings.Default["ScriptPath"] = txtScriptDirectory.Text;
-                Properties.Settings.Default["FrameworkPath"] = txtFrameworkFile.Text;
                 Properties.Settings.Default["ModulePath"] = txtModuleDirectory.Text;
                 Properties.Settings.Default["ScriptDefaultAction"] = cmbScriptDefAction.SelectedIndex;
                 Properties.Settings.Default["PSExecPath"] = txtPSExecPath.Text;
                 Properties.Settings.Default["ScheduleFile"] = txtSchFile.Text;
+                Properties.Settings.Default["GithubAPIKey"] = txtGithubAPIKey.Text;
                 bool firsttime = false;
-                if(cmbFirstTime.SelectedIndex == 0) 
+                if (cmbFirstTime.SelectedIndex == 0)
                 {
                     firsttime = true;
                 }
                 Properties.Settings.Default["FirstTime"] = firsttime;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.Close();
+
             }
             else if (!Directory.Exists(txtScriptDirectory.Text))
             {
                 MessageBox.Show(StringValue.ScriptPathError);
-            }
-            else if (!File.Exists(txtFrameworkFile.Text))
-            {
-                MessageBox.Show(StringValue.FrameworkFileError);
+                rtn = false;
             }
             else if (!Directory.Exists(txtModuleDirectory.Text))
             {
                 MessageBox.Show(StringValue.ModulePathError);
+                rtn = false;
             }
+            return rtn;
         }
 
         private void btnBrowseScript_Click(object sender, EventArgs e)
@@ -88,21 +97,6 @@ namespace poshsecframework.Interface
             if (dlgFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 txtScriptDirectory.Text = dlgFolder.SelectedPath;
-            }
-        }
-
-        private void btnBrowseFramework_Click(object sender, EventArgs e)
-        {
-            dlgFile.CheckFileExists = true;
-            if (File.Exists(txtFrameworkFile.Text))
-            {
-                dlgFile.FileName = txtFrameworkFile.Text;
-                dlgFile.InitialDirectory = new FileInfo(txtFrameworkFile.Text).Directory.ToString();
-            }
-            dlgFile.Title = "Select the Framework File.";
-            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                txtFrameworkFile.Text = dlgFile.FileName;
             }
         }
 
@@ -152,10 +146,43 @@ namespace poshsecframework.Interface
 
         private void btnAddModule_Click(object sender, EventArgs e)
         {
-            Interface.frmRepository frm = new frmRepository();
-            frm.ShowDialog();
-            frm.Dispose();
-            frm = null;
+            if (Save())
+            {
+                Interface.frmRepository frm = new frmRepository();
+                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    restart = frm.Restart;
+                }
+                frm.Dispose();
+                frm = null;
+                if (restart)
+                {
+                    lblRestartRequired.Visible = true;
+                }
+            }            
+        }
+
+        public bool Restart
+        {
+            get { return restart; }
+        }
+
+        private void btnGithubHelp_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(StringValue.RateLimitURL);
+                psi.UseShellExecute = true;
+                psi.Verb = "open";
+                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                prc.StartInfo = psi;
+                prc.Start();
+                prc = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

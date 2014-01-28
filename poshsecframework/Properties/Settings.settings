@@ -5,8 +5,8 @@
     <Setting Name="ScriptPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">.\Scripts\</Value>
     </Setting>
-    <Setting Name="FrameworkPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.\Modules\PoshSecFramework\PoshSecFramework.psm1</Value>
+    <Setting Name="GithubAPIKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ModulePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">.\Modules\</Value>

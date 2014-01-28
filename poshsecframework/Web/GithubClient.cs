@@ -20,7 +20,17 @@ namespace poshsecframework.Web
         HttpWebRequest ghc = null;
         List<String> errors = new List<string>();
         int ratelimitremaining = 0;
+        bool restart = false;
+        string token = "";
         #endregion
+
+        public GithubClient()
+        {
+            if (Properties.Settings.Default.GithubAPIKey.Trim() != "")
+            {
+                token = String.Format(StringValue.AccessToken, Properties.Settings.Default.GithubAPIKey.Trim());
+            }
+        }
 
         #region Public Methods
         /// <summary>
@@ -31,7 +41,7 @@ namespace poshsecframework.Web
         /// <returns></returns>
         public Collection<GithubJsonItem> GetBranches(String OwnerName, String RepositoryName)
         {
-            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, OwnerName, RepositoryName)));
+            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, OwnerName, RepositoryName) + token));
             return ghi;
         }
 
@@ -45,7 +55,7 @@ namespace poshsecframework.Web
         public void GetArchive(String OwnerName, String RepositoryName, GithubJsonItem BranchItem, String ModuleDirectory)
         {
             String tmpfile = Path.GetTempFileName();
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, BranchItem.Name)), tmpfile);
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, BranchItem.Name) + token), tmpfile);
             if (savedfile != null)
             {
                 try
@@ -64,11 +74,29 @@ namespace poshsecframework.Web
                                 if (Directory.Exists(newfolder))
                                 {
                                     DirectoryInfo di = new DirectoryInfo(newfolder);
-                                    if (Directory.Exists(target))
+                                    restart = false;
+                                    try
                                     {
-                                        Directory.Delete(target, true);
+                                        if (Directory.Exists(target))
+                                        {
+                                            Directory.Delete(target, true);
+                                        }
                                     }
-                                    di.MoveTo(target);
+                                    catch
+                                    {
+                                        restart = true;
+                                    }
+                                    if (!restart)
+                                    {
+                                        di.MoveTo(target);
+                                    }
+                                    else
+                                    {
+                                        StreamWriter wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                                        wtr.WriteLine(newfolder + ">>" + target);
+                                        wtr.Flush();
+                                        wtr.Close();
+                                    }
                                     di = null;
                                 }
                             }
@@ -129,7 +157,7 @@ namespace poshsecframework.Web
         private string GetLastCommit(GithubJsonItem BranchItem)
         {
             string rtn = "";
-            Collection<GithubJsonItem> brnchinfo = Get(BranchItem.URL);
+            Collection<GithubJsonItem> brnchinfo = Get(BranchItem.URL + token);
             if (brnchinfo != null && brnchinfo.Count() > 0)
             { 
                 
@@ -306,6 +334,11 @@ namespace poshsecframework.Web
         public int RateLimitRemaining
         {
             get { return ratelimitremaining; }
+        }
+
+        public bool Restart
+        {
+            get { return restart; }
         }
         #endregion        
     }

@@ -14,12 +14,13 @@ namespace poshsecframework.Interface
 {
     public partial class frmRepository : Form
     {
-        Web.GithubClient ghc = new Web.GithubClient();
-        String RepoOwner = "";
-        String Repository = "";
-        String curl = "";
-        Web.GithubJsonItem branch = null;
-        Collection<Web.GithubJsonItem> branches = null;
+        private Web.GithubClient ghc = new Web.GithubClient();
+        private String RepoOwner = "";
+        private String Repository = "";
+        private String curl = "";
+        private Web.GithubJsonItem branch = null;
+        private Collection<Web.GithubJsonItem> branches = null;
+        private bool restart = false;
 
         public frmRepository()
         {
@@ -35,7 +36,8 @@ namespace poshsecframework.Interface
                     btnOK.Enabled = false;
                     if (GetRepository() == true)
                     {
-                        MessageBox.Show("Yay");
+                        this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                        this.Close();
                     }
                     else
                     {
@@ -96,6 +98,7 @@ namespace poshsecframework.Interface
                 rtn = false;
                 MessageBox.Show(String.Join(Environment.NewLine, ghc.Errors.ToArray()));
             }
+            restart = ghc.Restart;
             lblStatus.Text = StringValue.Ready;
             lblRateLimit.Text = ghc.RateLimitRemaining.ToString();
             return rtn;
@@ -166,6 +169,11 @@ namespace poshsecframework.Interface
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             InitListBatches();
+        }
+
+        public bool Restart
+        {
+            get { return restart; }
         }
     }
 }

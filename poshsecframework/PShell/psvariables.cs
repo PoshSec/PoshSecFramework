@@ -34,7 +34,7 @@ namespace poshsecframework.PShell
 
         public class PSFramework : PSVariable
         {
-            private String psf = poshsecframework.Properties.Settings.Default.FrameworkPath;
+            private String psf = poshsecframework.Properties.Settings.Default.GithubAPIKey;
 
             public PSFramework(string name) : base(name) { }
 

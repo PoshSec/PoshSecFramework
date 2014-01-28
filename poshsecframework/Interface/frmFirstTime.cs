@@ -285,11 +285,6 @@ namespace poshsecframework.Interface
                 err += "Script Path " + Properties.Settings.Default.ScriptPath + " does not exist.\r\n";
                 rtn = rtn && false;
             }
-            if (!File.Exists(Properties.Settings.Default.FrameworkPath)) 
-            {
-                err += "Framework File " + Properties.Settings.Default.FrameworkPath + " does not exist.\r\n";
-                rtn = rtn && false;
-            }
             if (!Directory.Exists(Properties.Settings.Default.ModulePath)) 
             { 
                 err += "Module Path " + Properties.Settings.Default.ModulePath + " does not exist.\r\n"; 

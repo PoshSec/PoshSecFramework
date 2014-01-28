@@ -903,7 +903,7 @@ namespace poshsecframework
             this.tslSystemCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tslSystemCount.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tslSystemCount.Name = "tslSystemCount";
-            this.tslSystemCount.Size = new System.Drawing.Size(61, 22);
+            this.tslSystemCount.Size = new System.Drawing.Size(63, 22);
             this.tslSystemCount.Text = "0 Systems";
             // 
             // tbpPowerShell

@@ -149,16 +149,11 @@ namespace poshsecframework
 
         private void Initialize()
         {
-            if (stat == null)
-            {
-                stat = new Interface.frmStartup();
-                stat.Show();
-                stat.Refresh();
-            }
-            stat.SetStatus("Looking for modules, please wait...");
+            if (stat != null) { stat.SetStatus("Looking for modules, please wait..."); }
+            CheckPendingModules();            
             BuildModuleFilter();
             cmbLibraryTypes.SelectedIndex = 0;
-            stat.SetStatus("Initializing PowerShell, please wait...");
+            if (stat != null) { stat.SetStatus("Initializing PowerShell, please wait..."); }
             psf = new PShell.pshell(this);
             psf.ImportPSModules(enabledmods);
             psf.ParentForm = this;
@@ -170,11 +165,11 @@ namespace poshsecframework
             txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
-            stat.SetStatus("Loading script library, please wait...");
+            if (stat != null) { stat.SetStatus("Loading script library, please wait..."); }
             GetLibrary();
-            stat.SetStatus("Getting commands, please wait...");
+            if (stat != null) { stat.SetStatus("Getting commands, please wait..."); }
             GetCommand();
-            stat.SetStatus("Loading schedule library, please wait...");
+            if (stat != null) { stat.SetStatus("Loading schedule library, please wait..."); }
             LoadSchedule();  
         }
 
@@ -642,11 +637,25 @@ namespace poshsecframework
                 psf.Close();
                 poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
                 System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
+                bool restart = frm.Restart;
                 frm.Dispose();
                 frm = null;
                 if (rslt == System.Windows.Forms.DialogResult.OK)
                 {
-                    Initialize();
+                    if (restart)
+                    {
+                        Application.Restart();
+                        this.Close();
+                    }
+                    else
+                    {
+                        psf.Open();
+                        Initialize();
+                    }
+                }
+                else
+                {
+                    psf.Open();
                 }
                 schedule.Resume();
             }
@@ -1078,10 +1087,9 @@ namespace poshsecframework
                     case StringValue.Reload:
                         if (lvwActiveScripts.Items.Count == 0)
                         {
+                            this.UseWaitCursor = true;
                             Initialize();
-                            stat.Close();
-                            stat.Dispose();
-                            stat = null;
+                            this.UseWaitCursor = false;
                         }
                         else 
                         {
@@ -1160,16 +1168,12 @@ namespace poshsecframework
         {
             //Ensure we have settings and that if it's .\ to change to application path.
             String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
-            String frwpath = poshsecframework.Properties.Settings.Default.FrameworkPath;
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
             String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
+            String ghapikey = poshsecframework.Properties.Settings.Default.GithubAPIKey;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
-            }
-            if (frwpath.StartsWith(".") || frwpath.Trim() == "")
-            {
-                poshsecframework.Properties.Settings.Default["FrameworkPath"] = Path.Combine(Application.StartupPath, frwpath).Replace("\\.\\", "\\");
             }
             if (modpath.StartsWith(".") || modpath.Trim() == "")
             {
@@ -1179,8 +1183,57 @@ namespace poshsecframework
             {
                 poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
             }
+            if(ghapikey.Contains("\\"))
+            {
+                //Used to be Framework File path which is not needed.
+                ghapikey = "";
+                poshsecframework.Properties.Settings.Default["GithubAPIKey"] = "";
+            }
             poshsecframework.Properties.Settings.Default.Save();
             poshsecframework.Properties.Settings.Default.Reload();
+        }
+
+        private void CheckPendingModules()
+        {
+            try
+            { 
+                if (File.Exists(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename)))
+                { 
+                    StreamReader rdr = File.OpenText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                    String filcontents = rdr.ReadToEnd();
+                    rdr.Close();
+                    if(filcontents.Trim() != "")
+                    {
+                        String[] movetos = filcontents.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                        if(movetos != null && movetos.Length > 0)
+                        {
+                            foreach(String moveto in movetos)
+                            {
+                                if (moveto.Trim() != "")
+                                {
+                                    String[] paths = moveto.Split(new string[] { ">>" }, StringSplitOptions.None);
+                                    if (paths != null && paths.Length == 2)
+                                    {
+                                        String newfolder = paths[0];
+                                        String target = paths[1];
+                                        DirectoryInfo di = new DirectoryInfo(newfolder);
+                                        if (Directory.Exists(target))
+                                        {
+                                            Directory.Delete(target, true);
+                                        }
+                                        di.MoveTo(target);
+                                    }
+                                }                                
+                            }
+                        }
+                    }
+                    File.Delete(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
         }
 
         private void BuildModuleFilter()

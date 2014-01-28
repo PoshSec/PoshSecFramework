@@ -29,11 +29,9 @@ namespace poshsecframework.PShell
         {
             try
             {
-                pspath = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
-                ps = new pscript();
+                pspath = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();                
                 frm = ParentForm;
-                ps.ParentForm = frm;
-                ps.ScriptCompleted += new EventHandler<pseventargs>(ScriptCompleted);
+                Open();
                 if (ps.LoadErrors != "")
                 {
                     loaderrors = ps.LoadErrors;
@@ -44,6 +42,13 @@ namespace poshsecframework.PShell
                 //Base Exception Handler
                 MessageBox.Show(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace);
             }            
+        }
+
+        public void Open()
+        {
+            ps = new pscript();
+            ps.ParentForm = frm;
+            ps.ScriptCompleted += new EventHandler<pseventargs>(ScriptCompleted);
         }
 
         public void Close()

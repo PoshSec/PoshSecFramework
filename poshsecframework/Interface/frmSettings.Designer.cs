@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSettings));
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnOK = new System.Windows.Forms.Button();
@@ -41,25 +42,19 @@
             this.cmbScriptDefAction = new System.Windows.Forms.ComboBox();
             this.lblScriptDefAction = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.pnlGithubAPIKey = new System.Windows.Forms.Panel();
+            this.lblGithubAPIKey = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.txtPSExecPath = new System.Windows.Forms.TextBox();
-            this.btnBrowsePSExec = new System.Windows.Forms.Button();
             this.lblPSExecPath = new System.Windows.Forms.Label();
             this.panel8 = new System.Windows.Forms.Panel();
             this.txtSchFile = new System.Windows.Forms.TextBox();
-            this.btnBrowseSchFile = new System.Windows.Forms.Button();
             this.lblSchFile = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.txtFrameworkFile = new System.Windows.Forms.TextBox();
-            this.btnBrowseFramework = new System.Windows.Forms.Button();
-            this.lblFrameworkDirectory = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.txtModuleDirectory = new System.Windows.Forms.TextBox();
-            this.btnBrowseModule = new System.Windows.Forms.Button();
             this.lblModuleDirectory = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.txtScriptDirectory = new System.Windows.Forms.TextBox();
-            this.btnBrowseScript = new System.Windows.Forms.Button();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
             this.tbpModules = new System.Windows.Forms.TabPage();
@@ -68,17 +63,25 @@
             this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tbModules = new System.Windows.Forms.ToolStrip();
-            this.btnAddModule = new System.Windows.Forms.ToolStripButton();
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripLabel();
+            this.lblRestartRequired = new System.Windows.Forms.ToolStripLabel();
+            this.txtGithubAPIKey = new System.Windows.Forms.TextBox();
+            this.btnGithubHelp = new System.Windows.Forms.Button();
+            this.btnBrowsePSExec = new System.Windows.Forms.Button();
+            this.btnBrowseSchFile = new System.Windows.Forms.Button();
+            this.btnBrowseModule = new System.Windows.Forms.Button();
+            this.btnBrowseScript = new System.Windows.Forms.Button();
+            this.btnAddModule = new System.Windows.Forms.ToolStripButton();
+            this.ttGithubAPI = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.gbScriptSetting.SuspendLayout();
+            this.pnlGithubAPIKey.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
-            this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
@@ -120,9 +123,9 @@
             // 
             this.tbpGeneral.Controls.Add(this.panel6);
             this.tbpGeneral.Controls.Add(this.panel5);
+            this.tbpGeneral.Controls.Add(this.pnlGithubAPIKey);
             this.tbpGeneral.Controls.Add(this.panel7);
             this.tbpGeneral.Controls.Add(this.panel8);
-            this.tbpGeneral.Controls.Add(this.panel3);
             this.tbpGeneral.Controls.Add(this.panel4);
             this.tbpGeneral.Controls.Add(this.panel2);
             this.tbpGeneral.Location = new System.Drawing.Point(4, 22);
@@ -221,13 +224,34 @@
             this.panel5.Size = new System.Drawing.Size(446, 19);
             this.panel5.TabIndex = 6;
             // 
+            // pnlGithubAPIKey
+            // 
+            this.pnlGithubAPIKey.Controls.Add(this.txtGithubAPIKey);
+            this.pnlGithubAPIKey.Controls.Add(this.btnGithubHelp);
+            this.pnlGithubAPIKey.Controls.Add(this.lblGithubAPIKey);
+            this.pnlGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlGithubAPIKey.Location = new System.Drawing.Point(3, 107);
+            this.pnlGithubAPIKey.Name = "pnlGithubAPIKey";
+            this.pnlGithubAPIKey.Size = new System.Drawing.Size(446, 26);
+            this.pnlGithubAPIKey.TabIndex = 1;
+            // 
+            // lblGithubAPIKey
+            // 
+            this.lblGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblGithubAPIKey.Location = new System.Drawing.Point(0, 0);
+            this.lblGithubAPIKey.Name = "lblGithubAPIKey";
+            this.lblGithubAPIKey.Size = new System.Drawing.Size(111, 26);
+            this.lblGithubAPIKey.TabIndex = 0;
+            this.lblGithubAPIKey.Text = "Github Access Token:";
+            this.lblGithubAPIKey.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // panel7
             // 
             this.panel7.Controls.Add(this.txtPSExecPath);
             this.panel7.Controls.Add(this.btnBrowsePSExec);
             this.panel7.Controls.Add(this.lblPSExecPath);
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel7.Location = new System.Drawing.Point(3, 107);
+            this.panel7.Location = new System.Drawing.Point(3, 81);
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(446, 26);
             this.panel7.TabIndex = 5;
@@ -239,17 +263,6 @@
             this.txtPSExecPath.Name = "txtPSExecPath";
             this.txtPSExecPath.Size = new System.Drawing.Size(309, 21);
             this.txtPSExecPath.TabIndex = 6;
-            // 
-            // btnBrowsePSExec
-            // 
-            this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowsePSExec.Name = "btnBrowsePSExec";
-            this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowsePSExec.TabIndex = 1;
-            this.btnBrowsePSExec.UseVisualStyleBackColor = true;
-            this.btnBrowsePSExec.Click += new System.EventHandler(this.btnBrowsePSExec_Click);
             // 
             // lblPSExecPath
             // 
@@ -267,7 +280,7 @@
             this.panel8.Controls.Add(this.btnBrowseSchFile);
             this.panel8.Controls.Add(this.lblSchFile);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel8.Location = new System.Drawing.Point(3, 81);
+            this.panel8.Location = new System.Drawing.Point(3, 55);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(446, 26);
             this.panel8.TabIndex = 8;
@@ -280,17 +293,6 @@
             this.txtSchFile.Size = new System.Drawing.Size(309, 21);
             this.txtSchFile.TabIndex = 5;
             // 
-            // btnBrowseSchFile
-            // 
-            this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseSchFile.Name = "btnBrowseSchFile";
-            this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseSchFile.TabIndex = 1;
-            this.btnBrowseSchFile.UseVisualStyleBackColor = true;
-            this.btnBrowseSchFile.Click += new System.EventHandler(this.btnBrowseSchFile_Click);
-            // 
             // lblSchFile
             // 
             this.lblSchFile.Dock = System.Windows.Forms.DockStyle.Left;
@@ -300,46 +302,6 @@
             this.lblSchFile.TabIndex = 0;
             this.lblSchFile.Text = "Schedule File:";
             this.lblSchFile.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.txtFrameworkFile);
-            this.panel3.Controls.Add(this.btnBrowseFramework);
-            this.panel3.Controls.Add(this.lblFrameworkDirectory);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(3, 55);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(446, 26);
-            this.panel3.TabIndex = 1;
-            // 
-            // txtFrameworkFile
-            // 
-            this.txtFrameworkFile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFrameworkFile.Location = new System.Drawing.Point(111, 0);
-            this.txtFrameworkFile.Name = "txtFrameworkFile";
-            this.txtFrameworkFile.Size = new System.Drawing.Size(309, 21);
-            this.txtFrameworkFile.TabIndex = 4;
-            // 
-            // btnBrowseFramework
-            // 
-            this.btnBrowseFramework.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseFramework.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseFramework.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseFramework.Name = "btnBrowseFramework";
-            this.btnBrowseFramework.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseFramework.TabIndex = 1;
-            this.btnBrowseFramework.UseVisualStyleBackColor = true;
-            this.btnBrowseFramework.Click += new System.EventHandler(this.btnBrowseFramework_Click);
-            // 
-            // lblFrameworkDirectory
-            // 
-            this.lblFrameworkDirectory.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblFrameworkDirectory.Location = new System.Drawing.Point(0, 0);
-            this.lblFrameworkDirectory.Name = "lblFrameworkDirectory";
-            this.lblFrameworkDirectory.Size = new System.Drawing.Size(111, 26);
-            this.lblFrameworkDirectory.TabIndex = 0;
-            this.lblFrameworkDirectory.Text = "Framework File:";
-            this.lblFrameworkDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel4
             // 
@@ -359,17 +321,6 @@
             this.txtModuleDirectory.Name = "txtModuleDirectory";
             this.txtModuleDirectory.Size = new System.Drawing.Size(309, 21);
             this.txtModuleDirectory.TabIndex = 3;
-            // 
-            // btnBrowseModule
-            // 
-            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseModule.Name = "btnBrowseModule";
-            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseModule.TabIndex = 1;
-            this.btnBrowseModule.UseVisualStyleBackColor = true;
-            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
             // 
             // lblModuleDirectory
             // 
@@ -399,17 +350,6 @@
             this.txtScriptDirectory.Name = "txtScriptDirectory";
             this.txtScriptDirectory.Size = new System.Drawing.Size(309, 21);
             this.txtScriptDirectory.TabIndex = 2;
-            // 
-            // btnBrowseScript
-            // 
-            this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
-            this.btnBrowseScript.Name = "btnBrowseScript";
-            this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
-            this.btnBrowseScript.TabIndex = 1;
-            this.btnBrowseScript.UseVisualStyleBackColor = true;
-            this.btnBrowseScript.Click += new System.EventHandler(this.btnBrowseScript_Click);
             // 
             // lblScriptDirectory
             // 
@@ -480,20 +420,12 @@
             this.tbModules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddModule,
             this.pbStatus,
-            this.lblStatus});
+            this.lblStatus,
+            this.lblRestartRequired});
             this.tbModules.Location = new System.Drawing.Point(3, 3);
             this.tbModules.Name = "tbModules";
             this.tbModules.Size = new System.Drawing.Size(446, 25);
             this.tbModules.TabIndex = 0;
-            // 
-            // btnAddModule
-            // 
-            this.btnAddModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddModule.Image = ((System.Drawing.Image)(resources.GetObject("btnAddModule.Image")));
-            this.btnAddModule.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddModule.Name = "btnAddModule";
-            this.btnAddModule.Size = new System.Drawing.Size(23, 22);
-            this.btnAddModule.Click += new System.EventHandler(this.btnAddModule_Click);
             // 
             // pbStatus
             // 
@@ -506,6 +438,93 @@
             this.lblStatus.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 22);
+            // 
+            // lblRestartRequired
+            // 
+            this.lblRestartRequired.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.lblRestartRequired.ForeColor = System.Drawing.Color.Red;
+            this.lblRestartRequired.Name = "lblRestartRequired";
+            this.lblRestartRequired.Size = new System.Drawing.Size(93, 22);
+            this.lblRestartRequired.Text = "Restart required!";
+            this.lblRestartRequired.Visible = false;
+            // 
+            // txtGithubAPIKey
+            // 
+            this.txtGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGithubAPIKey.Location = new System.Drawing.Point(111, 0);
+            this.txtGithubAPIKey.Name = "txtGithubAPIKey";
+            this.txtGithubAPIKey.Size = new System.Drawing.Size(309, 21);
+            this.txtGithubAPIKey.TabIndex = 6;
+            // 
+            // btnGithubHelp
+            // 
+            this.btnGithubHelp.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnGithubHelp.Image = global::poshsecframework.Properties.Resources.help;
+            this.btnGithubHelp.Location = new System.Drawing.Point(420, 0);
+            this.btnGithubHelp.Name = "btnGithubHelp";
+            this.btnGithubHelp.Size = new System.Drawing.Size(26, 26);
+            this.btnGithubHelp.TabIndex = 2;
+            this.ttGithubAPI.SetToolTip(this.btnGithubHelp, resources.GetString("btnGithubHelp.ToolTip"));
+            this.btnGithubHelp.UseVisualStyleBackColor = true;
+            this.btnGithubHelp.Click += new System.EventHandler(this.btnGithubHelp_Click);
+            // 
+            // btnBrowsePSExec
+            // 
+            this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowsePSExec.Name = "btnBrowsePSExec";
+            this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowsePSExec.TabIndex = 1;
+            this.btnBrowsePSExec.UseVisualStyleBackColor = true;
+            this.btnBrowsePSExec.Click += new System.EventHandler(this.btnBrowsePSExec_Click);
+            // 
+            // btnBrowseSchFile
+            // 
+            this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseSchFile.Name = "btnBrowseSchFile";
+            this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseSchFile.TabIndex = 1;
+            this.btnBrowseSchFile.UseVisualStyleBackColor = true;
+            this.btnBrowseSchFile.Click += new System.EventHandler(this.btnBrowseSchFile_Click);
+            // 
+            // btnBrowseModule
+            // 
+            this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseModule.Name = "btnBrowseModule";
+            this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseModule.TabIndex = 1;
+            this.btnBrowseModule.UseVisualStyleBackColor = true;
+            this.btnBrowseModule.Click += new System.EventHandler(this.btnBrowseModule_Click);
+            // 
+            // btnBrowseScript
+            // 
+            this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseScript.Name = "btnBrowseScript";
+            this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseScript.TabIndex = 1;
+            this.btnBrowseScript.UseVisualStyleBackColor = true;
+            this.btnBrowseScript.Click += new System.EventHandler(this.btnBrowseScript_Click);
+            // 
+            // btnAddModule
+            // 
+            this.btnAddModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddModule.Image = ((System.Drawing.Image)(resources.GetObject("btnAddModule.Image")));
+            this.btnAddModule.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddModule.Name = "btnAddModule";
+            this.btnAddModule.Size = new System.Drawing.Size(23, 22);
+            this.btnAddModule.Click += new System.EventHandler(this.btnAddModule_Click);
+            // 
+            // ttGithubAPI
+            // 
+            this.ttGithubAPI.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttGithubAPI.ToolTipTitle = "Github API Key";
             // 
             // frmSettings
             // 
@@ -530,12 +549,12 @@
             this.panel6.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.gbScriptSetting.ResumeLayout(false);
+            this.pnlGithubAPIKey.ResumeLayout(false);
+            this.pnlGithubAPIKey.PerformLayout();
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -562,10 +581,6 @@
         private System.Windows.Forms.TextBox txtModuleDirectory;
         private System.Windows.Forms.Button btnBrowseModule;
         private System.Windows.Forms.Label lblModuleDirectory;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.TextBox txtFrameworkFile;
-        private System.Windows.Forms.Button btnBrowseFramework;
-        private System.Windows.Forms.Label lblFrameworkDirectory;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Panel panel6;
@@ -593,5 +608,11 @@
         private System.Windows.Forms.ToolStripButton btnAddModule;
         private System.Windows.Forms.ToolStripProgressBar pbStatus;
         private System.Windows.Forms.ToolStripLabel lblStatus;
+        private System.Windows.Forms.ToolStripLabel lblRestartRequired;
+        private System.Windows.Forms.Panel pnlGithubAPIKey;
+        private System.Windows.Forms.Label lblGithubAPIKey;
+        private System.Windows.Forms.TextBox txtGithubAPIKey;
+        private System.Windows.Forms.Button btnGithubHelp;
+        private System.Windows.Forms.ToolTip ttGithubAPI;
     }
 }
