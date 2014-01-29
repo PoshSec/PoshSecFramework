@@ -89,6 +89,7 @@ namespace poshsecframework.Strings
         public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
         public const string BranchFormat = "repos/{0}/{1}/branches";
         public const string AccessToken = "?access_token={0}";
+        public const string ModuleSaveFormat = "{0}|{1}|{2}|{3}";
         public const string ContentTypeJSON = "application/json; charset=utf-8";
         public const string DefaultBranch = "master";
         public const string RateLimitKey = "X-RateLimit-Remaining";
