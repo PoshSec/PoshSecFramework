@@ -1251,16 +1251,20 @@ namespace poshsecframework
                     {
                         foreach (String modfolder in modfolders)
                         {
-                            String[] modpsms = Directory.GetFiles(modfolder, "*.psd1", SearchOption.TopDirectoryOnly);
-                            if (modpsms != null & modpsms.Length > 0)
+                            DirectoryInfo dirinfo = new DirectoryInfo(modfolder);
+                            if (IsEnabledModule(dirinfo.Name))
                             {
-                                foreach (String modpsm in modpsms)
-                                { 
-                                    FileInfo psminfo = new FileInfo(modpsm);
-                                    enabledmods.Add(psminfo.FullName);
-                                    cmbLibraryTypes.Items.Add(psminfo.Name.Replace(psminfo.Extension, ""));
+                                String[] modpsms = Directory.GetFiles(modfolder, "*.psd1", SearchOption.TopDirectoryOnly);
+                                if (modpsms != null & modpsms.Length > 0)
+                                {
+                                    foreach (String modpsm in modpsms)
+                                    {
+                                        FileInfo psminfo = new FileInfo(modpsm);
+                                        enabledmods.Add(psminfo.FullName);
+                                        cmbLibraryTypes.Items.Add(psminfo.Name.Replace(psminfo.Extension, ""));
+                                    }
                                 }
-                            }
+                            }                            
                         }
                     }
                 }
@@ -1269,6 +1273,21 @@ namespace poshsecframework
                     DisplayError(e);
                 }                
             }
+        }
+
+        private bool IsEnabledModule(String modname)
+        {
+            bool rtn = false;
+            int idx = 0;
+            while (idx < Properties.Settings.Default.Modules.Count && !rtn)
+            {
+                if (Properties.Settings.Default.Modules[idx].ToLower().IndexOf(modname.ToLower()) > -1)
+                {
+                    rtn = true;
+                }
+                idx++;
+            }
+            return rtn;
         }
 
         private void GetCommand()
