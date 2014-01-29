@@ -43,6 +43,7 @@
             this.lblScriptDefAction = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.pnlGithubAPIKey = new System.Windows.Forms.Panel();
+            this.txtGithubAPIKey = new System.Windows.Forms.TextBox();
             this.lblGithubAPIKey = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.txtPSExecPath = new System.Windows.Forms.TextBox();
@@ -58,7 +59,7 @@
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
             this.tbpModules = new System.Windows.Forms.TabPage();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.lvwModules = new System.Windows.Forms.ListView();
             this.chModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,14 +67,18 @@
             this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripLabel();
             this.lblRestartRequired = new System.Windows.Forms.ToolStripLabel();
-            this.txtGithubAPIKey = new System.Windows.Forms.TextBox();
+            this.ttGithubAPI = new System.Windows.Forms.ToolTip(this.components);
+            this.chLastCommit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnGithubHelp = new System.Windows.Forms.Button();
             this.btnBrowsePSExec = new System.Windows.Forms.Button();
             this.btnBrowseSchFile = new System.Windows.Forms.Button();
             this.btnBrowseModule = new System.Windows.Forms.Button();
             this.btnBrowseScript = new System.Windows.Forms.Button();
             this.btnAddModule = new System.Windows.Forms.ToolStripButton();
-            this.ttGithubAPI = new System.Windows.Forms.ToolTip(this.components);
+            this.btnEditModule = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteModule = new System.Windows.Forms.ToolStripButton();
+            this.btnCheckUpdates = new System.Windows.Forms.ToolStripButton();
+            this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -96,12 +101,13 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 249);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(460, 34);
+            this.panel1.Size = new System.Drawing.Size(531, 34);
             this.panel1.TabIndex = 0;
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(297, 6);
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.Location = new System.Drawing.Point(368, 6);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 8;
@@ -111,8 +117,9 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(378, 6);
+            this.btnCancel.Location = new System.Drawing.Point(449, 6);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
@@ -131,7 +138,7 @@
             this.tbpGeneral.Location = new System.Drawing.Point(4, 22);
             this.tbpGeneral.Name = "tbpGeneral";
             this.tbpGeneral.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpGeneral.Size = new System.Drawing.Size(452, 223);
+            this.tbpGeneral.Size = new System.Drawing.Size(523, 223);
             this.tbpGeneral.TabIndex = 0;
             this.tbpGeneral.Text = "General";
             this.tbpGeneral.UseVisualStyleBackColor = true;
@@ -143,7 +150,7 @@
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel6.Location = new System.Drawing.Point(3, 152);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(446, 70);
+            this.panel6.Size = new System.Drawing.Size(517, 70);
             this.panel6.TabIndex = 7;
             // 
             // groupBox1
@@ -221,7 +228,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(3, 133);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(446, 19);
+            this.panel5.Size = new System.Drawing.Size(517, 19);
             this.panel5.TabIndex = 6;
             // 
             // pnlGithubAPIKey
@@ -232,8 +239,16 @@
             this.pnlGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlGithubAPIKey.Location = new System.Drawing.Point(3, 107);
             this.pnlGithubAPIKey.Name = "pnlGithubAPIKey";
-            this.pnlGithubAPIKey.Size = new System.Drawing.Size(446, 26);
+            this.pnlGithubAPIKey.Size = new System.Drawing.Size(517, 26);
             this.pnlGithubAPIKey.TabIndex = 1;
+            // 
+            // txtGithubAPIKey
+            // 
+            this.txtGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtGithubAPIKey.Location = new System.Drawing.Point(111, 0);
+            this.txtGithubAPIKey.Name = "txtGithubAPIKey";
+            this.txtGithubAPIKey.Size = new System.Drawing.Size(380, 21);
+            this.txtGithubAPIKey.TabIndex = 6;
             // 
             // lblGithubAPIKey
             // 
@@ -253,7 +268,7 @@
             this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel7.Location = new System.Drawing.Point(3, 81);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(446, 26);
+            this.panel7.Size = new System.Drawing.Size(517, 26);
             this.panel7.TabIndex = 5;
             // 
             // txtPSExecPath
@@ -261,7 +276,7 @@
             this.txtPSExecPath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtPSExecPath.Location = new System.Drawing.Point(111, 0);
             this.txtPSExecPath.Name = "txtPSExecPath";
-            this.txtPSExecPath.Size = new System.Drawing.Size(309, 21);
+            this.txtPSExecPath.Size = new System.Drawing.Size(380, 21);
             this.txtPSExecPath.TabIndex = 6;
             // 
             // lblPSExecPath
@@ -282,7 +297,7 @@
             this.panel8.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel8.Location = new System.Drawing.Point(3, 55);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(446, 26);
+            this.panel8.Size = new System.Drawing.Size(517, 26);
             this.panel8.TabIndex = 8;
             // 
             // txtSchFile
@@ -290,7 +305,7 @@
             this.txtSchFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtSchFile.Location = new System.Drawing.Point(111, 0);
             this.txtSchFile.Name = "txtSchFile";
-            this.txtSchFile.Size = new System.Drawing.Size(309, 21);
+            this.txtSchFile.Size = new System.Drawing.Size(380, 21);
             this.txtSchFile.TabIndex = 5;
             // 
             // lblSchFile
@@ -311,7 +326,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(3, 29);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(446, 26);
+            this.panel4.Size = new System.Drawing.Size(517, 26);
             this.panel4.TabIndex = 2;
             // 
             // txtModuleDirectory
@@ -319,7 +334,7 @@
             this.txtModuleDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtModuleDirectory.Location = new System.Drawing.Point(111, 0);
             this.txtModuleDirectory.Name = "txtModuleDirectory";
-            this.txtModuleDirectory.Size = new System.Drawing.Size(309, 21);
+            this.txtModuleDirectory.Size = new System.Drawing.Size(380, 21);
             this.txtModuleDirectory.TabIndex = 3;
             // 
             // lblModuleDirectory
@@ -340,7 +355,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(446, 26);
+            this.panel2.Size = new System.Drawing.Size(517, 26);
             this.panel2.TabIndex = 0;
             // 
             // txtScriptDirectory
@@ -348,7 +363,7 @@
             this.txtScriptDirectory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtScriptDirectory.Location = new System.Drawing.Point(111, 0);
             this.txtScriptDirectory.Name = "txtScriptDirectory";
-            this.txtScriptDirectory.Size = new System.Drawing.Size(309, 21);
+            this.txtScriptDirectory.Size = new System.Drawing.Size(380, 21);
             this.txtScriptDirectory.TabIndex = 2;
             // 
             // lblScriptDirectory
@@ -370,50 +385,52 @@
             this.tcSettings.Multiline = true;
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
-            this.tcSettings.Size = new System.Drawing.Size(460, 249);
+            this.tcSettings.Size = new System.Drawing.Size(531, 249);
             this.tcSettings.TabIndex = 1;
             // 
             // tbpModules
             // 
-            this.tbpModules.Controls.Add(this.listView1);
+            this.tbpModules.Controls.Add(this.lvwModules);
             this.tbpModules.Controls.Add(this.tbModules);
             this.tbpModules.Location = new System.Drawing.Point(4, 22);
             this.tbpModules.Name = "tbpModules";
             this.tbpModules.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpModules.Size = new System.Drawing.Size(452, 223);
+            this.tbpModules.Size = new System.Drawing.Size(523, 223);
             this.tbpModules.TabIndex = 1;
             this.tbpModules.Text = "Modules";
             this.tbpModules.UseVisualStyleBackColor = true;
             // 
-            // listView1
+            // lvwModules
             // 
-            this.listView1.CheckBoxes = true;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvwModules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chModName,
             this.chRepository,
-            this.chBranch});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.Location = new System.Drawing.Point(3, 28);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(446, 192);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.chBranch,
+            this.chLastCommit});
+            this.lvwModules.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvwModules.FullRowSelect = true;
+            this.lvwModules.Location = new System.Drawing.Point(3, 28);
+            this.lvwModules.Name = "lvwModules";
+            this.lvwModules.Size = new System.Drawing.Size(517, 192);
+            this.lvwModules.SmallImageList = this.imgList;
+            this.lvwModules.TabIndex = 1;
+            this.lvwModules.UseCompatibleStateImageBehavior = false;
+            this.lvwModules.View = System.Windows.Forms.View.Details;
             // 
             // chModName
             // 
             this.chModName.Text = "Module Name";
-            this.chModName.Width = 140;
+            this.chModName.Width = 110;
             // 
             // chRepository
             // 
             this.chRepository.Text = "Repository";
-            this.chRepository.Width = 160;
+            this.chRepository.Width = 170;
             // 
             // chBranch
             // 
             this.chBranch.Text = "Branch";
-            this.chBranch.Width = 120;
+            this.chBranch.Width = 80;
             // 
             // tbModules
             // 
@@ -421,10 +438,13 @@
             this.btnAddModule,
             this.pbStatus,
             this.lblStatus,
-            this.lblRestartRequired});
+            this.lblRestartRequired,
+            this.btnEditModule,
+            this.btnDeleteModule,
+            this.btnCheckUpdates});
             this.tbModules.Location = new System.Drawing.Point(3, 3);
             this.tbModules.Name = "tbModules";
-            this.tbModules.Size = new System.Drawing.Size(446, 25);
+            this.tbModules.Size = new System.Drawing.Size(517, 25);
             this.tbModules.TabIndex = 0;
             // 
             // pbStatus
@@ -448,19 +468,21 @@
             this.lblRestartRequired.Text = "Restart required!";
             this.lblRestartRequired.Visible = false;
             // 
-            // txtGithubAPIKey
+            // ttGithubAPI
             // 
-            this.txtGithubAPIKey.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtGithubAPIKey.Location = new System.Drawing.Point(111, 0);
-            this.txtGithubAPIKey.Name = "txtGithubAPIKey";
-            this.txtGithubAPIKey.Size = new System.Drawing.Size(309, 21);
-            this.txtGithubAPIKey.TabIndex = 6;
+            this.ttGithubAPI.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttGithubAPI.ToolTipTitle = "Github API Key";
+            // 
+            // chLastCommit
+            // 
+            this.chLastCommit.Text = "Last Commit";
+            this.chLastCommit.Width = 130;
             // 
             // btnGithubHelp
             // 
             this.btnGithubHelp.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnGithubHelp.Image = global::poshsecframework.Properties.Resources.help;
-            this.btnGithubHelp.Location = new System.Drawing.Point(420, 0);
+            this.btnGithubHelp.Location = new System.Drawing.Point(491, 0);
             this.btnGithubHelp.Name = "btnGithubHelp";
             this.btnGithubHelp.Size = new System.Drawing.Size(26, 26);
             this.btnGithubHelp.TabIndex = 2;
@@ -472,7 +494,7 @@
             // 
             this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowsePSExec.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowsePSExec.Location = new System.Drawing.Point(491, 0);
             this.btnBrowsePSExec.Name = "btnBrowsePSExec";
             this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
             this.btnBrowsePSExec.TabIndex = 1;
@@ -483,7 +505,7 @@
             // 
             this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseSchFile.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseSchFile.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseSchFile.Name = "btnBrowseSchFile";
             this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
             this.btnBrowseSchFile.TabIndex = 1;
@@ -494,7 +516,7 @@
             // 
             this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseModule.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseModule.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseModule.Name = "btnBrowseModule";
             this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
             this.btnBrowseModule.TabIndex = 1;
@@ -505,7 +527,7 @@
             // 
             this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
-            this.btnBrowseScript.Location = new System.Drawing.Point(420, 0);
+            this.btnBrowseScript.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseScript.Name = "btnBrowseScript";
             this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
             this.btnBrowseScript.TabIndex = 1;
@@ -515,23 +537,57 @@
             // btnAddModule
             // 
             this.btnAddModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddModule.Image = ((System.Drawing.Image)(resources.GetObject("btnAddModule.Image")));
+            this.btnAddModule.Image = global::poshsecframework.Properties.Resources.pagewhiteadd;
             this.btnAddModule.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddModule.Name = "btnAddModule";
             this.btnAddModule.Size = new System.Drawing.Size(23, 22);
+            this.btnAddModule.ToolTipText = "Add Module";
             this.btnAddModule.Click += new System.EventHandler(this.btnAddModule_Click);
             // 
-            // ttGithubAPI
+            // btnEditModule
             // 
-            this.ttGithubAPI.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.ttGithubAPI.ToolTipTitle = "Github API Key";
+            this.btnEditModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEditModule.Enabled = false;
+            this.btnEditModule.Image = global::poshsecframework.Properties.Resources.pagewhiteedit;
+            this.btnEditModule.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEditModule.Name = "btnEditModule";
+            this.btnEditModule.Size = new System.Drawing.Size(23, 22);
+            this.btnEditModule.Text = "Edit Module";
+            // 
+            // btnDeleteModule
+            // 
+            this.btnDeleteModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDeleteModule.Enabled = false;
+            this.btnDeleteModule.Image = global::poshsecframework.Properties.Resources.pagewhitedelete;
+            this.btnDeleteModule.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteModule.Name = "btnDeleteModule";
+            this.btnDeleteModule.Size = new System.Drawing.Size(23, 22);
+            this.btnDeleteModule.Text = "Delete Module";
+            // 
+            // btnCheckUpdates
+            // 
+            this.btnCheckUpdates.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCheckUpdates.Image = global::poshsecframework.Properties.Resources.pagewhiteget;
+            this.btnCheckUpdates.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCheckUpdates.Name = "btnCheckUpdates";
+            this.btnCheckUpdates.Size = new System.Drawing.Size(23, 22);
+            this.btnCheckUpdates.Text = "Check for Updates";
+            this.btnCheckUpdates.ToolTipText = "Check for Updates";
+            // 
+            // imgList
+            // 
+            this.imgList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgList.ImageStream")));
+            this.imgList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imgList.Images.SetKeyName(0, "package-installed-updated.png");
+            this.imgList.Images.SetKeyName(1, "package-install.png");
+            this.imgList.Images.SetKeyName(2, "package-broken.png");
             // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(460, 283);
+            this.ClientSize = new System.Drawing.Size(531, 283);
             this.ControlBox = false;
             this.Controls.Add(this.tcSettings);
             this.Controls.Add(this.panel1);
@@ -600,7 +656,7 @@
         private System.Windows.Forms.ComboBox cmbFirstTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabPage tbpModules;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvwModules;
         private System.Windows.Forms.ColumnHeader chModName;
         private System.Windows.Forms.ToolStrip tbModules;
         private System.Windows.Forms.ColumnHeader chRepository;
@@ -614,5 +670,10 @@
         private System.Windows.Forms.TextBox txtGithubAPIKey;
         private System.Windows.Forms.Button btnGithubHelp;
         private System.Windows.Forms.ToolTip ttGithubAPI;
+        private System.Windows.Forms.ColumnHeader chLastCommit;
+        private System.Windows.Forms.ToolStripButton btnEditModule;
+        private System.Windows.Forms.ToolStripButton btnDeleteModule;
+        private System.Windows.Forms.ToolStripButton btnCheckUpdates;
+        private System.Windows.Forms.ImageList imgList;
     }
 }

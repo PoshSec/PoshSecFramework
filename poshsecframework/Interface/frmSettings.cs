@@ -42,6 +42,87 @@ namespace poshsecframework.Interface
             {
                 cmbFirstTime.SelectedIndex = 1;
             }
+            LoadModules();
+        }
+
+        private void SaveModules()
+        {
+            System.Collections.Specialized.StringCollection modsettings = new System.Collections.Specialized.StringCollection();
+            foreach (ListViewItem lvw in lvwModules.Items)
+            {
+                String modstr = "";
+                foreach (ListViewItem.ListViewSubItem subitm in lvw.SubItems)
+                {
+                    modstr += subitm.Text + "|";
+                }
+                if(modstr.Trim() != "")
+                {
+                    modstr = modstr.Substring(0, modstr.Length - 1);
+                    modsettings.Add(modstr);
+                }                
+            }
+            Properties.Settings.Default["Modules"] = modsettings;
+            Properties.Settings.Default.Save();
+            Properties.Settings.Default.Reload();
+        }
+
+        private void LoadModules()
+        {
+            System.Collections.Specialized.StringCollection modsettings = Properties.Settings.Default.Modules;
+            if (modsettings != null && modsettings.Count > 0)
+            {
+                foreach (String mod in modsettings)
+                {
+                    String[] modparts = mod.Split('|');
+                    if (modparts != null && modparts.Length >= 3 && modparts.Length <= 4)
+                    {
+                        ListViewItem lvw = new ListViewItem();
+                        lvw.Text = modparts[0];
+                        for (int idx = 1; idx < modparts.Length; idx++)
+                        {
+                            lvw.SubItems.Add(modparts[idx]);
+                        }
+                        if (modparts.Length == 3)
+                        {
+                            lvw.SubItems.Add("");
+                        }
+                        lvw.ImageIndex = 0;
+                        lvwModules.Items.Add(lvw);
+                    }
+                }
+            }
+        }
+
+        private void AddModule(String name, String location, String branch, DateTime lastcommit)
+        {
+            bool exists = false;
+            int idx = 0;
+            ListViewItem lvw = null;
+            while (idx < lvwModules.Items.Count && !exists)
+            {
+                lvw = lvwModules.Items[idx];
+                if (lvw.Text.ToLower() == name.ToLower() && lvw.SubItems[1].Text.ToLower() == location.ToLower())
+                {
+                    exists = true;
+                }
+                idx++;
+            }
+            if (exists)
+            {
+                lvw.SubItems[2].Text = branch;
+                lvw.SubItems[3].Text = lastcommit.ToString(StringValue.TimeFormat);
+            }
+            else
+            {
+                lvw = new ListViewItem();
+                lvw.Text = name;
+                lvw.SubItems.Add(location);
+                lvw.SubItems.Add(branch);
+                lvw.SubItems.Add(lastcommit.ToString(StringValue.TimeFormat));
+                lvw.ImageIndex = 0;
+                lvwModules.Items.Add(lvw);
+            }
+            SaveModules();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -152,6 +233,7 @@ namespace poshsecframework.Interface
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     restart = frm.Restart;
+                    AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastUpdate);
                 }
                 frm.Dispose();
                 frm = null;
