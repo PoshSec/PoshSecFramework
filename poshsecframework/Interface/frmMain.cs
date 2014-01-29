@@ -1281,9 +1281,13 @@ namespace poshsecframework
             int idx = 0;
             while (idx < Properties.Settings.Default.Modules.Count && !rtn)
             {
-                if (Properties.Settings.Default.Modules[idx].ToLower().IndexOf(modname.ToLower()) > -1)
+                String[] modparts = Properties.Settings.Default.Modules[idx].Split('|');
+                if (modparts != null && modparts.Length >= 3 && modparts.Length <= 4)
                 {
-                    rtn = true;
+                    if (modparts[0].ToLower() == modname.ToLower())
+                    {
+                        rtn = true;
+                    }
                 }
                 idx++;
             }
