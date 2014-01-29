@@ -175,5 +175,25 @@ namespace poshsecframework.Interface
         {
             get { return restart; }
         }
+
+        public String RepositoryName
+        {
+            get { return Repository; }
+        }
+
+        public String LocationName
+        {
+            get { return RepoOwner + "/" + Repository; }
+        }
+
+        public String Branch
+        {
+            get { return branch.Name; }
+        }
+
+        public DateTime LastUpdate
+        {
+            get { return DateTime.Now; }
+        }
     }
 }

@@ -820,6 +820,7 @@ namespace poshsecframework
                 }
             }
         }
+
         public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false, bool showtab = false)
         {
             if (this.InvokeRequired)

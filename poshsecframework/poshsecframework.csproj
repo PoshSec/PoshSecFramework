@@ -213,6 +213,10 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\page-white_get.png" />
+    <None Include="Resources\page-white_edit.png" />
+    <None Include="Resources\page-white_delete.png" />
+    <None Include="Resources\page-white_add.png" />
     <None Include="Resources\help.png" />
     <None Include="Resources\psf_logo_rev1.png" />
     <None Include="Resources\system-run-31.png" />
