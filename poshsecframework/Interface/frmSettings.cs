@@ -137,6 +137,44 @@ namespace poshsecframework.Interface
         private bool Save()
         {
             bool rtn = true;
+            if (!Directory.Exists(txtScriptDirectory.Text))
+            {
+                if (MessageBox.Show(StringValue.ScriptPathError + StringValue.CreatePath, "Settings", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(txtScriptDirectory.Text);
+                    }
+                    catch (Exception e)
+                    {
+                        rtn = false;
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                else
+                {
+                    rtn = false;
+                }
+            }
+            if (!Directory.Exists(txtModuleDirectory.Text))
+            {
+                if (MessageBox.Show(StringValue.ModulePathError + StringValue.CreatePath, "Settings", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(txtModuleDirectory.Text);
+                    }
+                    catch (Exception e)
+                    {
+                        rtn = false;
+                        MessageBox.Show(e.Message);
+                    }
+                }
+                else
+                {
+                    rtn = false;
+                }
+            }
             if (Directory.Exists(txtScriptDirectory.Text) && Directory.Exists(txtModuleDirectory.Text))
             {
                 Properties.Settings.Default["ScriptPath"] = txtScriptDirectory.Text;
@@ -154,16 +192,6 @@ namespace poshsecframework.Interface
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
-            }
-            else if (!Directory.Exists(txtScriptDirectory.Text))
-            {
-                MessageBox.Show(StringValue.ScriptPathError);
-                rtn = false;
-            }
-            else if (!Directory.Exists(txtModuleDirectory.Text))
-            {
-                MessageBox.Show(StringValue.ModulePathError);
-                rtn = false;
             }
             return rtn;
         }

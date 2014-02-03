@@ -15,8 +15,9 @@ namespace poshsecframework.Strings
         public const string RequireParams = "There are required paramaters that are missing values. Please fill in all of the required parameters before proceeding.";
         public const string SelectIPScan = "Please select an IP to scan.";
         public const string SelectNetwork = "Please select a network first.";
-        public const string ScriptPathError = "The specified script directory does not exist. Please check the path.";
-        public const string ModulePathError = "The specified module directory does not exist. Please check the path.";
+        public const string ScriptPathError = "The specified script directory does not exist.";
+        public const string ModulePathError = "The specified module directory does not exist.";
+        public const string CreatePath = " Would you like to create the directory?";
         public const string ImportError = "There was an error when importing the PoshSec Framework file.";
         public const string ClearAlerts = "Are you sure you want to clear all of the alerts?";
         public const string UnhandledException = "Unhandled exception in script function.";
