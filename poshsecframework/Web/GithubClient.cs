@@ -50,12 +50,12 @@ namespace poshsecframework.Web
         /// </summary>
         /// <param name="OwnerName">The owner of the repository.</param>
         /// <param name="RepositoryName">The name of the repository.</param>
-        /// <param name="BranchItem">The selected branch item.</param>
+        /// <param name="BranchName">The selected branch item.</param>
         /// <param name="ModuleDirectory">The target directory for the zipball to be extracted into.</param>
-        public void GetArchive(String OwnerName, String RepositoryName, GithubJsonItem BranchItem, String ModuleDirectory)
+        public void GetArchive(String OwnerName, String RepositoryName, String BranchName, String ModuleDirectory)
         {
             String tmpfile = Path.GetTempFileName();
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, BranchItem.Name) + token), tmpfile);
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, BranchName) + token), tmpfile);
             if (savedfile != null)
             {
                 try
@@ -102,7 +102,62 @@ namespace poshsecframework.Web
                             }
                             else
                             {
-                                errors.Add(String.Format(StringValue.InvalidPSModule, RepositoryName, BranchItem.Name));
+                                errors.Add(String.Format(StringValue.InvalidPSModule, RepositoryName, BranchName));
+                            }
+                        }
+                    }
+                    za = null;
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(ex.Message);
+                }
+            }
+            try
+            {
+                File.Delete(savedfile.FullName);
+            }
+            catch (Exception dex)
+            {
+                errors.Add(dex.Message);
+
+            }
+            savedfile = null;
+        }
+
+        public void GetPSFScripts(String ScriptDirectory)
+        {
+            String tmpfile = Path.GetTempFileName();
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, StringValue.PSFScriptsPath + token), tmpfile);
+            if (savedfile != null)
+            {
+                try
+                {
+                    String target = ScriptDirectory;
+                    System.IO.Compression.ZipArchive za = System.IO.Compression.ZipFile.Open(savedfile.FullName, System.IO.Compression.ZipArchiveMode.Read);
+                    if (za != null && za.Entries.Count() > 0)
+                    {
+                        using (za)
+                        {
+                            String parentfolder = za.Entries[0].FullName;
+                            System.IO.Compression.ZipFile.ExtractToDirectory(savedfile.FullName, ScriptDirectory);
+                            String newfolder = Path.Combine(ScriptDirectory, parentfolder);
+                            newfolder = newfolder.Substring(0, newfolder.Length - 1); // removes trailing slash
+                            if (Directory.Exists(newfolder))
+                            {
+                                DirectoryInfo di = new DirectoryInfo(newfolder);
+                                restart = false;
+                                foreach (FileInfo fil in di.GetFiles("*", SearchOption.AllDirectories))
+                                {
+                                    String dest = target + fil.DirectoryName.Replace(newfolder, "");
+                                    if (!Directory.Exists(dest))
+                                    {
+                                        Directory.CreateDirectory(dest);
+                                    }
+                                    File.Copy(fil.FullName, Path.Combine(dest, fil.Name));
+                                }
+                                di.Delete(true);
+                                di = null;
                             }
                         }
                     }

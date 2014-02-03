@@ -15,6 +15,7 @@ namespace poshsecframework.Interface
         #region Private Variables
         private string[] Message = new string[] {
             Strings.StringValue.FTCheckSettings,
+            Strings.StringValue.FTInitialDownload,
             Strings.StringValue.FTUnblockFiles,
             Strings.StringValue.FTUpdateHelp,
             Strings.StringValue.FTSetExecutionPolicy
@@ -23,12 +24,14 @@ namespace poshsecframework.Interface
         private enum Steps
         { 
             Check_Settings = 0,
+            InitialDownload,
             Unblock_Files,
             Update_Help,
             Set_Execution_Policy
         }
 
         private string[] Errors = new string[] {
+            Strings.StringValue.StepSuccessDescription,
             Strings.StringValue.StepSuccessDescription,
             Strings.StringValue.StepSuccessDescription,
             Strings.StringValue.StepSuccessDescription,
@@ -263,6 +266,9 @@ namespace poshsecframework.Interface
                 case Steps.Check_Settings:
                     rtn = CheckSettings();
                     break;
+                case Steps.InitialDownload:
+                    rtn = InitialDownload();
+                    break;
                 case Steps.Set_Execution_Policy:
                     rtn = SetExecutionPolicy();
                     break;
@@ -282,13 +288,75 @@ namespace poshsecframework.Interface
             string err = "";
             if (!Directory.Exists(Properties.Settings.Default.ScriptPath))
             {
-                err += "Script Path " + Properties.Settings.Default.ScriptPath + " does not exist.\r\n";
-                rtn = rtn && false;
+                try
+                {
+                    Directory.CreateDirectory(Properties.Settings.Default.ScriptPath);
+                }
+                catch
+                {
+                    err += "Script Path " + Properties.Settings.Default.ScriptPath + " does not exist.\r\n";
+                    rtn = rtn && false;
+                }                
             }
             if (!Directory.Exists(Properties.Settings.Default.ModulePath)) 
-            { 
-                err += "Module Path " + Properties.Settings.Default.ModulePath + " does not exist.\r\n"; 
-                rtn = rtn && false;
+            {
+                try
+                {
+                    Directory.CreateDirectory(Properties.Settings.Default.ModulePath);
+                }
+                catch
+                {
+                    err += "Module Path " + Properties.Settings.Default.ModulePath + " does not exist.\r\n";
+                    rtn = rtn && false;
+                }                
+            }
+            if (!rtn)
+            {
+                Errors[(int)Steps.Check_Settings] = err;
+            }
+            return rtn;
+        }
+
+        private bool InitialDownload()
+        {
+            bool rtn = true;
+            string err = "";
+            System.Collections.Specialized.StringCollection mods = Properties.Settings.Default.Modules;
+            if (mods != null && mods.Count > 0)
+            {
+                foreach (string mod in mods)
+                {
+                    String[] modparts = mod.Split('|');
+                    if (modparts != null && modparts.Length >= 3 && modparts.Length <= 4)
+                    {
+                        Web.GithubClient ghc = new Web.GithubClient();
+                        String location = modparts[1];
+                        String[] locparts = location.Split('/');
+                        if (locparts != null && locparts.Length == 2)
+                        {
+                            String RepoOwner = locparts[0];
+                            String Repository = modparts[0];
+                            String branch = modparts[2];
+                            ghc.GetArchive(RepoOwner, Repository, branch, Properties.Settings.Default.ModulePath);
+                            if (ghc.Errors.Count > 0)
+                            {
+                                rtn = rtn && false;
+                                err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                            }
+                            ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
+                            if (ghc.Errors.Count > 0)
+                            {
+                                rtn = rtn && false;
+                                err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                            }
+                        }
+                        else
+                        {
+                            rtn = rtn && false;
+                            err += "Invalid location in module.";
+                        }
+                    }
+                }
             }
             if (!rtn)
             {

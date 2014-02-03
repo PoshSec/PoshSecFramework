@@ -30,6 +30,7 @@ namespace poshsecframework.Strings
         public const string TNUnblockFile = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/ee176841.aspx\r\nhttp://technet.microsoft.com/en-us/library/hh849924.aspx";
 
         public const string FTCheckSettings = "This will ensure that the settings are pointing to the proper directories and files necessary for the PoshSec Framework to function properly.";
+        public const string FTInitialDownload = "This will download the PoshSec repository from github. This step can be skipped if you would prefer to use other repositories.";
         public const string FTUnblockFiles = "This will execute the command\r\n'Get-ChildItem -recurse <path to poshsecframework> | Unblock-File'. \r\n\r\nGet-ChildItem -recurse gets a listing of all of the files in the poshsecframework directory, and subdirectories, and sends that to the Unblock-File Cmdlet. This will remove the 'Blocked' file attibute on those files." + TNUnblockFile;
         public const string FTUpdateHelp = "This will execute the command\r\n'Update-Help -Force'.\r\n\r\nThis is required when using the Get-Help Cmdlet. This requires an active internet connection." + TNUpdateHelp;
         public const string FTSetExecutionPolicy = "This will execute the command\r\n'Set-ExecutionPolicy RemoteSigned -Force'.\r\n\r\nThis allows for downloaded scripts that are signed by a trusted publisher to run on your system.\r\n\r\nPoshSec Framework requires this ExecutionPolicy to work." + TNSetExecutionPolicy;
@@ -86,6 +87,7 @@ namespace poshsecframework.Strings
         public const string GithubURI = "https://api.github.com/";
         public const string GithubURL = "https://github.com/";
         public const string RateLimitURL = "http://developer.github.com/v3/#rate-limiting";
+        public const string PSFScriptsPath = "repos/PoshSec/PoshSecScripts/zipball/master";
         public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
         public const string BranchFormat = "repos/{0}/{1}/branches";
         public const string AccessToken = "?access_token={0}";

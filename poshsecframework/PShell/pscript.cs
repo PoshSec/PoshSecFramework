@@ -207,7 +207,7 @@ namespace poshsecframework.PShell
 
         public bool UnblockFiles(string FolderPath)
         {
-            bool rtn = false;
+            bool rtn = true;
             rslts.Clear();
 
             if (Directory.Exists(FolderPath))
@@ -229,19 +229,16 @@ namespace poshsecframework.PShell
                         script += "Unblock-File -path \"" + file + "\"\r\n";
                     }
                     InvokeCommand(script);
-                    if (rslts.ToString().Trim() == "")
+                    if (rslts.ToString().Trim() != "")
                     {
-                        rtn = true;
+                        rtn = false;
                     }
-                }
-                else
-                {
-                    rslts.AppendLine("Unable to find any PowerShell files in the directory " + FolderPath + " or it's subdirectories.");
                 }
             }
             else
             {
                 rslts.AppendLine("The path " + FolderPath + " does not exist.");
+                rtn = false;
             }
             return rtn;
         }

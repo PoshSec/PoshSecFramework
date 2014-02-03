@@ -92,7 +92,7 @@ namespace poshsecframework.Interface
             lblStatus.Text = "Downloading Repository, please wait...";
             Application.DoEvents();
             pbMain.Visible = true;
-            ghc.GetArchive(RepoOwner, Repository, branch, Properties.Settings.Default.ModulePath);
+            ghc.GetArchive(RepoOwner, Repository, branch.Name, Properties.Settings.Default.ModulePath);
             if (ghc.Errors.Count > 0)
             {
                 rtn = false;
