@@ -128,6 +128,9 @@
     <Compile Include="Network\ScanIP.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PShell\psfhost.cs" />
+    <Compile Include="PShell\psfhostinterface.cs" />
+    <Compile Include="PShell\psfhostrawuserinterface.cs" />
     <Compile Include="PShell\psfilenameeditor.cs" />
     <Compile Include="PShell\pshosteditor.cs" />
     <Compile Include="Strings\StringValue.cs" />

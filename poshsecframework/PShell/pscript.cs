@@ -17,6 +17,8 @@ namespace poshsecframework.PShell
         #region " Private Variables "
         private RunspaceConfiguration rspaceconfig;
         private Runspace rspace;
+        private psfhost host;
+        private psfhostinterface hostinterface;
         private String scriptcommand;
         private bool iscommand = false;
         private bool clicked = true;
@@ -47,7 +49,9 @@ namespace poshsecframework.PShell
         private void InitializeScript()
         {
             rspaceconfig = RunspaceConfiguration.Create();
-            rspace = RunspaceFactory.CreateRunspace(rspaceconfig);
+            host = new psfhost();
+            hostinterface = (psfhostinterface)host.UI;
+            rspace = RunspaceFactory.CreateRunspace(host, rspaceconfig);
             rspace.Open();
             InitializeSessionVars();
         }
@@ -310,7 +314,9 @@ namespace poshsecframework.PShell
                     {
                         rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));                        
                         pline.Commands.Add(pscmd);
-                    }                    
+                    }
+                    hostinterface.ClearErrors();
+                    hostinterface.ClearWarnings();
                     Collection<PSObject> rslt = pline.Invoke();
                     pline.Dispose();
                     pline = null;
