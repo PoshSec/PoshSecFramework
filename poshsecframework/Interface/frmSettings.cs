@@ -18,6 +18,13 @@ namespace poshsecframework.Interface
         private OpenFileDialog dlgFile = new OpenFileDialog();
         private bool restart = false;
 
+        private enum ModuleState
+        { 
+            Okay = 0,
+            UpdatePending,
+            Error
+        }
+
         public frmSettings()
         {
             InitializeComponent();
@@ -86,11 +93,36 @@ namespace poshsecframework.Interface
                         {
                             lvw.SubItems.Add("");
                         }
-                        lvw.ImageIndex = 0;
+                        ModuleState mstate = GetModuleState(modparts);
+                        lvw.ImageIndex = (int)mstate;
                         lvwModules.Items.Add(lvw);
+                        if (mstate != ModuleState.Okay)
+                        {
+                            tcSettings.SelectedTab = tbpModules;
+                        }
                     }
                 }
             }
+        }
+
+        private ModuleState GetModuleState(String[] modparts)
+        {
+            ModuleState rtn = ModuleState.Okay;
+            String localpath = Path.Combine(Properties.Settings.Default.ModulePath, modparts[0]);
+            if (Directory.Exists(localpath))
+            {
+                String[] files = Directory.GetFiles(localpath, "*.psd1", SearchOption.TopDirectoryOnly);
+                if (files == null || files.Count() == 0)
+                {
+                    rtn = ModuleState.Error;
+                }
+                //Check Last Github Query  / Last Update Here
+            }
+            else
+            {
+                rtn = ModuleState.Error;
+            }
+            return rtn;
         }
 
         private void AddModule(String name, String location, String branch, DateTime lastcommit)

@@ -329,31 +329,38 @@ namespace poshsecframework.Interface
                     String[] modparts = mod.Split('|');
                     if (modparts != null && modparts.Length >= 3 && modparts.Length <= 4)
                     {
-                        Web.GithubClient ghc = new Web.GithubClient();
-                        String location = modparts[1];
-                        String[] locparts = location.Split('/');
-                        if (locparts != null && locparts.Length == 2)
+                        try
                         {
-                            String RepoOwner = locparts[0];
-                            String Repository = modparts[0];
-                            String branch = modparts[2];
-                            ghc.GetArchive(RepoOwner, Repository, branch, Properties.Settings.Default.ModulePath);
-                            if (ghc.Errors.Count > 0)
+                            Web.GithubClient ghc = new Web.GithubClient();
+                            String location = modparts[1];
+                            String[] locparts = location.Split('/');
+                            if (locparts != null && locparts.Length == 2)
                             {
-                                rtn = rtn && false;
-                                err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                                String RepoOwner = locparts[0];
+                                String Repository = modparts[0];
+                                String branch = modparts[2];
+                                ghc.GetArchive(RepoOwner, Repository, branch, Properties.Settings.Default.ModulePath);
+                                if (ghc.Errors.Count > 0)
+                                {
+                                    rtn = rtn && false;
+                                    err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                                }
+                                ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
+                                if (ghc.Errors.Count > 0)
+                                {
+                                    rtn = rtn && false;
+                                    err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                                }
                             }
-                            ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
-                            if (ghc.Errors.Count > 0)
+                            else
                             {
                                 rtn = rtn && false;
-                                err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                                err += "Invalid location in module.";
                             }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            rtn = rtn && false;
-                            err += "Invalid location in module.";
+                            MessageBox.Show(e.Message);
                         }
                     }
                 }
