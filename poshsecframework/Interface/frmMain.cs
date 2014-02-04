@@ -898,6 +898,7 @@ namespace poshsecframework
                     lvwitm.Text = alerttype.ToString();
                     lvwitm.ImageIndex = (int)alerttype;
                     lvwitm.SubItems.Add(message);
+                    lvwitm.ToolTipText = message;
                     lvwitm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
                     lvwitm.SubItems.Add(scriptname);                    
                     lvwAlerts.Items.Add(lvwitm);                    
@@ -1716,6 +1717,14 @@ namespace poshsecframework
             }
         }
 
+        private void cmnuAlerts_Opening(object sender, CancelEventArgs e)
+        {
+            if (lvwAlerts.SelectedItems.Count == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+
         private void cmnuScheduleCommands_Opening(object sender, CancelEventArgs e)
         {
             if (lvwSchedule.Items.Count == 0)
@@ -1759,6 +1768,33 @@ namespace poshsecframework
             //This gets rid of any formating and nontext data.
             Clipboard.SetText(Clipboard.GetText(TextDataFormat.Text));
             txtPShellOutput.Paste();
+        }
+
+        private void cmbtnCopyMessage_Click(object sender, EventArgs e)
+        {
+            string messages = "";
+            if (lvwAlerts.SelectedItems.Count > 0)
+            { 
+                foreach(ListViewItem lvw in lvwAlerts.SelectedItems)
+                {
+                    messages += lvw.SubItems[1].Text + Environment.NewLine;
+                }
+                Clipboard.SetText(messages, TextDataFormat.Text);
+            }
+        }
+
+        private void cmbtnCopyAlert_Click(object sender, EventArgs e)
+        {
+            string alerts = "";
+            if (lvwAlerts.SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem lvw in lvwAlerts.SelectedItems)
+                {
+                    string alert = String.Format(StringValue.AlertFormat, lvw.SubItems[0].Text, lvw.SubItems[1].Text, lvw.SubItems[2].Text, lvw.SubItems[3].Text).Replace("\\r\\n", Environment.NewLine);
+                    alerts += alert + Environment.NewLine;
+                }
+                Clipboard.SetText(alerts, TextDataFormat.Text);
+            }
         }
 
         private void cmbtnCancelScript_Click(object sender, EventArgs e)

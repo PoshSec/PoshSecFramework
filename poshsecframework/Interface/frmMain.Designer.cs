@@ -128,6 +128,9 @@ namespace poshsecframework
             this.chMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chTimeStamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chScript = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cmnuAlerts = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmbtnCopyMessage = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmbtnCopyAlert = new System.Windows.Forms.ToolStripMenuItem();
             this.imgListAlerts = new System.Windows.Forms.ImageList(this.components);
             this.tsAlerts = new System.Windows.Forms.ToolStrip();
             this.btnClearAlerts = new System.Windows.Forms.ToolStripButton();
@@ -177,6 +180,7 @@ namespace poshsecframework
             this.cmnuScheduleCommands.SuspendLayout();
             this.tcSystem.SuspendLayout();
             this.tbpAlerts.SuspendLayout();
+            this.cmnuAlerts.SuspendLayout();
             this.tsAlerts.SuspendLayout();
             this.tbpScripts.SuspendLayout();
             this.cmnuActiveScripts.SuspendLayout();
@@ -1071,11 +1075,13 @@ namespace poshsecframework
             this.chMessage,
             this.chTimeStamp,
             this.chScript});
+            this.lvwAlerts.ContextMenuStrip = this.cmnuAlerts;
             this.lvwAlerts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwAlerts.FullRowSelect = true;
             this.lvwAlerts.HideSelection = false;
             this.lvwAlerts.Location = new System.Drawing.Point(3, 28);
             this.lvwAlerts.Name = "lvwAlerts";
+            this.lvwAlerts.ShowItemToolTips = true;
             this.lvwAlerts.Size = new System.Drawing.Size(942, 173);
             this.lvwAlerts.SmallImageList = this.imgListAlerts;
             this.lvwAlerts.TabIndex = 1;
@@ -1101,6 +1107,29 @@ namespace poshsecframework
             // 
             this.chScript.Text = "Script";
             this.chScript.Width = 150;
+            // 
+            // cmnuAlerts
+            // 
+            this.cmnuAlerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmbtnCopyMessage,
+            this.cmbtnCopyAlert});
+            this.cmnuAlerts.Name = "cmnuAlerts";
+            this.cmnuAlerts.Size = new System.Drawing.Size(164, 48);
+            this.cmnuAlerts.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuAlerts_Opening);
+            // 
+            // cmbtnCopyMessage
+            // 
+            this.cmbtnCopyMessage.Name = "cmbtnCopyMessage";
+            this.cmbtnCopyMessage.Size = new System.Drawing.Size(163, 22);
+            this.cmbtnCopyMessage.Text = "Copy Message";
+            this.cmbtnCopyMessage.Click += new System.EventHandler(this.cmbtnCopyMessage_Click);
+            // 
+            // cmbtnCopyAlert
+            // 
+            this.cmbtnCopyAlert.Name = "cmbtnCopyAlert";
+            this.cmbtnCopyAlert.Size = new System.Drawing.Size(163, 22);
+            this.cmbtnCopyAlert.Text = "Copy Entire Alert";
+            this.cmbtnCopyAlert.Click += new System.EventHandler(this.cmbtnCopyAlert_Click);
             // 
             // imgListAlerts
             // 
@@ -1366,6 +1395,7 @@ namespace poshsecframework
             this.tcSystem.ResumeLayout(false);
             this.tbpAlerts.ResumeLayout(false);
             this.tbpAlerts.PerformLayout();
+            this.cmnuAlerts.ResumeLayout(false);
             this.tsAlerts.ResumeLayout(false);
             this.tsAlerts.PerformLayout();
             this.tbpScripts.ResumeLayout(false);
@@ -1497,6 +1527,9 @@ namespace poshsecframework
         private System.Windows.Forms.ContextMenuStrip cmnuPSFConsole;
         private System.Windows.Forms.ToolStripMenuItem cmbtnCopy;
         private System.Windows.Forms.ToolStripMenuItem cmbtnPaste;
+        private System.Windows.Forms.ContextMenuStrip cmnuAlerts;
+        private System.Windows.Forms.ToolStripMenuItem cmbtnCopyMessage;
+        private System.Windows.Forms.ToolStripMenuItem cmbtnCopyAlert;
     }
 }
 

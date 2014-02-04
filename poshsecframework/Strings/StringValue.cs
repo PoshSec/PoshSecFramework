@@ -47,6 +47,7 @@ namespace poshsecframework.Strings
         public const string StepIgnored = "Ignored";
         public const string StepFailed = "Failed!";
         public const string MustSelectStep = "You must select at least 1 step to continue.";
+        public const string AlertFormat = "Severity: {0}\\r\\nMessage: {1}\\r\\nTimestamp: {2}\\r\\nScript: {3}\\r\\n";
 
         public const string ScriptCancelled = "Script cancelled by user.";
         public const string CommandCancelled = "Command cancelled by user.";
