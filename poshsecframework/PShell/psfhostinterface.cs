@@ -11,16 +11,10 @@ namespace poshsecframework.PShell
     class psfhostinterface : PSHostUserInterface
     {
         private Collection<String> warnings = new Collection<string>();
-        private Collection<String> errors = new Collection<string>();
 
         public void ClearWarnings()
         {
             warnings.Clear();
-        }
-
-        public void ClearErrors()
-        {
-            errors.Clear();
         }
 
         public override void Write(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
@@ -45,7 +39,7 @@ namespace poshsecframework.PShell
 
         public override void WriteErrorLine(string value)
         {
-            errors.Add(value);
+            return;
         }
 
         public override void WriteLine(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
@@ -116,11 +110,6 @@ namespace poshsecframework.PShell
         public Collection<String> Warnings
         {
             get { return warnings; }
-        }
-
-        public Collection<String> Errors
-        {
-            get { return errors; }
         }
     }
 }

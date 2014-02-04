@@ -105,6 +105,7 @@ namespace poshsecframework.PShell
                 }
                 pline.Commands.AddScript(script + StringValue.WriteError);
                 Collection<PSObject> rslt = pline.Invoke();
+                HandleWarningsErrors(pline.Error);
                 pline.Dispose();
                 pline = null;
                 if (rslt != null && rslt.Count > 0)
@@ -136,6 +137,7 @@ namespace poshsecframework.PShell
             }
             finally
             {
+                HandleWarningsErrors(pline.Error);
                 pline.Dispose();
                 pline = null;
                 if (rslt != null)
@@ -154,10 +156,11 @@ namespace poshsecframework.PShell
         #endregion
 
         #region " Public Methods "
-        public pscript()
+        public pscript(frmMain ParentForm)
         {            
             try
             {
+                frm = ParentForm;
                 InitializeScript();
             }
             catch (Exception e)
@@ -192,6 +195,7 @@ namespace poshsecframework.PShell
             }
             finally
             {
+                HandleWarningsErrors(pline.Error);
                 pline.Dispose();
                 pline = null;
                 if (rslt != null)
@@ -315,9 +319,8 @@ namespace poshsecframework.PShell
                         rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));                        
                         pline.Commands.Add(pscmd);
                     }
-                    hostinterface.ClearErrors();
-                    hostinterface.ClearWarnings();
                     Collection<PSObject> rslt = pline.Invoke();
+                    HandleWarningsErrors(pline.Error);
                     pline.Dispose();
                     pline = null;
                     if (rslt != null)
@@ -344,6 +347,7 @@ namespace poshsecframework.PShell
                     pline.Dispose();
                     pline = null;
                 }
+                HandleWarningsErrors(pline.Error);
                 GC.Collect();
                 cancelled = true;
                 if (iscommand)
@@ -357,6 +361,7 @@ namespace poshsecframework.PShell
             }
             catch (Exception e)
             {
+                HandleWarningsErrors(pline.Error);
                 rslts.AppendLine(psexec.psexceptionhandler(e,iscommand));
             }
             finally
@@ -393,6 +398,7 @@ namespace poshsecframework.PShell
             pline.Commands.Add(StringValue.OutString);
 
             Collection<PSObject> rslt = pline.Invoke();
+            HandleWarningsErrors(pline.Error);
             if (rslt != null)
             {
                 if (rslt[0].ToString().Contains("PARAMETERS"))
@@ -500,6 +506,24 @@ namespace poshsecframework.PShell
         #endregion
 
         #region " Private Methods "
+        private void HandleWarningsErrors(PipelineReader<object> pipelineerrors)
+        {
+            foreach (string warning in hostinterface.Warnings)
+            {
+                PSAlert.Add(warning, psmethods.PSAlert.AlertType.Warning);
+            }
+            if (pipelineerrors.Count > 0)
+            {
+                Collection<object> errors = pipelineerrors.ReadToEnd();
+                foreach (object error in errors)
+                {
+                    PSAlert.Add(error.ToString(), psmethods.PSAlert.AlertType.Error);
+                }
+            }
+            hostinterface.ClearWarnings();
+        }
+
+
         private Type GetTypeFromString(String typename)
         {
             Type rtn = null;

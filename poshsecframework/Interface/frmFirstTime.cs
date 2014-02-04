@@ -376,7 +376,7 @@ namespace poshsecframework.Interface
         {
             bool rtn = true;
             string err = "";
-            PShell.pscript ps = new PShell.pscript();
+            PShell.pscript ps = new PShell.pscript(null);
             if (!ps.UnblockFiles(poshsecframework.Properties.Settings.Default.ScriptPath))
             {
                 err = ps.Results;
@@ -404,7 +404,7 @@ namespace poshsecframework.Interface
         private bool SetExecutionPolicy()
         {
             bool rtn = false;
-            PShell.pscript ps = new PShell.pscript();
+            PShell.pscript ps = new PShell.pscript(null);
             rtn = ps.SetExecutionPolicy();
             if (!rtn)
             {
@@ -418,7 +418,7 @@ namespace poshsecframework.Interface
         private bool UpdateHelp()
         {
             bool rtn = false;
-            PShell.pscript ps = new PShell.pscript();
+            PShell.pscript ps = new PShell.pscript(null);
             rtn = ps.UpdateHelp();
             if (!rtn)
             {

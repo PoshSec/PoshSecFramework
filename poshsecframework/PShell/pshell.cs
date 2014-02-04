@@ -46,8 +46,7 @@ namespace poshsecframework.PShell
 
         public void Open()
         {
-            ps = new pscript();
-            ps.ParentForm = frm;
+            ps = new pscript(frm);
             ps.ScriptCompleted += new EventHandler<pseventargs>(ScriptCompleted);
         }
 
