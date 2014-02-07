@@ -53,25 +53,68 @@ namespace poshsecframework.Interface
                 {
                     lvwSystems.Items.Clear();
                     lvwSystems.BeginUpdate();
-                    foreach (String system in rslts)
+                    foreach (Object system in rslts)
                     {
-                        if (system != null && system != "")
+                        if (system != null)
                         {
-                            ListViewItem lvwItm = new ListViewItem();
-                            String[] ipinfo = system.Split('|');
-                            lvwItm.Text = ipinfo[2];
-                            lvwItm.SubItems.Add(ipinfo[1]);
-                            lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                            lvwItm.SubItems.Add(StringValue.Up);
+                            if (system.GetType() == typeof(String))
+                            {
+                                string sys = (string)system;
+                                if (sys != null && sys != "")
+                                {
+                                    ListViewItem lvwItm = new ListViewItem();
+                                    String[] ipinfo = system.ToString().Split('|');
 
-                            lvwItm.ImageIndex = 2;
-                            lvwSystems.Items.Add(lvwItm);
-                            lvwSystems.Refresh();
-                        }
+                                    lvwItm.Text = ipinfo[2];
+                                    lvwItm.SubItems.Add(ipinfo[1]);
+                                    lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
+                                    lvwItm.SubItems.Add(StringValue.Up);
+
+                                    lvwItm.ImageIndex = 2;
+                                    lvwSystems.Items.Add(lvwItm);
+                                    lvwSystems.Refresh();
+                                }
+                            }
+                            else
+                            {
+                                DirectoryEntry sys = (DirectoryEntry)system;
+                                String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
+                                String[] ips = ipadr.Split(',');
+                                if(ips != null && ips.Length > 0)
+                                {
+                                    foreach(String ip in ips)
+                                    {
+                                        ListViewItem lvwItm = new ListViewItem();
+                                        lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
+
+                                        lvwItm.SubItems.Add(ip);
+                                        string macaddr = scnr.GetMac(ip);
+                                        lvwItm.SubItems.Add(macaddr);
+                                        bool isup = false;
+                                        if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
+                                        {
+                                            isup = true;
+                                        }
+                                        if (isup)
+                                        {
+                                            lvwItm.SubItems.Add(StringValue.Up);
+                                        }
+                                        else
+                                        {
+                                            lvwItm.SubItems.Add(StringValue.Down);
+                                        }
+
+                                        lvwItm.ImageIndex = 2;
+                                        lvwSystems.Items.Add(lvwItm);
+                                        lvwSystems.Refresh();
+                                    }
+                                }
+                            }
+                        }                        
                     }
                     lvwSystems.EndUpdate();
+                    lvwSystems.Sort();
                 }
-                rslts = null;
                 EnableControls();
             }
         }
@@ -176,63 +219,10 @@ namespace poshsecframework.Interface
             thd.Start();
         }
 
-        private void OnScanADComplete(ArrayList rslts)
-        { 
-            if (this.InvokeRequired)
-            {
-                MethodInvoker del = delegate
-                {
-                    OnScanADComplete(rslts);
-                };
-                this.Invoke(del);
-            }
-            else
-            {
-                if (rslts.Count > 0)
-                {
-                    lvwSystems.Items.Clear();
-                    lvwSystems.BeginUpdate();
-                    foreach (DirectoryEntry system in rslts)
-                    {
-                        ListViewItem lvwItm = new ListViewItem();
-                        lvwItm.Text = system.Name.ToString();
-
-                        String ipadr = scnr.GetIP(system.Name);
-                        lvwItm.SubItems.Add(ipadr);
-                        lvwItm.SubItems.Add(scnr.GetMac(ipadr));
-                        bool isup = false;
-                        if (ipadr != StringValue.UnknownHost)
-                        {
-                            isup = scnr.Ping(system.Name, 1, 500);
-                        }
-                        if (isup)
-                        {
-                            lvwItm.SubItems.Add(StringValue.Up);
-                        }
-                        else
-                        {
-                            lvwItm.SubItems.Add(StringValue.Down);
-                        }
-
-                        lvwItm.ImageIndex = 0;
-                        lvwSystems.Items.Add(lvwItm);
-                        lvwSystems.Refresh();
-                        Application.DoEvents();
-                    }
-                    lvwSystems.EndUpdate();
-                }
-                rslts = null;
-                EnableControls();
-            }
-        }
-
         private void ScanAD()
         {
             scnr.Domain = domain;
             scnr.ScanActiveDirectory();
-
-            ArrayList rslts = scnr.Systems;
-            OnScanADComplete(rslts);
         }
         #endregion
 

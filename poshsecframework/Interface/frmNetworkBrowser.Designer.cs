@@ -134,6 +134,7 @@
             this.lvwSystems.Name = "lvwSystems";
             this.lvwSystems.Size = new System.Drawing.Size(458, 243);
             this.lvwSystems.SmallImageList = this.imgList16;
+            this.lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvwSystems.TabIndex = 3;
             this.lvwSystems.UseCompatibleStateImageBehavior = false;
             this.lvwSystems.View = System.Windows.Forms.View.Details;

@@ -37,7 +37,10 @@
             this.optMonthly = new System.Windows.Forms.RadioButton();
             this.optWeekly = new System.Windows.Forms.RadioButton();
             this.optDaily = new System.Windows.Forms.RadioButton();
+            this.optOnce = new System.Windows.Forms.RadioButton();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.datStartDate = new System.Windows.Forms.DateTimePicker();
+            this.lblDate = new System.Windows.Forms.Label();
             this.datStartTime = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
@@ -116,6 +119,7 @@
             this.gbFrequency.Controls.Add(this.optMonthly);
             this.gbFrequency.Controls.Add(this.optWeekly);
             this.gbFrequency.Controls.Add(this.optDaily);
+            this.gbFrequency.Controls.Add(this.optOnce);
             this.gbFrequency.Dock = System.Windows.Forms.DockStyle.Left;
             this.gbFrequency.Location = new System.Drawing.Point(0, 26);
             this.gbFrequency.Name = "gbFrequency";
@@ -128,7 +132,7 @@
             // 
             this.optMonthly.AutoSize = true;
             this.optMonthly.Dock = System.Windows.Forms.DockStyle.Top;
-            this.optMonthly.Location = new System.Drawing.Point(3, 51);
+            this.optMonthly.Location = new System.Drawing.Point(3, 68);
             this.optMonthly.Name = "optMonthly";
             this.optMonthly.Size = new System.Drawing.Size(97, 17);
             this.optMonthly.TabIndex = 2;
@@ -141,7 +145,7 @@
             // 
             this.optWeekly.AutoSize = true;
             this.optWeekly.Dock = System.Windows.Forms.DockStyle.Top;
-            this.optWeekly.Location = new System.Drawing.Point(3, 34);
+            this.optWeekly.Location = new System.Drawing.Point(3, 51);
             this.optWeekly.Name = "optWeekly";
             this.optWeekly.Size = new System.Drawing.Size(97, 17);
             this.optWeekly.TabIndex = 1;
@@ -153,19 +157,33 @@
             // optDaily
             // 
             this.optDaily.AutoSize = true;
-            this.optDaily.Checked = true;
             this.optDaily.Dock = System.Windows.Forms.DockStyle.Top;
-            this.optDaily.Location = new System.Drawing.Point(3, 17);
+            this.optDaily.Location = new System.Drawing.Point(3, 34);
             this.optDaily.Name = "optDaily";
             this.optDaily.Size = new System.Drawing.Size(97, 17);
             this.optDaily.TabIndex = 0;
-            this.optDaily.TabStop = true;
             this.optDaily.Text = "Daily";
             this.optDaily.UseVisualStyleBackColor = true;
             this.optDaily.CheckedChanged += new System.EventHandler(this.optDaily_CheckedChanged);
             // 
+            // optOnce
+            // 
+            this.optOnce.AutoSize = true;
+            this.optOnce.Checked = true;
+            this.optOnce.Dock = System.Windows.Forms.DockStyle.Top;
+            this.optOnce.Location = new System.Drawing.Point(3, 17);
+            this.optOnce.Name = "optOnce";
+            this.optOnce.Size = new System.Drawing.Size(97, 17);
+            this.optOnce.TabIndex = 3;
+            this.optOnce.TabStop = true;
+            this.optOnce.Text = "Once";
+            this.optOnce.UseVisualStyleBackColor = true;
+            this.optOnce.CheckedChanged += new System.EventHandler(this.optOnce_CheckedChanged);
+            // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.datStartDate);
+            this.panel3.Controls.Add(this.lblDate);
             this.panel3.Controls.Add(this.datStartTime);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
@@ -173,6 +191,27 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(418, 23);
             this.panel3.TabIndex = 4;
+            // 
+            // datStartDate
+            // 
+            this.datStartDate.CustomFormat = "MM/dd/yyyy";
+            this.datStartDate.Dock = System.Windows.Forms.DockStyle.Left;
+            this.datStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.datStartDate.Location = new System.Drawing.Point(232, 0);
+            this.datStartDate.Name = "datStartDate";
+            this.datStartDate.Size = new System.Drawing.Size(110, 21);
+            this.datStartDate.TabIndex = 3;
+            this.datStartDate.ValueChanged += new System.EventHandler(this.datStartDate_ValueChanged);
+            // 
+            // lblDate
+            // 
+            this.lblDate.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblDate.Location = new System.Drawing.Point(160, 0);
+            this.lblDate.Name = "lblDate";
+            this.lblDate.Size = new System.Drawing.Size(72, 23);
+            this.lblDate.TabIndex = 2;
+            this.lblDate.Text = "Start Date:";
+            this.lblDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // datStartTime
             // 
@@ -426,5 +465,8 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton optOnce;
+        private System.Windows.Forms.DateTimePicker datStartDate;
+        private System.Windows.Forms.Label lblDate;
     }
 }

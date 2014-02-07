@@ -25,6 +25,8 @@ namespace poshsecframework.Utility
         public EventHandler<ScheduleEventArgs> ItemUpdated;
         [XmlIgnore]
         public EventHandler<ScheduleEventArgs> ScriptInvoked;
+        [XmlIgnore]
+        public EventHandler<ScheduleEventArgs> ScheduleRemoved;
         #endregion
 
         #region Public Methods
@@ -37,6 +39,11 @@ namespace poshsecframework.Utility
         {
             interval = Interval;
             tmr.Elapsed += tmr_Elapsed;
+        }
+
+        public void Start()
+        {
+            tmr.Enabled = true;
         }
 
         public void Pause()
@@ -75,7 +82,7 @@ namespace poshsecframework.Utility
             return rtn;
         }
 
-        public bool Load()
+        public bool Load(bool start = false)
         {
             tmr.Enabled = false;
             bool rtn = false;
@@ -98,7 +105,7 @@ namespace poshsecframework.Utility
                     rtn = false;
                 }
             }
-            tmr.Enabled = rtn;
+            tmr.Enabled = start;
             return rtn;
         }
 
@@ -130,41 +137,50 @@ namespace poshsecframework.Utility
         private bool IsScheduledTime(ScheduleItem sched)
         {
             bool rtn = false;
-            switch (sched.ScheduledTime.Frequency)
-            { 
-                case Enums.EnumValues.TimeFrequency.Daily:
-                    //Only compare the time ignoring the seconds.
-                    rtn = isittime(sched);
-                    break;
-                case Enums.EnumValues.TimeFrequency.Weekly:
-                    //Check Day(s) then check time.
-                    int didx = -1;
-                    int today = (int)DateTime.Now.DayOfWeek;                    
-                    if (sched.ScheduledTime.DaysofWeek.Count > 0)
-                    {
-                        bool found = false;
-                        do
+            if (DateTime.Now >= sched.ScheduledTime.StartDate)
+            {
+                switch (sched.ScheduledTime.Frequency)
+                {
+                    case Enums.EnumValues.TimeFrequency.Once:
+                        if (DateTime.Now >= sched.ScheduledTime.StartDate)
                         {
-                            didx++;
-                            if (sched.ScheduledTime.DaysofWeek[didx] == today)
+                            rtn = true;
+                        }
+                        break;
+                    case Enums.EnumValues.TimeFrequency.Daily:
+                        //Only compare the time ignoring the seconds.
+                        rtn = isittime(sched);
+                        break;
+                    case Enums.EnumValues.TimeFrequency.Weekly:
+                        //Check Day(s) then check time.
+                        int didx = -1;
+                        int today = (int)DateTime.Now.DayOfWeek;
+                        if (sched.ScheduledTime.DaysofWeek.Count > 0)
+                        {
+                            bool found = false;
+                            do
                             {
-                                found = true;
+                                didx++;
+                                if (sched.ScheduledTime.DaysofWeek[didx] == today)
+                                {
+                                    found = true;
+                                }
+                            } while (didx < sched.ScheduledTime.DaysofWeek.Count - 1 && !found);
+                            if (found)
+                            {
+                                rtn = isittime(sched);
                             }
-                        } while (didx < sched.ScheduledTime.DaysofWeek.Count - 1 && !found);
-                        if (found)
+                        }
+                        break;
+                    case Enums.EnumValues.TimeFrequency.Monthly:
+                        //Check Month, then dates, then time.
+                        if (isthemonth(sched) && isthedate(sched))
                         {
                             rtn = isittime(sched);
                         }
-                    }
-                    break;
-                case Enums.EnumValues.TimeFrequency.Monthly:
-                    //Check Month, then dates, then time.
-                    if (isthemonth(sched) && isthedate(sched))
-                    {
-                        rtn = isittime(sched);
-                    }
-                    break;
-            }
+                        break;
+                }
+            }            
             return rtn;
         }
 
@@ -244,6 +260,15 @@ namespace poshsecframework.Utility
                 handler(this, e);
             }
         }
+
+        private void OnScheduleRemoved(ScheduleEventArgs e)
+        {
+            EventHandler<ScheduleEventArgs> handler = ScheduleRemoved;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
         #endregion
 
         #region Private Events
@@ -254,13 +279,29 @@ namespace poshsecframework.Utility
                 ischecking = true;
                 if (schedule.Count > 0)
                 {
+                    List<ScheduleItem> schedstoremove = new List<ScheduleItem>();
                     foreach (ScheduleItem sched in schedule)
                     {
                         if (IsScheduledTime(sched) && sched.LastRunTime != DateTime.Now.ToString("MM/dd/yyyy hh:mm tt"))
                         {
                             RunScheduleScript(sched);
+                            if (sched.ScheduledTime.Frequency == Enums.EnumValues.TimeFrequency.Once)
+                            {
+                                schedstoremove.Add(sched);
+                            }
                         }
                     }
+                    if (schedstoremove.Count > 0)
+                    {
+                        foreach (ScheduleItem sched in schedstoremove)
+                        {
+                            schedule.Remove(sched);
+                            OnScheduleRemoved(new ScheduleEventArgs(sched));
+                        }
+                        Save();
+                    }
+                    schedstoremove.Clear();
+                    schedstoremove = null;
                 }
                 ischecking = false;
             }

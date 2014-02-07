@@ -215,7 +215,7 @@ namespace poshsecframework.Network
             System.Net.IPHostEntry ipentry = null;
             try
             {
-                ipentry = System.Net.Dns.GetHostEntry(host);
+                ipentry = System.Net.Dns.GetHostEntry(host.Replace("CN=", ""));
                 System.Net.IPAddress[] addrs = ipentry.AddressList;
                 foreach (System.Net.IPAddress addr in addrs)
                 {

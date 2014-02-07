@@ -79,6 +79,7 @@ namespace poshsecframework
             scnr.ScanUpdate += scnr_ScanUpdate;
             schedule.ItemUpdated += schedule_ItemUpdated;
             schedule.ScriptInvoked += schedule_ScriptInvoked;
+            schedule.ScheduleRemoved += schedule_ScheduleRemoved;
 
             stat.SetStatus("Checking Settings, please wait...");
             CheckSettings();
@@ -110,6 +111,7 @@ namespace poshsecframework
             stat = null;
             this.Enabled = true;
             this.Focus();
+            schedule.Start();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -496,6 +498,43 @@ namespace poshsecframework
             }
         }
 
+        private void schedule_ScheduleRemoved(object sender, Utility.ScheduleEventArgs e)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    schedule_ScheduleRemoved(sender, e);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                int idx = -1;
+                bool found = false;
+                ListViewItem lvw = null;
+                if (lvwSchedule.Items.Count > 0)
+                {
+                    do
+                    {
+                        idx++;
+                        lvw = lvwSchedule.Items[idx];
+                        if (lvw.Tag != null)
+                        {
+                            if ((int)lvw.Tag == e.Schedule.Index)
+                            {
+                                found = true;
+                            }
+                        }
+                    } while (idx < lvwSchedule.Items.Count && !found);
+                    if (found && lvw != null)
+                    {
+                        lvwSchedule.Items.Remove(lvw);
+                    }
+                }
+            }
+        }
+
         private void ScheduleScript()
         {
             try
@@ -561,10 +600,17 @@ namespace poshsecframework
         private String GetScheduleText(Utility.ScheduleTime schedtime)
         { 
             String rtn = "";
+            if (schedtime.StartDate != null && schedtime.StartDate.ToString() != "")
+            {
+                rtn = "Starting " + schedtime.StartDate.ToString("MM/dd/yyyy") + " ";
+            }
             switch(schedtime.Frequency)
             {
                 case Enums.EnumValues.TimeFrequency.Daily:
-                    rtn = schedtime.Frequency.ToString();
+                    rtn += schedtime.Frequency.ToString();
+                    break;
+                case EnumValues.TimeFrequency.Once:
+                    rtn += "Once ";
                     break;
                 case Enums.EnumValues.TimeFrequency.Weekly:
                     String daystr = "Every ";
@@ -1155,6 +1201,7 @@ namespace poshsecframework
                         lvwSchedule.Items.Add(lvw);
                     }
                     lvwSchedule.EndUpdate();
+                    schedule.Start();
                 }
             }
             else

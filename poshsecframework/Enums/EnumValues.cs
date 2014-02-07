@@ -14,10 +14,11 @@ namespace poshsecframework.Enums
         }
 
         public enum TimeFrequency
-        { 
-            Daily = 0,
+        {
+            Once = 0,
+            Daily,
             Weekly,
-            Monthly
+            Monthly            
         }
 
         public enum FilterType

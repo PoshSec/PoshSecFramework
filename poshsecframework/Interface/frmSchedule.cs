@@ -20,12 +20,19 @@ namespace poshsecframework.Interface
         public frmSchedule()
         {
             InitializeComponent();
-            schedtime.Frequency = Enums.EnumValues.TimeFrequency.Daily;
+            schedtime.Frequency = Enums.EnumValues.TimeFrequency.Once;
             schedtime.StartTime = datStartTime.Value;
+            schedtime.StartDate = datStartDate.Value;
         }
         #endregion
         
         #region Private Events
+        private void optOnce_CheckedChanged(object sender, EventArgs e)
+        {
+            tcSettings.SelectedTab = tbDaily;
+            schedtime.Frequency = Enums.EnumValues.TimeFrequency.Once;
+        }
+
         private void optDaily_CheckedChanged(object sender, EventArgs e)
         {
             tcSettings.SelectedTab = tbDaily;
@@ -49,12 +56,17 @@ namespace poshsecframework.Interface
             schedtime.StartTime = datStartTime.Value;
         }
 
+        private void datStartDate_ValueChanged(object sender, EventArgs e)
+        {
+            schedtime.StartDate = datStartDate.Value;
+        }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             bool save = false;
             switch (schedtime.Frequency)
             {
-                case Enums.EnumValues.TimeFrequency.Daily:
+                case Enums.EnumValues.TimeFrequency.Daily: case Enums.EnumValues.TimeFrequency.Once:
                     save = true;
                     break;
                 case Enums.EnumValues.TimeFrequency.Weekly:
@@ -110,6 +122,5 @@ namespace poshsecframework.Interface
             get { return this.schedtime; }
         }
         #endregion
-
     }
 }
