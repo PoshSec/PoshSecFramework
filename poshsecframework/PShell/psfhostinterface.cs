@@ -11,6 +11,7 @@ namespace poshsecframework.PShell
     class psfhostinterface : PSHostUserInterface
     {
         private Collection<String> warnings = new Collection<string>();
+        public EventHandler<Events.WriteProgressEventArgs> WriteProgressUpdate;
 
         public void ClearWarnings()
         {
@@ -54,7 +55,16 @@ namespace poshsecframework.PShell
 
         public override void WriteProgress(long sourceId, System.Management.Automation.ProgressRecord record)
         {
-            throw new NotImplementedException();
+            OnWriteProgress(new Events.WriteProgressEventArgs(record));
+        }
+
+        private void OnWriteProgress(Events.WriteProgressEventArgs e)
+        {
+            EventHandler<Events.WriteProgressEventArgs> handler = WriteProgressUpdate;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
         public override void WriteVerboseLine(string message)

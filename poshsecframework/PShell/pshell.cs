@@ -87,6 +87,7 @@ namespace poshsecframework.PShell
                     ListViewItem lvw = new ListViewItem();
                     lvw.Text = "Scheduled Script: " + sched.ScriptName;
                     lvw.SubItems.Add("Running...");
+                    lvw.SubItems.Add("");
                     lvw.ImageIndex = 4;
 
                     ps.ParentForm = frm;
@@ -127,6 +128,7 @@ namespace poshsecframework.PShell
                     ListViewItem lvw = new ListViewItem();
                     lvw.Text = ScriptCommand;
                     lvw.SubItems.Add("Running...");
+                    lvw.SubItems.Add("");
                     lvw.ImageIndex = 4;
 
                     ps.ParentForm = frm;

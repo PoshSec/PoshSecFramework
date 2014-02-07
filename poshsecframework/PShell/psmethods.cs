@@ -64,6 +64,11 @@ namespace poshsecframework.PShell
             {
                 frm.UpdateStatus(StatusMessage, lvw);
             }
+
+            public void WriteProgress(String Progress)
+            {
+                frm.UpdateProgress(Progress, lvw);
+            }
         }
 
         public class PSHosts

@@ -69,6 +69,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums\EnumValues.cs" />
+    <Compile Include="Events\WriteProgressEventArgs.cs" />
     <Compile Include="Interface\frmFirstTime.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,7 +125,7 @@
       <DependentUpon>frmStartup.cs</DependentUpon>
     </Compile>
     <Compile Include="Network\NetworkBrowser.cs" />
-    <Compile Include="Network\ScanEventArgs.cs" />
+    <Compile Include="Events\ScanEventArgs.cs" />
     <Compile Include="Network\ScanIP.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Strings\StringValue.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />
-    <Compile Include="Utility\ScheduleEventArgs.cs" />
+    <Compile Include="Events\ScheduleEventArgs.cs" />
     <Compile Include="Utility\ScheduleItem.cs" />
     <Compile Include="Utility\ScheduleTime.cs" />
     <Compile Include="Web\GithubClient.cs" />

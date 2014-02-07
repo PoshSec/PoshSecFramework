@@ -51,6 +51,7 @@ namespace poshsecframework.PShell
             rspaceconfig = RunspaceConfiguration.Create();
             host = new psfhost();
             hostinterface = (psfhostinterface)host.UI;
+            hostinterface.WriteProgressUpdate += WriteProgressUpdate;
             rspace = RunspaceFactory.CreateRunspace(host, rspaceconfig);
             rspace.Open();
             InitializeSessionVars();
@@ -523,6 +524,11 @@ namespace poshsecframework.PShell
             hostinterface.ClearWarnings();
         }
 
+        private void WriteProgressUpdate(object sender, Events.WriteProgressEventArgs e)
+        {
+            PSStatus.Update(e.ProgressRecord.StatusDescription);
+            PSStatus.WriteProgress(e.ProgressRecord.PercentComplete + "%");
+        }
 
         private Type GetTypeFromString(String typename)
         {

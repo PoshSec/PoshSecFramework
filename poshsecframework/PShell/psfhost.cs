@@ -15,7 +15,7 @@ namespace poshsecframework.PShell
         private System.Globalization.CultureInfo originalUICultureInfo = System.Threading.Thread.CurrentThread.CurrentUICulture;        
 
         public psfhost()
-        { 
+        {
 
         }
 

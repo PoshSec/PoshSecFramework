@@ -958,6 +958,30 @@ namespace poshsecframework
             }
         }
 
+        public void UpdateProgress(String progress, ListViewItem lvw)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    UpdateProgress(progress, lvw);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                try
+                {
+                    lvw.SubItems[2].Text = progress;
+                    lvwScripts.Refresh();
+                }
+                catch (Exception e)
+                {
+                    DisplayError(e);
+                }
+            }
+        }
+
         public void UpdateStatus(String message, ListViewItem lvw)
         {
             if (this.InvokeRequired)
