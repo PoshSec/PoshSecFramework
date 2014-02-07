@@ -527,7 +527,7 @@ namespace poshsecframework.PShell
         private void WriteProgressUpdate(object sender, Events.WriteProgressEventArgs e)
         {
             PSStatus.Update(e.ProgressRecord.StatusDescription);
-            PSStatus.WriteProgress(e.ProgressRecord.PercentComplete + "%");
+            PSStatus.WriteProgress(e.ProgressRecord.PercentComplete.ToString() + "%");
         }
 
         private Type GetTypeFromString(String typename)

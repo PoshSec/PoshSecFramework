@@ -70,6 +70,12 @@
     </Compile>
     <Compile Include="Enums\EnumValues.cs" />
     <Compile Include="Events\WriteProgressEventArgs.cs" />
+    <Compile Include="Interface\frmAddNetwork.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\frmAddNetwork.Designer.cs">
+      <DependentUpon>frmAddNetwork.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\frmFirstTime.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +150,9 @@
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Interface\frmAddNetwork.resx">
+      <DependentUpon>frmAddNetwork.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmFirstTime.resx">
       <DependentUpon>frmFirstTime.cs</DependentUpon>
     </EmbeddedResource>
@@ -216,6 +225,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\edit-delete-6.png" />
     <None Include="Resources\page-white_get.png" />
     <None Include="Resources\page-white_edit.png" />
     <None Include="Resources\page-white_delete.png" />

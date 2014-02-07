@@ -58,7 +58,14 @@ namespace poshsecframework.Network
                     srch.Filter = "(&(objectClass=computer))";
                     srch.SearchScope = SearchScope.Subtree;
                     srch.PropertiesToLoad.Add("description");
-                    srslts = srch.FindAll();
+                    try
+                    {
+                        srslts = srch.FindAll();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
                 }
 
                 if (srslts != null && srslts.Count > 0)

@@ -22,9 +22,11 @@ namespace poshsecframework.Strings
         public const string ClearAlerts = "Are you sure you want to clear all of the alerts?";
         public const string UnhandledException = "Unhandled exception in script function.";
         public const string ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
+        public const string ConfirmNetworkDelete = "Are you sure you want to delete the selected network?";
         public const string SelectWeekdays = "Please select the days of the week to schedule this script.";
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
+        public const string InvalidNetworkName = "Please enter a unique and valid network name. (i.e. system.local)";
 
         public const string TNSetExecutionPolicy = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/ee176961.aspx";
         public const string TNUpdateHelp = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/hh849720.aspx";

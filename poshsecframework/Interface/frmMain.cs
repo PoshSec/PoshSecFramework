@@ -1237,6 +1237,23 @@ namespace poshsecframework
             }
         }
 
+        private bool ValidNetwork(String networkname)
+        {
+            bool rtn = true;
+            int idx = 0;
+            TreeNode rootnode = tvwNetworks.Nodes[0];
+            while (idx < rootnode.Nodes.Count && rtn)
+            {
+                TreeNode node = rootnode.Nodes[idx];
+                if (node.Text == networkname)
+                {
+                    rtn = false;
+                }
+                idx++;
+            }
+            return rtn;
+        }
+
         private void CheckSettings()
         {
             //Ensure we have settings and that if it's .\ to change to application path.
@@ -1627,6 +1644,20 @@ namespace poshsecframework
         }
         #endregion
 
+        #region TreeNode
+        private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node.Parent != null && e.Node.Text != StringValue.LocalNetwork)
+            {
+                btnRemoveNetwork.Enabled = true;
+            }
+            else
+            {
+                btnRemoveNetwork.Enabled = false;
+            }
+        }
+        #endregion
+
         #region TextBox
         private void txtPShellOutput_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1942,14 +1973,44 @@ namespace poshsecframework
             ViewScript();
         }
 
-        private void btnAddNetwork_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(StringValue.NotImplemented);
-        }
-
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(StringValue.NotImplemented);           
+        }
+
+        private void btnAddNetwork_Click(object sender, EventArgs e)
+        {
+            Interface.frmAddNetwork frm = new Interface.frmAddNetwork();
+            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (ValidNetwork(frm.NetworkName))
+                {
+                    TreeNode node = new TreeNode();
+                    node.Text = frm.NetworkName;
+                    node.SelectedImageIndex = 3;
+                    node.ImageIndex = 3;
+                    node.Tag = SystemType.Domain;
+                    tvwNetworks.Nodes[0].Nodes.Add(node);
+                }
+                else
+                {
+                    MessageBox.Show(StringValue.InvalidNetworkName);
+                }
+            }
+            frm.Dispose();
+            frm = null;
+        }
+
+        private void btnRemoveNetwork_Click(object sender, EventArgs e)
+        {
+            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Parent != null)
+            {
+                if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    tvwNetworks.SelectedNode.Remove();
+                }
+            }
+            
         }
 
         private void btnLaunchPShellCmd_Click(object sender, EventArgs e)
