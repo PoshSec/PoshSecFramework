@@ -49,6 +49,7 @@ namespace poshsecframework.Interface
             {
                 cmbFirstTime.SelectedIndex = 1;
             }
+            ckNameCheck.Checked = Properties.Settings.Default.NameChecking;
             LoadModules();
         }
 
@@ -221,6 +222,7 @@ namespace poshsecframework.Interface
                     firsttime = true;
                 }
                 Properties.Settings.Default["FirstTime"] = firsttime;
+                Properties.Settings.Default["NameChecking"] = ckNameCheck.Checked;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
@@ -324,6 +326,18 @@ namespace poshsecframework.Interface
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ckNameCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckNameCheck.Checked)
+            {
+                ckNameCheck.Text = "On";
+            }
+            else
+            {
+                ckNameCheck.Text = "Off";
             }
         }
     }

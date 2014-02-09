@@ -100,9 +100,14 @@ namespace poshsecframework.PShell
             {
                 Pipeline pline = rspace.CreatePipeline();
                 String script = "";
+                String namecheck = "";
+                if (!Properties.Settings.Default.NameChecking)
+                {
+                    namecheck = " -DisableNameChecking";
+                }
                 foreach (String mod in enabledmods)
                 {
-                    script += "Import-Module \"" + mod + "\"\r\n";
+                    script += "Import-Module \"" + mod + "\"" + namecheck + "\r\n";
                 }
                 pline.Commands.AddScript(script + StringValue.WriteError);
                 Collection<PSObject> rslt = pline.Invoke();

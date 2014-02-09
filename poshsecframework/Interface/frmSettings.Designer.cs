@@ -78,7 +78,10 @@
             this.btnEditModule = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteModule = new System.Windows.Forms.ToolStripButton();
             this.btnCheckUpdates = new System.Windows.Forms.ToolStripButton();
-            this.ttGithubAPI = new System.Windows.Forms.ToolTip(this.components);
+            this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ckNameCheck = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -92,6 +95,7 @@
             this.tcSettings.SuspendLayout();
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -145,10 +149,11 @@
             // 
             // panel6
             // 
+            this.panel6.Controls.Add(this.groupBox2);
             this.panel6.Controls.Add(this.groupBox1);
             this.panel6.Controls.Add(this.gbScriptSetting);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(3, 152);
+            this.panel6.Location = new System.Drawing.Point(3, 146);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(517, 70);
             this.panel6.TabIndex = 7;
@@ -163,7 +168,6 @@
             this.groupBox1.Size = new System.Drawing.Size(123, 70);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "First Time Utility";
             // 
             // cmbFirstTime
             // 
@@ -198,7 +202,6 @@
             this.gbScriptSetting.Size = new System.Drawing.Size(200, 70);
             this.gbScriptSetting.TabIndex = 0;
             this.gbScriptSetting.TabStop = false;
-            this.gbScriptSetting.Text = "Scripts";
             // 
             // cmbScriptDefAction
             // 
@@ -228,7 +231,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(3, 133);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(517, 19);
+            this.panel5.Size = new System.Drawing.Size(517, 13);
             this.panel5.TabIndex = 6;
             // 
             // pnlGithubAPIKey
@@ -258,7 +261,7 @@
             this.btnGithubHelp.Name = "btnGithubHelp";
             this.btnGithubHelp.Size = new System.Drawing.Size(26, 26);
             this.btnGithubHelp.TabIndex = 2;
-            this.ttGithubAPI.SetToolTip(this.btnGithubHelp, resources.GetString("btnGithubHelp.ToolTip"));
+            this.ttPSFHelp.SetToolTip(this.btnGithubHelp, resources.GetString("btnGithubHelp.ToolTip"));
             this.btnGithubHelp.UseVisualStyleBackColor = true;
             this.btnGithubHelp.Click += new System.EventHandler(this.btnGithubHelp_Click);
             // 
@@ -577,10 +580,49 @@
             this.btnCheckUpdates.Text = "Check for Updates";
             this.btnCheckUpdates.ToolTipText = "Check for Updates";
             // 
-            // ttGithubAPI
+            // ttPSFHelp
             // 
-            this.ttGithubAPI.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.ttGithubAPI.ToolTipTitle = "Github API Key";
+            this.ttPSFHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ttPSFHelp.ToolTipTitle = "PoshSec Framework Help";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.ckNameCheck);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox2.Location = new System.Drawing.Point(323, 0);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(89, 70);
+            this.groupBox2.TabIndex = 2;
+            this.groupBox2.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label2.Location = new System.Drawing.Point(3, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(83, 23);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Name Checking";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckNameCheck
+            // 
+            this.ckNameCheck.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckNameCheck.Checked = true;
+            this.ckNameCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckNameCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckNameCheck.Location = new System.Drawing.Point(3, 40);
+            this.ckNameCheck.Name = "ckNameCheck";
+            this.ckNameCheck.Size = new System.Drawing.Size(83, 21);
+            this.ckNameCheck.TabIndex = 1;
+            this.ckNameCheck.Text = "On";
+            this.ckNameCheck.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttPSFHelp.SetToolTip(this.ckNameCheck, "When On, it will check to ensure the Functions / Cmdlets follow PowerShell naming" +
+        " standards.\r\nWhen Off it will add -DisableNameChecking when loading the modules." +
+        "");
+            this.ckNameCheck.UseVisualStyleBackColor = true;
+            this.ckNameCheck.CheckedChanged += new System.EventHandler(this.ckNameCheck_CheckedChanged);
             // 
             // frmSettings
             // 
@@ -620,6 +662,7 @@
             this.tbpModules.PerformLayout();
             this.tbModules.ResumeLayout(false);
             this.tbModules.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -669,11 +712,14 @@
         private System.Windows.Forms.Label lblGithubAPIKey;
         private System.Windows.Forms.TextBox txtGithubAPIKey;
         private System.Windows.Forms.Button btnGithubHelp;
-        private System.Windows.Forms.ToolTip ttGithubAPI;
+        private System.Windows.Forms.ToolTip ttPSFHelp;
         private System.Windows.Forms.ColumnHeader chLastCommit;
         private System.Windows.Forms.ToolStripButton btnEditModule;
         private System.Windows.Forms.ToolStripButton btnDeleteModule;
         private System.Windows.Forms.ToolStripButton btnCheckUpdates;
         private System.Windows.Forms.ImageList imgList;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox ckNameCheck;
+        private System.Windows.Forms.Label label2;
     }
 }
