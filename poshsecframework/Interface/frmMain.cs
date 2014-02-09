@@ -1330,6 +1330,7 @@ namespace poshsecframework
         {
             cmbLibraryTypes.Items.Clear();
             cmbLibraryTypes.Items.Add("All");
+            enabledmods.Clear();
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
             if (Directory.Exists(modpath))
             {
