@@ -62,12 +62,18 @@ namespace poshsecframework.PShell
 
             public void Update(String StatusMessage)
             {
-                frm.UpdateStatus(StatusMessage, lvw);
+                if (frm != null)
+                {
+                    frm.UpdateStatus(StatusMessage, lvw);
+                }                
             }
 
             public void WriteProgress(String Progress)
             {
-                frm.UpdateProgress(Progress, lvw);
+                if (frm != null)
+                {
+                    frm.UpdateProgress(Progress, lvw);
+                }
             }
         }
 
