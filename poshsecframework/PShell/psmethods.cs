@@ -39,7 +39,10 @@ namespace poshsecframework.PShell
 
             public void Add(String message, AlertType alerttype)
             {
-                frm.AddAlert(message, alerttype, scriptname);
+                if (frm != null)
+                {
+                    frm.AddAlert(message, alerttype, scriptname);
+                }                
             }
 
             public String ScriptName
@@ -62,7 +65,7 @@ namespace poshsecframework.PShell
 
             public void Update(String StatusMessage)
             {
-                if (frm != null)
+                if (frm != null && lvw != null)
                 {
                     frm.UpdateStatus(StatusMessage, lvw);
                 }                
@@ -70,7 +73,7 @@ namespace poshsecframework.PShell
 
             public void WriteProgress(String Progress)
             {
-                if (frm != null)
+                if (frm != null && lvw != null)
                 {
                     frm.UpdateProgress(Progress, lvw);
                 }

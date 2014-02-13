@@ -177,7 +177,7 @@ namespace poshsecframework
 
         private void FirstTimeSetup()
         {
-            Interface.frmFirstTime frm = new Interface.frmFirstTime();
+            Interface.frmFirstTime frm = new Interface.frmFirstTime(this);
             if (frm.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
                 restart = false;

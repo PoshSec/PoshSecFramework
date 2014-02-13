@@ -40,11 +40,13 @@ namespace poshsecframework.Interface
 
         private bool showerrors = false;
         private int contcount = 0;
+        private frmMain parentform = null;
         #endregion
 
         #region Public Methods 
-        public frmFirstTime()
+        public frmFirstTime(frmMain Parent)
         {
+            parentform = Parent;
             InitializeComponent();
             Array stepvals = Enum.GetValues(typeof(Steps));
             foreach (Steps step in stepvals)
@@ -376,7 +378,7 @@ namespace poshsecframework.Interface
         {
             bool rtn = true;
             string err = "";
-            PShell.pscript ps = new PShell.pscript(null);
+            PShell.pscript ps = new PShell.pscript(parentform);
             if (!ps.UnblockFiles(poshsecframework.Properties.Settings.Default.ScriptPath))
             {
                 err = ps.Results;
@@ -404,7 +406,7 @@ namespace poshsecframework.Interface
         private bool SetExecutionPolicy()
         {
             bool rtn = false;
-            PShell.pscript ps = new PShell.pscript(null);
+            PShell.pscript ps = new PShell.pscript(parentform);
             rtn = ps.SetExecutionPolicy();
             if (!rtn)
             {
@@ -418,7 +420,7 @@ namespace poshsecframework.Interface
         private bool UpdateHelp()
         {
             bool rtn = false;
-            PShell.pscript ps = new PShell.pscript(null);
+            PShell.pscript ps = new PShell.pscript(parentform);
             rtn = ps.UpdateHelp();
             if (!rtn)
             {
