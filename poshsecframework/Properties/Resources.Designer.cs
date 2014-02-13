@@ -233,9 +233,9 @@ namespace poshsecframework.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap edit_delete_6 {
+        internal static System.Drawing.Bitmap editclearlist {
             get {
-                object obj = ResourceManager.GetObject("edit-delete-6", resourceCulture);
+                object obj = ResourceManager.GetObject("editclearlist", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -243,9 +243,9 @@ namespace poshsecframework.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap editclearlist {
+        internal static System.Drawing.Bitmap editdelete6 {
             get {
-                object obj = ResourceManager.GetObject("editclearlist", resourceCulture);
+                object obj = ResourceManager.GetObject("editdelete6", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
