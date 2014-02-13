@@ -88,13 +88,20 @@ namespace poshsecframework.PShell
 
             public Collection<PSObject> GetHosts(bool AllHosts = false)
             {
-                if (AllHosts)
+                if (frm != null)
                 {
-                    return frm.GetHosts();
+                    if (AllHosts)
+                    {
+                        return frm.GetHosts();
+                    }
+                    else
+                    {
+                        return frm.GetCheckedHosts();
+                    }
                 }
                 else
                 {
-                    return frm.GetCheckedHosts();
+                    return null;
                 }
             }
 
@@ -116,10 +123,17 @@ namespace poshsecframework.PShell
 
             public void AddObjectGrid(System.Object[] CustomObject, String TabTitle)
             {
-                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
-                ptitm.Text = TabTitle;
-                ptitm.AddGrid(CustomObject);
-                frm.AddTabPage(ptitm);
+                if (frm != null)
+                {
+                    poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                    ptitm.Text = TabTitle;
+                    ptitm.AddGrid(CustomObject);
+                    frm.AddTabPage(ptitm);
+                }
+                else
+                {
+                    throw new Exception("Parent Form is not set in PSTab.");
+                }
             }
         }
     }
