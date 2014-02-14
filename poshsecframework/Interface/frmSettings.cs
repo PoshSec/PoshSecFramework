@@ -50,6 +50,7 @@ namespace poshsecframework.Interface
                 cmbFirstTime.SelectedIndex = 1;
             }
             ckNameCheck.Checked = Properties.Settings.Default.NameChecking;
+            ckSaveSystems.Checked = Properties.Settings.Default.SaveSystems;
             LoadModules();
         }
 
@@ -223,6 +224,15 @@ namespace poshsecframework.Interface
                 }
                 Properties.Settings.Default["FirstTime"] = firsttime;
                 Properties.Settings.Default["NameChecking"] = ckNameCheck.Checked;
+                Properties.Settings.Default["SaveSystems"] = ckSaveSystems.Checked;
+                if (!ckSaveSystems.Checked)
+                {
+                    if (Properties.Settings.Default.Systems == null)
+                    {
+                        Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
+                    }
+                    ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
+                }
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
@@ -338,6 +348,18 @@ namespace poshsecframework.Interface
             else
             {
                 ckNameCheck.Text = "Off";
+            }
+        }
+
+        private void ckSaveSystems_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckSaveSystems.Checked)
+            {
+                ckSaveSystems.Text = "Yes";
+            }
+            else
+            {
+                ckSaveSystems.Text = "No";
             }
         }
     }

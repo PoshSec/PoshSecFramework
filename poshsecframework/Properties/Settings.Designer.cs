@@ -143,5 +143,17 @@ namespace poshsecframework.Properties {
                 this["Systems"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SaveSystems {
+            get {
+                return ((bool)(this["SaveSystems"]));
+            }
+            set {
+                this["SaveSystems"] = value;
+            }
+        }
     }
 }

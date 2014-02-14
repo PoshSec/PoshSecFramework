@@ -420,9 +420,9 @@ namespace poshsecframework
                 }
                 rslts = null;
                 lvwSystems.Sorting = SortOrder.Ascending;
-                lvwSystems.Sort();      
+                lvwSystems.Sort();
                 //Save to settings
-                if (lvwSystems.Items.Count > 0)
+                if (lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
                 {
                     if (Properties.Settings.Default.Systems == null)
                     {
