@@ -32,10 +32,10 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txtNetworkName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
-            this.txtNetworkName = new System.Windows.Forms.TextBox();
             this.panel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -83,6 +83,15 @@
             this.panel1.Size = new System.Drawing.Size(339, 26);
             this.panel1.TabIndex = 5;
             // 
+            // txtNetworkName
+            // 
+            this.txtNetworkName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtNetworkName.Location = new System.Drawing.Point(93, 0);
+            this.txtNetworkName.Name = "txtNetworkName";
+            this.txtNetworkName.Size = new System.Drawing.Size(246, 21);
+            this.txtNetworkName.TabIndex = 1;
+            this.txtNetworkName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNetworkName_KeyDown);
+            // 
             // label1
             // 
             this.label1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -112,15 +121,6 @@
             this.lblScriptDirectory.TabIndex = 0;
             this.lblScriptDirectory.Text = "Please enter the name of the network. ";
             this.lblScriptDirectory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtNetworkName
-            // 
-            this.txtNetworkName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtNetworkName.Location = new System.Drawing.Point(93, 0);
-            this.txtNetworkName.Name = "txtNetworkName";
-            this.txtNetworkName.Size = new System.Drawing.Size(246, 21);
-            this.txtNetworkName.TabIndex = 1;
-            this.txtNetworkName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtNetworkName_KeyDown);
             // 
             // frmAddNetwork
             // 

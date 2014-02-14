@@ -118,7 +118,10 @@ namespace poshsecframework.Interface
         {
             if (curl != txtURL.Text.Trim())
             {
-                InitListBatches();
+                if (!btnCancel.Focused)
+                {
+                    InitListBatches();
+                }                
             }
         }
 

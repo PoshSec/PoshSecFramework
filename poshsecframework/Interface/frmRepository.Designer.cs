@@ -159,7 +159,6 @@
             this.llblRateLimit.Name = "llblRateLimit";
             this.llblRateLimit.Size = new System.Drawing.Size(116, 30);
             this.llblRateLimit.TabIndex = 4;
-            this.llblRateLimit.TabStop = true;
             this.llblRateLimit.Text = "Rate Limit Remaining:";
             this.llblRateLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.llblRateLimit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblRateLimit_LinkClicked);
@@ -181,7 +180,7 @@
             this.btnCancel.Location = new System.Drawing.Point(361, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 4;
             this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -204,7 +203,7 @@
             this.btnRefresh.Location = new System.Drawing.Point(240, 0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(35, 26);
-            this.btnRefresh.TabIndex = 4;
+            this.btnRefresh.TabIndex = 5;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
@@ -216,7 +215,7 @@
             this.cmbBranch.Location = new System.Drawing.Point(51, 0);
             this.cmbBranch.Name = "cmbBranch";
             this.cmbBranch.Size = new System.Drawing.Size(189, 21);
-            this.cmbBranch.TabIndex = 1;
+            this.cmbBranch.TabIndex = 2;
             // 
             // lblBranch
             // 
