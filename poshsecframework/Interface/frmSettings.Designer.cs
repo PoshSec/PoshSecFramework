@@ -652,9 +652,9 @@
             this.ckSaveSystems.TabIndex = 1;
             this.ckSaveSystems.Text = "Yes";
             this.ckSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ttPSFHelp.SetToolTip(this.ckSaveSystems, "When On, it will check to ensure the Functions / Cmdlets follow PowerShell naming" +
-        " standards.\r\nWhen Off it will add -DisableNameChecking when loading the modules." +
-        "");
+            this.ttPSFHelp.SetToolTip(this.ckSaveSystems, "This option is to retain the systems listed in the Systems tab\r\nand to reload the" +
+        "m on startup.\r\nIf set to No, it will delete any currently saved systems from the" +
+        "\r\nsettings file.");
             this.ckSaveSystems.UseVisualStyleBackColor = true;
             this.ckSaveSystems.CheckedChanged += new System.EventHandler(this.ckSaveSystems_CheckedChanged);
             // 
