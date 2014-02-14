@@ -138,6 +138,7 @@ namespace poshsecframework
                         e.Cancel = true;
                     }
                 }
+                SaveSystems();
             }
             catch (Exception)
             { 
@@ -421,30 +422,7 @@ namespace poshsecframework
                 rslts = null;
                 lvwSystems.Sorting = SortOrder.Ascending;
                 lvwSystems.Sort();
-                //Save to settings
-                if (lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
-                {
-                    if (Properties.Settings.Default.Systems == null)
-                    {
-                        Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
-                    }
-                    ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
-                    foreach (ListViewItem lvw in lvwSystems.Items)
-                    {
-                        String system = "";
-                        foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
-                        {
-                            system += lvwsub.Text + "|";
-                        }
-                        if (system != "")
-                        {
-                            system = system.Substring(0, system.Length - 1);
-                            ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Add(system);
-                        }
-                    }
-                    Properties.Settings.Default.Save();
-                    Properties.Settings.Default.Reload();
-                }                
+                SaveSystems();                
                 btnCancelScan.Enabled = false;
                 btnScan.Enabled = true;
                 mnuScan.Enabled = true;
@@ -453,6 +431,33 @@ namespace poshsecframework
                 UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }            
+        }
+
+        private void SaveSystems()
+        {
+            if (lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
+            {
+                if (Properties.Settings.Default.Systems == null)
+                {
+                    Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
+                }
+                ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
+                foreach (ListViewItem lvw in lvwSystems.Items)
+                {
+                    String system = "";
+                    foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
+                    {
+                        system += lvwsub.Text + "|";
+                    }
+                    if (system != "")
+                    {
+                        system = system.Substring(0, system.Length - 1);
+                        ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Add(system);
+                    }
+                }
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+            }
         }
 
         private void scnr_ScanCancelled(object sender, EventArgs e)
