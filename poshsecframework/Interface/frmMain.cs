@@ -219,36 +219,59 @@ namespace poshsecframework
                 //fail silently because it's not on A/D   
             }
 
-            try
+            if (Properties.Settings.Default.Systems != null && Properties.Settings.Default.Systems.Count > 0)
             {
-                //Add Local IP/Host to Local Network
                 lvwSystems.Items.Clear();
-                String localHost = Dns.GetHostName();
-                String[] localIPs = scnr.GetIP(localHost).Split(',');
-                foreach (String localIP in localIPs)
+                foreach (String system in Properties.Settings.Default.Systems)
                 {
-                    ListViewItem lvwItm = new ListViewItem();
-
-                    lvwItm.Text = localHost;
-                    lvwItm.SubItems.Add(localIP);
-                    lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
-                    lvwItm.SubItems.Add("");
-                    lvwItm.SubItems.Add(StringValue.Up);
-                    lvwItm.SubItems.Add(StringValue.NotInstalled);
-                    lvwItm.SubItems.Add("0");
-                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                    lvwItm.ImageIndex = 2;
-                    lvwSystems.Items.Add(lvwItm);
-                    lvwSystems.Refresh();
+                    String[] systemparts = system.Split('|');
+                    if (systemparts.Length == lvwSystems.Columns.Count)
+                    {
+                        ListViewItem lvwItm = new ListViewItem();
+                        lvwItm.Text = systemparts[0];
+                        for(int idx = 1; idx < systemparts.Length; idx++)
+                        {
+                            lvwItm.SubItems.Add(systemparts[idx]);
+                        }
+                        lvwItm.ImageIndex = 2;
+                        lvwSystems.Items.Add(lvwItm);
+                    }
                 }
-                tvwNetworks.Nodes[0].Expand();
                 UpdateSystemCount();
             }
-            catch (Exception e)
+            else
             {
-                MessageBox.Show(e.Message + Environment.NewLine + e.StackTrace);
+                try
+                {
+                    //Add Local IP/Host to Local Network
+                    lvwSystems.Items.Clear();
+                    String localHost = Dns.GetHostName();
+                    String[] localIPs = scnr.GetIP(localHost).Split(',');
+                    foreach (String localIP in localIPs)
+                    {
+                        ListViewItem lvwItm = new ListViewItem();
+
+                        lvwItm.Text = localHost;
+                        lvwItm.SubItems.Add(localIP);
+                        lvwItm.SubItems.Add(scnr.GetMyMac(localIP));
+                        lvwItm.SubItems.Add("");
+                        lvwItm.SubItems.Add(StringValue.Up);
+                        lvwItm.SubItems.Add(StringValue.NotInstalled);
+                        lvwItm.SubItems.Add("0");
+                        lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
+
+                        lvwItm.ImageIndex = 2;
+                        lvwSystems.Items.Add(lvwItm);
+                    }
+                    tvwNetworks.Nodes[0].Expand();
+                    UpdateSystemCount();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message + Environment.NewLine + e.StackTrace);
+                }
             }
+            
             if (tvwNetworks.Nodes[0].Nodes.Count > 0)
             {
                 tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
@@ -397,7 +420,31 @@ namespace poshsecframework
                 }
                 rslts = null;
                 lvwSystems.Sorting = SortOrder.Ascending;
-                lvwSystems.Sort();                
+                lvwSystems.Sort();      
+                //Save to settings
+                if (lvwSystems.Items.Count > 0)
+                {
+                    if (Properties.Settings.Default.Systems == null)
+                    {
+                        Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
+                    }
+                    ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
+                    foreach (ListViewItem lvw in lvwSystems.Items)
+                    {
+                        String system = "";
+                        foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
+                        {
+                            system += lvwsub.Text + "|";
+                        }
+                        if (system != "")
+                        {
+                            system = system.Substring(0, system.Length - 1);
+                            ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Add(system);
+                        }
+                    }
+                    Properties.Settings.Default.Save();
+                    Properties.Settings.Default.Reload();
+                }                
                 btnCancelScan.Enabled = false;
                 btnScan.Enabled = true;
                 mnuScan.Enabled = true;
