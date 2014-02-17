@@ -20,6 +20,7 @@ namespace poshsecframework.Web
         HttpWebRequest ghc = null;
         List<String> errors = new List<string>();
         int ratelimitremaining = 0;
+        string lastmodified = "";
         bool restart = false;
         string token = "";
         #endregion
@@ -41,8 +42,20 @@ namespace poshsecframework.Web
         /// <returns></returns>
         public Collection<GithubJsonItem> GetBranches(String OwnerName, String RepositoryName)
         {
-            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, OwnerName, RepositoryName) + token));
+            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + token));
             return ghi;
+        }
+
+        public String GetLastModified(String OwnerName, String RepositoryName, String BranchName, String LastModified)
+        {
+            string branch = "?sha=" + BranchName;
+            if (token != "")
+            {
+                branch = "&sha=" + BranchName;
+            }
+            String url = Path.Combine(StringValue.GithubURI, String.Format(StringValue.LastModifiedFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + token + branch);
+            GetLastModDate(url, LastModified);
+            return lastmodified;
         }
 
         /// <summary>
@@ -55,7 +68,7 @@ namespace poshsecframework.Web
         public void GetArchive(String OwnerName, String RepositoryName, String BranchName, String ModuleDirectory)
         {
             String tmpfile = Path.GetTempFileName();
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, OwnerName, RepositoryName, BranchName) + token), tmpfile);
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName), BranchName) + token), tmpfile);
             if (savedfile != null)
             {
                 try
@@ -208,18 +221,6 @@ namespace poshsecframework.Web
             return rtn;
         }
 
-
-        private string GetLastCommit(GithubJsonItem BranchItem)
-        {
-            string rtn = "";
-            Collection<GithubJsonItem> brnchinfo = Get(BranchItem.URL + token);
-            if (brnchinfo != null && brnchinfo.Count() > 0)
-            { 
-                
-            }
-            return rtn;
-        }
-
         /// <summary>
         /// Downloads the specific file from the Github API.
         /// </summary>
@@ -265,6 +266,43 @@ namespace poshsecframework.Web
             return rtn;
         }
 
+        private void GetLastModDate(String uri, String LastModifiedDate)
+        {
+            ghc = (HttpWebRequest)WebRequest.Create(uri);
+            ghc.UserAgent = StringValue.psftitle;
+            DateTime lmd;
+            DateTime.TryParse(LastModifiedDate, out lmd);
+            if (lmd.Year > 1)
+            {
+                ghc.IfModifiedSince = lmd;            
+            }
+            ghc.AllowAutoRedirect = true;
+            WebResponse ghr = null;
+            try
+            {
+                ghr = ghc.GetResponse();
+            }
+            catch (WebException wex)
+            {
+                ratelimitremaining = GetRateLimitRemaining(wex.Response);
+                if (wex.Response.Headers["Status"] == StringValue.NotModified)
+                {
+                    lastmodified = LastModifiedDate;
+                }
+            }
+            catch (Exception e)
+            {
+                errors.Add(uri + ":" + e.Message);
+            }
+            if (ghr != null)
+            {
+                ratelimitremaining = GetRateLimitRemaining(ghr);
+                lastmodified = GetLastModified(ghr);
+                ghr.Close();
+            }
+            ghc = null;
+        }
+
         /// <summary>
         /// Performs a Get WebRequest to the specified URL and returns a collection of GithubJsonItems.
         /// </summary>
@@ -293,6 +331,7 @@ namespace poshsecframework.Web
             if (ghr != null)
             {
                 ratelimitremaining = GetRateLimitRemaining(ghr);
+                lastmodified = GetLastModified(ghr);
                 if (ghr.ContentType == StringValue.ContentTypeJSON)
                 {
                     Stream ghrs = ghr.GetResponseStream();
@@ -331,14 +370,17 @@ namespace poshsecframework.Web
             int rtn = 0;
             if (ghr.Headers.Keys.Count > 0)
             {
-                int idx = -1;
+                int idx = 0;
                 bool found = false;
                 do
                 {
-                    idx++;
                     if (ghr.Headers.Keys[idx] == StringValue.RateLimitKey)
                     {
                         found = true;
+                    }
+                    else
+                    {
+                        idx++;
                     }
                 } while (!found && idx < ghr.Headers.Keys.Count);
                 if (found)
@@ -349,6 +391,36 @@ namespace poshsecframework.Web
                         string val = vals[0];
                         int.TryParse(val, out rtn);
                     }                    
+                }
+            }
+            return rtn;
+        }
+
+        private String GetLastModified(WebResponse ghr)
+        {
+            String rtn = "";
+            if (ghr.Headers.Keys.Count > 0)
+            {
+                int idx = 0;
+                bool found = false;
+                do
+                {
+                    if (ghr.Headers.Keys[idx] == StringValue.LastModifiedKey)
+                    {
+                        found = true;
+                    }
+                    else
+                    {
+                        idx++;
+                    }                    
+                } while (!found && idx < ghr.Headers.Keys.Count);
+                if (found)
+                {
+                    string[] vals = ghr.Headers.GetValues(idx);
+                    if (vals != null)
+                    {
+                        rtn = vals[0];
+                    }
                 }
             }
             return rtn;
@@ -389,6 +461,11 @@ namespace poshsecframework.Web
         public int RateLimitRemaining
         {
             get { return ratelimitremaining; }
+        }
+
+        public string LastModified
+        {
+            get { return lastmodified; }
         }
 
         public bool Restart

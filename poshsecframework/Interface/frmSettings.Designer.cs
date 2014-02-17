@@ -35,6 +35,9 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbpGeneral = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.gbSaveSystems = new System.Windows.Forms.GroupBox();
+            this.ckSaveSystems = new System.Windows.Forms.CheckBox();
+            this.lblSaveSystems = new System.Windows.Forms.Label();
             this.gbNameChecking = new System.Windows.Forms.GroupBox();
             this.ckNameCheck = new System.Windows.Forms.CheckBox();
             this.lblNameChecking = new System.Windows.Forms.Label();
@@ -71,7 +74,7 @@
             this.chModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chLastCommit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chLastModified = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.tbModules = new System.Windows.Forms.ToolStrip();
             this.btnAddModule = new System.Windows.Forms.ToolStripButton();
@@ -82,12 +85,10 @@
             this.btnDeleteModule = new System.Windows.Forms.ToolStripButton();
             this.btnCheckUpdates = new System.Windows.Forms.ToolStripButton();
             this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
-            this.gbSaveSystems = new System.Windows.Forms.GroupBox();
-            this.ckSaveSystems = new System.Windows.Forms.CheckBox();
-            this.lblSaveSystems = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.gbSaveSystems.SuspendLayout();
             this.gbNameChecking.SuspendLayout();
             this.gbFirstTime.SuspendLayout();
             this.gbScriptSetting.SuspendLayout();
@@ -99,7 +100,6 @@
             this.tcSettings.SuspendLayout();
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
-            this.gbSaveSystems.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -162,6 +162,45 @@
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(517, 70);
             this.panel6.TabIndex = 7;
+            // 
+            // gbSaveSystems
+            // 
+            this.gbSaveSystems.Controls.Add(this.ckSaveSystems);
+            this.gbSaveSystems.Controls.Add(this.lblSaveSystems);
+            this.gbSaveSystems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbSaveSystems.Location = new System.Drawing.Point(412, 0);
+            this.gbSaveSystems.Name = "gbSaveSystems";
+            this.gbSaveSystems.Size = new System.Drawing.Size(105, 70);
+            this.gbSaveSystems.TabIndex = 3;
+            this.gbSaveSystems.TabStop = false;
+            // 
+            // ckSaveSystems
+            // 
+            this.ckSaveSystems.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckSaveSystems.Checked = true;
+            this.ckSaveSystems.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckSaveSystems.Location = new System.Drawing.Point(3, 40);
+            this.ckSaveSystems.Name = "ckSaveSystems";
+            this.ckSaveSystems.Size = new System.Drawing.Size(99, 21);
+            this.ckSaveSystems.TabIndex = 1;
+            this.ckSaveSystems.Text = "Yes";
+            this.ckSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttPSFHelp.SetToolTip(this.ckSaveSystems, "This option is to retain the systems listed in the Systems tab\r\nand to reload the" +
+        "m on startup.\r\nIf set to No, it will delete any currently saved systems from the" +
+        "\r\nsettings file.");
+            this.ckSaveSystems.UseVisualStyleBackColor = true;
+            this.ckSaveSystems.CheckedChanged += new System.EventHandler(this.ckSaveSystems_CheckedChanged);
+            // 
+            // lblSaveSystems
+            // 
+            this.lblSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSaveSystems.Location = new System.Drawing.Point(3, 17);
+            this.lblSaveSystems.Name = "lblSaveSystems";
+            this.lblSaveSystems.Size = new System.Drawing.Size(99, 23);
+            this.lblSaveSystems.TabIndex = 0;
+            this.lblSaveSystems.Text = "Save Systems";
+            this.lblSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // gbNameChecking
             // 
@@ -509,7 +548,7 @@
             this.chModName,
             this.chRepository,
             this.chBranch,
-            this.chLastCommit});
+            this.chLastModified});
             this.lvwModules.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwModules.FullRowSelect = true;
             this.lvwModules.Location = new System.Drawing.Point(3, 28);
@@ -535,10 +574,10 @@
             this.chBranch.Text = "Branch";
             this.chBranch.Width = 80;
             // 
-            // chLastCommit
+            // chLastModified
             // 
-            this.chLastCommit.Text = "Last Commit";
-            this.chLastCommit.Width = 130;
+            this.chLastModified.Text = "Last Modified";
+            this.chLastModified.Width = 130;
             // 
             // imgList
             // 
@@ -629,45 +668,6 @@
             this.ttPSFHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ttPSFHelp.ToolTipTitle = "PoshSec Framework Help";
             // 
-            // gbSaveSystems
-            // 
-            this.gbSaveSystems.Controls.Add(this.ckSaveSystems);
-            this.gbSaveSystems.Controls.Add(this.lblSaveSystems);
-            this.gbSaveSystems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbSaveSystems.Location = new System.Drawing.Point(412, 0);
-            this.gbSaveSystems.Name = "gbSaveSystems";
-            this.gbSaveSystems.Size = new System.Drawing.Size(105, 70);
-            this.gbSaveSystems.TabIndex = 3;
-            this.gbSaveSystems.TabStop = false;
-            // 
-            // ckSaveSystems
-            // 
-            this.ckSaveSystems.Appearance = System.Windows.Forms.Appearance.Button;
-            this.ckSaveSystems.Checked = true;
-            this.ckSaveSystems.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ckSaveSystems.Location = new System.Drawing.Point(3, 40);
-            this.ckSaveSystems.Name = "ckSaveSystems";
-            this.ckSaveSystems.Size = new System.Drawing.Size(99, 21);
-            this.ckSaveSystems.TabIndex = 1;
-            this.ckSaveSystems.Text = "Yes";
-            this.ckSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ttPSFHelp.SetToolTip(this.ckSaveSystems, "This option is to retain the systems listed in the Systems tab\r\nand to reload the" +
-        "m on startup.\r\nIf set to No, it will delete any currently saved systems from the" +
-        "\r\nsettings file.");
-            this.ckSaveSystems.UseVisualStyleBackColor = true;
-            this.ckSaveSystems.CheckedChanged += new System.EventHandler(this.ckSaveSystems_CheckedChanged);
-            // 
-            // lblSaveSystems
-            // 
-            this.lblSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSaveSystems.Location = new System.Drawing.Point(3, 17);
-            this.lblSaveSystems.Name = "lblSaveSystems";
-            this.lblSaveSystems.Size = new System.Drawing.Size(99, 23);
-            this.lblSaveSystems.TabIndex = 0;
-            this.lblSaveSystems.Text = "Save Systems";
-            this.lblSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -689,6 +689,7 @@
             this.panel1.ResumeLayout(false);
             this.tbpGeneral.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
+            this.gbSaveSystems.ResumeLayout(false);
             this.gbNameChecking.ResumeLayout(false);
             this.gbFirstTime.ResumeLayout(false);
             this.gbScriptSetting.ResumeLayout(false);
@@ -707,7 +708,6 @@
             this.tbpModules.PerformLayout();
             this.tbModules.ResumeLayout(false);
             this.tbModules.PerformLayout();
-            this.gbSaveSystems.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -758,7 +758,7 @@
         private System.Windows.Forms.TextBox txtGithubAPIKey;
         private System.Windows.Forms.Button btnGithubHelp;
         private System.Windows.Forms.ToolTip ttPSFHelp;
-        private System.Windows.Forms.ColumnHeader chLastCommit;
+        private System.Windows.Forms.ColumnHeader chLastModified;
         private System.Windows.Forms.ToolStripButton btnEditModule;
         private System.Windows.Forms.ToolStripButton btnDeleteModule;
         private System.Windows.Forms.ToolStripButton btnCheckUpdates;

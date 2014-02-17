@@ -324,6 +324,7 @@ namespace poshsecframework.Interface
             bool rtn = true;
             string err = "";
             System.Collections.Specialized.StringCollection mods = Properties.Settings.Default.Modules;
+            System.Collections.Specialized.StringCollection newmods = new System.Collections.Specialized.StringCollection();
             if (mods != null && mods.Count > 0)
             {
                 foreach (string mod in mods)
@@ -342,6 +343,8 @@ namespace poshsecframework.Interface
                                 String Repository = modparts[0];
                                 String branch = modparts[2];
                                 ghc.GetArchive(RepoOwner, Repository, branch, Properties.Settings.Default.ModulePath);
+                                ghc.GetLastModified(RepoOwner, Repository, branch, "");
+                                newmods.Add(mod + ghc.LastModified);
                                 if (ghc.Errors.Count > 0)
                                 {
                                     rtn = rtn && false;
@@ -352,19 +355,27 @@ namespace poshsecframework.Interface
                                 {
                                     rtn = rtn && false;
                                     err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
-                                }
+                                }                                
                             }
                             else
                             {
                                 rtn = rtn && false;
                                 err += "Invalid location in module.";
                             }
+                            ghc = null;
                         }
                         catch (Exception e)
                         {
                             MessageBox.Show(e.Message);
                         }
                     }
+                }
+                if (newmods.Count == mods.Count)
+                {
+                    Properties.Settings.Default["Modules"] = newmods;
+                    Properties.Settings.Default["LastModuleCheck"] = DateTime.Now.ToString();
+                    Properties.Settings.Default.Save();
+                    Properties.Settings.Default.Reload();
                 }
             }
             if (!rtn)

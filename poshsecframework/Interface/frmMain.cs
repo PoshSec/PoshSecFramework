@@ -155,6 +155,8 @@ namespace poshsecframework
             if (stat != null) { stat.SetStatus("Looking for modules, please wait..."); }
             CheckPendingModules();            
             BuildModuleFilter();
+            if (stat != null) { stat.SetStatus("Checking for updates, please wait..."); }
+            CheckLastModified();
             cmbLibraryTypes.SelectedIndex = 0;
             if (stat != null) { stat.SetStatus("Initializing PowerShell, please wait..."); }
             psf = new PShell.pshell(this);
@@ -1412,6 +1414,73 @@ namespace poshsecframework
                     DisplayError(e);
                 }                
             }
+        }
+
+        private void CheckLastModified()
+        {
+            DateTime last;
+            DateTime.TryParse(Properties.Settings.Default.LastModuleCheck, out last);
+            bool update = true;
+            if (last.Year > 1)
+            {
+                if (DateTime.Now.Subtract(last).Hours < 6)
+                {
+                    update = false;
+                }
+            }
+            if (update)
+            {
+                Properties.Settings.Default["LastModuleCheck"] = DateTime.Now.ToString();
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+                string err = "";
+                System.Collections.Specialized.StringCollection mods = Properties.Settings.Default.Modules;
+                if (mods != null && mods.Count > 0)
+                {
+                    Web.GithubClient ghc = new Web.GithubClient();
+                    foreach (string mod in mods)
+                    {
+                        String[] modparts = mod.Split('|');
+                        if (modparts != null && modparts.Length >= 3 && modparts.Length <= 4)
+                        {
+                            try
+                            {
+                                String location = modparts[1];
+                                String[] locparts = location.Split('/');
+                                if (locparts != null && locparts.Length == 2)
+                                {
+                                    String RepoOwner = locparts[0];
+                                    String Repository = modparts[0];
+                                    String branch = modparts[2];
+                                    String lastmodified = modparts[3];
+                                    String repolastmodified = ghc.GetLastModified(RepoOwner, Repository, branch, lastmodified);
+                                    if (lastmodified != repolastmodified)
+                                    {
+                                        AddAlert(Repository + " has a new update in branch " + branch + ". Last update: " + repolastmodified, PShell.psmethods.PSAlert.AlertType.Warning, "Github API");
+                                    }
+                                    if (ghc.Errors.Count > 0)
+                                    {
+                                        err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                                    }
+                                }
+                                else
+                                {
+                                    err += "Invalid location in module.";
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                MessageBox.Show(e.Message);
+                            }
+                        }
+                    }
+                    ghc = null;
+                }
+                if (err != "")
+                {
+                    DisplayError(new Exception(err));
+                }
+            }            
         }
 
         private void GetCommand()

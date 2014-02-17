@@ -159,6 +159,7 @@
             this.llblRateLimit.Name = "llblRateLimit";
             this.llblRateLimit.Size = new System.Drawing.Size(116, 30);
             this.llblRateLimit.TabIndex = 4;
+            this.llblRateLimit.TabStop = true;
             this.llblRateLimit.Text = "Rate Limit Remaining:";
             this.llblRateLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.llblRateLimit.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llblRateLimit_LinkClicked);

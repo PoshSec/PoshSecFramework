@@ -21,6 +21,7 @@ namespace poshsecframework.Interface
         private Web.GithubJsonItem branch = null;
         private Collection<Web.GithubJsonItem> branches = null;
         private bool restart = false;
+        private string lastmodified = "";
 
         public frmRepository()
         {
@@ -101,6 +102,7 @@ namespace poshsecframework.Interface
             restart = ghc.Restart;
             lblStatus.Text = StringValue.Ready;
             lblRateLimit.Text = ghc.RateLimitRemaining.ToString();
+            lastmodified = ghc.LastModified;
             return rtn;
         }
 
@@ -194,9 +196,9 @@ namespace poshsecframework.Interface
             get { return branch.Name; }
         }
 
-        public DateTime LastUpdate
+        public String LastModified
         {
-            get { return DateTime.Now; }
+            get { return lastmodified; }
         }
     }
 }

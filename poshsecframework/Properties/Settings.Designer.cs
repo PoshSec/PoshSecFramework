@@ -155,5 +155,17 @@ namespace poshsecframework.Properties {
                 this["SaveSystems"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastModuleCheck {
+            get {
+                return ((string)(this["LastModuleCheck"]));
+            }
+            set {
+                this["LastModuleCheck"] = value;
+            }
+        }
     }
 }

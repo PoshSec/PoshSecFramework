@@ -93,12 +93,16 @@ namespace poshsecframework.Strings
         public const string RateLimitURL = "http://developer.github.com/v3/#rate-limiting";
         public const string PSFScriptsPath = "repos/PoshSec/PoshSecScripts/zipball/master";
         public const string ArchiveFormat = "repos/{0}/{1}/zipball/{2}";
+        public const string LastModifiedFormat = "repos/{0}/{1}";
         public const string BranchFormat = "repos/{0}/{1}/branches";
         public const string AccessToken = "?access_token={0}";
         public const string ModuleSaveFormat = "{0}|{1}|{2}|{3}";
         public const string ContentTypeJSON = "application/json; charset=utf-8";
         public const string DefaultBranch = "master";
         public const string RateLimitKey = "X-RateLimit-Remaining";
+        public const string LastModifiedKey = "Last-Modified";
+        public const string NotModified = "304 Not Modified";
+        public const string IfModifiedSince = "If-Modified-Since";
         public const string InvalidPSModule = "The repository {0} in branch {1} does not have a valid .psd1 file. This is required for PowerShell modules. Please check the path, repository, and/or branch and try again.";
         public const string InvalidRepositoryURL = "The URL specified is not a valid Github repository URL. Please enter the URL again.";
 

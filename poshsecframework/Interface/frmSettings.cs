@@ -127,7 +127,7 @@ namespace poshsecframework.Interface
             return rtn;
         }
 
-        private void AddModule(String name, String location, String branch, DateTime lastcommit)
+        private void AddModule(String name, String location, String branch, String lastmodified)
         {
             bool exists = false;
             int idx = 0;
@@ -144,7 +144,7 @@ namespace poshsecframework.Interface
             if (exists)
             {
                 lvw.SubItems[2].Text = branch;
-                lvw.SubItems[3].Text = lastcommit.ToString(StringValue.TimeFormat);
+                lvw.SubItems[3].Text = lastmodified;
             }
             else
             {
@@ -152,7 +152,7 @@ namespace poshsecframework.Interface
                 lvw.Text = name;
                 lvw.SubItems.Add(location);
                 lvw.SubItems.Add(branch);
-                lvw.SubItems.Add(lastcommit.ToString(StringValue.TimeFormat));
+                lvw.SubItems.Add(lastmodified);
                 lvw.ImageIndex = 0;
                 lvwModules.Items.Add(lvw);
             }
@@ -305,7 +305,7 @@ namespace poshsecframework.Interface
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     restart = frm.Restart;
-                    AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastUpdate);
+                    AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastModified);
                 }
                 frm.Dispose();
                 frm = null;
