@@ -70,6 +70,7 @@ namespace poshsecframework.PShell
         public List<psparameter> CheckForParams(String scriptcommand)
         {
             paramcancelled = false;
+            ps.IsCommand = false;
             List<psparameter> parms = ps.CheckForParams(scriptcommand);
             paramcancelled = ps.ParamSelectionCancelled;
             return parms;

@@ -281,6 +281,7 @@ namespace poshsecframework.PShell
 
         public void RunScript()
         {
+            cancel = false;
             rslts.Clear();
             InitializeSessionVars();
             PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");            
