@@ -32,6 +32,7 @@ namespace poshsecframework.Interface
             scnr.ScanComplete += scnr_ScanComplete;
             scnr.ScanCancelled += scnr_ScanCancelled;
             GetNetworks();
+            ListSystems();
         }
         #endregion
         
@@ -188,6 +189,25 @@ namespace poshsecframework.Interface
             catch
             {
                 //fail silently because it's not on A/D   
+            }            
+        }
+
+        private void ListSystems()
+        {
+            if (Properties.Settings.Default.Systems != null && Properties.Settings.Default.Systems.Count > 0)
+            {
+                lvwSystems.Items.Clear();
+                foreach (String system in Properties.Settings.Default.Systems)
+                {
+                    String[] systemparts = system.Split('|');
+                    ListViewItem lvwItm = new ListViewItem();
+                    lvwItm.Text = systemparts[0];
+                    lvwItm.SubItems.Add(systemparts[1]);
+                    lvwItm.SubItems.Add(systemparts[2]);
+                    lvwItm.SubItems.Add(systemparts[4]);
+                    lvwItm.ImageIndex = 2;
+                    lvwSystems.Items.Add(lvwItm);
+                }
             }
         }
 

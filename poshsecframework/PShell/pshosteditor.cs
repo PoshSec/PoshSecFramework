@@ -33,7 +33,7 @@ namespace poshsecframework.PShell
                 {
                     value = nb.SerializedHosts;
                 }
-                nb = null;
+                nb = null;               
                 return value;
             }
         }
