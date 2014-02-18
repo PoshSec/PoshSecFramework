@@ -28,6 +28,7 @@ namespace poshsecframework.PShell
                 dlg.Title = "Select " + context.PropertyDescriptor.DisplayName;
                 dlg.FileName = (string)value;
                 dlg.Filter = "All Files (*.*)|*.*";
+                dlg.CheckFileExists = false;
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
                     value = dlg.FileName;
