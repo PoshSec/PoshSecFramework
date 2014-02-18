@@ -35,6 +35,8 @@ namespace poshsecframework
         private Utility.Schedule schedule = new Utility.Schedule(1000);
         private string loaderrors = "";
         private Collection<String> enabledmods = new Collection<string>();
+        private int updatefrequency = 12; // in hours
+        private Collection<ListViewItem> alerts = new Collection<ListViewItem>();
 
         enum SystemType
         { 
@@ -1000,8 +1002,12 @@ namespace poshsecframework
                     lvwitm.SubItems.Add(message);
                     lvwitm.ToolTipText = message;
                     lvwitm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-                    lvwitm.SubItems.Add(scriptname);                    
-                    lvwAlerts.Items.Add(lvwitm);                    
+                    lvwitm.SubItems.Add(scriptname);
+                    if (AlertFilterActive(alerttype))
+                    {
+                        lvwAlerts.Items.Add(lvwitm);
+                    }                    
+                    alerts.Add(lvwitm);
                     lvwAlerts_Update();
                     lvwitm.EnsureVisible();
                 }
@@ -1241,6 +1247,58 @@ namespace poshsecframework
             }
         }
 
+        private bool AlertFilterActive(PShell.psmethods.PSAlert.AlertType atype)
+        {
+            bool rtn = false;
+            switch (atype)
+            {
+                case PShell.psmethods.PSAlert.AlertType.Information:
+                    if (Utility.AlertFilter.Informational)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                case PShell.psmethods.PSAlert.AlertType.Error:
+                    if (Utility.AlertFilter.Error)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                case PShell.psmethods.PSAlert.AlertType.Warning:
+                    if (Utility.AlertFilter.Warning)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                case PShell.psmethods.PSAlert.AlertType.Severe:
+                    if (Utility.AlertFilter.Severe)
+                    {
+                        rtn = true;
+                    }
+                    break;
+                case PShell.psmethods.PSAlert.AlertType.Critical:
+                    if (Utility.AlertFilter.Critical)
+                    {
+                        rtn = true;
+                    }
+                    break;
+            }
+            return rtn;
+        }
+
+        private void FilterAlerts()
+        {
+            lvwAlerts.Items.Clear();
+            foreach (ListViewItem lvw in alerts)
+            {                
+                if (AlertFilterActive((PShell.psmethods.PSAlert.AlertType)lvw.ImageIndex))
+                {
+                    lvwAlerts.Items.Add(lvw);
+                }
+            }
+            lvwAlerts_Update();
+        }
+
         private void LoadSchedule()
         {
             if (schedule.Load())
@@ -1423,7 +1481,7 @@ namespace poshsecframework
             bool update = true;
             if (last.Year > 1)
             {
-                if (DateTime.Now.Subtract(last).Hours < 6)
+                if (DateTime.Now.Subtract(last).Hours < updatefrequency)
                 {
                     update = false;
                 }
@@ -1910,6 +1968,61 @@ namespace poshsecframework
         #endregion
 
         #region Button Clicks
+        private void btnAlert_Information_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AlertFilter.Informational = btnAlert_Information.Checked;
+            FilterAlerts();
+        }
+
+        private void btnAlert_Error_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AlertFilter.Error = btnAlert_Error.Checked;
+            FilterAlerts();
+        }
+
+        private void btnAlert_Warning_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AlertFilter.Warning = btnAlert_Warning.Checked;
+            FilterAlerts();
+        }
+
+        private void btnAlert_Severe_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AlertFilter.Severe = btnAlert_Severe.Checked;
+            FilterAlerts();
+        }
+
+        private void btnAlert_Critical_CheckedChanged(object sender, EventArgs e)
+        {
+            Utility.AlertFilter.Critical = btnAlert_Critical.Checked;
+            FilterAlerts();
+        }
+
+        private void btnAlert_Information_Click(object sender, EventArgs e)
+        {
+            btnAlert_Information.Checked = !btnAlert_Information.Checked;
+        }
+
+        private void btnAlert_Error_Click(object sender, EventArgs e)
+        {
+            btnAlert_Error.Checked = !btnAlert_Error.Checked;
+        }
+
+        private void btnAlert_Warning_Click(object sender, EventArgs e)
+        {
+            btnAlert_Warning.Checked = !btnAlert_Warning.Checked;
+        }
+
+        private void btnAlert_Severe_Click(object sender, EventArgs e)
+        {
+            btnAlert_Severe.Checked = !btnAlert_Severe.Checked;
+        }
+
+        private void btnAlert_Critical_Click(object sender, EventArgs e)
+        {
+            btnAlert_Critical.Checked = !btnAlert_Critical.Checked;
+        }
+
         private void btnLibraryRefresh_Click(object sender, EventArgs e)
         {
             GetCommand();
@@ -2041,8 +2154,26 @@ namespace poshsecframework
             if (MessageBox.Show(StringValue.ClearAlerts, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
                 lvwAlerts.Items.Clear();
+                alerts.Clear();
                 lvwAlerts_Update();
             }
+        }
+
+        private void btnAlert_MarkResolved_Click(object sender, EventArgs e)
+        {
+            if (lvwAlerts.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show(StringValue.ClearAlert, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    foreach (ListViewItem lvw in lvwAlerts.SelectedItems)
+                    {
+                        lvwAlerts.Items.Remove(lvw);
+                        alerts.Remove(lvw);
+                    }
+                    lvwAlerts_Update();
+                }
+            }
+            
         }
 
         private void btnScan_Click(object sender, EventArgs e)
@@ -2242,5 +2373,6 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
+
     }
 }

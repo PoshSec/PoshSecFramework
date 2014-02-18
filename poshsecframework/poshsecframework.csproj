@@ -140,6 +140,7 @@
     <Compile Include="PShell\psfilenameeditor.cs" />
     <Compile Include="PShell\pshosteditor.cs" />
     <Compile Include="Strings\StringValue.cs" />
+    <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />
     <Compile Include="Events\ScheduleEventArgs.cs" />

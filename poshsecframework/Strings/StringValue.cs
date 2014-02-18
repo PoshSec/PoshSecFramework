@@ -20,6 +20,7 @@ namespace poshsecframework.Strings
         public const string CreatePath = " Would you like to create the directory?";
         public const string ImportError = "There was an error when importing the PoshSec Framework file.";
         public const string ClearAlerts = "Are you sure you want to clear all of the alerts?";
+        public const string ClearAlert = "Are you sure you want to clear the selected alerts?";
         public const string UnhandledException = "Unhandled exception in script function.";
         public const string ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
         public const string ConfirmNetworkDelete = "Are you sure you want to delete the selected network?";
