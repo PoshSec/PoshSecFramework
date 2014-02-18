@@ -30,9 +30,9 @@ namespace poshsecframework
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Local Network");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Local Network");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Networks", new System.Windows.Forms.TreeNode[] {
+            treeNode3});
             this.mnuMain = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuScan = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,11 +101,7 @@ namespace poshsecframework
             this.chAlerts = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chLastScan = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tsSystems = new System.Windows.Forms.ToolStrip();
-            this.btnAddSystem = new System.Windows.Forms.ToolStripButton();
-            this.btnRemoveSystem = new System.Windows.Forms.ToolStripButton();
-            this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.btnExportSystems = new System.Windows.Forms.ToolStripButton();
-            this.btnImportSystems = new System.Windows.Forms.ToolStripButton();
             this.tslSystemCount = new System.Windows.Forms.ToolStripLabel();
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
             this.cmnuPSFConsole = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -155,6 +151,9 @@ namespace poshsecframework
             this.windowsUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waucheckps1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
+            this.tsSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.btnRemoveSystem = new System.Windows.Forms.ToolStripButton();
+            this.btnAddSystem = new System.Windows.Forms.ToolStripButton();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -670,15 +669,15 @@ namespace poshsecframework
             this.tvwNetworks.ImageList = this.imgList16;
             this.tvwNetworks.Location = new System.Drawing.Point(0, 25);
             this.tvwNetworks.Name = "tvwNetworks";
-            treeNode1.ImageKey = "Diagram.png";
-            treeNode1.Name = "ndNone";
-            treeNode1.SelectedImageKey = "Diagram.png";
-            treeNode1.Tag = "1";
-            treeNode1.Text = "Local Network";
-            treeNode2.Name = "ndNetwork";
-            treeNode2.Text = "Networks";
+            treeNode3.ImageKey = "Diagram.png";
+            treeNode3.Name = "ndNone";
+            treeNode3.SelectedImageKey = "Diagram.png";
+            treeNode3.Tag = "1";
+            treeNode3.Text = "Local Network";
+            treeNode4.Name = "ndNetwork";
+            treeNode4.Text = "Networks";
             this.tvwNetworks.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
+            treeNode4});
             this.tvwNetworks.SelectedImageIndex = 1;
             this.tvwNetworks.ShowPlusMinus = false;
             this.tvwNetworks.ShowRootLines = false;
@@ -870,36 +869,12 @@ namespace poshsecframework
             this.btnRemoveSystem,
             this.tsSeparator,
             this.btnExportSystems,
-            this.btnImportSystems,
             this.tslSystemCount});
             this.tsSystems.Location = new System.Drawing.Point(3, 3);
             this.tsSystems.Name = "tsSystems";
             this.tsSystems.Size = new System.Drawing.Size(942, 25);
             this.tsSystems.TabIndex = 2;
             this.tsSystems.Text = "toolStrip6";
-            // 
-            // btnAddSystem
-            // 
-            this.btnAddSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddSystem.Image = global::poshsecframework.Properties.Resources.computeradd;
-            this.btnAddSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnAddSystem.Name = "btnAddSystem";
-            this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
-            this.btnAddSystem.Text = "Add System";
-            // 
-            // btnRemoveSystem
-            // 
-            this.btnRemoveSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRemoveSystem.Image = global::poshsecframework.Properties.Resources.computerdelete;
-            this.btnRemoveSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRemoveSystem.Name = "btnRemoveSystem";
-            this.btnRemoveSystem.Size = new System.Drawing.Size(23, 22);
-            this.btnRemoveSystem.Text = "Remove System";
-            // 
-            // tsSeparator
-            // 
-            this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(6, 25);
             // 
             // btnExportSystems
             // 
@@ -910,15 +885,6 @@ namespace poshsecframework
             this.btnExportSystems.Size = new System.Drawing.Size(23, 22);
             this.btnExportSystems.Text = "Export Systems";
             this.btnExportSystems.Click += new System.EventHandler(this.btnExportSystems_Click);
-            // 
-            // btnImportSystems
-            // 
-            this.btnImportSystems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnImportSystems.Image = global::poshsecframework.Properties.Resources.documentimport;
-            this.btnImportSystems.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnImportSystems.Name = "btnImportSystems";
-            this.btnImportSystems.Size = new System.Drawing.Size(23, 22);
-            this.btnImportSystems.Text = "Import Systems";
             // 
             // tslSystemCount
             // 
@@ -1372,6 +1338,29 @@ namespace poshsecframework
             this.txtPShellOutput.Text = "psf > ";
             this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
+            // tsSeparator
+            // 
+            this.tsSeparator.Name = "tsSeparator";
+            this.tsSeparator.Size = new System.Drawing.Size(6, 25);
+            // 
+            // btnRemoveSystem
+            // 
+            this.btnRemoveSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRemoveSystem.Image = global::poshsecframework.Properties.Resources.computerdelete;
+            this.btnRemoveSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRemoveSystem.Name = "btnRemoveSystem";
+            this.btnRemoveSystem.Size = new System.Drawing.Size(23, 22);
+            this.btnRemoveSystem.Text = "Remove System";
+            // 
+            // btnAddSystem
+            // 
+            this.btnAddSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddSystem.Image = global::poshsecframework.Properties.Resources.computeradd;
+            this.btnAddSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddSystem.Name = "btnAddSystem";
+            this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
+            this.btnAddSystem.Text = "Add System";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1548,11 +1537,7 @@ namespace poshsecframework
         private System.Windows.Forms.ColumnHeader chDescription;
         private System.Windows.Forms.ToolStrip tsSystems;
         private System.Windows.Forms.ToolStripButton btnAddNetwork;
-        private System.Windows.Forms.ToolStripButton btnAddSystem;
         private System.Windows.Forms.ToolStripButton btnExportSystems;
-        private System.Windows.Forms.ToolStripButton btnImportSystems;
-        private System.Windows.Forms.ToolStripButton btnRemoveSystem;
-        private System.Windows.Forms.ToolStripSeparator tsSeparator;
         private System.Windows.Forms.ToolStripButton btnOptions;
         private System.Windows.Forms.ToolStripButton btnLaunchCmd;
         private System.Windows.Forms.ToolStripButton btnLaunchPShellCmd;
@@ -1565,6 +1550,9 @@ namespace poshsecframework
         private System.Windows.Forms.ToolStripMenuItem cmbtnCopyAlert;
         private System.Windows.Forms.ColumnHeader chActScrProgress;
         private System.Windows.Forms.ToolStripButton btnRemoveNetwork;
+        private System.Windows.Forms.ToolStripButton btnAddSystem;
+        private System.Windows.Forms.ToolStripButton btnRemoveSystem;
+        private System.Windows.Forms.ToolStripSeparator tsSeparator;
     }
 }
 
