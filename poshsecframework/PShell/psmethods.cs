@@ -63,6 +63,27 @@ namespace poshsecframework.PShell
                 }                
             }
 
+            public void Add(String message, int alerttype)
+            {
+                if (alerttype >= (int)AlertType.Information && alerttype <= (int)AlertType.Critical)
+                {
+                    Add(message, (AlertType)alerttype);
+                }
+                else
+                {
+                    if (frm != null)
+                    {
+                        String msg = Strings.StringValue.InvalidAlertType;
+                        for (int idx = 0; idx <= (int)AlertType.Critical; idx++)
+                        {
+                            msg += "[" + idx.ToString() + "] " + ((AlertType)idx).ToString() + ", ";
+                        }
+                        msg = msg.Substring(0, msg.Length - 2);
+                        frm.DisplayOutput(msg);
+                    }
+                }
+            }
+
             public String ScriptName
             {
                 get { return scriptname; }

@@ -1070,6 +1070,27 @@ namespace poshsecframework
             }
         }
 
+        public void DisplayOutput(String output)
+        {
+            if (this.InvokeRequired)
+            {
+                MethodInvoker del = delegate
+                {
+                    DisplayOutput(output);
+                };
+                this.Invoke(del);
+            }
+            else
+            {
+                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + StringValue.psf).Length) > txtPShellOutput.MaxLength)
+                {
+                    txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
+                }
+                txtPShellOutput.AppendText(output);
+                LogOutput(output);
+            }
+        }
+
         public void DisplayOutput(String output, ListViewItem lvw, bool clicked, bool cancelled = false, bool scroll = false, bool showtab = false)
         {
             if (this.InvokeRequired)
