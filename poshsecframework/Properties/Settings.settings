@@ -41,5 +41,17 @@
     <Setting Name="LastModuleCheck" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="LogOutput" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="OutputLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Logs\psfoutput.log</Value>
+    </Setting>
+    <Setting Name="LogAlerts" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AlertLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Logs\psfalerts.log</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

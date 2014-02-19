@@ -69,6 +69,17 @@
             this.btnBrowseScript = new System.Windows.Forms.Button();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
+            this.tbpLogging = new System.Windows.Forms.TabPage();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.txtAlertLog = new System.Windows.Forms.TextBox();
+            this.btnBrowseAlertLog = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.ckAlertLog = new System.Windows.Forms.CheckBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.txtOutputLog = new System.Windows.Forms.TextBox();
+            this.btnBrowseOutputLog = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ckOutputLog = new System.Windows.Forms.CheckBox();
             this.tbpModules = new System.Windows.Forms.TabPage();
             this.lvwModules = new System.Windows.Forms.ListView();
             this.chModName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -98,6 +109,9 @@
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
+            this.tbpLogging.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
             this.SuspendLayout();
@@ -180,9 +194,11 @@
             this.ckSaveSystems.Checked = true;
             this.ckSaveSystems.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckSaveSystems.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckSaveSystems.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckSaveSystems.Location = new System.Drawing.Point(3, 40);
             this.ckSaveSystems.Name = "ckSaveSystems";
-            this.ckSaveSystems.Size = new System.Drawing.Size(99, 21);
+            this.ckSaveSystems.Size = new System.Drawing.Size(99, 24);
             this.ckSaveSystems.TabIndex = 1;
             this.ckSaveSystems.Text = "Yes";
             this.ckSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -219,9 +235,11 @@
             this.ckNameCheck.Checked = true;
             this.ckNameCheck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckNameCheck.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckNameCheck.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckNameCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckNameCheck.Location = new System.Drawing.Point(3, 40);
             this.ckNameCheck.Name = "ckNameCheck";
-            this.ckNameCheck.Size = new System.Drawing.Size(83, 21);
+            this.ckNameCheck.Size = new System.Drawing.Size(83, 24);
             this.ckNameCheck.TabIndex = 1;
             this.ckNameCheck.Text = "On";
             this.ckNameCheck.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -521,6 +539,7 @@
             // tcSettings
             // 
             this.tcSettings.Controls.Add(this.tbpGeneral);
+            this.tcSettings.Controls.Add(this.tbpLogging);
             this.tcSettings.Controls.Add(this.tbpModules);
             this.tcSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
@@ -529,6 +548,134 @@
             this.tcSettings.SelectedIndex = 0;
             this.tcSettings.Size = new System.Drawing.Size(531, 249);
             this.tcSettings.TabIndex = 1;
+            // 
+            // tbpLogging
+            // 
+            this.tbpLogging.Controls.Add(this.panel9);
+            this.tbpLogging.Controls.Add(this.panel3);
+            this.tbpLogging.Location = new System.Drawing.Point(4, 22);
+            this.tbpLogging.Name = "tbpLogging";
+            this.tbpLogging.Padding = new System.Windows.Forms.Padding(3);
+            this.tbpLogging.Size = new System.Drawing.Size(523, 223);
+            this.tbpLogging.TabIndex = 2;
+            this.tbpLogging.Text = "Logging";
+            this.tbpLogging.UseVisualStyleBackColor = true;
+            // 
+            // panel9
+            // 
+            this.panel9.Controls.Add(this.txtAlertLog);
+            this.panel9.Controls.Add(this.btnBrowseAlertLog);
+            this.panel9.Controls.Add(this.label2);
+            this.panel9.Controls.Add(this.ckAlertLog);
+            this.panel9.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel9.Location = new System.Drawing.Point(3, 29);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(517, 26);
+            this.panel9.TabIndex = 2;
+            // 
+            // txtAlertLog
+            // 
+            this.txtAlertLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtAlertLog.Location = new System.Drawing.Point(111, 0);
+            this.txtAlertLog.Name = "txtAlertLog";
+            this.txtAlertLog.Size = new System.Drawing.Size(333, 21);
+            this.txtAlertLog.TabIndex = 5;
+            // 
+            // btnBrowseAlertLog
+            // 
+            this.btnBrowseAlertLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseAlertLog.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseAlertLog.Location = new System.Drawing.Point(444, 0);
+            this.btnBrowseAlertLog.Name = "btnBrowseAlertLog";
+            this.btnBrowseAlertLog.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseAlertLog.TabIndex = 4;
+            this.btnBrowseAlertLog.UseVisualStyleBackColor = true;
+            this.btnBrowseAlertLog.Click += new System.EventHandler(this.btnBrowseAlertLog_Click);
+            // 
+            // label2
+            // 
+            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label2.Location = new System.Drawing.Point(0, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(111, 26);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Alert Log:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckAlertLog
+            // 
+            this.ckAlertLog.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckAlertLog.Checked = true;
+            this.ckAlertLog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckAlertLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ckAlertLog.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckAlertLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ckAlertLog.Location = new System.Drawing.Point(470, 0);
+            this.ckAlertLog.Name = "ckAlertLog";
+            this.ckAlertLog.Size = new System.Drawing.Size(47, 26);
+            this.ckAlertLog.TabIndex = 0;
+            this.ckAlertLog.Text = "On";
+            this.ckAlertLog.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ckAlertLog.UseVisualStyleBackColor = true;
+            this.ckAlertLog.CheckedChanged += new System.EventHandler(this.ckAlertLog_CheckedChanged);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.txtOutputLog);
+            this.panel3.Controls.Add(this.btnBrowseOutputLog);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.ckOutputLog);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(517, 26);
+            this.panel3.TabIndex = 1;
+            // 
+            // txtOutputLog
+            // 
+            this.txtOutputLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtOutputLog.Location = new System.Drawing.Point(111, 0);
+            this.txtOutputLog.Name = "txtOutputLog";
+            this.txtOutputLog.Size = new System.Drawing.Size(333, 21);
+            this.txtOutputLog.TabIndex = 5;
+            // 
+            // btnBrowseOutputLog
+            // 
+            this.btnBrowseOutputLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnBrowseOutputLog.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseOutputLog.Location = new System.Drawing.Point(444, 0);
+            this.btnBrowseOutputLog.Name = "btnBrowseOutputLog";
+            this.btnBrowseOutputLog.Size = new System.Drawing.Size(26, 26);
+            this.btnBrowseOutputLog.TabIndex = 4;
+            this.btnBrowseOutputLog.UseVisualStyleBackColor = true;
+            this.btnBrowseOutputLog.Click += new System.EventHandler(this.btnBrowseOutputLog_Click);
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(111, 26);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Output Log:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckOutputLog
+            // 
+            this.ckOutputLog.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckOutputLog.Checked = true;
+            this.ckOutputLog.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckOutputLog.Dock = System.Windows.Forms.DockStyle.Right;
+            this.ckOutputLog.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckOutputLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ckOutputLog.Location = new System.Drawing.Point(470, 0);
+            this.ckOutputLog.Name = "ckOutputLog";
+            this.ckOutputLog.Size = new System.Drawing.Size(47, 26);
+            this.ckOutputLog.TabIndex = 0;
+            this.ckOutputLog.Text = "On";
+            this.ckOutputLog.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ckOutputLog.UseVisualStyleBackColor = true;
+            this.ckOutputLog.CheckedChanged += new System.EventHandler(this.ckOutputLog_CheckedChanged);
             // 
             // tbpModules
             // 
@@ -704,6 +851,11 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tcSettings.ResumeLayout(false);
+            this.tbpLogging.ResumeLayout(false);
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.tbpModules.ResumeLayout(false);
             this.tbpModules.PerformLayout();
             this.tbModules.ResumeLayout(false);
@@ -769,5 +921,16 @@
         private System.Windows.Forms.GroupBox gbSaveSystems;
         private System.Windows.Forms.CheckBox ckSaveSystems;
         private System.Windows.Forms.Label lblSaveSystems;
+        private System.Windows.Forms.TabPage tbpLogging;
+        private System.Windows.Forms.Panel panel9;
+        private System.Windows.Forms.TextBox txtAlertLog;
+        private System.Windows.Forms.Button btnBrowseAlertLog;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TextBox txtOutputLog;
+        private System.Windows.Forms.Button btnBrowseOutputLog;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox ckOutputLog;
+        private System.Windows.Forms.CheckBox ckAlertLog;
     }
 }

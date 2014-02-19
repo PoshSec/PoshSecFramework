@@ -180,6 +180,64 @@ namespace poshsecframework
             LoadSchedule();  
         }
 
+        private void LogOutput(String text)
+        {
+            if (Properties.Settings.Default.LogOutput)
+            {
+                StreamWriter wtr = null;
+                try
+                {
+                    if (!File.Exists(Properties.Settings.Default.OutputLogFile))
+                    {
+                        DirectoryInfo dirinfo = new DirectoryInfo(Properties.Settings.Default.OutputLogFile);
+                        if (!Directory.Exists(dirinfo.Parent.FullName))
+                        {
+                            Directory.CreateDirectory(dirinfo.Parent.FullName);
+                        }
+                        wtr = File.CreateText(Properties.Settings.Default.OutputLogFile);
+                        wtr.Write(StringValue.psf);
+                    }
+                    else
+                    {
+                        wtr = File.AppendText(Properties.Settings.Default.OutputLogFile);
+                    }
+                    wtr.Write(text);
+                    wtr.Flush();
+                    wtr.Close();
+                }
+                catch (Exception e)
+                {
+                    AddAlert("Unable to log output to file: " + e.Message, PShell.psmethods.PSAlert.AlertType.Error, "Logging");
+                }
+            }
+        }
+
+        private void LogAlert(String text)
+        {
+            if (Properties.Settings.Default.LogAlerts)
+            {
+                if (!File.Exists(Properties.Settings.Default.AlertLogFile))
+                {
+                    DirectoryInfo dirinfo = new DirectoryInfo(Properties.Settings.Default.AlertLogFile);
+                    if (!Directory.Exists(dirinfo.Parent.FullName))
+                    {
+                        Directory.CreateDirectory(dirinfo.Parent.FullName);
+                    }
+                }
+                try
+                {
+                    StreamWriter wtr = File.AppendText(Properties.Settings.Default.AlertLogFile);
+                    wtr.Write(text);
+                    wtr.Flush();
+                    wtr.Close();
+                }
+                catch (Exception e)
+                {
+                    AddAlert("Unable to log alerts to file: " + e.Message, PShell.psmethods.PSAlert.AlertType.Error, "Logging");
+                }
+            }
+        }
+
         private void FirstTimeSetup()
         {
             Interface.frmFirstTime frm = new Interface.frmFirstTime(this);
@@ -955,7 +1013,8 @@ namespace poshsecframework
                 {
                     tcMain.SelectedTab = tbpPowerShell;
                 }
-                RemoveActiveScript(lvw);                
+                RemoveActiveScript(lvw);
+                LogOutput(output + Environment.NewLine + StringValue.psf);
             }            
         }
 
@@ -1010,6 +1069,9 @@ namespace poshsecframework
                     alerts.Add(lvwitm);
                     lvwAlerts_Update();
                     lvwitm.EnsureVisible();
+                    string alert = String.Format(StringValue.AlertFormat, lvwitm.SubItems[0].Text, lvwitm.SubItems[1].Text, lvwitm.SubItems[2].Text, lvwitm.SubItems[3].Text).Replace("\\r\\n", Environment.NewLine);
+                    alert += Environment.NewLine;
+                    LogAlert(alert);
                 }
                 catch (Exception e)
                 {
@@ -1373,6 +1435,8 @@ namespace poshsecframework
             String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
             String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
             String ghapikey = poshsecframework.Properties.Settings.Default.GithubAPIKey;
+            String outputlog = poshsecframework.Properties.Settings.Default.OutputLogFile;
+            String alertlog = poshsecframework.Properties.Settings.Default.AlertLogFile;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
@@ -1384,6 +1448,14 @@ namespace poshsecframework
             if (schpath.StartsWith(".") || modpath.Trim() == "")
             {
                 poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
+            }
+            if (outputlog.StartsWith("."))
+            {
+                poshsecframework.Properties.Settings.Default["OutputLogFile"] = Path.Combine(Application.StartupPath, outputlog).Replace("\\.\\", "\\");
+            }
+            if (alertlog.StartsWith("."))
+            {
+                poshsecframework.Properties.Settings.Default["AlertLogFile"] = Path.Combine(Application.StartupPath, alertlog).Replace("\\.\\", "\\");
             }
             if(ghapikey.Contains("\\"))
             {
@@ -1885,6 +1957,7 @@ namespace poshsecframework
                     if (!txtPShellOutput.ReadOnly)
                     {
                         String cmd = txtPShellOutput.Text.Substring(mincurpos, txtPShellOutput.Text.Length - mincurpos);
+                        LogOutput(cmd);
                         ProcessCommand(cmd);
                     }
                     break;
@@ -2373,6 +2446,5 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
-
     }
 }

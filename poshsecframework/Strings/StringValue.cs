@@ -69,6 +69,8 @@ namespace poshsecframework.Strings
         public const string Down = "Down";
         public const string NotInstalled = "Not Installed";
         public const string TimeFormat = "MM/dd/yyyy hh:mm tt";
+        public const string LogDateFormat = "MM/dd/yyyy";
+        public const string LogTimeFormat = "hh:mm:ss tt";
         public const string WaitingForHostResp = "Waiting for hostname responses, please wait...";
         public const string BlankMAC = "00-00-00-00-00-00";
         public const string NAHost = "N/A";
@@ -108,5 +110,6 @@ namespace poshsecframework.Strings
         public const string InvalidRepositoryURL = "The URL specified is not a valid Github repository URL. Please enter the URL again.";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
+        public const string OutputLogFormat = "[{0}:{1}] - {2}";
     }
 }

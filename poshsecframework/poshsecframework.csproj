@@ -226,6 +226,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Images\psficon.ico" />
+    <None Include="Resources\dialog-yes.png" />
+    <None Include="Resources\dialog-no-2.png" />
     <None Include="Resources\application-x-shellscript1.png" />
     <None Include="Resources\edit-delete-6.png" />
     <None Include="Resources\page-white_get.png" />

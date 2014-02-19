@@ -51,6 +51,10 @@ namespace poshsecframework.Interface
             }
             ckNameCheck.Checked = Properties.Settings.Default.NameChecking;
             ckSaveSystems.Checked = Properties.Settings.Default.SaveSystems;
+            ckOutputLog.Checked = Properties.Settings.Default.LogOutput;
+            ckAlertLog.Checked = Properties.Settings.Default.LogAlerts;
+            txtOutputLog.Text = Properties.Settings.Default.OutputLogFile;
+            txtAlertLog.Text = Properties.Settings.Default.AlertLogFile;
             LoadModules();
         }
 
@@ -233,6 +237,10 @@ namespace poshsecframework.Interface
                     }
                     ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
                 }
+                Properties.Settings.Default["LogOutput"] = ckOutputLog.Checked;
+                Properties.Settings.Default["OutputLogFile"] = txtOutputLog.Text;
+                Properties.Settings.Default["LogAlerts"] = ckOutputLog.Checked;
+                Properties.Settings.Default["AlertLogFile"] = txtAlertLog.Text;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
@@ -344,10 +352,12 @@ namespace poshsecframework.Interface
             if (ckNameCheck.Checked)
             {
                 ckNameCheck.Text = "On";
+                ckNameCheck.Image = Properties.Resources.dialogyes;
             }
             else
             {
                 ckNameCheck.Text = "Off";
+                ckNameCheck.Image = Properties.Resources.dialogno2;
             }
         }
 
@@ -356,10 +366,72 @@ namespace poshsecframework.Interface
             if (ckSaveSystems.Checked)
             {
                 ckSaveSystems.Text = "Yes";
+                ckSaveSystems.Image = Properties.Resources.dialogyes;
             }
             else
             {
                 ckSaveSystems.Text = "No";
+                ckSaveSystems.Image = Properties.Resources.dialogno2;
+            }
+        }
+
+        private void ckOutputLog_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckOutputLog.Checked)
+            {
+                ckOutputLog.Text = "On";
+                ckOutputLog.Image = Properties.Resources.dialogyes;
+            }
+            else
+            {
+                ckOutputLog.Text = "Off";
+                ckOutputLog.Image = Properties.Resources.dialogno2;
+            }
+        }
+
+        private void ckAlertLog_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckAlertLog.Checked)
+            {
+                ckAlertLog.Text = "On";
+                ckAlertLog.Image = Properties.Resources.dialogyes;
+            }
+            else
+            {
+                ckAlertLog.Text = "Off";
+                ckAlertLog.Image = Properties.Resources.dialogno2;
+            }
+        }
+
+        private void btnBrowseOutputLog_Click(object sender, EventArgs e)
+        {
+            dlgFile.Title = "Output Log File";
+            dlgFile.FileName = "psfoutput.log";
+            dlgFile.CheckFileExists = false;
+            dlgFile.CheckPathExists = true;
+            if (File.Exists(txtOutputLog.Text))
+            {
+                dlgFile.InitialDirectory = new FileInfo(txtOutputLog.Text).Directory.ToString();
+            }
+            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtOutputLog.Text = dlgFile.FileName;
+            }
+        }
+
+        private void btnBrowseAlertLog_Click(object sender, EventArgs e)
+        {
+            dlgFile.Title = "Alert Log File";
+            dlgFile.FileName = "psfalerts.log";
+            dlgFile.CheckFileExists = false;
+            dlgFile.CheckPathExists = true;
+            if (File.Exists(txtAlertLog.Text))
+            {
+                dlgFile.InitialDirectory = new FileInfo(txtAlertLog.Text).Directory.ToString();
+            }
+            if (dlgFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                txtAlertLog.Text = dlgFile.FileName;
             }
         }
     }
