@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
@@ -35,6 +36,23 @@ namespace poshsecframework.PShell
             public PSAlert(frmMain ParentForm)
             {
                 frm = ParentForm;
+            }
+
+            public AlertType GetAlertTypeFromString(String alerttype)
+            {
+                AlertType rtn = AlertType.Information;
+                bool found = false;
+                int idx = 0;
+                do
+                {
+                    if (((AlertType)idx).ToString() == alerttype)
+                    {
+                        found = true;
+                        rtn = (AlertType)idx;
+                    }
+                    idx++;
+                } while (!found && idx <= (int)AlertType.Critical);
+                return rtn;
             }
 
             public void Add(String message, AlertType alerttype)

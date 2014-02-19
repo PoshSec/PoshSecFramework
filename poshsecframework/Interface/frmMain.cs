@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Management.Automation;
 using System.Net;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -102,6 +103,7 @@ namespace poshsecframework
                 stat.Show();
                 stat.SetStatus("Loading Networks, please wait...");
                 GetNetworks();
+                GetAlerts();
             }
             if (loaderrors != "")
             {
@@ -141,6 +143,8 @@ namespace poshsecframework
                     }
                 }
                 SaveSystems();
+                SaveAlerts();
+                Properties.Settings.Default.Save();
             }
             catch (Exception)
             { 
@@ -216,16 +220,16 @@ namespace poshsecframework
         {
             if (Properties.Settings.Default.LogAlerts)
             {
-                if (!File.Exists(Properties.Settings.Default.AlertLogFile))
-                {
-                    DirectoryInfo dirinfo = new DirectoryInfo(Properties.Settings.Default.AlertLogFile);
-                    if (!Directory.Exists(dirinfo.Parent.FullName))
-                    {
-                        Directory.CreateDirectory(dirinfo.Parent.FullName);
-                    }
-                }
                 try
                 {
+                    if (!File.Exists(Properties.Settings.Default.AlertLogFile))
+                    {
+                        DirectoryInfo dirinfo = new DirectoryInfo(Properties.Settings.Default.AlertLogFile);
+                        if (!Directory.Exists(dirinfo.Parent.FullName))
+                        {
+                            Directory.CreateDirectory(dirinfo.Parent.FullName);
+                        }
+                    }
                     StreamWriter wtr = File.AppendText(Properties.Settings.Default.AlertLogFile);
                     wtr.Write(text);
                     wtr.Flush();
@@ -247,6 +251,36 @@ namespace poshsecframework
             }
             frm.Dispose();
             frm = null;
+        }
+
+        private void GetAlerts()
+        {
+            if (Properties.Settings.Default.Alerts != null && Properties.Settings.Default.Alerts.Count > 0)
+            {
+                foreach (String system in Properties.Settings.Default.Alerts)
+                {
+                    String[] alertparts = system.Split('|');
+                    if (alertparts.Length == lvwAlerts.Columns.Count)
+                    {
+                        ListViewItem lvwItm = new ListViewItem();
+                        lvwItm.Text = alertparts[0];
+                        for (int idx = 1; idx < alertparts.Length; idx++)
+                        {
+                            lvwItm.SubItems.Add(alertparts[idx]);
+                        }
+                        PShell.psmethods.PSAlert alert = new PShell.psmethods.PSAlert(this);
+                        lvwItm.ImageIndex = (int)alert.GetAlertTypeFromString(alertparts[0]);
+                        alert = null;
+                        lvwAlerts.Items.Add(lvwItm);
+                        alerts.Add(lvwItm);
+                    }
+                }
+                lvwAlerts_Update();
+                Properties.Settings.Default["Alerts"] = new System.Collections.Specialized.StringCollection();
+                ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Alerts"]).Clear();
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+            }
         }
 
         #region Network
@@ -515,6 +549,33 @@ namespace poshsecframework
                     {
                         system = system.Substring(0, system.Length - 1);
                         ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Add(system);
+                    }
+                }
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+            }
+        }
+
+        private void SaveAlerts()
+        {
+            if (lvwAlerts.Items.Count > 0)
+            {
+                if (Properties.Settings.Default.Alerts == null)
+                {
+                    Properties.Settings.Default["Alerts"] = new System.Collections.Specialized.StringCollection();
+                }
+                ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Alerts"]).Clear();
+                foreach (ListViewItem lvw in lvwAlerts.Items)
+                {
+                    String system = "";
+                    foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
+                    {
+                        system += lvwsub.Text + "|";
+                    }
+                    if (system != "")
+                    {
+                        system = system.Substring(0, system.Length - 1);
+                        ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Alerts"]).Add(system);
                     }
                 }
                 Properties.Settings.Default.Save();
