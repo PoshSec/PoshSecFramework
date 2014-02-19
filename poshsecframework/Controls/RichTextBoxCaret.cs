@@ -131,5 +131,15 @@ namespace poshsecframework.Controls
         {
             set { cmds = value; }
         }
+
+        public int CurrentColumn
+        {
+            get { return this.SelectionStart - this.GetFirstCharIndexOfCurrentLine() + 1; }
+        }
+
+        public int CurrentLine
+        {
+            get { return this.GetLineFromCharIndex(this.SelectionStart) + 1; }
+        }
     }
 }
