@@ -55,6 +55,9 @@ namespace poshsecframework.Interface
             ckAlertLog.Checked = Properties.Settings.Default.LogAlerts;
             txtOutputLog.Text = Properties.Settings.Default.OutputLogFile;
             txtAlertLog.Text = Properties.Settings.Default.AlertLogFile;
+            ckUseSyslog.Checked = Properties.Settings.Default.UseSyslog;
+            txtSyslogServer.Text = Properties.Settings.Default.SyslogServer;
+            txtSyslogPort.Value = Properties.Settings.Default.SyslogPort;
             LoadModules();
         }
 
@@ -213,6 +216,11 @@ namespace poshsecframework.Interface
                     rtn = false;
                 }
             }
+            if (ckUseSyslog.Checked && txtSyslogServer.Text.Trim() == "")
+            {
+                MessageBox.Show(StringValue.InvalidSyslog);
+                rtn = false;
+            }
             if (Directory.Exists(txtScriptDirectory.Text) && Directory.Exists(txtModuleDirectory.Text))
             {
                 Properties.Settings.Default["ScriptPath"] = txtScriptDirectory.Text;
@@ -241,6 +249,9 @@ namespace poshsecframework.Interface
                 Properties.Settings.Default["OutputLogFile"] = txtOutputLog.Text;
                 Properties.Settings.Default["LogAlerts"] = ckOutputLog.Checked;
                 Properties.Settings.Default["AlertLogFile"] = txtAlertLog.Text;
+                Properties.Settings.Default["UseSyslog"] = ckUseSyslog.Checked;
+                Properties.Settings.Default["SyslogServer"] = txtSyslogServer.Text;
+                Properties.Settings.Default["SyslogPort"] = (int)txtSyslogPort.Value;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
@@ -433,6 +444,11 @@ namespace poshsecframework.Interface
             {
                 txtAlertLog.Text = dlgFile.FileName;
             }
+        }
+
+        private void ckUseSyslog_CheckedChanged(object sender, EventArgs e)
+        {
+            gbSyslogInfo.Enabled = ckUseSyslog.Checked;
         }
     }
 }

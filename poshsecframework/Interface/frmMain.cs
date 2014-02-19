@@ -38,6 +38,7 @@ namespace poshsecframework
         private Collection<String> enabledmods = new Collection<string>();
         private int updatefrequency = 12; // in hours
         private Collection<ListViewItem> alerts = new Collection<ListViewItem>();
+        Network.Syslog slog = null;
 
         enum SystemType
         { 
@@ -181,7 +182,34 @@ namespace poshsecframework
             if (stat != null) { stat.SetStatus("Getting commands, please wait..."); }
             GetCommand();
             if (stat != null) { stat.SetStatus("Loading schedule library, please wait..."); }
-            LoadSchedule();  
+            LoadSchedule();
+            InitSyslog();
+        }
+
+        private void InitSyslog()
+        {
+            try
+            {
+                if (Properties.Settings.Default.UseSyslog && Properties.Settings.Default.SyslogServer != "")
+                {
+                    if(slog == null)
+                    {
+                        slog = new Network.Syslog(new IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
+                    }                
+                }
+                else
+                {
+                    if(slog != null)
+                    {
+                        slog.Close();
+                        slog = null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                DisplayError(e);
+            }
         }
 
         private void LogOutput(String text)
@@ -1133,6 +1161,13 @@ namespace poshsecframework
                     string alert = String.Format(StringValue.AlertFormat, lvwitm.SubItems[0].Text, lvwitm.SubItems[1].Text, lvwitm.SubItems[2].Text, lvwitm.SubItems[3].Text).Replace("\\r\\n", Environment.NewLine);
                     alert += Environment.NewLine;
                     LogAlert(alert);
+                    if (Properties.Settings.Default.UseSyslog)
+                    {
+                        if (slog != null)
+                        {
+                            slog.SendMessage(alerttype, scriptname, message);    
+                        }
+                    }                    
                 }
                 catch (Exception e)
                 {

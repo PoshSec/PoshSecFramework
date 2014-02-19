@@ -28,6 +28,7 @@ namespace poshsecframework.Strings
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
         public const string InvalidNetworkName = "Please enter a unique and valid network name. (i.e. system.local)";
+        public const string InvalidSyslog = "Please enter a valid host name or IP address for the syslog server.";
 
         public const string TNSetExecutionPolicy = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/ee176961.aspx";
         public const string TNUpdateHelp = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/hh849720.aspx";
@@ -71,6 +72,7 @@ namespace poshsecframework.Strings
         public const string TimeFormat = "MM/dd/yyyy hh:mm tt";
         public const string LogDateFormat = "MM/dd/yyyy";
         public const string LogTimeFormat = "hh:mm:ss tt";
+        public const string SyslogTimeFormat = "MMM dd yyyy hh:mm:ss";
         public const string WaitingForHostResp = "Waiting for hostname responses, please wait...";
         public const string BlankMAC = "00-00-00-00-00-00";
         public const string NAHost = "N/A";
@@ -111,5 +113,7 @@ namespace poshsecframework.Strings
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
         public const string OutputLogFormat = "[{0}:{1}] - {2}";
+        public const string SyslogFormat = "{0}{1} {2} : %{3}-{4}: {5}";
+        public const string PriorityFormat = "<{0}>";
     }
 }

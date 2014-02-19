@@ -226,5 +226,41 @@ namespace poshsecframework.Properties {
                 this["Alerts"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseSyslog {
+            get {
+                return ((bool)(this["UseSyslog"]));
+            }
+            set {
+                this["UseSyslog"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SyslogServer {
+            get {
+                return ((string)(this["SyslogServer"]));
+            }
+            set {
+                this["SyslogServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("514")]
+        public int SyslogPort {
+            get {
+                return ((int)(this["SyslogPort"]));
+            }
+            set {
+                this["SyslogPort"] = value;
+            }
+        }
     }
 }
