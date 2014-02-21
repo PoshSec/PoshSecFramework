@@ -21,12 +21,12 @@ namespace poshsecframework.PShell
 
         public override void Write(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
         {
-            throw new NotImplementedException();
+            OnWrite(new Events.WriteEventArgs(value));
         }
 
         public override void WriteDebugLine(string message)
         {
-            throw new NotImplementedException();
+            OnWrite(new Events.WriteEventArgs(message));
         }
 
         public override void WriteLine()
@@ -36,7 +36,7 @@ namespace poshsecframework.PShell
 
         public override void Write(string value)
         {
-            throw new NotImplementedException();
+            OnWrite(new Events.WriteEventArgs(value));
         }
 
         public override void WriteErrorLine(string value)
@@ -51,7 +51,7 @@ namespace poshsecframework.PShell
 
         public override void WriteLine(string value)
         {
-            throw new NotImplementedException();
+            OnWrite(new Events.WriteEventArgs(value));
         }
 
         public override void WriteProgress(long sourceId, System.Management.Automation.ProgressRecord record)
@@ -94,17 +94,17 @@ namespace poshsecframework.PShell
 
         public override int PromptForChoice(string caption, string message, System.Collections.ObjectModel.Collection<ChoiceDescription> choices, int defaultChoice)
         {
-            throw new NotImplementedException();
+            return -1;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName, System.Management.Automation.PSCredentialTypes allowedCredentialTypes, System.Management.Automation.PSCredentialUIOptions options)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override PSHostRawUserInterface RawUI
@@ -114,12 +114,12 @@ namespace poshsecframework.PShell
 
         public override string ReadLine()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override System.Security.SecureString ReadLineAsSecureString()
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override int GetHashCode()
