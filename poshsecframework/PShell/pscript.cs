@@ -327,7 +327,15 @@ namespace poshsecframework.PShell
                         rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));                        
                         pline.Commands.Add(pscmd);
                     }
-                    Collection<PSObject> rslt = pline.Invoke();
+                    Collection<PSObject> rslt = null;
+                    try
+                    {
+                        rslt = pline.Invoke();
+                    }
+                    catch (Exception pex)
+                    {
+                        rslts.AppendLine(psexec.psexceptionhandler(pex, iscommand));
+                    }
                     HandleWarningsErrors(pline.Error);
                     pline.Dispose();
                     pline = null;
