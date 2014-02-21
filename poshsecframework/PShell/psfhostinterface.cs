@@ -89,7 +89,7 @@ namespace poshsecframework.PShell
 
         public override Dictionary<string, System.Management.Automation.PSObject> Prompt(string caption, string message, System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public override int PromptForChoice(string caption, string message, System.Collections.ObjectModel.Collection<ChoiceDescription> choices, int defaultChoice)
