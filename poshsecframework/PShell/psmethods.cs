@@ -147,6 +147,66 @@ namespace poshsecframework.PShell
                 }
             }
 
+            public String GetHostsCsv(bool AllHosts = false)
+            {
+                if (frm != null)
+                {
+                    string rtncsv = "";
+                    Collection<PSObject> hosts = null;
+                    if (AllHosts)
+                    {
+                        hosts = frm.GetHosts();
+                    }
+                    else
+                    {
+                        hosts = frm.GetCheckedHosts();
+                    }
+                    if (hosts != null)
+                    {
+                        List<String> csvhosts = new List<string>();
+                        foreach (PSObject host in hosts)
+                        {
+                            csvhosts.Add(host.Properties["Name"].Value.ToString());
+                        }
+                        rtncsv = string.Join(",", csvhosts.ToArray());
+                    }
+                    return rtncsv;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            public List<String> GetHostsList(bool AllHosts = false)
+            {
+                if (frm != null)
+                {
+                    List<String> rtn = new List<string>();
+                    Collection<PSObject> hosts = null;
+                    if (AllHosts)
+                    {
+                        hosts = frm.GetHosts();
+                    }
+                    else
+                    {
+                        hosts = frm.GetCheckedHosts();
+                    }
+                    if (hosts != null)
+                    {
+                        foreach (PSObject host in hosts)
+                        {
+                            rtn.Add(host.Properties["Name"].Value.ToString());
+                        }
+                    }
+                    return rtn;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
             public PSObject DeserializeHosts(String serializedhosts)
             {
                 PSObject hosts = (PSObject)PSSerializer.Deserialize(serializedhosts);
