@@ -69,6 +69,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Enums\EnumValues.cs" />
+    <Compile Include="Events\WriteEventArgs.cs" />
     <Compile Include="Events\WriteProgressEventArgs.cs" />
     <Compile Include="Interface\frmAddNetwork.cs">
       <SubType>Form</SubType>

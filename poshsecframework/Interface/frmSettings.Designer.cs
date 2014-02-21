@@ -70,6 +70,13 @@
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.tcSettings = new System.Windows.Forms.TabControl();
             this.tbpLogging = new System.Windows.Forms.TabPage();
+            this.gbSyslogInfo = new System.Windows.Forms.GroupBox();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.txtSyslogServer = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtSyslogPort = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.ckUseSyslog = new System.Windows.Forms.CheckBox();
             this.panel9 = new System.Windows.Forms.Panel();
             this.txtAlertLog = new System.Windows.Forms.TextBox();
             this.btnBrowseAlertLog = new System.Windows.Forms.Button();
@@ -96,13 +103,6 @@
             this.btnDeleteModule = new System.Windows.Forms.ToolStripButton();
             this.btnCheckUpdates = new System.Windows.Forms.ToolStripButton();
             this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
-            this.ckUseSyslog = new System.Windows.Forms.CheckBox();
-            this.gbSyslogInfo = new System.Windows.Forms.GroupBox();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtSyslogPort = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtSyslogServer = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -117,13 +117,13 @@
             this.panel2.SuspendLayout();
             this.tcSettings.SuspendLayout();
             this.tbpLogging.SuspendLayout();
+            this.gbSyslogInfo.SuspendLayout();
+            this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSyslogPort)).BeginInit();
             this.panel9.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
-            this.gbSyslogInfo.SuspendLayout();
-            this.panel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSyslogPort)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -573,6 +573,88 @@
             this.tbpLogging.Text = "Logging";
             this.tbpLogging.UseVisualStyleBackColor = true;
             // 
+            // gbSyslogInfo
+            // 
+            this.gbSyslogInfo.Controls.Add(this.panel10);
+            this.gbSyslogInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.gbSyslogInfo.Enabled = false;
+            this.gbSyslogInfo.Location = new System.Drawing.Point(3, 72);
+            this.gbSyslogInfo.Name = "gbSyslogInfo";
+            this.gbSyslogInfo.Size = new System.Drawing.Size(517, 53);
+            this.gbSyslogInfo.TabIndex = 4;
+            this.gbSyslogInfo.TabStop = false;
+            this.gbSyslogInfo.Text = "Syslog Server Information";
+            // 
+            // panel10
+            // 
+            this.panel10.Controls.Add(this.txtSyslogServer);
+            this.panel10.Controls.Add(this.label4);
+            this.panel10.Controls.Add(this.txtSyslogPort);
+            this.panel10.Controls.Add(this.label3);
+            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel10.Location = new System.Drawing.Point(3, 17);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(511, 26);
+            this.panel10.TabIndex = 3;
+            // 
+            // txtSyslogServer
+            // 
+            this.txtSyslogServer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtSyslogServer.Location = new System.Drawing.Point(111, 0);
+            this.txtSyslogServer.Name = "txtSyslogServer";
+            this.txtSyslogServer.Size = new System.Drawing.Size(296, 21);
+            this.txtSyslogServer.TabIndex = 6;
+            // 
+            // label4
+            // 
+            this.label4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label4.Location = new System.Drawing.Point(407, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(34, 26);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Port:";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtSyslogPort
+            // 
+            this.txtSyslogPort.Dock = System.Windows.Forms.DockStyle.Right;
+            this.txtSyslogPort.Location = new System.Drawing.Point(441, 0);
+            this.txtSyslogPort.Maximum = new decimal(new int[] {
+            32767,
+            0,
+            0,
+            0});
+            this.txtSyslogPort.Name = "txtSyslogPort";
+            this.txtSyslogPort.Size = new System.Drawing.Size(70, 21);
+            this.txtSyslogPort.TabIndex = 4;
+            this.txtSyslogPort.Value = new decimal(new int[] {
+            514,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label3.Location = new System.Drawing.Point(0, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(111, 26);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Server Name / IP:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ckUseSyslog
+            // 
+            this.ckUseSyslog.AutoSize = true;
+            this.ckUseSyslog.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckUseSyslog.Location = new System.Drawing.Point(3, 55);
+            this.ckUseSyslog.Name = "ckUseSyslog";
+            this.ckUseSyslog.Size = new System.Drawing.Size(517, 17);
+            this.ckUseSyslog.TabIndex = 3;
+            this.ckUseSyslog.Text = "Use Syslog";
+            this.ckUseSyslog.UseVisualStyleBackColor = true;
+            this.ckUseSyslog.CheckedChanged += new System.EventHandler(this.ckUseSyslog_CheckedChanged);
+            // 
             // panel9
             // 
             this.panel9.Controls.Add(this.txtAlertLog);
@@ -827,88 +909,6 @@
             this.ttPSFHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ttPSFHelp.ToolTipTitle = "PoshSec Framework Help";
             // 
-            // ckUseSyslog
-            // 
-            this.ckUseSyslog.AutoSize = true;
-            this.ckUseSyslog.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ckUseSyslog.Location = new System.Drawing.Point(3, 55);
-            this.ckUseSyslog.Name = "ckUseSyslog";
-            this.ckUseSyslog.Size = new System.Drawing.Size(517, 17);
-            this.ckUseSyslog.TabIndex = 3;
-            this.ckUseSyslog.Text = "Use Syslog";
-            this.ckUseSyslog.UseVisualStyleBackColor = true;
-            this.ckUseSyslog.CheckedChanged += new System.EventHandler(this.ckUseSyslog_CheckedChanged);
-            // 
-            // gbSyslogInfo
-            // 
-            this.gbSyslogInfo.Controls.Add(this.panel10);
-            this.gbSyslogInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.gbSyslogInfo.Enabled = false;
-            this.gbSyslogInfo.Location = new System.Drawing.Point(3, 72);
-            this.gbSyslogInfo.Name = "gbSyslogInfo";
-            this.gbSyslogInfo.Size = new System.Drawing.Size(517, 53);
-            this.gbSyslogInfo.TabIndex = 4;
-            this.gbSyslogInfo.TabStop = false;
-            this.gbSyslogInfo.Text = "Syslog Server Information";
-            // 
-            // panel10
-            // 
-            this.panel10.Controls.Add(this.txtSyslogServer);
-            this.panel10.Controls.Add(this.label4);
-            this.panel10.Controls.Add(this.txtSyslogPort);
-            this.panel10.Controls.Add(this.label3);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel10.Location = new System.Drawing.Point(3, 17);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(511, 26);
-            this.panel10.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(111, 26);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Server Name / IP:";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // txtSyslogPort
-            // 
-            this.txtSyslogPort.Dock = System.Windows.Forms.DockStyle.Right;
-            this.txtSyslogPort.Location = new System.Drawing.Point(441, 0);
-            this.txtSyslogPort.Maximum = new decimal(new int[] {
-            32767,
-            0,
-            0,
-            0});
-            this.txtSyslogPort.Name = "txtSyslogPort";
-            this.txtSyslogPort.Size = new System.Drawing.Size(70, 21);
-            this.txtSyslogPort.TabIndex = 4;
-            this.txtSyslogPort.Value = new decimal(new int[] {
-            514,
-            0,
-            0,
-            0});
-            // 
-            // label4
-            // 
-            this.label4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.label4.Location = new System.Drawing.Point(407, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 26);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Port:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // txtSyslogServer
-            // 
-            this.txtSyslogServer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSyslogServer.Location = new System.Drawing.Point(111, 0);
-            this.txtSyslogServer.Name = "txtSyslogServer";
-            this.txtSyslogServer.Size = new System.Drawing.Size(296, 21);
-            this.txtSyslogServer.TabIndex = 6;
-            // 
             // frmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -947,6 +947,10 @@
             this.tcSettings.ResumeLayout(false);
             this.tbpLogging.ResumeLayout(false);
             this.tbpLogging.PerformLayout();
+            this.gbSyslogInfo.ResumeLayout(false);
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSyslogPort)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
             this.panel3.ResumeLayout(false);
@@ -955,10 +959,6 @@
             this.tbpModules.PerformLayout();
             this.tbModules.ResumeLayout(false);
             this.tbModules.PerformLayout();
-            this.gbSyslogInfo.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtSyslogPort)).EndInit();
             this.ResumeLayout(false);
 
         }

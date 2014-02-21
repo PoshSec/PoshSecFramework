@@ -12,6 +12,7 @@ namespace poshsecframework.PShell
     {
         private Collection<String> warnings = new Collection<string>();
         public EventHandler<Events.WriteProgressEventArgs> WriteProgressUpdate;
+        public EventHandler<Events.WriteEventArgs> WriteUpdate;
 
         public void ClearWarnings()
         {
@@ -69,7 +70,16 @@ namespace poshsecframework.PShell
 
         public override void WriteVerboseLine(string message)
         {
-            throw new NotImplementedException();
+            OnWrite(new Events.WriteEventArgs(message));
+        }
+
+        private void OnWrite(Events.WriteEventArgs e)
+        {
+            EventHandler<Events.WriteEventArgs> handler = WriteUpdate;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
 
         public override void WriteWarningLine(string message)
