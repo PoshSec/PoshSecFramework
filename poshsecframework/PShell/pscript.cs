@@ -359,11 +359,14 @@ namespace poshsecframework.PShell
             {
                 if (pline != null)
                 {
+                    HandleWarningsErrors(pline.Error);
+                }
+                if (pline != null)
+                {
                     pline.Stop();
                     pline.Dispose();
                     pline = null;
-                }
-                HandleWarningsErrors(pline.Error);
+                }               
                 GC.Collect();
                 cancelled = true;
                 if (iscommand)

@@ -38,7 +38,8 @@ namespace poshsecframework
         private Collection<String> enabledmods = new Collection<string>();
         private int updatefrequency = 12; // in hours
         private Collection<ListViewItem> alerts = new Collection<ListViewItem>();
-        Network.Syslog slog = null;
+        private Network.Syslog slog = null;
+        private Comparers.ListViewColumnSorter lvwSorter = new Comparers.ListViewColumnSorter();
 
         enum SystemType
         { 
@@ -69,6 +70,7 @@ namespace poshsecframework
         public frmMain()
         {
             InitializeComponent();
+            lvwSystems.ListViewItemSorter = lvwSorter;
             this.Enabled = false;
             stat = new Interface.frmStartup();
             stat.Show();
@@ -1970,6 +1972,27 @@ namespace poshsecframework
             }
         }
 
+        private void lvwSystems_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            if (e.Column == lvwSorter.SortColumn)
+            {
+                if (lvwSorter.Order == SortOrder.Ascending)
+                {
+                    lvwSorter.Order = SortOrder.Descending;
+                }
+                else
+                {
+                    lvwSorter.Order = SortOrder.Ascending;
+                }
+            }
+            else
+            {
+                lvwSorter.SortColumn = e.Column;
+                lvwSorter.Order = SortOrder.Ascending;
+            }
+            lvwSystems.Sort();
+        }
+
         private void lvwCommands_DoubleClick(object sender, EventArgs e)
         {
             if (lvwCommands.SelectedItems.Count > 0 && !txtPShellOutput.ReadOnly)
@@ -2563,5 +2586,7 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
+
+        
     }
 }
