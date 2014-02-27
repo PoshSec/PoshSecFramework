@@ -1951,6 +1951,26 @@ namespace poshsecframework
         {
             DeleteScheduleItems();
         }
+
+        private void mnuScheduleItemRunNow_Click(object sender, EventArgs e)
+        {
+            if (lvwSchedule.SelectedItems.Count > 0)
+            {
+                ListViewItem lvw = lvwSchedule.SelectedItems[0];
+                if (lvw != null)
+                {
+                    int idx = (int)lvw.Tag;
+                    Utility.ScheduleItem sched = schedule.ScheduleItems[idx - 1];
+                    if (sched != null)
+                    {
+                        sched.LastRunTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                        schedule.Save();
+                        schedule_ScriptInvoked(null, new Utility.ScheduleEventArgs(sched));
+                        schedule_ItemUpdated(null, new Utility.ScheduleEventArgs(sched));
+                    }
+                }
+            }
+        }
         #endregion 
 
         #region List View
@@ -2586,7 +2606,6 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
-
         
     }
 }
