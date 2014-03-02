@@ -296,13 +296,13 @@ namespace poshsecframework.PShell
                     //If they typed the command then they should have passed params.
                     //If it was scheduled and there were params, they should be passed.
                     scriptparams = CheckForParams(scriptcommand);
-                }                
+                }
                 if (!cancel)
                 {
                     Command pscmd = new Command(scriptcommand);
                     String cmdparams = "";
                     if (scriptparams != null)
-                    {                        
+                    {
                         foreach (psparameter param in scriptparams)
                         {
                             CommandParameter prm = new CommandParameter(param.Name, param.Value ?? param.DefaultValue);
@@ -324,13 +324,29 @@ namespace poshsecframework.PShell
                     }
                     else
                     {
-                        rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));                        
+                        rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));
                         pline.Commands.Add(pscmd);
                     }
                     Collection<PSObject> rslt = null;
                     try
                     {
                         rslt = pline.Invoke();
+                    }
+                    catch (System.Threading.ThreadAbortException thex)
+                    {
+                        if (pline != null)
+                        {
+                            HandleWarningsErrors(pline.Error);
+                        }
+                        cancelled = true;
+                        if (iscommand)
+                        {
+                            rslts.AppendLine(StringValue.CommandCancelled);
+                        }
+                        else
+                        {
+                            rslts.AppendLine(StringValue.ScriptCancelled);
+                        }
                     }
                     catch (Exception pex)
                     {
@@ -355,33 +371,20 @@ namespace poshsecframework.PShell
                     rslts.AppendLine(StringValue.ScriptCancelled);
                 }
             }
-            catch (ThreadAbortException thde)
+            catch (System.Threading.ThreadAbortException)
             {
-                if (pline != null)
-                {
-                    HandleWarningsErrors(pline.Error);
-                }
                 if (pline != null)
                 {
                     pline.Stop();
                     pline.Dispose();
                     pline = null;
-                }               
-                GC.Collect();
-                cancelled = true;
-                if (iscommand)
-                {
-                    rslts.AppendLine(StringValue.CommandCancelled + Environment.NewLine + thde.Message);
                 }
-                else
-                {
-                    rslts.AppendLine(StringValue.ScriptCancelled + Environment.NewLine + thde.Message);
-                }                
+                GC.Collect();
             }
             catch (Exception e)
             {
                 HandleWarningsErrors(pline.Error);
-                rslts.AppendLine(psexec.psexceptionhandler(e,iscommand));
+                rslts.AppendLine(psexec.psexceptionhandler(e, iscommand));
             }
             finally
             {
