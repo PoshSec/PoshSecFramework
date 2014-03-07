@@ -66,6 +66,9 @@
     <Compile Include="Controls\PSTabItem.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\PSTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\RichTextBoxCaret.cs">
       <SubType>Component</SubType>
     </Compile>

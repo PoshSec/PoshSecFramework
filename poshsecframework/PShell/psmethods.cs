@@ -237,6 +237,14 @@ namespace poshsecframework.PShell
                     throw new Exception("Parent Form is not set in PSTab.");
                 }
             }
+
+            public void AddText(String Text, String TabTitle)
+            {
+                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                ptitm.Text = TabTitle;
+                ptitm.AddText(Text);
+                frm.AddTabPage(ptitm);
+            }
         }
     }
 }

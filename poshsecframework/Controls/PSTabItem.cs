@@ -40,6 +40,15 @@ namespace poshsecframework.Controls
             this.Controls.Add(pgrid);
             this.Controls.SetChildIndex(pgrid, 0);
         }
+
+        public void AddText(String Text)
+        {
+            PSTextBox txt = new PSTextBox();
+            txt.Text = Text;
+            txt.ParentStrip = tbTools;
+            this.Controls.Add(txt);
+            this.Controls.SetChildIndex(txt, 0);
+        }
         #endregion
 
         #region Private Events

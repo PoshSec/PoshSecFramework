@@ -270,6 +270,7 @@ namespace poshsecframework.Web
         {
             ghc = (HttpWebRequest)WebRequest.Create(uri);
             ghc.UserAgent = StringValue.psftitle;
+            ghc.Timeout = 5000;
             DateTime lmd;
             DateTime.TryParse(LastModifiedDate, out lmd);
             if (lmd.Year > 1)
