@@ -40,8 +40,24 @@ namespace poshsecframework.Controls
                 exp.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
                 exp.ToolTipText = "Save";
                 exp.Alignment = ToolStripItemAlignment.Left;
-                //exp.Click += new EventHandler(Save);
+                exp.Click += new EventHandler(Save);
                 parstrip.Items.Add(exp);
+            }
+        }
+
+        private void Save(object sender, EventArgs e)
+        {
+            SaveFileDialog sdlg = new SaveFileDialog();
+            sdlg.CheckPathExists = true;
+            sdlg.Title = "Save As...";
+            sdlg.Filter = "Text Document (*.txt)|*.txt|All Documents (*.*)|*.*";
+            if (sdlg.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.StreamWriter wtr = System.IO.File.CreateText(sdlg.FileName);
+                wtr.Write(this.Text);
+                wtr.Flush();
+                wtr.Close();
+                MessageBox.Show(Strings.StringValue.FileSavedSuccessfully);
             }
         }
         #endregion

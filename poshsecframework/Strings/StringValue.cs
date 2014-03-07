@@ -30,6 +30,7 @@ namespace poshsecframework.Strings
         public const string InvalidNetworkName = "Please enter a unique and valid network name. (i.e. system.local)";
         public const string InvalidSyslog = "Please enter a valid host name or IP address for the syslog server.";
         public const string InvalidAlertType = "That is not a valid Alert Type. The valid alert types are ";
+        public const string FileSavedSuccessfully = "File saved successfully.";
 
         public const string TNSetExecutionPolicy = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/ee176961.aspx";
         public const string TNUpdateHelp = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/hh849720.aspx";
