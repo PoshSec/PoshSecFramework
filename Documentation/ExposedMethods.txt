@@ -1,0 +1,85 @@
+Exposed Methods
+===
+This documentation will guide you through on the exposed Methods that are available to use within your PowerShell script, function, or Cmdlet when running it from within the PoshSec Framework. Note: If you reference these variables directly from PowerShell they will do nothing or you will receive an error. These exposed variables are intended to only be used from within the PoshSec Framework.
+
+Methods
+===
+- $PSMessageBox
+- $PSAlert
+- $PSStatus
+- $PSHosts
+- $PSTab
+
+How to use an Exposed Method
+===
+Each of the defined methods listed below will give you an example of how to use them. However, you may also use the Get-Member Cmdlet to discover the methods, and functions available with each exposed Method.
+
+For example:
+ $PSMessageBox | Get-Member
+ 
+$PSMessageBox
+===
+The $PSMessageBox method exposes the System.Window.Forms.MessageBox class to your PowerShell script, function, or Cmdlet. This will display a MessageBox within the PoshSec Framework displaying the text you provide. This is useful if you wish to get the attention of the person running the PoshSec framework.
+
+Members:
+---
+
+Name        MemberType Definition                             
+----        ---------- ----------                             
+Equals      Method     bool Equals(System.Object obj)         
+GetHashCode Method     int GetHashCode()                      
+GetType     Method     type GetType()                         
+Show        Method     void Show(string message, string title)
+ToString    Method     string ToString()
+
+$PSMessageBox.Show()
+---
+This function will show a message box from within your script, function, or cmdlet in the PoshSec Framework interface.
+
+Parameters
+---
+
+- message (String) [Required]
+	The message you wish to display in the Message Box
+- title (String) [Not Required]
+	The title of the Message Box window.
+
+Usage
+---
+psf > $PSMessageBox.Show("Hello World", "My Custom MessageBox")
+psf > $PSMessageBox.Show("Hi, without title")
+
+
+$PSAlert
+===
+The $PSAlert method exposes the Alerts ListView control to your script, function, or cmdlet. This allows you to add an Alert to the ListView control. This is useful when you want to keep track of any errors, warnings, or informational messages and display that in the PoshSec Framework interface.
+
+Members
+---
+
+Name                   MemberType Definition                                    
+----                   ---------- ----------                                    
+Add                    Method     void Add(string message, poshsecframework.PShell.psmethods+PSAlert+AlertType alerttype)
+Add					   Method	  void Add(string message, int alerttype)
+Equals                 Method     bool Equals(System.Object obj)                
+GetAlertTypeFromString Method     poshsecframework.PShell.psmethods+PSAlert+AlertType GetAlertTypeFromString(string alerttype)
+GetHashCode            Method     int GetHashCode()                             
+GetType                Method     type GetType()                                
+ToString               Method     string ToString()                             
+ScriptName             Property   string ScriptName {get;set;}
+
+$PSAlert.Add()
+---
+This function adds an alert to the Alerts ListView control within the PoshSec Framework.
+
+Parameters
+---
+- message (String) [Required]
+	The message to display for the alert.
+- alerttype (AlertType or Integer)
+	The type of alert. Valid types are [0] Information, [1] Error, [2] Warning, [3] Severe, [4] Critical
+
+Usage
+---
+psf > $psalert.add("Test", [poshsecframework.PShell.psmethods+PSAlert+AlertType]::Critical)
+psf > $psalert.add("Test", 4)
