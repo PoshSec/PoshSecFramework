@@ -131,14 +131,15 @@ namespace poshsecframework
                     {
                         foreach (ListViewItem lvw in lvwActiveScripts.Items)
                         {
+                            int times = 0;
                             Thread thd = (Thread)lvw.Tag;
                             thd.Abort();
                             do
                             {
-                                Application.DoEvents();
-                            } while (thd.ThreadState != ThreadState.Aborted);
+                                System.Threading.Thread.Sleep(1000);
+                                times++;
+                            } while ((thd.ThreadState != ThreadState.Aborted) && times <=5);
                         }
-                        this.Close();
                     }
                     else
                     {
@@ -148,6 +149,7 @@ namespace poshsecframework
                 SaveSystems();
                 SaveAlerts();
                 Properties.Settings.Default.Save();
+                this.Close();
             }
             catch (Exception)
             { 
@@ -628,6 +630,7 @@ namespace poshsecframework
                 HideProgress();
                 btnCancelScan.Enabled = false;
                 this.UseWaitCursor = false;
+                btnScan.Enabled = true;
                 UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }            
