@@ -149,7 +149,6 @@ namespace poshsecframework
                 SaveSystems();
                 SaveAlerts();
                 Properties.Settings.Default.Save();
-                this.Close();
             }
             catch (Exception)
             { 
