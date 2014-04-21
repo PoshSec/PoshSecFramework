@@ -40,6 +40,7 @@ namespace poshsecframework
         private Collection<ListViewItem> alerts = new Collection<ListViewItem>();
         private Network.Syslog slog = null;
         private Comparers.ListViewColumnSorter lvwSorter = new Comparers.ListViewColumnSorter();
+        private bool closing = false;
 
         enum SystemType
         { 
@@ -123,6 +124,7 @@ namespace poshsecframework
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            closing = true;
             try
             {
                 if (lvwActiveScripts.Items.Count > 0)
@@ -144,6 +146,7 @@ namespace poshsecframework
                     else
                     {
                         e.Cancel = true;
+                        closing = false;
                     }
                 }
                 SaveSystems();
@@ -151,9 +154,9 @@ namespace poshsecframework
                 Properties.Settings.Default.Save();
             }
             catch (Exception)
-            { 
-                //just exit.
-                this.Close();
+            {
+                e.Cancel = false;
+                closing = true;
             }
         }
         #endregion
@@ -1103,7 +1106,10 @@ namespace poshsecframework
                 {
                     DisplayOutput(output, lvw, clicked, cancelled, scroll);
                 };
-                this.Invoke(del);
+                if (!closing)
+                {
+                    this.Invoke(del);
+                }                
             }
             else
             {
