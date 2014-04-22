@@ -217,6 +217,7 @@ namespace poshsecframework.PShell
         public class PSTab
         {
             private frmMain frm = null;
+            private string scriptname = "";
             
             public PSTab(frmMain ParentForm)
             {
@@ -244,6 +245,21 @@ namespace poshsecframework.PShell
                 ptitm.Text = TabTitle;
                 ptitm.AddText(Text);
                 frm.AddTabPage(ptitm);
+            }
+
+            public poshsecframework.Controls.PSAlertList AddAlerts(String TabTitle)
+            {
+                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                ptitm.Text = TabTitle;
+                poshsecframework.Controls.PSAlertList rtn = ptitm.CreateAlertTab(scriptname);
+                frm.AddTabPage(ptitm);
+                return rtn;
+            }
+
+            public String ScriptName
+            {
+                get { return scriptname; }
+                set { scriptname = value; }
             }
         }
     }

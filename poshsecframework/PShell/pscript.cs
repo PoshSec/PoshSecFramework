@@ -285,7 +285,8 @@ namespace poshsecframework.PShell
             cancel = false;
             rslts.Clear();
             InitializeSessionVars();
-            PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");            
+            PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
+            PSTab.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
             Pipeline pline = null;
             bool cancelled = false;
             try
