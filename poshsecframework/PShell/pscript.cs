@@ -332,7 +332,7 @@ namespace poshsecframework.PShell
                     {
                         rslt = pline.Invoke();
                     }
-                    catch (System.Threading.ThreadAbortException thex)
+                    catch (System.Threading.ThreadAbortException)
                     {
                         if (pline != null)
                         {
