@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace poshsecframework.Controls
 {
-    class PSTabItem : TabPage
+    public class PSTabItem : TabPage
     {
         #region Private Variables
         private ToolStrip tbTools = new ToolStrip();
@@ -48,6 +48,15 @@ namespace poshsecframework.Controls
             txt.ParentStrip = tbTools;
             this.Controls.Add(txt);
             this.Controls.SetChildIndex(txt, 0);
+        }
+
+        public PSAlertList CreateAlertTab(string scriptname)
+        {
+            PSAlertList psal = new PSAlertList(scriptname);
+            psal.ParentStrip = tbTools;
+            this.Controls.Add(psal);
+            this.Controls.SetChildIndex(psal, 0);
+            return psal;
         }
         #endregion
 
