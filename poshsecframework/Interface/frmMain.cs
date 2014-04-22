@@ -2172,7 +2172,7 @@ namespace poshsecframework
                     if (e.Control)
                     {
                         switch (e.KeyCode)
-                        { 
+                        {
                             case Keys.L:
                                 //Ctrl+L for CLS!
                                 e.Handled = true;
@@ -2191,7 +2191,15 @@ namespace poshsecframework
                                 e.Handled = false;
                                 e.SuppressKeyPress = false;
                                 break;
-                        }                        
+                        }
+                    }
+                    else
+                    {
+                        if (txtPShellOutput.SelectionStart < mincurpos)
+                        {
+                            txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
+                            txtPShellOutput.ScrollToCaret();
+                        }
                     }
                     break;
                 case Keys.Tab:
