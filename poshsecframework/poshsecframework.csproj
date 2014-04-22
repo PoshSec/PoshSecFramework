@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparers\ListViewColumnSorter.cs" />
+    <Compile Include="Controls\PSAlertList.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\PSObjectGrid.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -154,6 +157,9 @@
     <Compile Include="Utility\ScheduleTime.cs" />
     <Compile Include="Web\GithubClient.cs" />
     <Compile Include="Web\GithubJsonItem.cs" />
+    <EmbeddedResource Include="Controls\PSAlertList.resx">
+      <DependentUpon>PSAlertList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\PSTabItem.resx">
       <DependentUpon>PSTabItem.cs</DependentUpon>
     </EmbeddedResource>

@@ -668,14 +668,13 @@ namespace poshsecframework
             }
             else
             {
-                int idx = -1;
+                int idx = 0;
                 bool found = false;
                 ListViewItem lvw = null;
                 if (lvwSchedule.Items.Count > 0)
                 {
                     do
                     {
-                        idx++;
                         lvw = lvwSchedule.Items[idx];
                         if (lvw.Tag != null)
                         {
@@ -683,7 +682,8 @@ namespace poshsecframework
                             {
                                 found = true;
                             }
-                        }                        
+                        }
+                        idx++;
                     } while (idx < lvwSchedule.Items.Count && !found);
                     if (found && lvw != null)
                     {
@@ -1223,7 +1223,6 @@ namespace poshsecframework
                 try
                 {
                     lvw.SubItems[2].Text = progress;
-                    lvwScripts.Refresh();
                 }
                 catch (Exception e)
                 {
@@ -1247,7 +1246,6 @@ namespace poshsecframework
                 try
                 {
                     lvw.SubItems[1].Text = message;
-                    lvwScripts.Refresh();
                 }
                 catch (Exception e)
                 {
@@ -1968,8 +1966,24 @@ namespace poshsecframework
                 ListViewItem lvw = lvwSchedule.SelectedItems[0];
                 if (lvw != null)
                 {
-                    int idx = (int)lvw.Tag;
-                    Utility.ScheduleItem sched = schedule.ScheduleItems[idx - 1];
+                    Utility.ScheduleItem sched = null;
+                    bool found = false;
+                    int idx = 0;
+                    do
+                    {
+                        if (lvw.Tag != null)
+                        {
+                            if(schedule.ScheduleItems.Count > idx) 
+                            {
+                                if ((int)lvw.Tag == schedule.ScheduleItems[idx].Index)
+                                {
+                                    sched = schedule.ScheduleItems[idx];
+                                    found = true;
+                                }
+                            }                            
+                        }
+                        idx++;
+                    } while (idx < lvwSchedule.Items.Count && !found);                                        
                     if (sched != null)
                     {
                         sched.LastRunTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
@@ -2647,13 +2661,6 @@ namespace poshsecframework
                 this.ShowInTaskbar = true;
                 nimain.Visible = false;
             }
-        }
-
-        private void frmMain_ResizeBegin(object sender, EventArgs e)
-        {
-            MessageBox.Show("Resize Begin");
-        }
-
-        
+        }        
     }
 }

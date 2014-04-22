@@ -1421,7 +1421,6 @@ namespace poshsecframework
             this.Text = "PoshSec Framework";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);
-            this.ResizeBegin += new System.EventHandler(this.frmMain_ResizeBegin);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
