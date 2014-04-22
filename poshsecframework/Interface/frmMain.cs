@@ -41,6 +41,7 @@ namespace poshsecframework
         private Network.Syslog slog = null;
         private Comparers.ListViewColumnSorter lvwSorter = new Comparers.ListViewColumnSorter();
         private bool closing = false;
+        private FormWindowState lastwindowstate = FormWindowState.Normal;
 
         enum SystemType
         { 
@@ -2311,6 +2312,16 @@ namespace poshsecframework
             }
         }
 
+        private void cmnuRestore_Click(object sender, EventArgs e)
+        {
+            this.WindowState = lastwindowstate;
+        }
+
+        private void cmnuExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void cmnuScheduleCommands_Opening(object sender, CancelEventArgs e)
         {
             if (lvwSchedule.Items.Count == 0)
@@ -2622,6 +2633,27 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                nimain.Visible = true;
+            }
+            else
+            {
+                lastwindowstate = this.WindowState;
+                this.ShowInTaskbar = true;
+                nimain.Visible = false;
+            }
+        }
+
+        private void frmMain_ResizeBegin(object sender, EventArgs e)
+        {
+            MessageBox.Show("Resize Begin");
+        }
+
         
     }
 }

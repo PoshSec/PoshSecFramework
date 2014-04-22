@@ -107,7 +107,6 @@ namespace poshsecframework
             this.btnExportSystems = new System.Windows.Forms.ToolStripButton();
             this.tslSystemCount = new System.Windows.Forms.ToolStripLabel();
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.cmnuPSFConsole = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmbtnCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbtnPaste = new System.Windows.Forms.ToolStripMenuItem();
@@ -155,6 +154,11 @@ namespace poshsecframework
             this.powerShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.waucheckps1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nimain = new System.Windows.Forms.NotifyIcon(this.components);
+            this.cmnuNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmnuRestore = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuExit = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -187,6 +191,7 @@ namespace poshsecframework
             this.tbpScripts.SuspendLayout();
             this.cmnuActiveScripts.SuspendLayout();
             this.cmnuHosts.SuspendLayout();
+            this.cmnuNotify.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnuMain
@@ -916,7 +921,7 @@ namespace poshsecframework
             this.tslSystemCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tslSystemCount.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tslSystemCount.Name = "tslSystemCount";
-            this.tslSystemCount.Size = new System.Drawing.Size(61, 22);
+            this.tslSystemCount.Size = new System.Drawing.Size(63, 22);
             this.tslSystemCount.Text = "0 Systems";
             // 
             // tbpPowerShell
@@ -930,25 +935,6 @@ namespace poshsecframework
             this.tbpPowerShell.Size = new System.Drawing.Size(948, 313);
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
-            // 
-            // txtPShellOutput
-            // 
-            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
-            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPShellOutput.ContextMenuStrip = this.cmnuPSFConsole;
-            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtPShellOutput.DetectUrls = false;
-            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
-            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
-            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.txtPShellOutput.Name = "txtPShellOutput";
-            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
-            this.txtPShellOutput.TabIndex = 0;
-            this.txtPShellOutput.Text = "";
-            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
             // cmnuPSFConsole
             // 
@@ -1371,6 +1357,53 @@ namespace poshsecframework
             this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.waucheckps1ToolStripMenuItem.Text = "waucheck.ps1";
             // 
+            // nimain
+            // 
+            this.nimain.ContextMenuStrip = this.cmnuNotify;
+            this.nimain.Icon = ((System.Drawing.Icon)(resources.GetObject("nimain.Icon")));
+            this.nimain.Text = "PoshSec Framework";
+            // 
+            // cmnuNotify
+            // 
+            this.cmnuNotify.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmnuRestore,
+            this.cmnuExit});
+            this.cmnuNotify.Name = "cmnuNotify";
+            this.cmnuNotify.Size = new System.Drawing.Size(114, 48);
+            // 
+            // cmnuRestore
+            // 
+            this.cmnuRestore.Name = "cmnuRestore";
+            this.cmnuRestore.Size = new System.Drawing.Size(113, 22);
+            this.cmnuRestore.Text = "Restore";
+            this.cmnuRestore.Click += new System.EventHandler(this.cmnuRestore_Click);
+            // 
+            // cmnuExit
+            // 
+            this.cmnuExit.Name = "cmnuExit";
+            this.cmnuExit.Size = new System.Drawing.Size(113, 22);
+            this.cmnuExit.Text = "Exit";
+            this.cmnuExit.Click += new System.EventHandler(this.cmnuExit_Click);
+            // 
+            // txtPShellOutput
+            // 
+            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
+            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPShellOutput.ContextMenuStrip = this.cmnuPSFConsole;
+            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtPShellOutput.DetectUrls = false;
+            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
+            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.txtPShellOutput.Name = "txtPShellOutput";
+            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.TabIndex = 0;
+            this.txtPShellOutput.Text = "";
+            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1388,6 +1421,8 @@ namespace poshsecframework
             this.Text = "PoshSec Framework";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Shown += new System.EventHandler(this.frmMain_Shown);
+            this.ResizeBegin += new System.EventHandler(this.frmMain_ResizeBegin);
+            this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.mnuMain.ResumeLayout(false);
             this.mnuMain.PerformLayout();
             this.stsMain.ResumeLayout(false);
@@ -1434,6 +1469,7 @@ namespace poshsecframework
             this.tbpScripts.PerformLayout();
             this.cmnuActiveScripts.ResumeLayout(false);
             this.cmnuHosts.ResumeLayout(false);
+            this.cmnuNotify.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1564,6 +1600,10 @@ namespace poshsecframework
         private System.Windows.Forms.ToolStripButton btnRemoveSystem;
         private System.Windows.Forms.ToolStripSeparator tsSeparator;
         private System.Windows.Forms.ToolStripMenuItem mnuScheduleItemRunNow;
+        private System.Windows.Forms.NotifyIcon nimain;
+        private System.Windows.Forms.ContextMenuStrip cmnuNotify;
+        private System.Windows.Forms.ToolStripMenuItem cmnuRestore;
+        private System.Windows.Forms.ToolStripMenuItem cmnuExit;
     }
 }
 
