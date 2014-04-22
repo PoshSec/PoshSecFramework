@@ -160,6 +160,21 @@ namespace poshsecframework
                 closing = true;
             }
         }
+
+        private void frmMain_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                nimain.Visible = true;
+            }
+            else
+            {
+                lastwindowstate = this.WindowState;
+                this.ShowInTaskbar = true;
+                nimain.Visible = false;
+            }
+        }
         #endregion
 
         #region Private Methods
@@ -2639,6 +2654,11 @@ namespace poshsecframework
             }
         }
 
+        private void nimain_DoubleClick(object sender, EventArgs e)
+        {
+            this.WindowState = lastwindowstate;
+        }
+
         #endregion
 
         #region Public Properties
@@ -2647,20 +2667,6 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
-
-        private void frmMain_Resize(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.ShowInTaskbar = false;
-                nimain.Visible = true;
-            }
-            else
-            {
-                lastwindowstate = this.WindowState;
-                this.ShowInTaskbar = true;
-                nimain.Visible = false;
-            }
-        }        
+        
     }
 }

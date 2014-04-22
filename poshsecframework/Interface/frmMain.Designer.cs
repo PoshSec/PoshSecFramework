@@ -1362,6 +1362,7 @@ namespace poshsecframework
             this.nimain.ContextMenuStrip = this.cmnuNotify;
             this.nimain.Icon = ((System.Drawing.Icon)(resources.GetObject("nimain.Icon")));
             this.nimain.Text = "PoshSec Framework";
+            this.nimain.DoubleClick += new System.EventHandler(this.nimain_DoubleClick);
             // 
             // cmnuNotify
             // 
