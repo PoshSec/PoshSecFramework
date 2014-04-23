@@ -19,16 +19,20 @@ namespace poshsecframework.Controls
         private ImageList imgListAlerts;
         private System.ComponentModel.IContainer components;
         private Network.Syslog slog = null;
-        private ToolStripLabel lblalertcount = new ToolStripLabel("Alerts (0)");
+        private ToolStripLabel lblalertcount = new ToolStripLabel(String.Format(StringValue.AlertLabelFormat, "Alerts", 0));
         private int alertcount = 0;
+        poshsecframework.Controls.PSTabItem parent = null;
+        private string tablabel = "";
         #endregion
 
         #region Public Methods
-        public PSAlertList(String ScriptName = "")
+        public PSAlertList(String ScriptName, poshsecframework.Controls.PSTabItem Parent)
         {
             scriptname = ScriptName;
             InitializeComponent();
             Init();
+            parent = Parent;
+            tablabel = Parent.Text;
         }
 
         public void Add(String message, int alerttype)
@@ -97,7 +101,8 @@ namespace poshsecframework.Controls
             else
             {
                 alertcount++;
-                lblalertcount.Text = "Alerts (" + alertcount.ToString() + ")";
+                lblalertcount.Text = String.Format(StringValue.AlertLabelFormat, "Alerts", alertcount);
+                parent.Text = string.Format(StringValue.AlertLabelFormat, tablabel, alertcount);
                 ListViewItem lvwitm = new ListViewItem();
                 lvwitm.Text = alerttype.ToString();
                 lvwitm.ImageIndex = (int)alerttype;

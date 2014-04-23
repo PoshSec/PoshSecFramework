@@ -52,7 +52,7 @@ namespace poshsecframework.Controls
 
         public PSAlertList CreateAlertTab(string scriptname)
         {
-            PSAlertList psal = new PSAlertList(scriptname);
+            PSAlertList psal = new PSAlertList(scriptname, this);
             psal.ParentStrip = tbTools;
             this.Controls.Add(psal);
             this.Controls.SetChildIndex(psal, 0);

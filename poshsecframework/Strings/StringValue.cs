@@ -118,5 +118,6 @@ namespace poshsecframework.Strings
         public const string OutputLogFormat = "[{0}:{1}] - {2}";
         public const string SyslogFormat = "{0}{1} {2} : %{3}-{4}: {5}";
         public const string PriorityFormat = "<{0}>";
+        public const string AlertLabelFormat = "{0} ({1})";
     }
 }
