@@ -141,6 +141,21 @@ namespace poshsecframework.Web
         public void GetPSFScripts(String ScriptDirectory)
         {
             String tmpfile = Path.GetTempFileName();
+            if (new DirectoryInfo(ScriptDirectory).GetFiles("*", SearchOption.AllDirectories).Count() > 0)
+            {
+                try
+                {
+                    Directory.Delete(ScriptDirectory, true);
+                    Directory.CreateDirectory(ScriptDirectory);
+                }
+                catch
+                {
+                    if (Directory.Exists(ScriptDirectory) == false)
+                    {
+                        Directory.CreateDirectory(ScriptDirectory);
+                    }
+                }
+            }            
             FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, StringValue.PSFScriptsPath + token), tmpfile);
             if (savedfile != null)
             {

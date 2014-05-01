@@ -350,7 +350,17 @@ namespace poshsecframework.Interface
                                     rtn = rtn && false;
                                     err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
                                 }
-                                ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
+                                if (new DirectoryInfo(Properties.Settings.Default.ScriptPath).GetFiles("*", SearchOption.AllDirectories).Count() > 0)
+                                {
+                                    if (MessageBox.Show(Strings.StringValue.ConfirmScriptDelete, "Existing Scripts", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                                    {
+                                        ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
+                                    }
+                                }
+                                else
+                                {
+                                    ghc.GetPSFScripts(Properties.Settings.Default.ScriptPath);
+                                }                                
                                 if (ghc.Errors.Count > 0)
                                 {
                                     rtn = rtn && false;

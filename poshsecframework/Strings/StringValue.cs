@@ -24,7 +24,8 @@ namespace poshsecframework.Strings
         public const string UnhandledException = "Unhandled exception in script function.";
         public const string ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
         public const string ConfirmNetworkDelete = "Are you sure you want to delete the selected network?";
-        public const string ConfirmModuleDelete = "Are you sure you want to delete the selected module?";
+        public const string ConfirmModuleDelete = "Are you sure you want to delete the selected module(s)?";
+        public const string ConfirmScriptDelete = "There are existing scripts in the Scripts folder. Downloading the current scripts will delete any existing scripts in that folder. Proceed?";
         public const string SelectWeekdays = "Please select the days of the week to schedule this script.";
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
