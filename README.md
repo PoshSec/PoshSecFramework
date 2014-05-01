@@ -65,6 +65,10 @@ ps C:\> Update-Help -Force
 =======
 <b>Note: Minimum of PowerShell 3.0 is required at this time.</b>
 
+PowerShell 3.0 First Time Users
+==
+You need to make sure you run "Update-Help" in PowerShell Command Shell the first time you load. This is required for the framework to work properly!
+
 If you are using the source code:
 ==
 Open the poshsecframework.sln in Visual Studio 2012+ and build the project (F7). This will create the bin\Release folder at {your github repodirectory}\poshsecframework\poshsecframework\bin\Release.
@@ -128,7 +132,7 @@ Current "Core" Developers are:
 * Ben Ten - @ben0xa - Primary Developer of the PoshSec Framework
 
 In alphabetical order:
-* Bryan Smith - @tweetbsmith
+* Bryan Smith - @securekomodo
 * J Wolfgang Goerlich - @jwgoerlich
 * Michael Ortega - @securitymoey
 * Nick Jacob - @MortiousPrime 
