@@ -470,7 +470,7 @@ namespace poshsecframework.Interface
                                 }
                                 catch
                                 {
-                                    StreamWriter wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                                    StreamWriter wtr = File.AppendText(StringValue.ModRestartFilename);
                                     wtr.WriteLine(path);
                                     wtr.Flush();
                                     wtr.Close();
@@ -497,6 +497,29 @@ namespace poshsecframework.Interface
             {
                 btnEditModule.Enabled = false;
                 btnDeleteModule.Enabled = false;
+            }
+        }
+
+        private void btnEditModule_Click(object sender, EventArgs e)
+        {
+            if (lvwModules.SelectedItems.Count > 0)
+            {
+                ListViewItem itm = lvwModules.SelectedItems[0];
+                Interface.frmRepository frm = new frmRepository();
+                frm.Url = Path.Combine(StringValue.GithubURL, itm.SubItems[1].Text);
+                frm.Branch = itm.SubItems[2].Text;
+                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    restart = frm.Restart;
+                    AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastModified);
+                    SaveModules();
+                }
+                frm.Dispose();
+                frm = null;
+                if (restart)
+                {
+                    lblRestartRequired.Visible = true;
+                }                
             }
         }
     }

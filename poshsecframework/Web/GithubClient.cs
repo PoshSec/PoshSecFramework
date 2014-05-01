@@ -106,7 +106,7 @@ namespace poshsecframework.Web
                                     else
                                     {
                                         StreamWriter wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
-                                        wtr.WriteLine(newfolder + ">>" + target);
+                                        wtr.WriteLine(parentfolder + ">>" + RepositoryName);
                                         wtr.Flush();
                                         wtr.Close();
                                     }

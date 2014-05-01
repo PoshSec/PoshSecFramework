@@ -22,6 +22,7 @@ namespace poshsecframework.Interface
         private Collection<Web.GithubJsonItem> branches = null;
         private bool restart = false;
         private string lastmodified = "";
+        private string curBranch = "";
 
         public frmRepository()
         {
@@ -63,11 +64,27 @@ namespace poshsecframework.Interface
                 branches = GetBranches(ghc, RepoOwner, Repository);
                 if (branches != null && branches.Count() > 0)
                 {
+                    int idx = -1;
+                    int selidx = -1;
+                    if (curBranch == "")
+                    {
+                        selidx = 0;
+                    }
                     foreach (Web.GithubJsonItem branchitem in branches)
                     {
+                        idx++;
                         cmbBranch.Items.Add(branchitem.Name);
+                        if (curBranch != "" && branchitem.Name == curBranch)
+                        {
+                            selidx = idx;
+                        }
                     }
-                    cmbBranch.SelectedIndex = 0;
+                    if (curBranch != "" && selidx == -1)
+                    {
+                        MessageBox.Show(String.Format(StringValue.BranchNotFound, curBranch));
+                        selidx = 0;
+                    }
+                    cmbBranch.SelectedIndex = selidx;
                     cmbBranch.Enabled = true;
                     btnOK.Enabled = true;
                     cmbBranch.Focus();
@@ -151,6 +168,7 @@ namespace poshsecframework.Interface
             txtURL.Focus();
             txtURL.SelectionStart = 0;
             txtURL.SelectionLength = txtURL.Text.Length;
+            cmbBranch.Enabled = false;
         }
 
         private void llblRateLimit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -191,14 +209,32 @@ namespace poshsecframework.Interface
             get { return RepoOwner + "/" + Repository; }
         }
 
+        public String Url
+        {
+            set { txtURL.Text = value; }
+        }
+
         public String Branch
         {
             get { return branch.Name; }
+            set 
+            { 
+                cmbBranch.Text = value;
+                curBranch = value;
+            }
         }
 
         public String LastModified
         {
             get { return lastmodified; }
+        }
+
+        private void frmRepository_Shown(object sender, EventArgs e)
+        {
+            if (curBranch != "")
+            {
+                cmbBranch.Enabled = true;
+            }
         }
     }
 }

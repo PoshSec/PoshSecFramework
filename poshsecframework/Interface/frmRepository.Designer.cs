@@ -247,6 +247,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Repository";
+            this.Shown += new System.EventHandler(this.frmRepository_Shown);
             this.pnlURL.ResumeLayout(false);
             this.pnlURL.PerformLayout();
             this.sbStatus.ResumeLayout(false);

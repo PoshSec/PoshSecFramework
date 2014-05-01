@@ -884,6 +884,7 @@
             this.btnEditModule.Name = "btnEditModule";
             this.btnEditModule.Size = new System.Drawing.Size(23, 22);
             this.btnEditModule.Text = "Edit Module";
+            this.btnEditModule.Click += new System.EventHandler(this.btnEditModule_Click);
             // 
             // btnDeleteModule
             // 

@@ -115,6 +115,7 @@ namespace poshsecframework.Strings
         public const string IfModifiedSince = "If-Modified-Since";
         public const string InvalidPSModule = "The repository {0} in branch {1} does not have a valid .psd1 file. This is required for PowerShell modules. Please check the path, repository, and/or branch and try again.";
         public const string InvalidRepositoryURL = "The URL specified is not a valid Github repository URL. Please enter the URL again.";
+        public const string BranchNotFound = "The specified branch of {0} was not found as a valid branch for this repository.";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
         public const string OutputLogFormat = "[{0}:{1}] - {2}";

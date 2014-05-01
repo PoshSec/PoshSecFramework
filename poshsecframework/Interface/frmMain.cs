@@ -1636,8 +1636,8 @@ namespace poshsecframework
                                     String[] paths = moveto.Split(new string[] { ">>" }, StringSplitOptions.None);
                                     if (paths != null && paths.Length == 2)
                                     {
-                                        String newfolder = paths[0];
-                                        String target = paths[1];
+                                        String newfolder = Path.Combine(Properties.Settings.Default.ModulePath, paths[0]);
+                                        String target = Path.Combine(Properties.Settings.Default.ModulePath, paths[1]);
                                         DirectoryInfo di = new DirectoryInfo(newfolder);
                                         if (Directory.Exists(target))
                                         {
@@ -1648,11 +1648,11 @@ namespace poshsecframework
                                     else
                                     { 
                                         //Just delete the path listed.
-                                        if (Directory.Exists(moveto))
+                                        if (Directory.Exists(Path.Combine(Properties.Settings.Default.ModulePath, moveto)))
                                         {
                                             try
                                             {
-                                                Directory.Delete(moveto, true);
+                                                Directory.Delete(Path.Combine(Properties.Settings.Default.ModulePath, moveto), true);
                                             }
                                             catch (Exception e)
                                             {
