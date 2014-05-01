@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace poshsecframework.Controls
 {
-    class PSTabItem : TabPage
+    public class PSTabItem : TabPage
     {
         #region Private Variables
         private ToolStrip tbTools = new ToolStrip();
@@ -24,7 +24,7 @@ namespace poshsecframework.Controls
             tbTools.GripStyle = ToolStripGripStyle.Hidden;
             ToolStripButton tbClose = new ToolStripButton();
             tbClose.Text = "Close";
-            tbClose.Image = Properties.Resources.tab_close_3;
+            tbClose.Image = Properties.Resources.tabclose3;
             tbClose.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             tbClose.ToolTipText = "Close Tab";
             tbClose.Alignment = ToolStripItemAlignment.Right;
@@ -39,6 +39,24 @@ namespace poshsecframework.Controls
             pgrid.ParentStrip = tbTools;
             this.Controls.Add(pgrid);
             this.Controls.SetChildIndex(pgrid, 0);
+        }
+
+        public void AddText(String Text)
+        {
+            PSTextBox txt = new PSTextBox();
+            txt.Text = Text;
+            txt.ParentStrip = tbTools;
+            this.Controls.Add(txt);
+            this.Controls.SetChildIndex(txt, 0);
+        }
+
+        public PSAlertList CreateAlertTab(string scriptname)
+        {
+            PSAlertList psal = new PSAlertList(scriptname, this);
+            psal.ParentStrip = tbTools;
+            this.Controls.Add(psal);
+            this.Controls.SetChildIndex(psal, 0);
+            return psal;
         }
         #endregion
 

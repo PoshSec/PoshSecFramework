@@ -1,1 +1,0 @@
-Write-outp "Hi"

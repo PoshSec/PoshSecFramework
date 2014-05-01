@@ -31,8 +31,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblScriptDirectory = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
             this.cmbIPs = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -71,16 +71,6 @@
             this.panel1.Size = new System.Drawing.Size(393, 26);
             this.panel1.TabIndex = 2;
             // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(111, 26);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "IP Address:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // cmbIPs
             // 
             this.cmbIPs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -90,6 +80,16 @@
             this.cmbIPs.Name = "cmbIPs";
             this.cmbIPs.Size = new System.Drawing.Size(282, 21);
             this.cmbIPs.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(111, 26);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "IP Address:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // panel3
             // 

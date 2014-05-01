@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     public class psmethods
     {
@@ -37,9 +38,50 @@ namespace psframework.PShell
                 frm = ParentForm;
             }
 
+            public AlertType GetAlertTypeFromString(String alerttype)
+            {
+                AlertType rtn = AlertType.Information;
+                bool found = false;
+                int idx = 0;
+                do
+                {
+                    if (((AlertType)idx).ToString() == alerttype)
+                    {
+                        found = true;
+                        rtn = (AlertType)idx;
+                    }
+                    idx++;
+                } while (!found && idx <= (int)AlertType.Critical);
+                return rtn;
+            }
+
             public void Add(String message, AlertType alerttype)
             {
-                frm.AddAlert(message, alerttype, scriptname);
+                if (frm != null)
+                {
+                    frm.AddAlert(message, alerttype, scriptname);
+                }                
+            }
+
+            public void Add(String message, int alerttype)
+            {
+                if (alerttype >= (int)AlertType.Information && alerttype <= (int)AlertType.Critical)
+                {
+                    Add(message, (AlertType)alerttype);
+                }
+                else
+                {
+                    if (frm != null)
+                    {
+                        String msg = Strings.StringValue.InvalidAlertType;
+                        for (int idx = 0; idx <= (int)AlertType.Critical; idx++)
+                        {
+                            msg += "[" + idx.ToString() + "] " + ((AlertType)idx).ToString() + ", ";
+                        }
+                        msg = msg.Substring(0, msg.Length - 2);
+                        frm.DisplayOutput(msg);
+                    }
+                }
             }
 
             public String ScriptName
@@ -62,7 +104,18 @@ namespace psframework.PShell
 
             public void Update(String StatusMessage)
             {
-                frm.UpdateStatus(StatusMessage, lvw);
+                if (frm != null && lvw != null)
+                {
+                    frm.UpdateStatus(StatusMessage, lvw);
+                }                
+            }
+
+            public void WriteProgress(String Progress)
+            {
+                if (frm != null && lvw != null)
+                {
+                    frm.UpdateProgress(Progress, lvw);
+                }
             }
         }
 
@@ -77,20 +130,94 @@ namespace psframework.PShell
 
             public Collection<PSObject> GetHosts(bool AllHosts = false)
             {
-                if (AllHosts)
+                if (frm != null)
                 {
-                    return frm.GetHosts();
+                    if (AllHosts)
+                    {
+                        return frm.GetHosts();
+                    }
+                    else
+                    {
+                        return frm.GetCheckedHosts();
+                    }
                 }
                 else
                 {
-                    return frm.GetCheckedHosts();
+                    return null;
                 }
+            }
+
+            public String GetHostsCsv(bool AllHosts = false)
+            {
+                if (frm != null)
+                {
+                    string rtncsv = "";
+                    Collection<PSObject> hosts = null;
+                    if (AllHosts)
+                    {
+                        hosts = frm.GetHosts();
+                    }
+                    else
+                    {
+                        hosts = frm.GetCheckedHosts();
+                    }
+                    if (hosts != null)
+                    {
+                        List<String> csvhosts = new List<string>();
+                        foreach (PSObject host in hosts)
+                        {
+                            csvhosts.Add(host.Properties["Name"].Value.ToString());
+                        }
+                        rtncsv = string.Join(",", csvhosts.ToArray());
+                    }
+                    return rtncsv;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+
+            public List<String> GetHostsList(bool AllHosts = false)
+            {
+                if (frm != null)
+                {
+                    List<String> rtn = new List<string>();
+                    Collection<PSObject> hosts = null;
+                    if (AllHosts)
+                    {
+                        hosts = frm.GetHosts();
+                    }
+                    else
+                    {
+                        hosts = frm.GetCheckedHosts();
+                    }
+                    if (hosts != null)
+                    {
+                        foreach (PSObject host in hosts)
+                        {
+                            rtn.Add(host.Properties["Name"].Value.ToString());
+                        }
+                    }
+                    return rtn;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            public PSObject DeserializeHosts(String serializedhosts)
+            {
+                PSObject hosts = (PSObject)PSSerializer.Deserialize(serializedhosts);
+                return hosts;
             }
         }
 
         public class PSTab
         {
             private frmMain frm = null;
+            private string scriptname = "";
             
             public PSTab(frmMain ParentForm)
             {
@@ -99,10 +226,40 @@ namespace psframework.PShell
 
             public void AddObjectGrid(System.Object[] CustomObject, String TabTitle)
             {
+                if (frm != null)
+                {
+                    poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                    ptitm.Text = TabTitle;
+                    ptitm.AddGrid(CustomObject);
+                    frm.AddTabPage(ptitm);
+                }
+                else
+                {
+                    throw new Exception("Parent Form is not set in PSTab.");
+                }
+            }
+
+            public void AddText(String Text, String TabTitle)
+            {
                 poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
                 ptitm.Text = TabTitle;
-                ptitm.AddGrid(CustomObject);
+                ptitm.AddText(Text);
                 frm.AddTabPage(ptitm);
+            }
+
+            public poshsecframework.Controls.PSAlertList AddAlerts(String TabTitle)
+            {
+                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                ptitm.Text = TabTitle;
+                poshsecframework.Controls.PSAlertList rtn = ptitm.CreateAlertTab(scriptname);
+                frm.AddTabPage(ptitm);
+                return rtn;
+            }
+
+            public String ScriptName
+            {
+                get { return scriptname; }
+                set { scriptname = value; }
             }
         }
     }

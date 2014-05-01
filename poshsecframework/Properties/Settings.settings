@@ -5,14 +5,65 @@
     <Setting Name="ScriptPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">.\Scripts\</Value>
     </Setting>
-    <Setting Name="FrameworkPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.\Modules\PoshSecFramework\PoshSecFramework.psm1</Value>
+    <Setting Name="GithubAPIKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ModulePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">.\Modules\</Value>
     </Setting>
     <Setting Name="ScriptDefaultAction" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="PSExecPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ScheduleFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Scripts\schedule.xml</Value>
+    </Setting>
+    <Setting Name="FirstTime" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Modules" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;PoshSec|PoshSec/PoshSec|PoshSec|&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="NameChecking" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="Systems" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SaveSystems" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LastModuleCheck" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LogOutput" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="OutputLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Logs\psfoutput.log</Value>
+    </Setting>
+    <Setting Name="LogAlerts" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AlertLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Logs\psfalerts.log</Value>
+    </Setting>
+    <Setting Name="Alerts" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UseSyslog" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SyslogServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SyslogPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">514</Value>
     </Setting>
   </Settings>
 </SettingsFile>

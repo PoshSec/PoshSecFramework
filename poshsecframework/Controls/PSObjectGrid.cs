@@ -5,6 +5,8 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
+using poshsecframework.Strings;
+using poshsecframework.Enums;
 
 namespace poshsecframework.Controls
 {
@@ -13,13 +15,6 @@ namespace poshsecframework.Controls
         #region Private Variables
         private ToolStrip parstrip = null;
         System.Object[] psobj = null;
-
-        private enum FilterType
-        { 
-            XML = 1,
-            CSV,
-            TXT
-        }
         #endregion
 
         #region Public Methods
@@ -32,7 +27,7 @@ namespace poshsecframework.Controls
 
         public void Export(object sender, EventArgs e)
         {
-            String expfilter = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
+            String expfilter = StringValue.ExportFormats;
             SaveFileDialog dlgExport = new SaveFileDialog();
             dlgExport.Filter = expfilter;
             dlgExport.CheckFileExists = false;
@@ -40,7 +35,7 @@ namespace poshsecframework.Controls
             dlgExport.Title = "Export As...";
             if (dlgExport.ShowDialog() == DialogResult.OK)
             {
-                ExportObject((FilterType)dlgExport.FilterIndex, dlgExport.FileName);
+                ExportObject((EnumValues.FilterType)dlgExport.FilterIndex, dlgExport.FileName);
             }
             dlgExport.Dispose();
             dlgExport = null;
@@ -134,20 +129,20 @@ namespace poshsecframework.Controls
             }            
         }
 
-        private void ExportObject(FilterType type, String filename)
+        private void ExportObject(EnumValues.FilterType type, String filename)
         {
             if (psobj != null && psobj.Count() > 0)
             {
                 Utility.ExportObject exobj = new Utility.ExportObject();
                 switch (type)
                 { 
-                    case FilterType.XML:
+                    case EnumValues.FilterType.XML:
                         exobj.XML(psobj, filename);
                         break;
-                    case FilterType.CSV:
+                    case EnumValues.FilterType.CSV:
                         exobj.CSV(psobj, filename);
                         break;
-                    case FilterType.TXT:
+                    case EnumValues.FilterType.TXT:
                         exobj.TXT(psobj, filename);
                         break;
                 }

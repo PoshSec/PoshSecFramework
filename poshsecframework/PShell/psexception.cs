@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class psexception
     {
@@ -75,7 +75,8 @@ namespace psframework.PShell
             String rtn = "";
             rtn += "There was an error in your script or command. Please see the error message below." + Environment.NewLine + Environment.NewLine;
             rtn += "Error Message:" + Environment.NewLine;
-            rtn += e.Message.ToString();
+            rtn += e.Message.ToString() + Environment.NewLine;
+            rtn += e.ErrorRecord.ScriptStackTrace.Replace(Strings.StringValue.ScriptBlockNoFile, "");
             return rtn;
         }
 

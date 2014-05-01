@@ -4,21 +4,26 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Runspaces;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using poshsecframework.Strings;
 
-namespace psframework.PShell
+namespace poshsecframework.PShell
 {
     class pscript
     {
         #region " Private Variables "
         private RunspaceConfiguration rspaceconfig;
         private Runspace rspace;
+        private psfhost host;
+        private psfhostinterface hostinterface;
         private String scriptcommand;
         private bool iscommand = false;
         private bool clicked = true;
-        private List<psparameter> scriptparams;
+        private bool scheduled = false;
+        private List<psparameter> scriptparams = new List<psparameter>();
         private StringBuilder rslts = new StringBuilder();
         private psexception psexec = new psexception();
         private bool cancel = false;
@@ -27,11 +32,13 @@ namespace psframework.PShell
         private psvariables.PSRoot PSRoot;
         private psvariables.PSModRoot PSModRoot;
         private psvariables.PSFramework PSFramework;
+        private psvariables.PSExec PSExec;
         private psmethods.PSMessageBox PSMessageBox;
         private psmethods.PSAlert PSAlert;
         private psmethods.PSStatus PSStatus;
         private psmethods.PSHosts PSHosts;
         private psmethods.PSTab PSTab;
+        private String loaderrors = "";
         #endregion
 
         #region " Public Events "
@@ -42,7 +49,11 @@ namespace psframework.PShell
         private void InitializeScript()
         {
             rspaceconfig = RunspaceConfiguration.Create();
-            rspace = RunspaceFactory.CreateRunspace(rspaceconfig);
+            host = new psfhost();
+            hostinterface = (psfhostinterface)host.UI;
+            hostinterface.WriteProgressUpdate += WriteProgressUpdate;
+            hostinterface.WriteUpdate += WriteUpdate;
+            rspace = RunspaceFactory.CreateRunspace(host, rspaceconfig);
             rspace.Open();
             InitializeSessionVars();
         }
@@ -56,12 +67,14 @@ namespace psframework.PShell
                 PSStatus = new psmethods.PSStatus(frm, scriptlvw);
                 PSModRoot = new psvariables.PSModRoot("PSModRoot");
                 PSFramework = new psvariables.PSFramework("PSFramework");
+                PSExec = new psvariables.PSExec("PSExec");
                 PSMessageBox = new psmethods.PSMessageBox();
                 PSTab = new psmethods.PSTab(frm);
                 PSHosts = new psmethods.PSHosts(frm);
                 rspace.SessionStateProxy.PSVariable.Set(PSRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSModRoot);
                 rspace.SessionStateProxy.PSVariable.Set(PSFramework);
+                rspace.SessionStateProxy.PSVariable.Set(PSExec);
                 rspace.SessionStateProxy.SetVariable("PSMessageBox", PSMessageBox);
                 rspace.SessionStateProxy.SetVariable("PSAlert", PSAlert);
                 rspace.SessionStateProxy.SetVariable("PSStatus", PSStatus);
@@ -69,24 +82,98 @@ namespace psframework.PShell
                 rspace.SessionStateProxy.SetVariable("PSTab", PSTab);
             }
         }
+
+        public void Close()
+        {
+            rspace.Close();
+            do
+            {
+                System.Threading.Thread.Sleep(100);
+            } while (rspace.RunspaceStateInfo.State != RunspaceState.Closed);
+            rspace.Dispose();
+            rspace = null;
+            GC.Collect();
+        }
+
+        public void ImportPSModules(Collection<String> enabledmods)
+        {
+            if (enabledmods != null & enabledmods.Count() > 0)
+            {
+                Pipeline pline = rspace.CreatePipeline();
+                String script = "";
+                String namecheck = "";
+                if (!Properties.Settings.Default.NameChecking)
+                {
+                    namecheck = " -DisableNameChecking";
+                }
+                foreach (String mod in enabledmods)
+                {
+                    script += "Import-Module \"" + mod + "\"" + namecheck + "\r\n";
+                }
+                pline.Commands.AddScript(script + StringValue.WriteError);
+                Collection<PSObject> rslt = pline.Invoke();
+                HandleWarningsErrors(pline.Error);
+                pline.Dispose();
+                pline = null;
+                if (rslt != null && rslt.Count > 0)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                    loaderrors += rslts.ToString();
+                }
+            }           
+        }
+
+        private void InvokeCommand(string command)
+        {
+            Collection<PSObject> rslt = null;
+            Pipeline pline = rspace.CreatePipeline();
+            pline.Commands.AddScript(command);           
+            try
+            {
+                rslt = pline.Invoke();
+            }
+            catch (Exception e)
+            {
+                rslts.AppendLine(e.Message);
+            }
+            finally
+            {
+                HandleWarningsErrors(pline.Error);
+                pline.Dispose();
+                pline = null;
+                if (rslt != null)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                }
+                GC.Collect();
+            }            
+        }
         #endregion
 
         #region " Public Methods "
-        public void Test()
-        {
-            OnScriptComplete(new pseventargs("It worked!", null, false));
-        }
-
-        public pscript()
+        public pscript(frmMain ParentForm)
         {            
             try
             {
+                frm = ParentForm;
                 InitializeScript();
             }
             catch (Exception e)
             {
                 //Base Exception Handler
-                OnScriptComplete(new pseventargs("Unhandled exception in script function." + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
+                OnScriptComplete(new pseventargs(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
             } 
         }
 
@@ -99,49 +186,124 @@ namespace psframework.PShell
 
         public Collection<PSObject> GetCommand()
         {
+            rslts.Clear();
             Collection<PSObject> rslt = null;
             String scrpt = "";
             Pipeline pline = rspace.CreatePipeline();
-            if (System.IO.File.Exists(poshsecframework.Properties.Settings.Default.FrameworkPath))
-            {                
-                scrpt = "Import-Module \"$PSFramework\"" + Environment.NewLine;
+            scrpt = StringValue.GetCommand;
+            pline.Commands.AddScript(scrpt);
+            try
+            {
+                rslt = pline.Invoke();
+            }
+            catch (Exception e)
+            {
+                rslts.AppendLine(e.Message);
+            }
+            finally
+            {
+                HandleWarningsErrors(pline.Error);
+                pline.Dispose();
+                pline = null;
+                if (rslt != null)
+                {
+                    foreach (PSObject po in rslt)
+                    {
+                        if (po != null)
+                        {
+                            rslts.AppendLine(po.ToString());
+                        }
+                    }
+                }
+                GC.Collect();
+            }                        
+            return rslt;
+        }
+
+        public bool UnblockFiles(string FolderPath)
+        {
+            bool rtn = true;
+            rslts.Clear();
+
+            if (Directory.Exists(FolderPath))
+            {
+                string[] files = null;
+                try
+                {
+                    files = Directory.GetFiles(FolderPath, "*.*", SearchOption.AllDirectories);
+                }
+                catch (Exception e)
+                {
+                    rslts.AppendLine(e.Message);
+                }
+                if (files != null && files.Count() > 0)
+                {
+                    string script = "";
+                    foreach (string file in files)
+                    {
+                        script += "Unblock-File -path \"" + file + "\"\r\n";
+                    }
+                    InvokeCommand(script);
+                    if (rslts.ToString().Trim() != "")
+                    {
+                        rtn = false;
+                    }
+                }
             }
             else
             {
-                frm.AddAlert("Can not locate the Framework file. Check your settings.", psmethods.PSAlert.AlertType.Error, "PoshSec Framework");
+                rslts.AppendLine("The path " + FolderPath + " does not exist.");
+                rtn = false;
             }
-            scrpt += "Get-Command";
-            pline.Commands.AddScript(scrpt);
-            rslt = pline.Invoke();
-            pline.Dispose();
-            GC.Collect();            
-            return rslt;
+            return rtn;
         }
-        
+
+        public bool SetExecutionPolicy()
+        {
+            bool rtn = false;
+            InvokeCommand(StringValue.SetExecutionPolicy);
+            if (rslts.ToString().Trim() == "")
+            {
+                rtn = true;
+            }
+            return rtn;
+        }
+
+        public bool UpdateHelp()
+        {
+            bool rtn = false;
+            InvokeCommand(StringValue.UpdateHelp);
+            if (rslts.ToString().Trim() == "")
+            {
+                rtn = true;
+            }
+            return rtn;
+        }
+
         public void RunScript()
         {
+            cancel = false;
+            rslts.Clear();
             InitializeSessionVars();
             PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
-            if (scriptparams != null)
-            {
-                scriptparams.Clear();
-            }
+            PSTab.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
             Pipeline pline = null;
             bool cancelled = false;
             try
             {
-                if (clicked)
+                if (clicked && !scheduled)
                 {
                     //Only run this if the user double clicked a script or command.
                     //If they typed the command then they should have passed params.
-                    scriptparams = CheckForParams(rspace, scriptcommand);
-                }                
+                    //If it was scheduled and there were params, they should be passed.
+                    scriptparams = CheckForParams(scriptcommand);
+                }
                 if (!cancel)
                 {
                     Command pscmd = new Command(scriptcommand);
                     String cmdparams = "";
                     if (scriptparams != null)
-                    {                        
+                    {
                         foreach (psparameter param in scriptparams)
                         {
                             CommandParameter prm = new CommandParameter(param.Name, param.Value ?? param.DefaultValue);
@@ -153,20 +315,45 @@ namespace psframework.PShell
                     pline = rspace.CreatePipeline();
                     if (iscommand)
                     {
-                        String cmdscript = "Import-Module \"$PSFramework\"" + Environment.NewLine + scriptcommand + cmdparams;
+                        String cmdscript = scriptcommand + cmdparams;
                         if (clicked)
                         {
                             rslts.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
-                        pline.Commands.Add("Out-String");
+                        pline.Commands.Add(StringValue.OutString);
                     }
                     else
                     {
-                        rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));                        
+                        rslts.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));
                         pline.Commands.Add(pscmd);
-                    }                    
-                    Collection<PSObject> rslt = pline.Invoke();
+                    }
+                    Collection<PSObject> rslt = null;
+                    try
+                    {
+                        rslt = pline.Invoke();
+                    }
+                    catch (System.Threading.ThreadAbortException)
+                    {
+                        if (pline != null)
+                        {
+                            HandleWarningsErrors(pline.Error);
+                        }
+                        cancelled = true;
+                        if (iscommand)
+                        {
+                            rslts.AppendLine(StringValue.CommandCancelled);
+                        }
+                        else
+                        {
+                            rslts.AppendLine(StringValue.ScriptCancelled);
+                        }
+                    }
+                    catch (Exception pex)
+                    {
+                        rslts.AppendLine(psexec.psexceptionhandler(pex, iscommand));
+                    }
+                    HandleWarningsErrors(pline.Error);
                     pline.Dispose();
                     pline = null;
                     if (rslt != null)
@@ -182,10 +369,10 @@ namespace psframework.PShell
                 }
                 else
                 {
-                    rslts.AppendLine("Script cancelled by user.");
+                    rslts.AppendLine(StringValue.ScriptCancelled);
                 }
             }
-            catch (ThreadAbortException thde)
+            catch (System.Threading.ThreadAbortException)
             {
                 if (pline != null)
                 {
@@ -194,19 +381,11 @@ namespace psframework.PShell
                     pline = null;
                 }
                 GC.Collect();
-                cancelled = true;
-                if (iscommand)
-                {
-                    rslts.AppendLine("Command cancelled by user." + Environment.NewLine + thde.Message);
-                }
-                else
-                {
-                    rslts.AppendLine("Script cancelled by user." + Environment.NewLine + thde.Message);
-                }                
             }
             catch (Exception e)
             {
-                rslts.AppendLine(psexec.psexceptionhandler(e,iscommand));
+                HandleWarningsErrors(pline.Error);
+                rslts.AppendLine(psexec.psexceptionhandler(e, iscommand));
             }
             finally
             {
@@ -220,10 +399,8 @@ namespace psframework.PShell
                 rslts.Clear();
             }            
         }
-        #endregion
 
-        #region " Private Methods "
-        private List<psparameter>CheckForParams(Runspace rspace, String scriptcommand)
+        public List<psparameter> CheckForParams(String scriptcommand)
         {
             cancel = false;
             List<psparameter> parms = null;
@@ -231,19 +408,20 @@ namespace psframework.PShell
 
             Pipeline pline = rspace.CreatePipeline();
 
-            String scrpt = "Get-Help ";
+            String scrpt = "";
             if (iscommand)
             {
-                scrpt = "Import-Module \"$PSFramework\"" + Environment.NewLine + scrpt + scriptcommand + " -full";
+                scrpt = StringValue.GetHelpFull.Replace("{0}", scriptcommand);
             }
             else
             {
-                scrpt += "\"" + scriptcommand + "\" -full";
+                scrpt = StringValue.GetHelpFull.Replace("{0}", "\"" + scriptcommand + "\"");
             }
             pline.Commands.AddScript(scrpt);
-            pline.Commands.Add("Out-String");
+            pline.Commands.Add(StringValue.OutString);
 
             Collection<PSObject> rslt = pline.Invoke();
+            HandleWarningsErrors(pline.Error);
             if (rslt != null)
             {
                 if (rslt[0].ToString().Contains("PARAMETERS"))
@@ -253,15 +431,17 @@ namespace psframework.PShell
                     {
                         int idx = 0;
                         bool found = false;
+                        List<String> fileparams = GetEditorParams(rslt[0].ToString(), "psfilename");
+                        List<String> hostparams = GetEditorParams(rslt[0].ToString(), "pshosts");                        
                         do
                         {
                             String line = lines[idx];
-                            if(line == "PARAMETERS")
+                            if (line == "PARAMETERS")
                             {
                                 found = true;
                             }
                             idx++;
-                        }while( found == false && idx < lines.Length);
+                        } while (found == false && idx < lines.Length);
 
                         if (found)
                         {
@@ -289,7 +469,7 @@ namespace psframework.PShell
                                     idx += 2;
                                     line = lines[idx];
                                     if (line.Contains("true"))
-                                    { 
+                                    {
                                         prm.Category = "Required";
                                     }
                                     else
@@ -312,11 +492,19 @@ namespace psframework.PShell
                                                 prm.DefaultValue = defval;
                                             }
                                         }
-                                    }                                    
+                                    }
+                                    if (fileparams.Contains(prm.Name))
+                                    {
+                                        prm.IsFileName = true;
+                                    }
+                                    if (hostparams.Contains(prm.Name))
+                                    {
+                                        prm.IsHostList = true;
+                                    }
                                     parm.Properties.Add(prm);
                                 }
                                 idx++;
-                            }while(line.Substring(0,1) == " " && idx < lines.Length);
+                            } while (line.Substring(0, 1) == " " && idx < lines.Length);
                         }
                     }
                 }
@@ -327,10 +515,7 @@ namespace psframework.PShell
             GC.Collect();
             if (parm.Properties.Count > 0)
             {
-                Interface.frmParams frm = new Interface.frmParams();
-                frm.SetParameters(parm);
-                frm.TopMost = true;
-                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (frm.ShowParams(parm) == System.Windows.Forms.DialogResult.OK)
                 {
                     parms = parm.Properties;
                 }
@@ -338,8 +523,38 @@ namespace psframework.PShell
                 {
                     cancel = true;
                 }
-            }            
+            }
             return parms;
+        }
+        #endregion
+
+        #region " Private Methods "
+        private void HandleWarningsErrors(PipelineReader<object> pipelineerrors)
+        {
+            foreach (string warning in hostinterface.Warnings)
+            {
+                PSAlert.Add(warning, psmethods.PSAlert.AlertType.Warning);
+            }
+            if (pipelineerrors.Count > 0)
+            {
+                Collection<object> errors = pipelineerrors.ReadToEnd();
+                foreach (object error in errors)
+                {
+                    PSAlert.Add(error.ToString(), psmethods.PSAlert.AlertType.Error);
+                }
+            }
+            hostinterface.ClearWarnings();
+        }
+
+        private void WriteProgressUpdate(object sender, Events.WriteProgressEventArgs e)
+        {
+            PSStatus.Update(e.ProgressRecord.StatusDescription);
+            PSStatus.WriteProgress(e.ProgressRecord.PercentComplete.ToString() + "%");
+        }
+
+        private void WriteUpdate(object sender, Events.WriteEventArgs e)
+        {
+            rslts.AppendLine(e.Message);
         }
 
         private Type GetTypeFromString(String typename)
@@ -353,9 +568,43 @@ namespace psframework.PShell
                 case "<boolean>":
                     rtn = typeof(Boolean);
                     break;
+                case "<int32>":
+                    rtn = typeof(int);
+                    break;
+                case "<psobject>":
+                    rtn = typeof(PSObject);
+                    break;
+                case "[<switchparameter>]":
+                    rtn = typeof(bool);
+                    break;
                 default:
                     rtn = typeof(Object);
                     break;
+            }
+            return rtn;
+        }
+
+        private List<String> GetEditorParams(String helptext, String identifier)
+        {
+            List<String> rtn = new List<string>();
+            identifier += "=";
+            if (helptext.Contains(identifier))
+            {
+                int fnidx = helptext.IndexOf(identifier);
+                int fnendidx = helptext.IndexOf(" ", fnidx);
+                String fnparms = helptext.Substring(fnidx, fnendidx - fnidx);
+                fnparms = fnparms.Replace("\r\n", "").Replace(identifier, "");
+                if (fnparms.Trim() != "")
+                {
+                    String[] prms = fnparms.Split(',');
+                    if (prms != null && prms.Length > 0)
+                    {
+                        foreach (String prm in prms)
+                        {
+                            rtn.Add(prm);
+                        }
+                    }
+                }
             }
             return rtn;
         }
@@ -381,6 +630,11 @@ namespace psframework.PShell
             set { this.iscommand = value; }
         }
 
+        public bool IsScheduled
+        {
+            set { this.scheduled = value; }
+        }
+
         public bool Clicked
         {
             set { this.clicked = value; }
@@ -389,6 +643,7 @@ namespace psframework.PShell
         public List<psparameter> Parameters
         {
             set { this.scriptparams = value; }
+            get { return this.scriptparams; }
         }
 
         public String Results
@@ -404,6 +659,16 @@ namespace psframework.PShell
         public ListViewItem ScriptListView
         {
             set { scriptlvw = value; }
+        }
+
+        public bool ParamSelectionCancelled
+        {
+            get { return cancel; }
+        }
+
+        public String LoadErrors
+        {
+            get { return loaderrors; }
         }
         #endregion
     }
