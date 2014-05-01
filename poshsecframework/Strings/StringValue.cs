@@ -24,6 +24,7 @@ namespace poshsecframework.Strings
         public const string UnhandledException = "Unhandled exception in script function.";
         public const string ConfirmScheduleDelete = "Are you sure you want to delete the selected schedules?";
         public const string ConfirmNetworkDelete = "Are you sure you want to delete the selected network?";
+        public const string ConfirmModuleDelete = "Are you sure you want to delete the selected module?";
         public const string SelectWeekdays = "Please select the days of the week to schedule this script.";
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
@@ -31,6 +32,7 @@ namespace poshsecframework.Strings
         public const string InvalidSyslog = "Please enter a valid host name or IP address for the syslog server.";
         public const string InvalidAlertType = "That is not a valid Alert Type. The valid alert types are ";
         public const string FileSavedSuccessfully = "File saved successfully.";
+        public const string RestartRequired = "PoshSec Framework needs to be restarted. Would you like to restart now?";
 
         public const string TNSetExecutionPolicy = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/ee176961.aspx";
         public const string TNUpdateHelp = "\r\n\r\nFor more information, please visit\r\nhttp://technet.microsoft.com/en-us/library/hh849720.aspx";

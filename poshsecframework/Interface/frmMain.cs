@@ -916,8 +916,15 @@ namespace poshsecframework
                 {
                     if (restart)
                     {
-                        Application.Restart();
-                        this.Close();
+                        if (MessageBox.Show(StringValue.RestartRequired, "Restart?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                        {
+                            Application.Restart();
+                            this.Close();
+                        }
+                        else
+                        {
+                            psf.Open();
+                        }
                     }
                     else
                     {
@@ -1637,6 +1644,21 @@ namespace poshsecframework
                                             Directory.Delete(target, true);
                                         }
                                         di.MoveTo(target);
+                                    }
+                                    else
+                                    { 
+                                        //Just delete the path listed.
+                                        if (Directory.Exists(moveto))
+                                        {
+                                            try
+                                            {
+                                                Directory.Delete(moveto, true);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                AddAlert(e.Message, PShell.psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
+                                            }
+                                        }
                                     }
                                 }                                
                             }

@@ -799,6 +799,7 @@
             this.lvwModules.TabIndex = 1;
             this.lvwModules.UseCompatibleStateImageBehavior = false;
             this.lvwModules.View = System.Windows.Forms.View.Details;
+            this.lvwModules.SelectedIndexChanged += new System.EventHandler(this.lvwModules_SelectedIndexChanged);
             // 
             // chModName
             // 
@@ -893,6 +894,7 @@
             this.btnDeleteModule.Name = "btnDeleteModule";
             this.btnDeleteModule.Size = new System.Drawing.Size(23, 22);
             this.btnDeleteModule.Text = "Delete Module";
+            this.btnDeleteModule.Click += new System.EventHandler(this.btnDeleteModule_Click);
             // 
             // btnCheckUpdates
             // 

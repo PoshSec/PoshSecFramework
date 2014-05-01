@@ -450,5 +450,54 @@ namespace poshsecframework.Interface
         {
             gbSyslogInfo.Enabled = ckUseSyslog.Checked;
         }
+
+        private void btnDeleteModule_Click(object sender, EventArgs e)
+        {
+            if (lvwModules.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show(StringValue.ConfirmModuleDelete, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    foreach (ListViewItem itm in lvwModules.SelectedItems)
+                    {
+                        if (Directory.Exists(poshsecframework.Properties.Settings.Default.ModulePath))
+                        {
+                            String path = Path.Combine(poshsecframework.Properties.Settings.Default.ModulePath, itm.Text);
+                            if (Directory.Exists(path))
+                            {
+                                try
+                                {
+                                    Directory.Delete(path, true);
+                                }
+                                catch
+                                {
+                                    StreamWriter wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                                    wtr.WriteLine(path);
+                                    wtr.Flush();
+                                    wtr.Close();
+                                    restart = true;
+                                    lblRestartRequired.Visible = true;
+                                }
+                            }
+                        }
+                        itm.Remove();
+                    }
+                }
+                SaveModules();
+            }            
+        }
+
+        private void lvwModules_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvwModules.SelectedItems.Count > 0)
+            {
+                btnEditModule.Enabled = true;
+                btnDeleteModule.Enabled = true;
+            }
+            else
+            {
+                btnEditModule.Enabled = false;
+                btnDeleteModule.Enabled = false;
+            }
+        }
     }
 }
