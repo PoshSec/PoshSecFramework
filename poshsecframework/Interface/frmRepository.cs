@@ -23,6 +23,7 @@ namespace poshsecframework.Interface
         private bool restart = false;
         private string lastmodified = "";
         private string curBranch = "";
+        private bool update = false;
 
         public frmRepository()
         {
@@ -229,11 +230,35 @@ namespace poshsecframework.Interface
             get { return lastmodified; }
         }
 
+        public bool DoUpdate
+        {
+            set { update = value; }
+        }
+
         private void frmRepository_Shown(object sender, EventArgs e)
         {
-            if (curBranch != "")
+            if (update)
             {
-                cmbBranch.Enabled = true;
+                txtURL.Enabled = false;
+                btnOK.Enabled = false;
+                btnCancel.Enabled = false;
+                cmbBranch.Enabled = false;
+                if (GetRepository() == true)
+                {
+                    this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                }
+                else
+                {
+                    this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                }
+                this.Close();
+            }
+            else
+            {
+                if (curBranch != "")
+                {
+                    cmbBranch.Enabled = true;
+                }
             }
         }
     }

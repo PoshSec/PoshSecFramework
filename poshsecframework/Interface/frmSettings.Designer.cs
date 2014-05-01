@@ -900,12 +900,14 @@
             // btnCheckUpdates
             // 
             this.btnCheckUpdates.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCheckUpdates.Enabled = false;
             this.btnCheckUpdates.Image = global::poshsecframework.Properties.Resources.pagewhiteget;
             this.btnCheckUpdates.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCheckUpdates.Name = "btnCheckUpdates";
             this.btnCheckUpdates.Size = new System.Drawing.Size(23, 22);
             this.btnCheckUpdates.Text = "Check for Updates";
             this.btnCheckUpdates.ToolTipText = "Check for Updates";
+            this.btnCheckUpdates.Click += new System.EventHandler(this.btnCheckUpdates_Click);
             // 
             // ttPSFHelp
             // 

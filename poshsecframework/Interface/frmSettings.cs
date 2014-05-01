@@ -492,11 +492,13 @@ namespace poshsecframework.Interface
             {
                 btnEditModule.Enabled = true;
                 btnDeleteModule.Enabled = true;
+                btnCheckUpdates.Enabled = true;
             }
             else
             {
                 btnEditModule.Enabled = false;
                 btnDeleteModule.Enabled = false;
+                btnCheckUpdates.Enabled = false;
             }
         }
 
@@ -506,6 +508,7 @@ namespace poshsecframework.Interface
             {
                 ListViewItem itm = lvwModules.SelectedItems[0];
                 Interface.frmRepository frm = new frmRepository();
+                frm.Text = "Edit Module";
                 frm.Url = Path.Combine(StringValue.GithubURL, itm.SubItems[1].Text);
                 frm.Branch = itm.SubItems[2].Text;
                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -520,6 +523,76 @@ namespace poshsecframework.Interface
                 {
                     lblRestartRequired.Visible = true;
                 }                
+            }
+        }
+
+        private void btnCheckUpdates_Click(object sender, EventArgs e)
+        {
+            if (lvwModules.SelectedItems.Count > 0)
+            {
+                ListViewItem itm = lvwModules.SelectedItems[0];
+                Properties.Settings.Default["LastModuleCheck"] = DateTime.Now.ToString();
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+                string err = "";
+                Web.GithubClient ghc = new Web.GithubClient();
+                try
+                {
+                    String location = itm.SubItems[1].Text;
+                    String[] locparts = location.Split('/');
+                    if (locparts != null && locparts.Length == 2)
+                    {
+                        String RepoOwner = locparts[0];
+                        String Repository = itm.Text;
+                        String branch = itm.SubItems[2].Text;
+                        String lastmodified = itm.SubItems[3].Text;
+                        String repolastmodified = ghc.GetLastModified(RepoOwner, Repository, branch, lastmodified);
+                        if (lastmodified != repolastmodified)
+                        {
+                            if (MessageBox.Show(String.Format(StringValue.ModuleUpdateAvailable, repolastmodified), "Update Available", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                            {
+                                Interface.frmRepository frm = new frmRepository();
+                                frm.Text = "Update Module";
+                                frm.Url = Path.Combine(StringValue.GithubURL, itm.SubItems[1].Text);
+                                frm.Branch = itm.SubItems[2].Text;
+                                frm.DoUpdate = true;
+                                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                                {
+                                    restart = frm.Restart;
+                                    AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastModified);
+                                    SaveModules();
+                                }
+                                frm.Dispose();
+                                frm = null;
+                                if (restart)
+                                {
+                                    lblRestartRequired.Visible = true;
+                                }
+                            }                            
+                        }
+                        else
+                        {
+                            MessageBox.Show(StringValue.ModuleUptoDate);
+                        }
+                        if (ghc.Errors.Count > 0)
+                        {
+                            err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                        }
+                    }
+                    else
+                    {
+                        err += "Invalid location in module.";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                ghc = null;
+                if (restart)
+                {
+                    lblRestartRequired.Visible = true;
+                }
             }
         }
     }
