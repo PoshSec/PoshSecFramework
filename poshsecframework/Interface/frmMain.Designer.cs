@@ -1236,6 +1236,7 @@ namespace poshsecframework
             this.btnAlert_Error.Name = "btnAlert_Error";
             this.btnAlert_Error.Size = new System.Drawing.Size(23, 22);
             this.btnAlert_Error.Text = "toolStripButton6";
+            this.btnAlert_Error.ToolTipText = "Show Error Alerts";
             this.btnAlert_Error.CheckedChanged += new System.EventHandler(this.btnAlert_Error_CheckedChanged);
             this.btnAlert_Error.Click += new System.EventHandler(this.btnAlert_Error_Click);
             // 
@@ -1249,6 +1250,7 @@ namespace poshsecframework
             this.btnAlert_Warning.Name = "btnAlert_Warning";
             this.btnAlert_Warning.Size = new System.Drawing.Size(23, 22);
             this.btnAlert_Warning.Text = "toolStripButton7";
+            this.btnAlert_Warning.ToolTipText = "Show Warning Alerts";
             this.btnAlert_Warning.CheckedChanged += new System.EventHandler(this.btnAlert_Warning_CheckedChanged);
             this.btnAlert_Warning.Click += new System.EventHandler(this.btnAlert_Warning_Click);
             // 
@@ -1262,6 +1264,7 @@ namespace poshsecframework
             this.btnAlert_Severe.Name = "btnAlert_Severe";
             this.btnAlert_Severe.Size = new System.Drawing.Size(23, 22);
             this.btnAlert_Severe.Text = "toolStripButton8";
+            this.btnAlert_Severe.ToolTipText = "Show Severe Alerts";
             this.btnAlert_Severe.CheckedChanged += new System.EventHandler(this.btnAlert_Severe_CheckedChanged);
             this.btnAlert_Severe.Click += new System.EventHandler(this.btnAlert_Severe_Click);
             // 
@@ -1274,6 +1277,7 @@ namespace poshsecframework
             this.btnAlert_Critical.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Critical.Name = "btnAlert_Critical";
             this.btnAlert_Critical.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Critical.ToolTipText = "Show Critical Alerts";
             this.btnAlert_Critical.CheckedChanged += new System.EventHandler(this.btnAlert_Critical_CheckedChanged);
             this.btnAlert_Critical.Click += new System.EventHandler(this.btnAlert_Critical_Click);
             // 
