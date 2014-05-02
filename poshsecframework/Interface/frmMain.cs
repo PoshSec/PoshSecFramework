@@ -906,7 +906,6 @@ namespace poshsecframework
             if (lvwActiveScripts.Items.Count == 0)
             {
                 schedule.Pause();
-                psf.Close();
                 poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
                 System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
                 bool restart = frm.Restart;
@@ -914,6 +913,7 @@ namespace poshsecframework
                 frm = null;
                 if (rslt == System.Windows.Forms.DialogResult.OK)
                 {
+                    psf.Close();
                     if (restart)
                     {
                         if (MessageBox.Show(StringValue.RestartRequired, "Restart?", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
@@ -931,10 +931,6 @@ namespace poshsecframework
                         psf.Open();
                         Initialize();
                     }
-                }
-                else
-                {
-                    psf.Open();
                 }
                 schedule.Resume();
             }
