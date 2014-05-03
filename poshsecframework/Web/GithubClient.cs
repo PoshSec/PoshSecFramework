@@ -384,7 +384,7 @@ namespace poshsecframework.Web
         private int GetRateLimitRemaining(WebResponse ghr)
         {
             int rtn = 0;
-            if (ghr.Headers.Keys.Count > 0)
+            if (ghr != null && ghr.Headers != null && ghr.Headers.Keys.Count > 0)
             {
                 int idx = 0;
                 bool found = false;
