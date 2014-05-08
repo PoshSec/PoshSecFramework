@@ -246,7 +246,7 @@ namespace poshsecframework.Web
         {
             FileInfo rtn = null;
             ghc = (HttpWebRequest)WebRequest.Create(uri);
-            ghc.Timeout = 30000;
+            ghc.Timeout = 5000;
             ghc.UserAgent = StringValue.psftitle;
             WebResponse ghr = null;
             try
@@ -384,7 +384,7 @@ namespace poshsecframework.Web
         private int GetRateLimitRemaining(WebResponse ghr)
         {
             int rtn = 0;
-            if (ghr.Headers.Keys.Count > 0)
+            if (ghr != null && ghr.Headers != null && ghr.Headers.Keys.Count > 0)
             {
                 int idx = 0;
                 bool found = false;
