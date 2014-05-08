@@ -246,7 +246,7 @@ namespace poshsecframework.Web
         {
             FileInfo rtn = null;
             ghc = (HttpWebRequest)WebRequest.Create(uri);
-            ghc.Timeout = 30000;
+            ghc.Timeout = 5000;
             ghc.UserAgent = StringValue.psftitle;
             WebResponse ghr = null;
             try
