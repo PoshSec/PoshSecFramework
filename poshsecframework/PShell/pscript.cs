@@ -384,7 +384,10 @@ namespace poshsecframework.PShell
             }
             catch (Exception e)
             {
-                HandleWarningsErrors(pline.Error);
+                if (pline != null)
+                {
+                    HandleWarningsErrors(pline.Error);
+                }                
                 rslts.AppendLine(psexec.psexceptionhandler(e, iscommand));
             }
             finally
