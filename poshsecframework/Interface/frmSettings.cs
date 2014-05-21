@@ -237,7 +237,7 @@ namespace poshsecframework.Interface
                 }
                 Properties.Settings.Default["FirstTime"] = firsttime;
                 Properties.Settings.Default["NameChecking"] = ckNameCheck.Checked;
-                Properties.Settings.Default["ShowInTaskbar"] = ckNameCheck.Checked;
+                Properties.Settings.Default["ShowInTaskbar"] = ckShowinTaskbar.Checked;
                 Properties.Settings.Default["SaveSystems"] = ckSaveSystems.Checked;
                 if (!ckSaveSystems.Checked)
                 {

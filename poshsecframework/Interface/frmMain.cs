@@ -165,8 +165,8 @@ namespace poshsecframework
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                this.ShowInTaskbar = false;
-                nimain.Visible = true;
+                this.ShowInTaskbar = Properties.Settings.Default.ShowInTaskbar;
+                nimain.Visible = !this.ShowInTaskbar;
             }
             else
             {
