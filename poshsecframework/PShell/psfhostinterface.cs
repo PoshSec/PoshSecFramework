@@ -32,7 +32,6 @@ namespace poshsecframework.PShell
 
         public override void WriteLine()
         {
-            System.Windows.Forms.MessageBox.Show("Writeline");
             base.WriteLine();
         }
 
@@ -43,13 +42,12 @@ namespace poshsecframework.PShell
 
         public override void WriteErrorLine(string value)
         {
-            System.Windows.Forms.MessageBox.Show("Writeerrorline");
             return;
         }
 
         public override void WriteLine(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
         {
-            return; //base.WriteLine(foregroundColor, backgroundColor, value);
+            return;
         }
 
         public override void WriteLine(string value)
@@ -107,19 +105,16 @@ namespace poshsecframework.PShell
 
         public override int PromptForChoice(string caption, string message, System.Collections.ObjectModel.Collection<ChoiceDescription> choices, int defaultChoice)
         {
-            System.Windows.Forms.MessageBox.Show("Caption = " + caption);
             return -1;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName)
         {
-            System.Windows.Forms.MessageBox.Show("promptforcreds");
             return null;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName, System.Management.Automation.PSCredentialTypes allowedCredentialTypes, System.Management.Automation.PSCredentialUIOptions options)
         {
-            System.Windows.Forms.MessageBox.Show("promptforcreds2");
             return null;
         }
 

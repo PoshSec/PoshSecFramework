@@ -1113,7 +1113,12 @@ namespace poshsecframework
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                LogOutput(output);
+                txtPShellOutput.AppendText(StringValue.psf);
+                mincurpos = txtPShellOutput.Text.Length;
+                txtPShellOutput.SelectionStart = mincurpos;
+                txtPShellOutput.Select();
+                txtPShellOutput.ReadOnly = false;
+                LogOutput(Environment.NewLine + output + StringValue.psf);
             }
         }
 
@@ -2173,8 +2178,16 @@ namespace poshsecframework
                     if (!txtPShellOutput.ReadOnly)
                     {
                         String cmd = txtPShellOutput.Text.Substring(mincurpos, txtPShellOutput.Text.Length - mincurpos);
+                        
                         LogOutput(cmd);
-                        ProcessCommand(cmd);
+                        if (cmd.Trim() != "")
+                        {
+                            ProcessCommand(cmd);
+                        }
+                        else
+                        {
+                            DisplayOutput("\r\n");
+                        }
                     }
                     break;
                 case Keys.ControlKey: case Keys.Alt:

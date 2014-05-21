@@ -91,7 +91,7 @@ namespace poshsecframework.Strings
         public const string Exit = "EXIT";
 
         public const string GetCommand = "Get-Command";
-        public const string OutString = "Out-string";
+        public const string OutString = "Out-String";
         public const string GetHelpFull = "Get-Help {0} -full";
         public const string SetExecutionPolicy = "Set-ExecutionPolicy RemoteSigned -Force";
         public const string UpdateHelp = "Update-Help -Force";

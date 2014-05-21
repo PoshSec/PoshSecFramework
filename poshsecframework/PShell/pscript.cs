@@ -321,7 +321,7 @@ namespace poshsecframework.PShell
                             rslts.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
-                        //pline.Commands.Add(StringValue.OutString);
+                        pline.Commands.Add(StringValue.OutString);
                     }
                     else
                     {
