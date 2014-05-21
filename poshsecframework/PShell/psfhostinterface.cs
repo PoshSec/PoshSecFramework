@@ -11,6 +11,7 @@ namespace poshsecframework.PShell
     class psfhostinterface : PSHostUserInterface
     {
         private Collection<String> warnings = new Collection<string>();
+        private psfhostrawinterface rawinterface = new psfhostrawinterface();
         public EventHandler<Events.WriteProgressEventArgs> WriteProgressUpdate;
         public EventHandler<Events.WriteEventArgs> WriteUpdate;
 
@@ -31,6 +32,7 @@ namespace poshsecframework.PShell
 
         public override void WriteLine()
         {
+            System.Windows.Forms.MessageBox.Show("Writeline");
             base.WriteLine();
         }
 
@@ -41,12 +43,13 @@ namespace poshsecframework.PShell
 
         public override void WriteErrorLine(string value)
         {
+            System.Windows.Forms.MessageBox.Show("Writeerrorline");
             return;
         }
 
         public override void WriteLine(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
         {
-            base.WriteLine(foregroundColor, backgroundColor, value);
+            return; //base.WriteLine(foregroundColor, backgroundColor, value);
         }
 
         public override void WriteLine(string value)
@@ -89,27 +92,40 @@ namespace poshsecframework.PShell
 
         public override Dictionary<string, System.Management.Automation.PSObject> Prompt(string caption, string message, System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
         {
-            return null;
+            Dictionary<string, System.Management.Automation.PSObject> rtn = new Dictionary<string, System.Management.Automation.PSObject>();
+            string msg = message;
+            if (descriptions != null)
+            {
+                foreach (FieldDescription descr in descriptions)
+                {
+                    msg += descr.Name + "\n";
+                }
+            }
+            System.Windows.Forms.MessageBox.Show(msg, caption);
+            return rtn;
         }
 
         public override int PromptForChoice(string caption, string message, System.Collections.ObjectModel.Collection<ChoiceDescription> choices, int defaultChoice)
         {
+            System.Windows.Forms.MessageBox.Show("Caption = " + caption);
             return -1;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName)
         {
+            System.Windows.Forms.MessageBox.Show("promptforcreds");
             return null;
         }
 
         public override System.Management.Automation.PSCredential PromptForCredential(string caption, string message, string userName, string targetName, System.Management.Automation.PSCredentialTypes allowedCredentialTypes, System.Management.Automation.PSCredentialUIOptions options)
         {
+            System.Windows.Forms.MessageBox.Show("promptforcreds2");
             return null;
         }
 
         public override PSHostRawUserInterface RawUI
         {
-            get { return null; }
+            get { return rawinterface; }
         }
 
         public override string ReadLine()

@@ -1132,12 +1132,12 @@ namespace poshsecframework
             }
             else
             {
-                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + StringValue.psf).Length) > txtPShellOutput.MaxLength)
+                if ((txtPShellOutput.Text.Length + output.Length + StringValue.psf.Length) > txtPShellOutput.MaxLength)
                 {
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
+                txtPShellOutput.AppendText(StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 if (clicked || cancelled || scroll)
@@ -1153,7 +1153,7 @@ namespace poshsecframework
                     tcMain.SelectedTab = tbpPowerShell;
                 }
                 RemoveActiveScript(lvw);
-                LogOutput(output + Environment.NewLine + StringValue.psf);
+                LogOutput(Environment.NewLine + output + StringValue.psf);
             }            
         }
 

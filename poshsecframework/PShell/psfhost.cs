@@ -21,12 +21,14 @@ namespace poshsecframework.PShell
 
         public override void EnterNestedPrompt()
         {
-            throw new NotImplementedException();
+            System.Windows.Forms.MessageBox.Show("Enter nested prompt");
+            //throw new NotImplementedException();
         }
 
         public override void ExitNestedPrompt()
         {
-            throw new NotImplementedException();
+            System.Windows.Forms.MessageBox.Show("Exit nested prompt");
+            //throw new NotImplementedException();
         }
 
         public override void NotifyBeginApplication()
