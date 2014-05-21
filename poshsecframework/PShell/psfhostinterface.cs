@@ -90,16 +90,60 @@ namespace poshsecframework.PShell
 
         public override Dictionary<string, System.Management.Automation.PSObject> Prompt(string caption, string message, System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
         {
-            Dictionary<string, System.Management.Automation.PSObject> rtn = new Dictionary<string, System.Management.Automation.PSObject>();
-            string msg = message;
+            Dictionary<string, System.Management.Automation.PSObject> rtn = null;
+            string msg = message + "\n";
             if (descriptions != null)
             {
-                foreach (FieldDescription descr in descriptions)
+                //foreach (FieldDescription descr in descriptions)
+                //{
+                //    msg += "Name = " + descr.Name + "\n";
+                //    msg += "Attributes = ";
+                //    foreach(Attribute attr in descr.Attributes)
+                //    {
+                //        msg += attr.ToString() + ", ";
+                //    }
+                //    msg += "\n";
+                //    msg += "DefaultValue = " + descr.DefaultValue + "\n";
+                //    msg += "Help Message = " + descr.HelpMessage + "\n";
+                //    msg += "Mandatory = " + descr.IsMandatory.ToString() + "\n";
+                //    msg += "Label = " + descr.Label + "\n";
+                //    msg += "Parameter Type = " + descr.ParameterTypeName + "\n";
+                //}
+                rtn = GetParameters(descriptions);
+            }
+            return rtn;
+        }
+
+        private Dictionary<string, System.Management.Automation.PSObject> GetParameters(System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
+        {
+            Dictionary<string, System.Management.Automation.PSObject> rtn = new Dictionary<string, System.Management.Automation.PSObject>();
+            psparamtype parm = new psparamtype();
+            foreach (FieldDescription descr in descriptions)
+            {
+                psparameter prm = new psparameter();
+                prm.Name = descr.Name;
+                if (descr.IsMandatory)
                 {
-                    msg += descr.Name + "\n";
+                    prm.Category = "Required";
+                }
+                else
+                {
+                    prm.Category = "Optional";
+                }
+                prm.DefaultValue = descr.DefaultValue;
+                prm.Description = descr.HelpMessage;
+                prm.Type = Type.GetType(descr.ParameterAssemblyFullName);
+                parm.Properties.Add(prm);
+            }
+            Interface.frmParams frmi = new Interface.frmParams();
+            frmi.SetParameters(parm);
+            if (frmi.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (psparameter prm in parm.Properties)
+                {
+                    rtn.Add(prm.Name, new System.Management.Automation.PSObject(prm.Value));
                 }
             }
-            System.Windows.Forms.MessageBox.Show(msg, caption);
             return rtn;
         }
 
