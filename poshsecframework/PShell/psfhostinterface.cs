@@ -12,8 +12,14 @@ namespace poshsecframework.PShell
     {
         private Collection<String> warnings = new Collection<string>();
         private psfhostrawinterface rawinterface = new psfhostrawinterface();
+        private frmMain frm;
         public EventHandler<Events.WriteProgressEventArgs> WriteProgressUpdate;
         public EventHandler<Events.WriteEventArgs> WriteUpdate;
+
+        public psfhostinterface(frmMain parent)
+        {
+            frm = parent;
+        }
 
         public void ClearWarnings()
         {
@@ -114,6 +120,7 @@ namespace poshsecframework.PShell
             return rtn;
         }
 
+        [STAThread]
         private Dictionary<string, System.Management.Automation.PSObject> GetParameters(System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
         {
             Dictionary<string, System.Management.Automation.PSObject> rtn = new Dictionary<string, System.Management.Automation.PSObject>();
@@ -133,11 +140,13 @@ namespace poshsecframework.PShell
                 prm.DefaultValue = descr.DefaultValue;
                 prm.Description = descr.HelpMessage;
                 prm.Type = Type.GetType(descr.ParameterAssemblyFullName);
+                if(prm.Name.ToLower() == "file" || prm.Name.ToLower() == "filename")
+                {
+                    prm.IsFileName = true;
+                }
                 parm.Properties.Add(prm);
             }
-            Interface.frmParams frmi = new Interface.frmParams();
-            frmi.SetParameters(parm);
-            if (frmi.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (frm.ShowParams(parm) == System.Windows.Forms.DialogResult.OK)
             {
                 foreach (psparameter prm in parm.Properties)
                 {

@@ -9,14 +9,14 @@ namespace poshsecframework.PShell
 {
     class psfhost : PSHost
     {
-        private psfhostinterface psfi = new psfhostinterface();
+        private psfhostinterface psfi;
         private Guid gid = Guid.NewGuid();
         private System.Globalization.CultureInfo originalCultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
         private System.Globalization.CultureInfo originalUICultureInfo = System.Threading.Thread.CurrentThread.CurrentUICulture;        
 
-        public psfhost()
+        public psfhost(frmMain parent)
         {
-
+            psfi = new psfhostinterface(parent);
         }
 
         public override void EnterNestedPrompt()

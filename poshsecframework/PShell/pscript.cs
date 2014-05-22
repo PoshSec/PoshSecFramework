@@ -49,7 +49,7 @@ namespace poshsecframework.PShell
         private void InitializeScript()
         {
             rspaceconfig = RunspaceConfiguration.Create();
-            host = new psfhost();
+            host = new psfhost(frm);
             hostinterface = (psfhostinterface)host.UI;
             hostinterface.WriteProgressUpdate += WriteProgressUpdate;
             hostinterface.WriteUpdate += WriteUpdate;
@@ -496,7 +496,7 @@ namespace poshsecframework.PShell
                                             }
                                         }
                                     }
-                                    if (fileparams.Contains(prm.Name))
+                                    if (fileparams.Contains(prm.Name) || prm.Name.ToLower() == "file" || prm.Name.ToLower() == "filename")
                                     {
                                         prm.IsFileName = true;
                                     }
