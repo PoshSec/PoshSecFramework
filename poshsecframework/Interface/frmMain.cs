@@ -165,8 +165,8 @@ namespace poshsecframework
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                this.ShowInTaskbar = false;
-                nimain.Visible = true;
+                this.ShowInTaskbar = Properties.Settings.Default.ShowInTaskbar;
+                nimain.Visible = !this.ShowInTaskbar;
             }
             else
             {
@@ -1113,7 +1113,12 @@ namespace poshsecframework
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                LogOutput(output);
+                txtPShellOutput.AppendText(StringValue.psf);
+                mincurpos = txtPShellOutput.Text.Length;
+                txtPShellOutput.SelectionStart = mincurpos;
+                txtPShellOutput.Select();
+                txtPShellOutput.ReadOnly = false;
+                LogOutput(Environment.NewLine + output + StringValue.psf);
             }
         }
 
@@ -1132,12 +1137,12 @@ namespace poshsecframework
             }
             else
             {
-                if ((txtPShellOutput.Text.Length + output.Length + (Environment.NewLine + StringValue.psf).Length) > txtPShellOutput.MaxLength)
+                if ((txtPShellOutput.Text.Length + output.Length + StringValue.psf.Length) > txtPShellOutput.MaxLength)
                 {
                     txtPShellOutput.Text = txtPShellOutput.Text.Substring(output.Length + 500, txtPShellOutput.Text.Length - (output.Length + 500));
                 }
                 txtPShellOutput.AppendText(output);
-                txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
+                txtPShellOutput.AppendText(StringValue.psf);
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 if (clicked || cancelled || scroll)
@@ -1153,7 +1158,7 @@ namespace poshsecframework
                     tcMain.SelectedTab = tbpPowerShell;
                 }
                 RemoveActiveScript(lvw);
-                LogOutput(output + Environment.NewLine + StringValue.psf);
+                LogOutput(Environment.NewLine + output + StringValue.psf);
             }            
         }
 
@@ -2173,8 +2178,16 @@ namespace poshsecframework
                     if (!txtPShellOutput.ReadOnly)
                     {
                         String cmd = txtPShellOutput.Text.Substring(mincurpos, txtPShellOutput.Text.Length - mincurpos);
+                        
                         LogOutput(cmd);
-                        ProcessCommand(cmd);
+                        if (cmd.Trim() != "")
+                        {
+                            ProcessCommand(cmd);
+                        }
+                        else
+                        {
+                            DisplayOutput("\r\n");
+                        }
                     }
                     break;
                 case Keys.ControlKey: case Keys.Alt:

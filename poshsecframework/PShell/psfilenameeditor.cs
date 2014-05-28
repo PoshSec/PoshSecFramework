@@ -36,7 +36,7 @@ namespace poshsecframework.PShell
                 dlg.Dispose();
                 dlg = null;
                 return value;
-            }
+            }            
         }
     }
 }

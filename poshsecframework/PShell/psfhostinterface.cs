@@ -11,8 +11,15 @@ namespace poshsecframework.PShell
     class psfhostinterface : PSHostUserInterface
     {
         private Collection<String> warnings = new Collection<string>();
+        private psfhostrawinterface rawinterface = new psfhostrawinterface();
+        private frmMain frm;
         public EventHandler<Events.WriteProgressEventArgs> WriteProgressUpdate;
         public EventHandler<Events.WriteEventArgs> WriteUpdate;
+
+        public psfhostinterface(frmMain parent)
+        {
+            frm = parent;
+        }
 
         public void ClearWarnings()
         {
@@ -46,7 +53,7 @@ namespace poshsecframework.PShell
 
         public override void WriteLine(ConsoleColor foregroundColor, ConsoleColor backgroundColor, string value)
         {
-            base.WriteLine(foregroundColor, backgroundColor, value);
+            return;
         }
 
         public override void WriteLine(string value)
@@ -89,7 +96,64 @@ namespace poshsecframework.PShell
 
         public override Dictionary<string, System.Management.Automation.PSObject> Prompt(string caption, string message, System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
         {
-            return null;
+            Dictionary<string, System.Management.Automation.PSObject> rtn = null;
+            string msg = message + "\n";
+            if (descriptions != null)
+            {
+                //foreach (FieldDescription descr in descriptions)
+                //{
+                //    msg += "Name = " + descr.Name + "\n";
+                //    msg += "Attributes = ";
+                //    foreach(Attribute attr in descr.Attributes)
+                //    {
+                //        msg += attr.ToString() + ", ";
+                //    }
+                //    msg += "\n";
+                //    msg += "DefaultValue = " + descr.DefaultValue + "\n";
+                //    msg += "Help Message = " + descr.HelpMessage + "\n";
+                //    msg += "Mandatory = " + descr.IsMandatory.ToString() + "\n";
+                //    msg += "Label = " + descr.Label + "\n";
+                //    msg += "Parameter Type = " + descr.ParameterTypeName + "\n";
+                //}
+                rtn = GetParameters(descriptions);
+            }
+            return rtn;
+        }
+
+        [STAThread]
+        private Dictionary<string, System.Management.Automation.PSObject> GetParameters(System.Collections.ObjectModel.Collection<FieldDescription> descriptions)
+        {
+            Dictionary<string, System.Management.Automation.PSObject> rtn = new Dictionary<string, System.Management.Automation.PSObject>();
+            psparamtype parm = new psparamtype();
+            foreach (FieldDescription descr in descriptions)
+            {
+                psparameter prm = new psparameter();
+                prm.Name = descr.Name;
+                if (descr.IsMandatory)
+                {
+                    prm.Category = "Required";
+                }
+                else
+                {
+                    prm.Category = "Optional";
+                }
+                prm.DefaultValue = descr.DefaultValue;
+                prm.Description = descr.HelpMessage;
+                prm.Type = Type.GetType(descr.ParameterAssemblyFullName);
+                if(prm.Name.ToLower() == "file" || prm.Name.ToLower() == "filename")
+                {
+                    prm.IsFileName = true;
+                }
+                parm.Properties.Add(prm);
+            }
+            if (frm.ShowParams(parm) == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (psparameter prm in parm.Properties)
+                {
+                    rtn.Add(prm.Name, new System.Management.Automation.PSObject(prm.Value));
+                }
+            }
+            return rtn;
         }
 
         public override int PromptForChoice(string caption, string message, System.Collections.ObjectModel.Collection<ChoiceDescription> choices, int defaultChoice)
@@ -109,7 +173,7 @@ namespace poshsecframework.PShell
 
         public override PSHostRawUserInterface RawUI
         {
-            get { return null; }
+            get { return rawinterface; }
         }
 
         public override string ReadLine()

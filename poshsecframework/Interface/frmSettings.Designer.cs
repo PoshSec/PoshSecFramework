@@ -35,10 +35,14 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.tbpGeneral = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.gbSaveSystems = new System.Windows.Forms.GroupBox();
+            this.gbNameChecking = new System.Windows.Forms.GroupBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.ckShowinTaskbar = new System.Windows.Forms.CheckBox();
+            this.lblShowinTaskbar = new System.Windows.Forms.Label();
+            this.panel12 = new System.Windows.Forms.Panel();
             this.ckSaveSystems = new System.Windows.Forms.CheckBox();
             this.lblSaveSystems = new System.Windows.Forms.Label();
-            this.gbNameChecking = new System.Windows.Forms.GroupBox();
+            this.panel11 = new System.Windows.Forms.Panel();
             this.ckNameCheck = new System.Windows.Forms.CheckBox();
             this.lblNameChecking = new System.Windows.Forms.Label();
             this.gbFirstTime = new System.Windows.Forms.GroupBox();
@@ -47,7 +51,6 @@
             this.gbScriptSetting = new System.Windows.Forms.GroupBox();
             this.cmbScriptDefAction = new System.Windows.Forms.ComboBox();
             this.lblScriptDefAction = new System.Windows.Forms.Label();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.pnlGithubAPIKey = new System.Windows.Forms.Panel();
             this.txtGithubAPIKey = new System.Windows.Forms.TextBox();
             this.btnGithubHelp = new System.Windows.Forms.Button();
@@ -106,8 +109,10 @@
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
             this.panel6.SuspendLayout();
-            this.gbSaveSystems.SuspendLayout();
             this.gbNameChecking.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel12.SuspendLayout();
+            this.panel11.SuspendLayout();
             this.gbFirstTime.SuspendLayout();
             this.gbScriptSetting.SuspendLayout();
             this.pnlGithubAPIKey.SuspendLayout();
@@ -161,7 +166,6 @@
             // tbpGeneral
             // 
             this.tbpGeneral.Controls.Add(this.panel6);
-            this.tbpGeneral.Controls.Add(this.panel5);
             this.tbpGeneral.Controls.Add(this.pnlGithubAPIKey);
             this.tbpGeneral.Controls.Add(this.panel7);
             this.tbpGeneral.Controls.Add(this.panel8);
@@ -177,26 +181,75 @@
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.gbSaveSystems);
             this.panel6.Controls.Add(this.gbNameChecking);
             this.panel6.Controls.Add(this.gbFirstTime);
             this.panel6.Controls.Add(this.gbScriptSetting);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel6.Location = new System.Drawing.Point(3, 146);
+            this.panel6.Location = new System.Drawing.Point(3, 133);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(517, 70);
+            this.panel6.Size = new System.Drawing.Size(517, 84);
             this.panel6.TabIndex = 7;
             // 
-            // gbSaveSystems
+            // gbNameChecking
             // 
-            this.gbSaveSystems.Controls.Add(this.ckSaveSystems);
-            this.gbSaveSystems.Controls.Add(this.lblSaveSystems);
-            this.gbSaveSystems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbSaveSystems.Location = new System.Drawing.Point(412, 0);
-            this.gbSaveSystems.Name = "gbSaveSystems";
-            this.gbSaveSystems.Size = new System.Drawing.Size(105, 70);
-            this.gbSaveSystems.TabIndex = 3;
-            this.gbSaveSystems.TabStop = false;
+            this.gbNameChecking.Controls.Add(this.panel5);
+            this.gbNameChecking.Controls.Add(this.panel12);
+            this.gbNameChecking.Controls.Add(this.panel11);
+            this.gbNameChecking.Dock = System.Windows.Forms.DockStyle.Left;
+            this.gbNameChecking.Location = new System.Drawing.Point(318, 0);
+            this.gbNameChecking.Name = "gbNameChecking";
+            this.gbNameChecking.Padding = new System.Windows.Forms.Padding(0);
+            this.gbNameChecking.Size = new System.Drawing.Size(199, 84);
+            this.gbNameChecking.TabIndex = 2;
+            this.gbNameChecking.TabStop = false;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.ckShowinTaskbar);
+            this.panel5.Controls.Add(this.lblShowinTaskbar);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(0, 61);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(199, 24);
+            this.panel5.TabIndex = 2;
+            // 
+            // ckShowinTaskbar
+            // 
+            this.ckShowinTaskbar.Appearance = System.Windows.Forms.Appearance.Button;
+            this.ckShowinTaskbar.Checked = true;
+            this.ckShowinTaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckShowinTaskbar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ckShowinTaskbar.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckShowinTaskbar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ckShowinTaskbar.Location = new System.Drawing.Point(118, 0);
+            this.ckShowinTaskbar.Name = "ckShowinTaskbar";
+            this.ckShowinTaskbar.Size = new System.Drawing.Size(81, 24);
+            this.ckShowinTaskbar.TabIndex = 3;
+            this.ckShowinTaskbar.Text = "Yes";
+            this.ckShowinTaskbar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ttPSFHelp.SetToolTip(this.ckShowinTaskbar, "If set to No, this will hide the program from the Taskbar\r\nwhen minimized.");
+            this.ckShowinTaskbar.UseVisualStyleBackColor = true;
+            this.ckShowinTaskbar.CheckedChanged += new System.EventHandler(this.ckShowinTaskbar_CheckedChanged);
+            // 
+            // lblShowinTaskbar
+            // 
+            this.lblShowinTaskbar.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblShowinTaskbar.Location = new System.Drawing.Point(0, 0);
+            this.lblShowinTaskbar.Name = "lblShowinTaskbar";
+            this.lblShowinTaskbar.Size = new System.Drawing.Size(118, 24);
+            this.lblShowinTaskbar.TabIndex = 2;
+            this.lblShowinTaskbar.Text = "Show in Taskbar";
+            this.lblShowinTaskbar.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panel12
+            // 
+            this.panel12.Controls.Add(this.ckSaveSystems);
+            this.panel12.Controls.Add(this.lblSaveSystems);
+            this.panel12.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel12.Location = new System.Drawing.Point(0, 37);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(199, 24);
+            this.panel12.TabIndex = 1;
             // 
             // ckSaveSystems
             // 
@@ -206,10 +259,10 @@
             this.ckSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
             this.ckSaveSystems.Image = global::poshsecframework.Properties.Resources.dialogyes;
             this.ckSaveSystems.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ckSaveSystems.Location = new System.Drawing.Point(3, 40);
+            this.ckSaveSystems.Location = new System.Drawing.Point(118, 0);
             this.ckSaveSystems.Name = "ckSaveSystems";
-            this.ckSaveSystems.Size = new System.Drawing.Size(99, 24);
-            this.ckSaveSystems.TabIndex = 1;
+            this.ckSaveSystems.Size = new System.Drawing.Size(81, 24);
+            this.ckSaveSystems.TabIndex = 3;
             this.ckSaveSystems.Text = "Yes";
             this.ckSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ttPSFHelp.SetToolTip(this.ckSaveSystems, "This option is to retain the systems listed in the Systems tab\r\nand to reload the" +
@@ -220,24 +273,23 @@
             // 
             // lblSaveSystems
             // 
-            this.lblSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSaveSystems.Location = new System.Drawing.Point(3, 17);
+            this.lblSaveSystems.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblSaveSystems.Location = new System.Drawing.Point(0, 0);
             this.lblSaveSystems.Name = "lblSaveSystems";
-            this.lblSaveSystems.Size = new System.Drawing.Size(99, 23);
-            this.lblSaveSystems.TabIndex = 0;
+            this.lblSaveSystems.Size = new System.Drawing.Size(118, 24);
+            this.lblSaveSystems.TabIndex = 2;
             this.lblSaveSystems.Text = "Save Systems";
             this.lblSaveSystems.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // gbNameChecking
+            // panel11
             // 
-            this.gbNameChecking.Controls.Add(this.ckNameCheck);
-            this.gbNameChecking.Controls.Add(this.lblNameChecking);
-            this.gbNameChecking.Dock = System.Windows.Forms.DockStyle.Left;
-            this.gbNameChecking.Location = new System.Drawing.Point(323, 0);
-            this.gbNameChecking.Name = "gbNameChecking";
-            this.gbNameChecking.Size = new System.Drawing.Size(89, 70);
-            this.gbNameChecking.TabIndex = 2;
-            this.gbNameChecking.TabStop = false;
+            this.panel11.Controls.Add(this.ckNameCheck);
+            this.panel11.Controls.Add(this.lblNameChecking);
+            this.panel11.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel11.Location = new System.Drawing.Point(0, 14);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(199, 23);
+            this.panel11.TabIndex = 0;
             // 
             // ckNameCheck
             // 
@@ -247,10 +299,11 @@
             this.ckNameCheck.Dock = System.Windows.Forms.DockStyle.Top;
             this.ckNameCheck.Image = global::poshsecframework.Properties.Resources.dialogyes;
             this.ckNameCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ckNameCheck.Location = new System.Drawing.Point(3, 40);
+            this.ckNameCheck.Location = new System.Drawing.Point(118, 0);
+            this.ckNameCheck.Margin = new System.Windows.Forms.Padding(0);
             this.ckNameCheck.Name = "ckNameCheck";
-            this.ckNameCheck.Size = new System.Drawing.Size(83, 24);
-            this.ckNameCheck.TabIndex = 1;
+            this.ckNameCheck.Size = new System.Drawing.Size(81, 24);
+            this.ckNameCheck.TabIndex = 3;
             this.ckNameCheck.Text = "On";
             this.ckNameCheck.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ttPSFHelp.SetToolTip(this.ckNameCheck, "When On, it will check to ensure the Functions / Cmdlets follow PowerShell naming" +
@@ -261,11 +314,11 @@
             // 
             // lblNameChecking
             // 
-            this.lblNameChecking.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblNameChecking.Location = new System.Drawing.Point(3, 17);
+            this.lblNameChecking.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lblNameChecking.Location = new System.Drawing.Point(0, 0);
             this.lblNameChecking.Name = "lblNameChecking";
-            this.lblNameChecking.Size = new System.Drawing.Size(83, 23);
-            this.lblNameChecking.TabIndex = 0;
+            this.lblNameChecking.Size = new System.Drawing.Size(118, 23);
+            this.lblNameChecking.TabIndex = 2;
             this.lblNameChecking.Text = "Name Checking";
             this.lblNameChecking.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -274,9 +327,9 @@
             this.gbFirstTime.Controls.Add(this.cmbFirstTime);
             this.gbFirstTime.Controls.Add(this.lblShowFirstTime);
             this.gbFirstTime.Dock = System.Windows.Forms.DockStyle.Left;
-            this.gbFirstTime.Location = new System.Drawing.Point(200, 0);
+            this.gbFirstTime.Location = new System.Drawing.Point(195, 0);
             this.gbFirstTime.Name = "gbFirstTime";
-            this.gbFirstTime.Size = new System.Drawing.Size(123, 70);
+            this.gbFirstTime.Size = new System.Drawing.Size(123, 84);
             this.gbFirstTime.TabIndex = 1;
             this.gbFirstTime.TabStop = false;
             // 
@@ -310,7 +363,7 @@
             this.gbScriptSetting.Dock = System.Windows.Forms.DockStyle.Left;
             this.gbScriptSetting.Location = new System.Drawing.Point(0, 0);
             this.gbScriptSetting.Name = "gbScriptSetting";
-            this.gbScriptSetting.Size = new System.Drawing.Size(200, 70);
+            this.gbScriptSetting.Size = new System.Drawing.Size(195, 84);
             this.gbScriptSetting.TabIndex = 0;
             this.gbScriptSetting.TabStop = false;
             // 
@@ -324,7 +377,7 @@
             "View Script"});
             this.cmbScriptDefAction.Location = new System.Drawing.Point(3, 40);
             this.cmbScriptDefAction.Name = "cmbScriptDefAction";
-            this.cmbScriptDefAction.Size = new System.Drawing.Size(194, 21);
+            this.cmbScriptDefAction.Size = new System.Drawing.Size(189, 21);
             this.cmbScriptDefAction.TabIndex = 7;
             // 
             // lblScriptDefAction
@@ -332,18 +385,10 @@
             this.lblScriptDefAction.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblScriptDefAction.Location = new System.Drawing.Point(3, 17);
             this.lblScriptDefAction.Name = "lblScriptDefAction";
-            this.lblScriptDefAction.Size = new System.Drawing.Size(194, 23);
+            this.lblScriptDefAction.Size = new System.Drawing.Size(189, 23);
             this.lblScriptDefAction.TabIndex = 0;
             this.lblScriptDefAction.Text = "Double Click Default Action:";
             this.lblScriptDefAction.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel5
-            // 
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel5.Location = new System.Drawing.Point(3, 133);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(517, 13);
-            this.panel5.TabIndex = 6;
             // 
             // pnlGithubAPIKey
             // 
@@ -935,8 +980,10 @@
             this.panel1.ResumeLayout(false);
             this.tbpGeneral.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
-            this.gbSaveSystems.ResumeLayout(false);
             this.gbNameChecking.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel12.ResumeLayout(false);
+            this.panel11.ResumeLayout(false);
             this.gbFirstTime.ResumeLayout(false);
             this.gbScriptSetting.ResumeLayout(false);
             this.pnlGithubAPIKey.ResumeLayout(false);
@@ -987,7 +1034,6 @@
         private System.Windows.Forms.GroupBox gbScriptSetting;
         private System.Windows.Forms.ComboBox cmbScriptDefAction;
         private System.Windows.Forms.Label lblScriptDefAction;
-        private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.TextBox txtPSExecPath;
         private System.Windows.Forms.Button btnBrowsePSExec;
@@ -1020,11 +1066,6 @@
         private System.Windows.Forms.ToolStripButton btnCheckUpdates;
         private System.Windows.Forms.ImageList imgList;
         private System.Windows.Forms.GroupBox gbNameChecking;
-        private System.Windows.Forms.CheckBox ckNameCheck;
-        private System.Windows.Forms.Label lblNameChecking;
-        private System.Windows.Forms.GroupBox gbSaveSystems;
-        private System.Windows.Forms.CheckBox ckSaveSystems;
-        private System.Windows.Forms.Label lblSaveSystems;
         private System.Windows.Forms.TabPage tbpLogging;
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.TextBox txtAlertLog;
@@ -1043,5 +1084,14 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown txtSyslogPort;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel panel12;
+        private System.Windows.Forms.CheckBox ckSaveSystems;
+        private System.Windows.Forms.Label lblSaveSystems;
+        private System.Windows.Forms.Panel panel11;
+        private System.Windows.Forms.CheckBox ckNameCheck;
+        private System.Windows.Forms.Label lblNameChecking;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.CheckBox ckShowinTaskbar;
+        private System.Windows.Forms.Label lblShowinTaskbar;
     }
 }

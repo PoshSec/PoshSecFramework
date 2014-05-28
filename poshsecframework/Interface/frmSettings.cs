@@ -51,6 +51,7 @@ namespace poshsecframework.Interface
             }
             ckNameCheck.Checked = Properties.Settings.Default.NameChecking;
             ckSaveSystems.Checked = Properties.Settings.Default.SaveSystems;
+            ckShowinTaskbar.Checked = Properties.Settings.Default.ShowInTaskbar;
             ckOutputLog.Checked = Properties.Settings.Default.LogOutput;
             ckAlertLog.Checked = Properties.Settings.Default.LogAlerts;
             txtOutputLog.Text = Properties.Settings.Default.OutputLogFile;
@@ -236,6 +237,7 @@ namespace poshsecframework.Interface
                 }
                 Properties.Settings.Default["FirstTime"] = firsttime;
                 Properties.Settings.Default["NameChecking"] = ckNameCheck.Checked;
+                Properties.Settings.Default["ShowInTaskbar"] = ckShowinTaskbar.Checked;
                 Properties.Settings.Default["SaveSystems"] = ckSaveSystems.Checked;
                 if (!ckSaveSystems.Checked)
                 {
@@ -383,6 +385,20 @@ namespace poshsecframework.Interface
             {
                 ckSaveSystems.Text = "No";
                 ckSaveSystems.Image = Properties.Resources.dialogno2;
+            }
+        }
+
+        private void ckShowinTaskbar_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ckShowinTaskbar.Checked)
+            {
+                ckShowinTaskbar.Text = "Yes";
+                ckShowinTaskbar.Image = Properties.Resources.dialogyes;
+            }
+            else
+            {
+                ckShowinTaskbar.Text = "No";
+                ckShowinTaskbar.Image = Properties.Resources.dialogno2;
             }
         }
 

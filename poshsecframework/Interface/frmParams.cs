@@ -12,14 +12,26 @@ namespace poshsecframework.Interface
 {
     public partial class frmParams : Form
     {
+        private DialogResult _frmresult = DialogResult.Cancel;
+
         public frmParams()
         {
             InitializeComponent();
         }
 
+        public void ShowFromThread()
+        {
+            _frmresult = this.ShowDialog();
+        }
+
         public void SetParameters(PShell.psparamtype p)
         {
             pgParams.SelectedObject = p;
+        }
+
+        public DialogResult FormCloseResult
+        {
+            get { return _frmresult; }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
