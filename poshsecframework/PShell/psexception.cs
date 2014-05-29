@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Management.Automation.Runspaces;
 
 namespace poshsecframework.PShell
 {
     class psexception
     {
         #region " Public Methods "
-        public String psexceptionhandler(Exception e, bool iscommand = true)
+        public String psexceptionhandler(Exception e, bool iscommand = true, CommandCollection commands = null)
         {
             String rtn = "";
             if (iscommand)
@@ -29,6 +30,9 @@ namespace poshsecframework.PShell
                     break;
                 case "ParameterBindingException":
                     rtn += ParameterBindingException((System.Management.Automation.ParameterBindingException)e);
+                    break;
+                case "ParameterBindingValidationException":
+                    rtn += ParameterBindingValidationException((System.Management.Automation.ParameterBindingException)e);
                     break;
                 case "CommandNotFoundException":
                     rtn += CommandNotFoundException((System.Management.Automation.CommandNotFoundException)e);
@@ -70,13 +74,21 @@ namespace poshsecframework.PShell
             return rtn;
         }
 
-        private String CmdletInvocationException(System.Management.Automation.CmdletInvocationException e)
+        private String CmdletInvocationException(System.Management.Automation.CmdletInvocationException e, CommandCollection commands = null)
         {
             String rtn = "";
             rtn += "There was an error in your script or command. Please see the error message below." + Environment.NewLine + Environment.NewLine;
             rtn += "Error Message:" + Environment.NewLine;
             rtn += e.Message.ToString() + Environment.NewLine;
             rtn += e.ErrorRecord.ScriptStackTrace.Replace(Strings.StringValue.ScriptBlockNoFile, "");
+            if (commands != null)
+            {
+                rtn += "Commands: " + Environment.NewLine;
+                foreach (Command cmd in commands)
+                {
+                    rtn += cmd.CommandText.ToString() + Environment.NewLine;
+                }
+            }
             return rtn;
         }
 
@@ -85,6 +97,16 @@ namespace poshsecframework.PShell
             String rtn = "";
             rtn += "Missing Parameters!" + Environment.NewLine + Environment.NewLine;
             rtn += "Please check the command or script file and ensure that the parameters are defined properly." + Environment.NewLine + Environment.NewLine;
+            rtn += "Error Message:" + Environment.NewLine;
+            rtn += e.Message.ToString();
+            return rtn;
+        }
+
+        private String ParameterBindingValidationException(System.Management.Automation.ParameterBindingException e)
+        {
+            String rtn = "";
+            rtn += "Invalid parameter value!" + Environment.NewLine + Environment.NewLine;
+            rtn += "You entered an invalid parameter value. Please see the error message below." + Environment.NewLine + Environment.NewLine;
             rtn += "Error Message:" + Environment.NewLine;
             rtn += e.Message.ToString();
             return rtn;
