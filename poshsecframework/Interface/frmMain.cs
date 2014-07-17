@@ -1747,7 +1747,7 @@ namespace poshsecframework
                 DateTime.TryParse(Properties.Settings.Default.LastModuleCheck, out modlast);
                 if (psflast > modlast)
                 {
-                    AddAlert("PoshSec Framework has been updated! Please update your version. Last update: " + psflastmodified, PShell.psmethods.PSAlert.AlertType.Warning, "Github API");
+                    AddAlert("PoshSec Framework has been updated! Please update your version. Last update: " + psflastmodified, PShell.psmethods.PSAlert.AlertType.Critical, "Github API");
                 }
                 if (ghc.Errors.Count > 0)
                 {
