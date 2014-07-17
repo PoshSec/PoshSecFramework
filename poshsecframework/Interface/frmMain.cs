@@ -2691,6 +2691,25 @@ namespace poshsecframework
                 tcMain.SelectedTab = tbpPowerShell;
             }
         }
+
+        private void btnRemoveSystem_Click(object sender, EventArgs e)
+        {
+            if (lvwSystems.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show(StringValue.ConfirmRemoveSystem, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    lvwSystems.BeginUpdate();
+                    while (lvwSystems.SelectedItems.Count > 0)
+                    {
+                        ListViewItem lvw = lvwSystems.SelectedItems[0];
+                        lvwSystems.Items.Remove(lvw);
+                    }
+                    lvwSystems.EndUpdate();
+                    SaveSystems();
+                    UpdateSystemCount();
+                }
+            }
+        }
         #endregion
 
         #region ComboBox Events
