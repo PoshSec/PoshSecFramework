@@ -42,6 +42,7 @@ namespace poshsecframework
         private Comparers.ListViewColumnSorter lvwSorter = new Comparers.ListViewColumnSorter();
         private bool closing = false;
         private FormWindowState lastwindowstate = FormWindowState.Normal;
+        private System.Timers.Timer ghChecker = null;
 
         enum SystemType
         { 
@@ -185,6 +186,13 @@ namespace poshsecframework
             CheckPendingModules();            
             BuildModuleFilter();
             if (stat != null) { stat.SetStatus("Checking for updates, please wait..."); }
+            
+            // Set up GitHub Timer for Checking for Updates
+            ghChecker = new System.Timers.Timer();
+            ghChecker.Interval = 3600000; //One Hour
+            ghChecker.Elapsed += ghChecker_Elapsed;
+            ghChecker.Enabled = true;
+
             CheckLastModified();
             cmbLibraryTypes.SelectedIndex = 0;
             if (stat != null) { stat.SetStatus("Initializing PowerShell, please wait..."); }
@@ -206,6 +214,11 @@ namespace poshsecframework
             if (stat != null) { stat.SetStatus("Loading schedule library, please wait..."); }
             LoadSchedule();
             InitSyslog();
+        }
+
+        void ghChecker_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            CheckLastModified();
         }
 
         private void InitSyslog()
@@ -1717,21 +1730,35 @@ namespace poshsecframework
             bool update = true;
             if (last.Year > 1)
             {
-                if (DateTime.Now.Subtract(last).Hours < updatefrequency)
+                if (DateTime.Now.Subtract(last).TotalHours < updatefrequency)
                 {
                     update = false;
                 }
             }
             if (update)
             {
+                string err = "";
+                System.Collections.Specialized.StringCollection mods = Properties.Settings.Default.Modules;
+                Web.GithubClient ghc = new Web.GithubClient();
+                String psflastmodified = ghc.GetLastModified("PoshSec", "PoshSecFramework", "master", Properties.Settings.Default.LastModuleCheck);
+                DateTime psflast;
+                DateTime modlast;
+                DateTime.TryParse(psflastmodified, out psflast);
+                DateTime.TryParse(Properties.Settings.Default.LastModuleCheck, out modlast);
+                if (psflast > modlast)
+                {
+                    AddAlert("PoshSec Framework has been updated! Please update your version. Last update: " + psflastmodified, PShell.psmethods.PSAlert.AlertType.Critical, "Github API");
+                }
+                if (ghc.Errors.Count > 0)
+                {
+                    err += String.Join(Environment.NewLine, ghc.Errors.ToArray());
+                }
+
                 Properties.Settings.Default["LastModuleCheck"] = DateTime.Now.ToString();
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
-                string err = "";
-                System.Collections.Specialized.StringCollection mods = Properties.Settings.Default.Modules;
                 if (mods != null && mods.Count > 0)
                 {
-                    Web.GithubClient ghc = new Web.GithubClient();
                     foreach (string mod in mods)
                     {
                         String[] modparts = mod.Split('|');
@@ -1774,6 +1801,7 @@ namespace poshsecframework
                 {
                     DisplayError(new Exception(err));
                 }
+                ghc = null;
             }            
         }
 
@@ -2661,6 +2689,25 @@ namespace poshsecframework
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);
                 tcMain.SelectedTab = tbpPowerShell;
+            }
+        }
+
+        private void btnRemoveSystem_Click(object sender, EventArgs e)
+        {
+            if (lvwSystems.SelectedItems.Count > 0)
+            {
+                if (MessageBox.Show(StringValue.ConfirmRemoveSystem, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    lvwSystems.BeginUpdate();
+                    while (lvwSystems.SelectedItems.Count > 0)
+                    {
+                        ListViewItem lvw = lvwSystems.SelectedItems[0];
+                        lvwSystems.Items.Remove(lvw);
+                    }
+                    lvwSystems.EndUpdate();
+                    SaveSystems();
+                    UpdateSystemCount();
+                }
             }
         }
         #endregion

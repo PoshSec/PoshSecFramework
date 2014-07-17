@@ -351,7 +351,7 @@ namespace poshsecframework.PShell
                     }
                     catch (Exception pex)
                     {
-                        rslts.AppendLine(psexec.psexceptionhandler(pex, iscommand));
+                        rslts.AppendLine(psexec.psexceptionhandler(pex, iscommand, pline.Commands));
                     }
                     HandleWarningsErrors(pline.Error);
                     pline.Dispose();

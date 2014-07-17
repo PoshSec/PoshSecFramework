@@ -48,15 +48,22 @@ namespace poshsecframework.Interface
         {
             parentform = Parent;
             InitializeComponent();
-            Array stepvals = Enum.GetValues(typeof(Steps));
-            foreach (Steps step in stepvals)
+            if (TestPSEnvironment())
             {
-                ListViewItem lvw = new ListViewItem();
-                lvw.Text = step.ToString().Replace("_", " ");
-                lvw.ImageIndex = -1;
-                lvw.SubItems.Add("");
-                lvw.Checked = true;
-                lvwSteps.Items.Add(lvw);
+                Array stepvals = Enum.GetValues(typeof(Steps));
+                foreach (Steps step in stepvals)
+                {
+                    ListViewItem lvw = new ListViewItem();
+                    lvw.Text = step.ToString().Replace("_", " ");
+                    lvw.ImageIndex = -1;
+                    lvw.SubItems.Add("");
+                    lvw.Checked = true;
+                    lvwSteps.Items.Add(lvw);
+                }
+            }
+            else
+            {
+                MessageBox.Show(Strings.StringValue.PSRequirements);
             }
         }
         #endregion
@@ -179,6 +186,20 @@ namespace poshsecframework.Interface
         #endregion
 
         #region Private Methods
+        private bool TestPSEnvironment() 
+        {
+            bool rtn = true;
+            try
+            {
+                PShell.pscript ps = new PShell.pscript(parentform);
+            }
+            catch (Exception)
+            {
+                rtn = false;
+            }
+            return rtn;            
+        }
+
         private void SetStepFixed(int index)
         {
             lvwSteps.Items[index].ImageIndex = 0;

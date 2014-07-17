@@ -8,6 +8,7 @@ namespace poshsecframework.Strings
     internal static class StringValue
     {
         public const string psftitle = "PoshSec Framework";
+        public const string PSRequirements = "It appears that your environment is not configured correctly for PoshSec Framework to work correctly.\r\nYou need PowerShell 3.0 (Windows Management Framework 3.0) and Microsoft .NET 4.5\r\nPlease download and install WMF 3.0 before running PoshSec Framework.";
         public const string ActiveScriptsRunning = "You have active scripts running. If you exit, all running scripts will be terminated. Are you sure you want to exit?";
         public const string ReloadScriptsRunning = "Can not reload the framework because there are scripts running. Please stop all scripts before issuing the reload command again.";
         public const string SettingScriptsRunning = "You can not change the settings while scripts or commands are running. Please stop any commands or scripts and then try again.";
@@ -119,6 +120,7 @@ namespace poshsecframework.Strings
         public const string BranchNotFound = "The specified branch of {0} was not found as a valid branch for this repository.";
         public const string ModuleUptoDate = "That module is up to date. There are no updates available.";
         public const string ModuleUpdateAvailable = "This module was updated on {0}. Would you like to update your copy now?";
+        public const string ConfirmRemoveSystem = "Are you sure you want to remove the selected system(s)?";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
         public const string OutputLogFormat = "[{0}:{1}] - {2}";

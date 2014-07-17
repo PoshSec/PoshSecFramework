@@ -81,7 +81,8 @@ namespace poshsecframework.PShell
 
         public override System.Version Version
         {
-            get { return new System.Version(0, 2, 0, 0); }
+            // return the powershell version supported, not psf version.
+            get { return new System.Version(3, 0, 0, 0); }
         }
 
     }
