@@ -2723,6 +2723,36 @@ namespace poshsecframework
         }
         #endregion
 
+        #region Tab Pages
+        private void tbpAlerts_TextChanged(object sender, EventArgs e)
+        {
+            int alertcnt = lvwAlerts.Items.Count;
+            if (alertcnt > 0)
+            {
+                nimain.Icon = Properties.Resources.psficon_alert;
+                this.Icon = Properties.Resources.psficon_alert;
+                nimain.Text = StringValue.psftitle + " - Alerts (" + alertcnt.ToString() + ")";
+                if (alertcnt > 1)
+                {
+                    nimain.BalloonTipText = String.Format(StringValue.AlertsBalloon, alertcnt.ToString());
+                }
+                else
+                {
+                    nimain.BalloonTipText = StringValue.AlertBalloon;
+                }
+                nimain.ShowBalloonTip(5);
+            }
+            else
+            {
+                nimain.Icon = Properties.Resources.psficon_ico;
+                this.Icon = Properties.Resources.psficon_ico;
+                nimain.Text = StringValue.psftitle;
+                nimain.BalloonTipText = "";
+            }
+        }
+        #endregion
+
+        #region Tab Control
         private void tcMain_Selected(object sender, TabControlEventArgs e)
         {
             if (e.TabPage == tbpPowerShell)
@@ -2731,11 +2761,14 @@ namespace poshsecframework
                 txtPShellOutput.DrawCaret();
             }
         }
+        #endregion
 
+        #region NotifyIcon
         private void nimain_DoubleClick(object sender, EventArgs e)
         {
             this.WindowState = lastwindowstate;
         }
+        #endregion
 
         #endregion
 
@@ -2745,6 +2778,8 @@ namespace poshsecframework
             get { return cancelscan; }
         }
         #endregion
+
+        
         
     }
 }
