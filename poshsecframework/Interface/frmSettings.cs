@@ -574,7 +574,10 @@ namespace poshsecframework.Interface
                                 frm.DoUpdate = true;
                                 if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                                 {
-                                    restart = frm.Restart;
+                                    if (!restart)
+                                    {
+                                        restart = frm.Restart;
+                                    }                                    
                                     AddModule(frm.RepositoryName, frm.LocationName, frm.Branch, frm.LastModified);
                                     SaveModules();
                                 }
