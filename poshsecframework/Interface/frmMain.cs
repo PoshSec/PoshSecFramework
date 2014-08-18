@@ -33,6 +33,7 @@ namespace poshsecframework
         private bool cancelscan = false;
         private bool restart = false;
         private bool shown = false;
+        private bool cont = true;
         private Utility.Schedule schedule = new Utility.Schedule(1000);
         private string loaderrors = "";
         private Collection<String> enabledmods = new Collection<string>();
@@ -75,53 +76,71 @@ namespace poshsecframework
             InitializeComponent();
             lvwSystems.ListViewItemSorter = lvwSorter;
             this.Enabled = false;
-            stat = new Interface.frmStartup();
-            stat.Show();
-            stat.Refresh();
+            if (IsRootDrive())
+            {
+                cont = false;
+                if (MessageBox.Show(StringValue.RootDrive, "Running in root drive!", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    cont = true;
+                }
+            }
+            if (cont)
+            {
+                stat = new Interface.frmStartup();
+                stat.Show();
+                stat.Refresh();
+            }
         }
 
         private void frmMain_Shown(object sender, EventArgs e)
-        {            
-            stat.SetStatus("Initializing, please wait...");
-            scnr.ScanComplete += scnr_ScanComplete;
-            scnr.ScanCancelled += scnr_ScanCancelled;
-            scnr.ScanUpdate += scnr_ScanUpdate;
-            schedule.ItemUpdated += schedule_ItemUpdated;
-            schedule.ScriptInvoked += schedule_ScriptInvoked;
-            schedule.ScheduleRemoved += schedule_ScheduleRemoved;
+        {
+            if (cont)
+            {
+                stat.SetStatus("Initializing, please wait...");
+                scnr.ScanComplete += scnr_ScanComplete;
+                scnr.ScanCancelled += scnr_ScanCancelled;
+                scnr.ScanUpdate += scnr_ScanUpdate;
+                schedule.ItemUpdated += schedule_ItemUpdated;
+                schedule.ScriptInvoked += schedule_ScriptInvoked;
+                schedule.ScheduleRemoved += schedule_ScheduleRemoved;
 
-            stat.SetStatus("Checking Settings, please wait...");
-            CheckSettings();
-            if (poshsecframework.Properties.Settings.Default.FirstTime)
-            {
-                restart = true;
-                stat.Hide();
-                FirstTimeSetup();
-            }
-            if (restart)
-            {
-                Application.Restart();
-                this.Close();
+                stat.SetStatus("Checking Settings, please wait...");
+                CheckSettings();
+                if (poshsecframework.Properties.Settings.Default.FirstTime)
+                {
+                    restart = true;
+                    stat.Hide();
+                    FirstTimeSetup();
+                }
+                if (restart)
+                {
+                    Application.Restart();
+                    this.Close();
+                }
+                else
+                {
+                    Initialize();
+                    stat.Show();
+                    stat.SetStatus("Loading Networks, please wait...");
+                    GetNetworks();
+                    GetAlerts();
+                }
+                if (loaderrors != "")
+                {
+                    DisplayOutput(StringValue.ImportError + Environment.NewLine + loaderrors, null, false, false, false, true);
+                }
+                shown = true;
+                stat.Close();
+                stat.Dispose();
+                stat = null;
+                this.Enabled = true;
+                this.Focus();
+                schedule.Start();
             }
             else
             {
-                Initialize();
-                stat.Show();
-                stat.SetStatus("Loading Networks, please wait...");
-                GetNetworks();
-                GetAlerts();
+                this.Close();
             }
-            if (loaderrors != "")
-            {
-                DisplayOutput(StringValue.ImportError + Environment.NewLine + loaderrors, null, false, false, false, true);
-            }
-            shown = true;
-            stat.Close();
-            stat.Dispose();
-            stat = null;
-            this.Enabled = true;
-            this.Focus();
-            schedule.Start();
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -214,6 +233,18 @@ namespace poshsecframework
             if (stat != null) { stat.SetStatus("Loading schedule library, please wait..."); }
             LoadSchedule();
             InitSyslog();
+        }
+
+        private bool IsRootDrive()
+        {
+            bool rtn = false;
+            DirectoryInfo dinfo = new DirectoryInfo(Application.StartupPath);
+            if (dinfo.Parent == null)
+            {
+                rtn = true;
+            }
+            dinfo = null;
+            return rtn;
         }
 
         void ghChecker_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -2777,9 +2808,7 @@ namespace poshsecframework
         {
             get { return cancelscan; }
         }
-        #endregion
-
-        
+        #endregion        
         
     }
 }

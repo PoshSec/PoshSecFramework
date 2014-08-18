@@ -11,6 +11,7 @@ namespace poshsecframework.Strings
         public const string AlertBalloon = "You have an alert!";
         public const string AlertsBalloon = "You have {0} alerts!";
         public const string PSRequirements = "It appears that your environment is not configured correctly for PoshSec Framework to work correctly.\r\nYou need PowerShell 3.0 (Windows Management Framework 3.0) and Microsoft .NET 4.5\r\nPlease download and install WMF 3.0 before running PoshSec Framework.";
+        public const string RootDrive = "You are running PoshSec Framework from the root of a disk drive. It is recommended to put PoshSec Framework in a subfolder.\r\n\r\nFor example: C:\\psf\\\r\n\r\nDo you wish to continue anyway?";
         public const string ActiveScriptsRunning = "You have active scripts running. If you exit, all running scripts will be terminated. Are you sure you want to exit?";
         public const string ReloadScriptsRunning = "Can not reload the framework because there are scripts running. Please stop all scripts before issuing the reload command again.";
         public const string SettingScriptsRunning = "You can not change the settings while scripts or commands are running. Please stop any commands or scripts and then try again.";
