@@ -144,11 +144,14 @@
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PShell\pscredentialeditor.cs" />
     <Compile Include="PShell\psfhost.cs" />
     <Compile Include="PShell\psfhostinterface.cs" />
     <Compile Include="PShell\psfhostrawinterface.cs" />
     <Compile Include="PShell\psfilenameeditor.cs" />
-    <Compile Include="PShell\pshosteditor.cs" />
+    <Compile Include="PShell\pshosteditor.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Strings\StringValue.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />

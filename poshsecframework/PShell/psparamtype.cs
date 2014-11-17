@@ -136,6 +136,10 @@ namespace poshsecframework.PShell
                 {
                     return new pshosteditor();
                 }
+                else if (psparam.IsCredential)
+                {
+                    return new pscredentialeditor();
+                }
                 else
                 {
                     return base.GetEditor(editorBaseType);
