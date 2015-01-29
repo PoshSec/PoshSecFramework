@@ -144,7 +144,10 @@ namespace poshsecframework.PShell
                     ps.IsCommand = IsCommand;
                     ps.Clicked = clicked;
                     ps.ScriptListView = lvw;
-                    ps.Parameters.Clear();
+                    if (ps.Parameters != null)
+                    {
+                        ps.Parameters.Clear();
+                    }                    
                     
                     Thread thd = new Thread(ps.RunScript);
                     thd.SetApartmentState(ApartmentState.STA);

@@ -24,6 +24,7 @@ namespace poshsecframework.PShell
         public Object DefaultValue { get; set; }
         public Boolean IsFileName { get; set; }
         public Boolean IsHostList { get; set; }
+        public Boolean IsCredential { get; set; }
         private Type type;
 
         [XmlIgnoreAttribute()]

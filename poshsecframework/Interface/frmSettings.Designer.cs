@@ -105,6 +105,9 @@
             this.btnEditModule = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteModule = new System.Windows.Forms.ToolStripButton();
             this.btnCheckUpdates = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
@@ -883,7 +886,10 @@
             this.lblRestartRequired,
             this.btnEditModule,
             this.btnDeleteModule,
-            this.btnCheckUpdates});
+            this.btnCheckUpdates,
+            this.toolStripSeparator1,
+            this.toolStripLabel1,
+            this.toolStripButton1});
             this.tbModules.Location = new System.Drawing.Point(3, 3);
             this.tbModules.Name = "tbModules";
             this.tbModules.Size = new System.Drawing.Size(517, 25);
@@ -953,6 +959,25 @@
             this.btnCheckUpdates.Text = "Check for Updates";
             this.btnCheckUpdates.ToolTipText = "Check for Updates";
             this.btnCheckUpdates.Click += new System.EventHandler(this.btnCheckUpdates_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(81, 22);
+            this.toolStripLabel1.Text = "Update Alerts:";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(43, 22);
+            this.toolStripButton1.Text = "On";
             // 
             // ttPSFHelp
             // 
@@ -1093,5 +1118,8 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.CheckBox ckShowinTaskbar;
         private System.Windows.Forms.Label lblShowinTaskbar;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

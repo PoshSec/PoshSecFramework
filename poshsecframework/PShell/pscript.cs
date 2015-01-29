@@ -504,6 +504,14 @@ namespace poshsecframework.PShell
                                     {
                                         prm.IsHostList = true;
                                     }
+                                    if (prm.Name.ToLower() == "file" || prm.Name.ToLower() == "filename")
+                                    {
+                                        prm.IsFileName = true;
+                                    }
+                                    if (prm.Name.ToLower() == "credential")
+                                    {
+                                        prm.IsCredential = true;
+                                    }
                                     parm.Properties.Add(prm);
                                 }
                                 idx++;

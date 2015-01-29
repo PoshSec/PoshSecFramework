@@ -144,6 +144,10 @@ namespace poshsecframework.PShell
                 {
                     prm.IsFileName = true;
                 }
+                if (prm.Name.ToLower() == "credential")
+                {
+                    prm.IsCredential = true;
+                }
                 parm.Properties.Add(prm);
             }
             if (frm.ShowParams(parm) == System.Windows.Forms.DialogResult.OK)
