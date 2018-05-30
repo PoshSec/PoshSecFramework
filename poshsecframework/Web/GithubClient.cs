@@ -281,17 +281,15 @@ namespace poshsecframework.Web
             return rtn;
         }
 
-        private void GetLastModDate(String uri, String LastModifiedDate)
+        private void GetLastModDate(string uri, string lastModifiedDate)
         {
             ghc = (HttpWebRequest)WebRequest.Create(uri);
             ghc.UserAgent = StringValue.psftitle;
             ghc.Timeout = 5000;
-            DateTime lmd;
-            DateTime.TryParse(LastModifiedDate, out lmd);
-            if (lmd.Year > 1)
-            {
-                ghc.IfModifiedSince = lmd;            
-            }
+
+            if (DateTime.TryParse(lastModifiedDate, out DateTime lmd) && lmd.Year > 1)
+                ghc.IfModifiedSince = lmd;
+
             ghc.AllowAutoRedirect = true;
             WebResponse ghr = null;
             try
@@ -301,9 +299,9 @@ namespace poshsecframework.Web
             catch (WebException wex)
             {
                 ratelimitremaining = GetRateLimitRemaining(wex.Response);
-                if (wex.Response.Headers["Status"] == StringValue.NotModified)
+                if (wex.Response != null && wex.Response.Headers["Status"] == StringValue.NotModified)
                 {
-                    lastmodified = LastModifiedDate;
+                    lastmodified = lastModifiedDate;
                 }
             }
             catch (Exception e)
