@@ -411,7 +411,7 @@ namespace poshsecframework.Interface
             }
             if (!rtn)
             {
-                Errors[(int)Steps.Check_Settings] = err;
+                Errors[(int)Steps.InitialDownload] = err;
             }
             return rtn;
         }
