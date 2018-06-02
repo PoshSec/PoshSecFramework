@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Net;
 
 namespace poshsecframework
 {
@@ -12,6 +13,8 @@ namespace poshsecframework
         [STAThread]
         static void Main()
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
             try
             {
                 Application.EnableVisualStyles();
