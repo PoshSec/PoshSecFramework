@@ -5,8 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Xml;
-using System.Runtime.Serialization.Json;
 using poshsecframework.Strings;
 
 namespace poshsecframework.Web
@@ -17,19 +15,20 @@ namespace poshsecframework.Web
     class GithubClient
     {
         #region Private Variables
-        HttpWebRequest ghc = null;
-        List<String> errors = new List<string>();
-        int ratelimitremaining = 0;
-        string lastmodified = "";
-        bool restart = false;
-        string token = "";
+
+        private List<String> _errors = new List<string>();
+        private int _ratelimitremaining = 0;
+        private string _lastmodified = "";
+        private bool _restart = false;
+        private string _token = "";
+
         #endregion
 
         public GithubClient()
         {
             if (Properties.Settings.Default.GithubAPIKey.Trim() != "")
             {
-                token = String.Format(StringValue.AccessToken, Properties.Settings.Default.GithubAPIKey.Trim());
+                _token = String.Format(StringValue.AccessToken, Properties.Settings.Default.GithubAPIKey.Trim());
             }
         }
 
@@ -42,20 +41,20 @@ namespace poshsecframework.Web
         /// <returns></returns>
         public Collection<GithubJsonItem> GetBranches(String OwnerName, String RepositoryName)
         {
-            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + token));
+            Collection<GithubJsonItem> ghi = Get(Path.Combine(StringValue.GithubURI, String.Format(StringValue.BranchFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + _token));
             return ghi;
         }
 
         public String GetLastModified(String OwnerName, String RepositoryName, String BranchName, String LastModified)
         {
             string branch = "?sha=" + BranchName;
-            if (token != "")
+            if (_token != "")
             {
                 branch = "&sha=" + BranchName;
             }
-            String url = Path.Combine(StringValue.GithubURI, String.Format(StringValue.LastModifiedFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + token + branch);
+            String url = Path.Combine(StringValue.GithubURI, String.Format(StringValue.LastModifiedFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName)) + _token + branch);
             GetLastModDate(url, LastModified);
-            return lastmodified;
+            return _lastmodified;
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace poshsecframework.Web
         public void GetArchive(String OwnerName, String RepositoryName, String BranchName, String ModuleDirectory)
         {
             String tmpfile = Path.GetTempFileName();
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName), BranchName) + token), tmpfile);
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName), BranchName) + _token), tmpfile);
             if (savedfile != null)
             {
                 try
@@ -87,7 +86,7 @@ namespace poshsecframework.Web
                                 if (Directory.Exists(newfolder))
                                 {
                                     DirectoryInfo di = new DirectoryInfo(newfolder);
-                                    restart = false;
+                                    _restart = false;
                                     try
                                     {
                                         if (Directory.Exists(target))
@@ -97,9 +96,9 @@ namespace poshsecframework.Web
                                     }
                                     catch
                                     {
-                                        restart = true;
+                                        _restart = true;
                                     }
-                                    if (!restart)
+                                    if (!_restart)
                                     {
                                         di.MoveTo(target);
                                     }
@@ -115,7 +114,7 @@ namespace poshsecframework.Web
                             }
                             else
                             {
-                                errors.Add(String.Format(StringValue.InvalidPSModule, RepositoryName, BranchName));
+                                _errors.Add(String.Format(StringValue.InvalidPSModule, RepositoryName, BranchName));
                             }
                         }
                     }
@@ -123,7 +122,7 @@ namespace poshsecframework.Web
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.Message);
+                    _errors.Add(ex.Message);
                 }
             }
             try
@@ -132,7 +131,7 @@ namespace poshsecframework.Web
             }
             catch (Exception dex)
             {
-                errors.Add(dex.Message);
+                _errors.Add(dex.Message);
 
             }
             savedfile = null;
@@ -155,8 +154,8 @@ namespace poshsecframework.Web
                         Directory.CreateDirectory(ScriptDirectory);
                     }
                 }
-            }            
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, StringValue.PSFScriptsPath + token), tmpfile);
+            }
+            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, StringValue.PSFScriptsPath + _token), tmpfile);
             if (savedfile != null)
             {
                 try
@@ -174,7 +173,7 @@ namespace poshsecframework.Web
                             if (Directory.Exists(newfolder))
                             {
                                 DirectoryInfo di = new DirectoryInfo(newfolder);
-                                restart = false;
+                                _restart = false;
                                 foreach (FileInfo fil in di.GetFiles("*", SearchOption.AllDirectories))
                                 {
                                     String dest = target + fil.DirectoryName.Replace(newfolder, "");
@@ -193,7 +192,7 @@ namespace poshsecframework.Web
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.Message);
+                    _errors.Add(ex.Message);
                 }
             }
             try
@@ -202,7 +201,7 @@ namespace poshsecframework.Web
             }
             catch (Exception dex)
             {
-                errors.Add(dex.Message);
+                _errors.Add(dex.Message);
 
             }
             savedfile = null;
@@ -229,10 +228,10 @@ namespace poshsecframework.Web
                     if (!filename.Contains("/") && filename.Contains(".psd1"))
                     {
                         rtn = true;
-                    }                    
+                    }
                     idx++;
                 } while (!rtn && idx < zaitem.Entries.Count());
-            }            
+            }
             return rtn;
         }
 
@@ -245,21 +244,23 @@ namespace poshsecframework.Web
         private FileInfo Download(String uri, String targetfile)
         {
             FileInfo rtn = null;
-            ghc = (HttpWebRequest)WebRequest.Create(uri);
-            ghc.Timeout = 5000;
-            ghc.UserAgent = StringValue.psftitle;
-            WebResponse ghr = null;
+
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Timeout = 5000;
+            request.UserAgent = StringValue.psftitle;
+            
+            WebResponse response = null;
             try
             {
-                ghr = ghc.GetResponse();
+                response = request.GetResponse();
             }
             catch (Exception e)
             {
-                errors.Add(uri + ":" + e.Message);
+                _errors.Add(uri + ":" + e.Message);
             }
-            if (ghr != null)
+            if (response != null)
             {
-                Stream ghrs = ghr.GetResponseStream();
+                Stream ghrs = response.GetResponseStream();
                 if (ghrs != null && ghrs.CanRead)
                 {
                     Stream str = new FileStream(targetfile, FileMode.Create);
@@ -271,50 +272,50 @@ namespace poshsecframework.Web
                 }
                 else
                 {
-                    errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
+                    _errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
                 }
             }
             else
             {
-                errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
+                _errors.Add(uri + ":" + "Failed to get stream. Please check your internet connection and try again.");
             }
             return rtn;
         }
 
         private void GetLastModDate(string uri, string lastModifiedDate)
         {
-            ghc = (HttpWebRequest)WebRequest.Create(uri);
-            ghc.UserAgent = StringValue.psftitle;
-            ghc.Timeout = 5000;
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.UserAgent = StringValue.psftitle;
+            request.Timeout = 5000;
 
             if (DateTime.TryParse(lastModifiedDate, out DateTime lmd) && lmd.Year > 1)
-                ghc.IfModifiedSince = lmd;
+                request.IfModifiedSince = lmd;
 
-            ghc.AllowAutoRedirect = true;
-            WebResponse ghr = null;
+            request.AllowAutoRedirect = true;
+            WebResponse response = null;
             try
             {
-                ghr = ghc.GetResponse();
+                response = request.GetResponse();
             }
             catch (WebException wex)
             {
-                ratelimitremaining = GetRateLimitRemaining(wex.Response);
+                _ratelimitremaining = GetRateLimitRemaining(wex.Response);
                 if (wex.Response != null && wex.Response.Headers["Status"] == StringValue.NotModified)
                 {
-                    lastmodified = lastModifiedDate;
+                    _lastmodified = lastModifiedDate;
                 }
             }
             catch (Exception e)
             {
-                errors.Add(uri + ":" + e.Message);
+                _errors.Add(uri + ":" + e.Message);
             }
-            if (ghr != null)
+            if (response != null)
             {
-                ratelimitremaining = GetRateLimitRemaining(ghr);
-                lastmodified = GetLastModified(ghr);
-                ghr.Close();
+                _ratelimitremaining = GetRateLimitRemaining(response);
+                _lastmodified = GetLastModified(response);
+                response.Close();
             }
-            ghc = null;
+            request = null;
         }
 
         /// <summary>
@@ -325,42 +326,45 @@ namespace poshsecframework.Web
         private Collection<GithubJsonItem> Get(String uri)
         {
             Collection<GithubJsonItem> rtn = new Collection<GithubJsonItem>();
-            ghc = (HttpWebRequest)WebRequest.Create(uri);
-            ghc.UserAgent = StringValue.psftitle;
-            ghc.AllowAutoRedirect = true;
-            WebResponse ghr = null;
+
+            var request = (HttpWebRequest)WebRequest.Create(uri);
+            request.UserAgent = StringValue.psftitle;
+            request.AllowAutoRedirect = true;
+
+            WebResponse response = null;
             try
             {
-                ghr = ghc.GetResponse();
+                response = request.GetResponse();
             }
             catch (WebException wex)
             {
-                ratelimitremaining = GetRateLimitRemaining(wex.Response);
-                errors.Add(uri + ":" + wex.Message);
+                _ratelimitremaining = GetRateLimitRemaining(wex.Response);
+                _errors.Add(uri + ":" + wex.Message);
             }
             catch (Exception e)
             {
-                errors.Add(uri + ":" + e.Message);
+                _errors.Add(uri + ":" + e.Message);
             }
-            if (ghr != null)
+            if (response != null)
             {
-                ratelimitremaining = GetRateLimitRemaining(ghr);
-                lastmodified = GetLastModified(ghr);
-                if (ghr.ContentType == StringValue.ContentTypeJSON)
+                _ratelimitremaining = GetRateLimitRemaining(response);
+                _lastmodified = GetLastModified(response);
+
+                if (response.ContentType == StringValue.ContentTypeJSON)
                 {
-                    Stream ghrs = ghr.GetResponseStream();
-                    if (ghrs != null)
+                    var responseStream = response.GetResponseStream();
+                    if (responseStream != null)
                     {
-                        StreamReader ghrdr = new StreamReader(ghrs);
-                        String response = ghrdr.ReadToEnd();
-                        ghrdr.Close();
-                        ghrdr = null;
-                        String name = "\"name\"";
-                        String[] split = new string[] { "\"name\"" };
-                        String[] items = response.Split(split, StringSplitOptions.None);
+                        var responseReader = new StreamReader(responseStream);
+                        var responseString = responseReader.ReadToEnd();
+                        responseReader.Close();
+                        responseReader = null;
+                        var name = "\"name\"";
+                        var split = new string[] { "\"name\"" };
+                        var items = responseString.Split(split, StringSplitOptions.None);
                         if (items != null && items.Count() > 0)
                         {
-                            foreach (String resp in items)
+                            foreach (var resp in items)
                             {
                                 if (resp != "[{" && resp != "{")
                                 {
@@ -369,26 +373,26 @@ namespace poshsecframework.Web
                                 }
                             }
                         }
-                        ghrs.Close();
-                        ghrs = null;
+                        responseStream.Close();
+                        responseStream = null;
                     }
                 }
-                ghr.Close();
-                ghr = null;
+                response.Close();
+                response = null;
             }
             return rtn;
         }
 
-        private int GetRateLimitRemaining(WebResponse ghr)
+        private int GetRateLimitRemaining(WebResponse response)
         {
             int rtn = 0;
-            if (ghr != null && ghr.Headers != null && ghr.Headers.Keys.Count > 0)
+            if (response != null && response.Headers != null && response.Headers.Keys.Count > 0)
             {
                 int idx = 0;
                 bool found = false;
                 do
                 {
-                    if (ghr.Headers.Keys[idx] == StringValue.RateLimitKey)
+                    if (response.Headers.Keys[idx] == StringValue.RateLimitKey)
                     {
                         found = true;
                     }
@@ -396,41 +400,41 @@ namespace poshsecframework.Web
                     {
                         idx++;
                     }
-                } while (!found && idx < ghr.Headers.Keys.Count);
+                } while (!found && idx < response.Headers.Keys.Count);
                 if (found)
                 {
-                    string[] vals = ghr.Headers.GetValues(idx);
+                    string[] vals = response.Headers.GetValues(idx);
                     if (vals != null)
                     {
                         string val = vals[0];
                         int.TryParse(val, out rtn);
-                    }                    
+                    }
                 }
             }
             return rtn;
         }
 
-        private String GetLastModified(WebResponse ghr)
+        private String GetLastModified(WebResponse response)
         {
             String rtn = "";
-            if (ghr.Headers.Keys.Count > 0)
+            if (response.Headers.Keys.Count > 0)
             {
                 int idx = 0;
                 bool found = false;
                 do
                 {
-                    if (ghr.Headers.Keys[idx] == StringValue.LastModifiedKey)
+                    if (response.Headers.Keys[idx] == StringValue.LastModifiedKey)
                     {
                         found = true;
                     }
                     else
                     {
                         idx++;
-                    }                    
-                } while (!found && idx < ghr.Headers.Keys.Count);
+                    }
+                } while (!found && idx < response.Headers.Keys.Count);
                 if (found)
                 {
-                    string[] vals = ghr.Headers.GetValues(idx);
+                    string[] vals = response.Headers.GetValues(idx);
                     if (vals != null)
                     {
                         rtn = vals[0];
@@ -452,11 +456,11 @@ namespace poshsecframework.Web
             {
                 UTF8Encoding enc = new UTF8Encoding();
                 Decoder dec = enc.GetDecoder();
-                rtn = Convert.FromBase64String(encodedstring.Replace("\\n", ""));                
+                rtn = Convert.FromBase64String(encodedstring.Replace("\\n", ""));
             }
             catch (Exception e)
             {
-                errors.Add("Decode failed: " + e.Message);
+                _errors.Add("Decode failed: " + e.Message);
                 rtn = null;
             }
             return rtn;
@@ -464,28 +468,30 @@ namespace poshsecframework.Web
         #endregion
 
         #region Public Properties
+
         /// <summary>
         /// List of any errors that may have occured during any request.
         /// </summary>
         public List<String> Errors
         {
-            get { return errors; }
+            get { return _errors; }
         }
 
         public int RateLimitRemaining
         {
-            get { return ratelimitremaining; }
+            get { return _ratelimitremaining; }
         }
 
         public string LastModified
         {
-            get { return lastmodified; }
+            get { return _lastmodified; }
         }
 
         public bool Restart
         {
-            get { return restart; }
+            get { return _restart; }
         }
+
         #endregion        
     }
 }
