@@ -248,16 +248,7 @@ namespace poshsecframework.Web
             var request = (HttpWebRequest)WebRequest.Create(uri);
             request.Timeout = 5000;
             request.UserAgent = StringValue.psftitle;
-
-            WebProxy proxy = null;
-            var proxyAddress = Properties.Settings.Default.ProxyAddress;
-            var proxyPort = Properties.Settings.Default.ProxyPort;
-            if (proxyAddress != null && proxyPort != 0)
-                proxy = new WebProxy(proxyAddress, proxyPort);
-            if (proxyAddress != null)
-                proxy = new WebProxy(proxyAddress);
-            request.Proxy = proxy;
-
+            
             WebResponse response = null;
             try
             {
