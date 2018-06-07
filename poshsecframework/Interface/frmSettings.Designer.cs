@@ -108,6 +108,14 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.tabProxy = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.radManualProxy = new System.Windows.Forms.RadioButton();
+            this.radSystemProxy = new System.Windows.Forms.RadioButton();
+            this.radNoProxy = new System.Windows.Forms.RadioButton();
             this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
@@ -132,6 +140,7 @@
             this.panel3.SuspendLayout();
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
+            this.tabProxy.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -599,6 +608,7 @@
             this.tcSettings.Controls.Add(this.tbpGeneral);
             this.tcSettings.Controls.Add(this.tbpLogging);
             this.tcSettings.Controls.Add(this.tbpModules);
+            this.tcSettings.Controls.Add(this.tabProxy);
             this.tcSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
             this.tcSettings.Multiline = true;
@@ -979,6 +989,90 @@
             this.toolStripButton1.Size = new System.Drawing.Size(43, 22);
             this.toolStripButton1.Text = "On";
             // 
+            // tabProxy
+            // 
+            this.tabProxy.Controls.Add(this.label6);
+            this.tabProxy.Controls.Add(this.textBox2);
+            this.tabProxy.Controls.Add(this.label5);
+            this.tabProxy.Controls.Add(this.textBox1);
+            this.tabProxy.Controls.Add(this.radManualProxy);
+            this.tabProxy.Controls.Add(this.radSystemProxy);
+            this.tabProxy.Controls.Add(this.radNoProxy);
+            this.tabProxy.Location = new System.Drawing.Point(4, 22);
+            this.tabProxy.Name = "tabProxy";
+            this.tabProxy.Padding = new System.Windows.Forms.Padding(3);
+            this.tabProxy.Size = new System.Drawing.Size(523, 223);
+            this.tabProxy.TabIndex = 3;
+            this.tabProxy.Text = "Proxy";
+            this.tabProxy.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(229, 91);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "Port:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(266, 88);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(62, 21);
+            this.textBox2.TabIndex = 8;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(38, 91);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Proxy host:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(107, 88);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 21);
+            this.textBox1.TabIndex = 6;
+            // 
+            // radManualProxy
+            // 
+            this.radManualProxy.AutoSize = true;
+            this.radManualProxy.Location = new System.Drawing.Point(20, 65);
+            this.radManualProxy.Name = "radManualProxy";
+            this.radManualProxy.Size = new System.Drawing.Size(160, 17);
+            this.radManualProxy.TabIndex = 4;
+            this.radManualProxy.TabStop = true;
+            this.radManualProxy.Text = "Manual proxy configuration:";
+            this.radManualProxy.UseVisualStyleBackColor = true;
+            // 
+            // radSystemProxy
+            // 
+            this.radSystemProxy.AutoSize = true;
+            this.radSystemProxy.Location = new System.Drawing.Point(20, 42);
+            this.radSystemProxy.Name = "radSystemProxy";
+            this.radSystemProxy.Size = new System.Drawing.Size(111, 17);
+            this.radSystemProxy.TabIndex = 3;
+            this.radSystemProxy.TabStop = true;
+            this.radSystemProxy.Text = "Use system proxy";
+            this.radSystemProxy.UseVisualStyleBackColor = true;
+            // 
+            // radNoProxy
+            // 
+            this.radNoProxy.AutoSize = true;
+            this.radNoProxy.Location = new System.Drawing.Point(20, 19);
+            this.radNoProxy.Name = "radNoProxy";
+            this.radNoProxy.Size = new System.Drawing.Size(69, 17);
+            this.radNoProxy.TabIndex = 2;
+            this.radNoProxy.TabStop = true;
+            this.radNoProxy.Text = "No proxy";
+            this.radNoProxy.UseVisualStyleBackColor = true;
+            // 
             // ttPSFHelp
             // 
             this.ttPSFHelp.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
@@ -1036,6 +1130,8 @@
             this.tbpModules.PerformLayout();
             this.tbModules.ResumeLayout(false);
             this.tbModules.PerformLayout();
+            this.tabProxy.ResumeLayout(false);
+            this.tabProxy.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1121,5 +1217,13 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.TabPage tabProxy;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.RadioButton radManualProxy;
+        private System.Windows.Forms.RadioButton radSystemProxy;
+        private System.Windows.Forms.RadioButton radNoProxy;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
