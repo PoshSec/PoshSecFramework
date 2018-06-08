@@ -138,6 +138,13 @@
     <Compile Include="Interface\frmStartup.Designer.cs">
       <DependentUpon>frmStartup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\ProxyPreference.cs" />
+    <Compile Include="Interface\ProxyPreferenceGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Interface\ProxyPreferenceGroupBox.Designer.cs">
+      <DependentUpon>ProxyPreferenceGroupBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Events\ScanEventArgs.cs" />
     <Compile Include="Network\ScanIP.cs" />
@@ -152,6 +159,7 @@
     <Compile Include="PShell\pshosteditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Strings\StringValue.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />

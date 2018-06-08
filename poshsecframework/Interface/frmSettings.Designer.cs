@@ -109,13 +109,14 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.tabProxy = new System.Windows.Forms.TabPage();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.radManualProxy = new System.Windows.Forms.RadioButton();
-            this.radSystemProxy = new System.Windows.Forms.RadioButton();
+            this.proxyPreferenceGroupBox1 = new poshsecframework.Interface.ProxyPreferenceGroupBox();
             this.radNoProxy = new System.Windows.Forms.RadioButton();
+            this.label6 = new System.Windows.Forms.Label();
+            this.radSystemProxy = new System.Windows.Forms.RadioButton();
+            this.txbProxyPort = new System.Windows.Forms.TextBox();
+            this.radManualProxy = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txbProxyHost = new System.Windows.Forms.TextBox();
             this.ttPSFHelp = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.tbpGeneral.SuspendLayout();
@@ -141,6 +142,7 @@
             this.tbpModules.SuspendLayout();
             this.tbModules.SuspendLayout();
             this.tabProxy.SuspendLayout();
+            this.proxyPreferenceGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -991,13 +993,7 @@
             // 
             // tabProxy
             // 
-            this.tabProxy.Controls.Add(this.label6);
-            this.tabProxy.Controls.Add(this.textBox2);
-            this.tabProxy.Controls.Add(this.label5);
-            this.tabProxy.Controls.Add(this.textBox1);
-            this.tabProxy.Controls.Add(this.radManualProxy);
-            this.tabProxy.Controls.Add(this.radSystemProxy);
-            this.tabProxy.Controls.Add(this.radNoProxy);
+            this.tabProxy.Controls.Add(this.proxyPreferenceGroupBox1);
             this.tabProxy.Location = new System.Drawing.Point(4, 22);
             this.tabProxy.Name = "tabProxy";
             this.tabProxy.Padding = new System.Windows.Forms.Padding(3);
@@ -1006,72 +1002,95 @@
             this.tabProxy.Text = "Proxy";
             this.tabProxy.UseVisualStyleBackColor = true;
             // 
-            // label6
+            // proxyPreferenceGroupBox1
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(229, 91);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 13);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "Port:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(266, 88);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(62, 21);
-            this.textBox2.TabIndex = 8;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(38, 91);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "Proxy host:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(107, 88);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 21);
-            this.textBox1.TabIndex = 6;
-            // 
-            // radManualProxy
-            // 
-            this.radManualProxy.AutoSize = true;
-            this.radManualProxy.Location = new System.Drawing.Point(20, 65);
-            this.radManualProxy.Name = "radManualProxy";
-            this.radManualProxy.Size = new System.Drawing.Size(160, 17);
-            this.radManualProxy.TabIndex = 4;
-            this.radManualProxy.TabStop = true;
-            this.radManualProxy.Text = "Manual proxy configuration:";
-            this.radManualProxy.UseVisualStyleBackColor = true;
-            // 
-            // radSystemProxy
-            // 
-            this.radSystemProxy.AutoSize = true;
-            this.radSystemProxy.Location = new System.Drawing.Point(20, 42);
-            this.radSystemProxy.Name = "radSystemProxy";
-            this.radSystemProxy.Size = new System.Drawing.Size(111, 17);
-            this.radSystemProxy.TabIndex = 3;
-            this.radSystemProxy.TabStop = true;
-            this.radSystemProxy.Text = "Use system proxy";
-            this.radSystemProxy.UseVisualStyleBackColor = true;
+            this.proxyPreferenceGroupBox1.Controls.Add(this.radNoProxy);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.label6);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.radSystemProxy);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.txbProxyPort);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.radManualProxy);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.label5);
+            this.proxyPreferenceGroupBox1.Controls.Add(this.txbProxyHost);
+            this.proxyPreferenceGroupBox1.Location = new System.Drawing.Point(8, 6);
+            this.proxyPreferenceGroupBox1.Name = "proxyPreferenceGroupBox1";
+            this.proxyPreferenceGroupBox1.Selected = poshsecframework.ProxyPreference.None;
+            this.proxyPreferenceGroupBox1.Size = new System.Drawing.Size(347, 139);
+            this.proxyPreferenceGroupBox1.TabIndex = 0;
+            this.proxyPreferenceGroupBox1.TabStop = false;
+            this.proxyPreferenceGroupBox1.Text = "Proxy";
             // 
             // radNoProxy
             // 
             this.radNoProxy.AutoSize = true;
-            this.radNoProxy.Location = new System.Drawing.Point(20, 19);
+            this.radNoProxy.Checked = true;
+            this.radNoProxy.Location = new System.Drawing.Point(20, 20);
             this.radNoProxy.Name = "radNoProxy";
             this.radNoProxy.Size = new System.Drawing.Size(69, 17);
-            this.radNoProxy.TabIndex = 2;
+            this.radNoProxy.TabIndex = 0;
             this.radNoProxy.TabStop = true;
+            this.radNoProxy.Tag = "None";
             this.radNoProxy.Text = "No proxy";
             this.radNoProxy.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(217, 100);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 13);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Port:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // radSystemProxy
+            // 
+            this.radSystemProxy.AutoSize = true;
+            this.radSystemProxy.Location = new System.Drawing.Point(20, 43);
+            this.radSystemProxy.Name = "radSystemProxy";
+            this.radSystemProxy.Size = new System.Drawing.Size(111, 17);
+            this.radSystemProxy.TabIndex = 1;
+            this.radSystemProxy.Tag = "System";
+            this.radSystemProxy.Text = "Use system proxy";
+            this.radSystemProxy.UseVisualStyleBackColor = true;
+            // 
+            // txbProxyPort
+            // 
+            this.txbProxyPort.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::poshsecframework.Properties.Settings.Default, "ProxyPort", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txbProxyPort.Location = new System.Drawing.Point(254, 97);
+            this.txbProxyPort.Name = "txbProxyPort";
+            this.txbProxyPort.Size = new System.Drawing.Size(62, 21);
+            this.txbProxyPort.TabIndex = 6;
+            this.txbProxyPort.Text = global::poshsecframework.Properties.Settings.Default.ProxyHost;
+            // 
+            // radManualProxy
+            // 
+            this.radManualProxy.AutoSize = true;
+            this.radManualProxy.Location = new System.Drawing.Point(20, 66);
+            this.radManualProxy.Name = "radManualProxy";
+            this.radManualProxy.Size = new System.Drawing.Size(160, 17);
+            this.radManualProxy.TabIndex = 2;
+            this.radManualProxy.Tag = "Manual";
+            this.radManualProxy.Text = "Manual proxy configuration:";
+            this.radManualProxy.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(26, 100);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.TabIndex = 3;
+            this.label5.Text = "Proxy host:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txbProxyHost
+            // 
+            this.txbProxyHost.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::poshsecframework.Properties.Settings.Default, "ProxyHost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txbProxyHost.Location = new System.Drawing.Point(95, 97);
+            this.txbProxyHost.Name = "txbProxyHost";
+            this.txbProxyHost.Size = new System.Drawing.Size(100, 21);
+            this.txbProxyHost.TabIndex = 4;
+            this.txbProxyHost.Text = global::poshsecframework.Properties.Settings.Default.ProxyHost;
             // 
             // ttPSFHelp
             // 
@@ -1131,7 +1150,8 @@
             this.tbModules.ResumeLayout(false);
             this.tbModules.PerformLayout();
             this.tabProxy.ResumeLayout(false);
-            this.tabProxy.PerformLayout();
+            this.proxyPreferenceGroupBox1.ResumeLayout(false);
+            this.proxyPreferenceGroupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1219,11 +1239,12 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.TabPage tabProxy;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txbProxyHost;
         private System.Windows.Forms.RadioButton radManualProxy;
         private System.Windows.Forms.RadioButton radSystemProxy;
         private System.Windows.Forms.RadioButton radNoProxy;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txbProxyPort;
+        private ProxyPreferenceGroupBox proxyPreferenceGroupBox1;
     }
 }
