@@ -92,7 +92,7 @@ namespace poshsecframework
                 spashScreen = new Interface.frmStartup();
                 spashScreen.Show();
                 spashScreen.Refresh();
-            }
+            }         
         }
 
         private void frmMain_Shown(object sender, EventArgs e)

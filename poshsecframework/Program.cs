@@ -5,7 +5,7 @@ using System.Net;
 
 namespace poshsecframework
 {
-    static class Program
+    public class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -15,19 +15,19 @@ namespace poshsecframework
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
-            try
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new frmMain());
-            }
-            catch (Exception e)
-            { 
-                //Safety Net
-                //This is a global exception handler.
-                MessageBox.Show("Unhandled Exception" + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace: " + Environment.NewLine + e.StackTrace, "Unhandled Exception. Program Will Halt.");
-                Application.Exit();
-            }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            var program = new PoshSecFramework();
+            program.ExitRequested += Program_ExitRequested;
+            program.Start();
+
+            Application.Run();
+        }
+
+        private static void Program_ExitRequested(object sender, EventArgs e)
+        {
+            Application.ExitThread();
         }
     }
 }
