@@ -1,16 +1,17 @@
-﻿using System;
+﻿using poshsecframework.Strings;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace poshsecframework
 {
     public class PoshSecFramework
     {
-        private readonly frmMain _mainForm;
+        private frmMain _mainForm;
 
         public PoshSecFramework()
         {
-            _mainForm = new frmMain();
-            _mainForm.FormClosed += _mainForm_FormClosed;
         }
 
         public event EventHandler<EventArgs> ExitRequested;
@@ -25,17 +26,14 @@ namespace poshsecframework
             ExitRequested?.Invoke(this, e);
         }
 
-        public void Start()
+        public async Task StartAsync()
         {
-            try
-            {
-                _mainForm.Show();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Unhandled Exception" + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace: " + Environment.NewLine + e.StackTrace, "Unhandled Exception. Program Will Halt.");
-                OnExitRequested(EventArgs.Empty);
-            }
+            _mainForm = new frmMain();
+            _mainForm.FormClosed += _mainForm_FormClosed;
+
+            await _mainForm.InitializeAsync();
+            _mainForm.Show();
         }
     }
+
 }

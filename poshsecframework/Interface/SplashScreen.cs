@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace poshsecframework.Interface
 {
-    public partial class frmStartup : Form
+    public partial class SplashScreen : Form
     {
-        public frmStartup()
+        public SplashScreen()
         {
             InitializeComponent();
         }
