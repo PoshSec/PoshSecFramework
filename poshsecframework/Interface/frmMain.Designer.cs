@@ -107,6 +107,7 @@ namespace poshsecframework
             this.btnExportSystems = new System.Windows.Forms.ToolStripButton();
             this.tslSystemCount = new System.Windows.Forms.ToolStripLabel();
             this.tbpPowerShell = new System.Windows.Forms.TabPage();
+            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.cmnuPSFConsole = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmbtnCopy = new System.Windows.Forms.ToolStripMenuItem();
             this.cmbtnPaste = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,7 +159,6 @@ namespace poshsecframework
             this.cmnuNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmnuRestore = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -937,6 +937,25 @@ namespace poshsecframework
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
+            // txtPShellOutput
+            // 
+            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
+            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPShellOutput.ContextMenuStrip = this.cmnuPSFConsole;
+            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.txtPShellOutput.DetectUrls = false;
+            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
+            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
+            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
+            this.txtPShellOutput.Name = "txtPShellOutput";
+            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.TabIndex = 0;
+            this.txtPShellOutput.Text = "";
+            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
+            // 
             // cmnuPSFConsole
             // 
             this.cmnuPSFConsole.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1391,25 +1410,6 @@ namespace poshsecframework
             this.cmnuExit.Size = new System.Drawing.Size(113, 22);
             this.cmnuExit.Text = "Exit";
             this.cmnuExit.Click += new System.EventHandler(this.cmnuExit_Click);
-            // 
-            // txtPShellOutput
-            // 
-            this.txtPShellOutput.BackColor = System.Drawing.Color.SteelBlue;
-            this.txtPShellOutput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPShellOutput.ContextMenuStrip = this.cmnuPSFConsole;
-            this.txtPShellOutput.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.txtPShellOutput.DetectUrls = false;
-            this.txtPShellOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPShellOutput.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPShellOutput.ForeColor = System.Drawing.Color.White;
-            this.txtPShellOutput.Location = new System.Drawing.Point(3, 3);
-            this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
-            this.txtPShellOutput.Name = "txtPShellOutput";
-            this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
-            this.txtPShellOutput.TabIndex = 0;
-            this.txtPShellOutput.Text = "";
-            this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
             // frmMain
             // 

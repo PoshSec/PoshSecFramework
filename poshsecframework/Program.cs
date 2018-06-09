@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Net;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace poshsecframework
 {
-    static class Program
+    public class Program
     {
         /// <summary>
         /// The main entry point for the application.
@@ -15,19 +17,36 @@ namespace poshsecframework
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            SynchronizationContext.SetSynchronizationContext(
+                new WindowsFormsSynchronizationContext());
+            var psf = new PoshSecFramework();
+            psf.ExitRequested += Program_ExitRequested;
+            Task programStart = psf.StartAsync();
+            HandleAnyTaskExceptions(programStart);
+
+            Application.Run();
+        }
+
+        private static async void HandleAnyTaskExceptions(Task task)
+        {
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new frmMain());
+                await Task.Yield();
+                await task;
             }
             catch (Exception e)
-            { 
-                //Safety Net
-                //This is a global exception handler.
+            {
                 MessageBox.Show("Unhandled Exception" + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace: " + Environment.NewLine + e.StackTrace, "Unhandled Exception. Program Will Halt.");
                 Application.Exit();
             }
+        }
+
+        private static void Program_ExitRequested(object sender, EventArgs e)
+        {
+            Application.ExitThread();
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace poshsecframework.Interface
 {
-    partial class frmStartup
+    partial class SplashScreen
     {
         /// <summary>
         /// Required designer variable.
