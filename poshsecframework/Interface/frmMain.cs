@@ -27,10 +27,12 @@ namespace poshsecframework
     {
         private Collection<PSObject> _commands;
 
+        public event EventHandler<StatusChangeEventArgs> StatusChange;
+        public event EventHandler<EventArgs> ShowSplashScreen;
+        public event EventHandler<EventArgs> HideSplashScreen;
 
         #region Private Variables 
         Network.NetworkBrowser scnr = new Network.NetworkBrowser();
-        Interface.SplashScreen splashScreen = null;
         private int mincurpos = 6;
         private Collection<String> cmdhist = new Collection<string>();
         private int cmdhistidx = -1;
@@ -77,6 +79,21 @@ namespace poshsecframework
 
         #region Form
 
+        public void OnSetStatus(string message)
+        {
+            StatusChange?.Invoke(this, new StatusChangeEventArgs(message));
+        }
+
+        public void OnShowSplashScreen()
+        {
+            ShowSplashScreen?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void OnHideSplashScreen()
+        {
+            HideSplashScreen?.Invoke(this, EventArgs.Empty);
+        }
+
         public frmMain()
         {
             InitializeComponent();
@@ -96,9 +113,7 @@ namespace poshsecframework
             }
             if (cont)
             {
-                splashScreen = new Interface.SplashScreen();
-                splashScreen.Show();
-                //splashScreen.Refresh();
+                OnShowSplashScreen();
             }
         }
 
@@ -106,7 +121,7 @@ namespace poshsecframework
         {
             if (cont)
             {
-                splashScreen.SetStatus("Initializing, please wait...");
+                OnSetStatus("Initializing, please wait...");
                 scnr.ScanComplete += scnr_ScanComplete;
                 scnr.ScanCancelled += scnr_ScanCancelled;
                 scnr.ScanUpdate += scnr_ScanUpdate;
@@ -114,12 +129,12 @@ namespace poshsecframework
                 schedule.ScriptInvoked += schedule_ScriptInvoked;
                 schedule.ScheduleRemoved += schedule_ScheduleRemoved;
 
-                splashScreen.SetStatus("Checking Settings, please wait...");
+                OnSetStatus("Checking Settings, please wait...");
                 CheckSettings();
                 if (poshsecframework.Properties.Settings.Default.FirstTime)
                 {
                     restart = true;
-                    splashScreen.Hide();
+                    OnHideSplashScreen();
                     FirstTimeSetup();
                 }
                 if (restart)
@@ -130,8 +145,8 @@ namespace poshsecframework
                 else
                 {
                     Initialize();
-                    splashScreen.Show();
-                    splashScreen.SetStatus("Loading Networks, please wait...");
+                    OnShowSplashScreen();
+                    OnSetStatus("Loading Networks, please wait...");
                     GetNetworks();
                     GetAlerts();
                 }
@@ -140,9 +155,7 @@ namespace poshsecframework
                     DisplayOutput(StringValue.ImportError + Environment.NewLine + loaderrors, null, false, false, false, true);
                 }
                 shown = true;
-                splashScreen.Close();
-                splashScreen.Dispose();
-                splashScreen = null;
+                OnHideSplashScreen();
                 this.Enabled = true;
                 this.Focus();
                 schedule.Start();
@@ -211,17 +224,17 @@ namespace poshsecframework
 
         private void Initialize()
         {
-            if (splashScreen != null) { splashScreen.SetStatus("Initializing PowerShell, please wait..."); }
+            OnSetStatus("Initializing PowerShell, please wait..."); 
             psf = new PShell.pshell(this);
             psf.ImportPSModules(enabledmods);
             psf.ParentForm = this;
             _commands = psf.GetCommand();
 
-            if (splashScreen != null) { splashScreen.SetStatus("Looking for modules, please wait..."); }
+            OnSetStatus("Looking for modules, please wait..."); 
             CheckPendingModules();
 
             BuildModuleFilter();
-            if (splashScreen != null) { splashScreen.SetStatus("Checking for updates, please wait..."); }
+            OnSetStatus("Checking for updates, please wait..."); 
 
             // Set up GitHub Timer for Checking for Updates
             ghChecker = new System.Timers.Timer();
@@ -240,11 +253,11 @@ namespace poshsecframework
             txtPShellOutput.Text = StringValue.psf;
             mincurpos = txtPShellOutput.Text.Length;
             txtPShellOutput.SelectionStart = mincurpos;
-            if (splashScreen != null) { splashScreen.SetStatus("Loading script library, please wait..."); }
+            OnSetStatus("Loading script library, please wait..."); 
             GetLibrary();
-            if (splashScreen != null) { splashScreen.SetStatus("Getting commands, please wait..."); }
+            OnSetStatus("Getting commands, please wait..."); 
             LoadCommands(_commands);
-            if (splashScreen != null) { splashScreen.SetStatus("Loading schedule library, please wait..."); }
+            OnSetStatus("Loading schedule library, please wait..."); 
             LoadSchedule();
             InitSyslog();
         }

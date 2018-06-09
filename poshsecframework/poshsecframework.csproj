@@ -138,6 +138,7 @@
     <Compile Include="Interface\SplashScreen.Designer.cs">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\StatusChangeEventArgs.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Events\ScanEventArgs.cs" />
     <Compile Include="Network\ScanIP.cs" />
