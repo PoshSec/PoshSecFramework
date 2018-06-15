@@ -59,6 +59,7 @@ namespace poshsecframework.Interface
             ckUseSyslog.Checked = Properties.Settings.Default.UseSyslog;
             txtSyslogServer.Text = Properties.Settings.Default.SyslogServer;
             txtSyslogPort.Value = Properties.Settings.Default.SyslogPort;
+            proxyPreferenceGroupBox1.Selected = Properties.Settings.Default.ProxyPreference;
             LoadModules();
         }
 
@@ -78,7 +79,7 @@ namespace poshsecframework.Interface
                     modsettings.Add(modstr);
                 }                
             }
-            Properties.Settings.Default["Modules"] = modsettings;
+            Properties.Settings.Default.Modules = modsettings;
             Properties.Settings.Default.Save();
             Properties.Settings.Default.Reload();
         }
@@ -224,36 +225,37 @@ namespace poshsecframework.Interface
             }
             if (Directory.Exists(txtScriptDirectory.Text) && Directory.Exists(txtModuleDirectory.Text))
             {
-                Properties.Settings.Default["ScriptPath"] = txtScriptDirectory.Text;
-                Properties.Settings.Default["ModulePath"] = txtModuleDirectory.Text;
-                Properties.Settings.Default["ScriptDefaultAction"] = cmbScriptDefAction.SelectedIndex;
-                Properties.Settings.Default["PSExecPath"] = txtPSExecPath.Text;
-                Properties.Settings.Default["ScheduleFile"] = txtSchFile.Text;
-                Properties.Settings.Default["GithubAPIKey"] = txtGithubAPIKey.Text;
+                Properties.Settings.Default.ScriptPath = txtScriptDirectory.Text;
+                Properties.Settings.Default.ModulePath = txtModuleDirectory.Text;
+                Properties.Settings.Default.ScriptDefaultAction = cmbScriptDefAction.SelectedIndex;
+                Properties.Settings.Default.PSExecPath = txtPSExecPath.Text;
+                Properties.Settings.Default.ScheduleFile = txtSchFile.Text;
+                Properties.Settings.Default.GithubAPIKey = txtGithubAPIKey.Text;
                 bool firsttime = false;
                 if (cmbFirstTime.SelectedIndex == 0)
                 {
                     firsttime = true;
                 }
-                Properties.Settings.Default["FirstTime"] = firsttime;
-                Properties.Settings.Default["NameChecking"] = ckNameCheck.Checked;
-                Properties.Settings.Default["ShowInTaskbar"] = ckShowinTaskbar.Checked;
-                Properties.Settings.Default["SaveSystems"] = ckSaveSystems.Checked;
+                Properties.Settings.Default.FirstTime = firsttime;
+                Properties.Settings.Default.NameChecking = ckNameCheck.Checked;
+                Properties.Settings.Default.ShowInTaskbar = ckShowinTaskbar.Checked;
+                Properties.Settings.Default.SaveSystems = ckSaveSystems.Checked;
                 if (!ckSaveSystems.Checked)
                 {
                     if (Properties.Settings.Default.Systems == null)
                     {
-                        Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
+                        Properties.Settings.Default.Systems = new System.Collections.Specialized.StringCollection();
                     }
-                    ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
+                    Properties.Settings.Default.Systems.Clear();
                 }
-                Properties.Settings.Default["LogOutput"] = ckOutputLog.Checked;
-                Properties.Settings.Default["OutputLogFile"] = txtOutputLog.Text;
-                Properties.Settings.Default["LogAlerts"] = ckOutputLog.Checked;
-                Properties.Settings.Default["AlertLogFile"] = txtAlertLog.Text;
-                Properties.Settings.Default["UseSyslog"] = ckUseSyslog.Checked;
-                Properties.Settings.Default["SyslogServer"] = txtSyslogServer.Text;
-                Properties.Settings.Default["SyslogPort"] = (int)txtSyslogPort.Value;
+                Properties.Settings.Default.LogOutput = ckOutputLog.Checked;
+                Properties.Settings.Default.OutputLogFile = txtOutputLog.Text;
+                Properties.Settings.Default.LogAlerts = ckOutputLog.Checked;
+                Properties.Settings.Default.AlertLogFile = txtAlertLog.Text;
+                Properties.Settings.Default.UseSyslog = ckUseSyslog.Checked;
+                Properties.Settings.Default.SyslogServer = txtSyslogServer.Text;
+                Properties.Settings.Default.SyslogPort = (int)txtSyslogPort.Value;
+                Properties.Settings.Default.ProxyPreference = proxyPreferenceGroupBox1.Selected;
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
 
@@ -547,7 +549,7 @@ namespace poshsecframework.Interface
             if (lvwModules.SelectedItems.Count > 0)
             {
                 ListViewItem itm = lvwModules.SelectedItems[0];
-                Properties.Settings.Default["LastModuleCheck"] = DateTime.Now.ToString();
+                Properties.Settings.Default.LastModuleCheck = DateTime.Now.ToString();
                 Properties.Settings.Default.Save();
                 Properties.Settings.Default.Reload();
                 string err = "";

@@ -12,7 +12,7 @@ namespace poshsecframework.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -278,12 +278,12 @@ namespace poshsecframework.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ProxyAddress {
+        public string ProxyHost {
             get {
-                return ((string)(this["ProxyAddress"]));
+                return ((string)(this["ProxyHost"]));
             }
             set {
-                this["ProxyAddress"] = value;
+                this["ProxyHost"] = value;
             }
         }
         
@@ -296,6 +296,18 @@ namespace poshsecframework.Properties {
             }
             set {
                 this["ProxyPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("System")]
+        public global::poshsecframework.ProxyPreference ProxyPreference {
+            get {
+                return ((global::poshsecframework.ProxyPreference)(this["ProxyPreference"]));
+            }
+            set {
+                this["ProxyPreference"] = value;
             }
         }
     }
