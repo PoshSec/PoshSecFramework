@@ -2164,7 +2164,7 @@ namespace PoshSec.Framework
         }
         #endregion
 
-        #region Networks Tree View
+        #region Networks
 
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -2176,6 +2176,31 @@ namespace PoshSec.Framework
             {
                 btnRemoveNetwork.Enabled = false;
             }
+        }
+
+        private void btnAddNetwork_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmAddNetwork())
+            {
+                if (frm.ShowDialog() != DialogResult.OK) return;
+                var networkName = frm.NetworkName;
+                if (tvwNetworks.IsValid(networkName))
+                    tvwNetworks.Add(networkName, NetworkType.Domain);
+                else
+                    MessageBox.Show(StringValue.InvalidNetworkName);
+            }
+        }
+
+        private void btnRemoveNetwork_Click(object sender, EventArgs e)
+        {
+            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Parent != null)
+            {
+                if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    tvwNetworks.SelectedNode.Remove();
+                }
+            }
+
         }
 
         #endregion
@@ -2327,6 +2352,7 @@ namespace PoshSec.Framework
         #endregion
 
         #region Button Clicks
+
         private void btnAlert_Information_CheckedChanged(object sender, EventArgs e)
         {
             Utility.AlertFilter.Informational = btnAlert_Information.Checked;
@@ -2600,33 +2626,7 @@ namespace PoshSec.Framework
         {
             MessageBox.Show(StringValue.NotImplemented);           
         }
-
-        private void btnAddNetwork_Click(object sender, EventArgs e)
-        {
-            var frm = new frmAddNetwork();
-            if (frm.ShowDialog() == DialogResult.OK)
-            {
-                var networkName = frm.NetworkName;
-                if (tvwNetworks.IsValid(networkName))
-                    tvwNetworks.Add(networkName, NetworkType.Domain);
-                else
-                    MessageBox.Show(StringValue.InvalidNetworkName);
-            }
-            frm.Dispose();
-        }
-
-        private void btnRemoveNetwork_Click(object sender, EventArgs e)
-        {
-            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Parent != null)
-            {
-                if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    tvwNetworks.SelectedNode.Remove();
-                }
-            }
-            
-        }
-
+        
         private void btnLaunchPShellCmd_Click(object sender, EventArgs e)
         {
             ShellOpenCommand("powershell.exe");
