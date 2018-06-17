@@ -129,7 +129,7 @@ namespace PoshSec.Framework
                     Initialize();
                     spashScreen.Show();
                     spashScreen.SetStatus("Loading Networks, please wait...");
-                    GetNetworks();
+                    LoadNetworks();
                     GetAlerts();
                 }
                 if (loaderrors != "")
@@ -389,30 +389,28 @@ namespace PoshSec.Framework
         }
 
         #region Network
-        private void GetNetworks()
+
+        private void LoadNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
-            TreeNode lnode = new TreeNode();
-            lnode.Text = StringValue.LocalNetwork;
-            lnode.ImageIndex = 3;
-            lnode.SelectedImageIndex = 3;
-            lnode.Tag = 1;
-            tvwNetworks.Nodes[0].Nodes.Add(lnode);
+            AddNetworkToTreeView(StringValue.LocalNetwork, SystemType.Local);
 
             try
             {
                 //Get Domain Name
-                Forest hostForest = Forest.GetCurrentForest();
-                DomainCollection domains = hostForest.Domains;
-                
+                var hostForest = Forest.GetCurrentForest();
+                var domains = hostForest.Domains;
+
                 foreach (Domain domain in domains)
                 {
-                    TreeNode node = new TreeNode();
-                    node.Text = domain.Name;
-                    node.SelectedImageIndex = 3;
-                    node.ImageIndex = 3;
-                    node.Tag = SystemType.Domain;
-                    TreeNode rootnode = tvwNetworks.Nodes[0];
+                    var node = new TreeNode
+                    {
+                        Text = domain.Name,
+                        SelectedImageIndex = 3,
+                        ImageIndex = 3,
+                        Tag = SystemType.Domain
+                    };
+                    var rootnode = tvwNetworks.Nodes[0];
                     rootnode.Nodes.Add(node);
                 }
             }
@@ -421,24 +419,21 @@ namespace PoshSec.Framework
                 //fail silently because it's not on A/D   
             }
 
-            if (Properties.Settings.Default.Systems != null && Properties.Settings.Default.Systems.Count > 0)
+            if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
             {
                 lvwSystems.Items.Clear();
-                foreach (String system in Properties.Settings.Default.Systems)
+                foreach (var system in Settings.Default.Systems)
                 {
-                    String[] systemparts = system.Split('|');
+                    var systemparts = system.Split('|');
                     if (systemparts.Length == lvwSystems.Columns.Count)
                     {
-                        ListViewItem lvwItm = new ListViewItem();
-                        lvwItm.Text = systemparts[0];
-                        for(int idx = 1; idx < systemparts.Length; idx++)
-                        {
-                            lvwItm.SubItems.Add(systemparts[idx]);
-                        }
+                        var lvwItm = new ListViewItem {Text = systemparts[0]};
+                        for (var idx = 1; idx < systemparts.Length; idx++) lvwItm.SubItems.Add(systemparts[idx]);
                         lvwItm.ImageIndex = 2;
                         lvwSystems.Items.Add(lvwItm);
                     }
                 }
+
                 UpdateSystemCount();
             }
             else
@@ -447,11 +442,11 @@ namespace PoshSec.Framework
                 {
                     //Add Local IP/Host to Local Network
                     lvwSystems.Items.Clear();
-                    String localHost = Dns.GetHostName();
-                    String[] localIPs = scnr.GetIP(localHost).Split(',');
-                    foreach (String localIP in localIPs)
+                    var localHost = Dns.GetHostName();
+                    var localIPs = scnr.GetIP(localHost).Split(',');
+                    foreach (var localIP in localIPs)
                     {
-                        ListViewItem lvwItm = new ListViewItem();
+                        var lvwItm = new ListViewItem();
 
                         lvwItm.Text = localHost;
                         lvwItm.SubItems.Add(localIP);
@@ -465,6 +460,7 @@ namespace PoshSec.Framework
                         lvwItm.ImageIndex = 2;
                         lvwSystems.Items.Add(lvwItm);
                     }
+
                     tvwNetworks.Nodes[0].Expand();
                     UpdateSystemCount();
                 }
@@ -473,11 +469,20 @@ namespace PoshSec.Framework
                     MessageBox.Show(e.Message + Environment.NewLine + e.StackTrace);
                 }
             }
-            
-            if (tvwNetworks.Nodes[0].Nodes.Count > 0)
+
+            if (tvwNetworks.Nodes[0].Nodes.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
+        }
+
+        private void AddNetworkToTreeView(string networkName, SystemType systemType)
+        {
+            var lnode = new TreeNode
             {
-                tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
-            }
+                Text = networkName,
+                SelectedImageIndex = 3,
+                ImageIndex = 3,
+                Tag = systemType
+            };
+            tvwNetworks.Nodes[0].Nodes.Add(lnode);
         }
 
         private void Scan()
@@ -1615,20 +1620,18 @@ namespace PoshSec.Framework
             }
         }
 
-        private bool ValidNetwork(String networkname)
+        private bool IsValidNetworkName(string networkname)
         {
-            bool rtn = true;
-            int idx = 0;
-            TreeNode rootnode = tvwNetworks.Nodes[0];
+            var rtn = true;
+            var idx = 0;
+            var rootnode = tvwNetworks.Nodes[0];
             while (idx < rootnode.Nodes.Count && rtn)
             {
-                TreeNode node = rootnode.Nodes[idx];
-                if (node.Text == networkname)
-                {
-                    rtn = false;
-                }
+                var node = rootnode.Nodes[idx];
+                if (node.Text == networkname) rtn = false;
                 idx++;
             }
+
             return rtn;
         }
 
@@ -2586,7 +2589,7 @@ namespace PoshSec.Framework
 
         private void btnRefreshNetworks_Click(object sender, EventArgs e)
         {
-            GetNetworks();
+            LoadNetworks();
         }
 
         private void btnRefreshScripts_Click(object sender, EventArgs e)
@@ -2631,25 +2634,17 @@ namespace PoshSec.Framework
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
         {
-            Interface.frmAddNetwork frm = new Interface.frmAddNetwork();
-            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            var frm = new frmAddNetwork();
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                if (ValidNetwork(frm.NetworkName))
-                {
-                    TreeNode node = new TreeNode();
-                    node.Text = frm.NetworkName;
-                    node.SelectedImageIndex = 3;
-                    node.ImageIndex = 3;
-                    node.Tag = SystemType.Domain;
-                    tvwNetworks.Nodes[0].Nodes.Add(node);
-                }
+                var networkName = frm.NetworkName;
+                if (IsValidNetworkName(networkName))
+                    AddNetworkToTreeView(networkName, SystemType.Domain);
                 else
-                {
                     MessageBox.Show(StringValue.InvalidNetworkName);
-                }
             }
+
             frm.Dispose();
-            frm = null;
         }
 
         private void btnRemoveNetwork_Click(object sender, EventArgs e)
