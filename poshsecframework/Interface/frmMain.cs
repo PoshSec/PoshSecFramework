@@ -52,12 +52,6 @@ namespace PoshSec.Framework
         private FormWindowState lastwindowstate = FormWindowState.Normal;
         private System.Timers.Timer ghChecker = null;
 
-        enum SystemType
-        { 
-            Local = 1,
-            Domain
-        }
-
         enum LibraryImages
         { 
             Function,
@@ -393,7 +387,7 @@ namespace PoshSec.Framework
         private void LoadNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
-            AddNetworkToTreeView(StringValue.LocalNetwork, SystemType.Local);
+            tvwNetworks.Add(StringValue.LocalNetwork, SystemType.Local);
 
             try
             {
@@ -471,18 +465,6 @@ namespace PoshSec.Framework
             }
 
             if (tvwNetworks.Nodes[0].Nodes.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
-        }
-
-        private void AddNetworkToTreeView(string networkName, SystemType systemType)
-        {
-            var lnode = new TreeNode
-            {
-                Text = networkName,
-                SelectedImageIndex = 3,
-                ImageIndex = 3,
-                Tag = systemType
-            };
-            tvwNetworks.Nodes[0].Nodes.Add(lnode);
         }
 
         private void Scan()
@@ -1620,21 +1602,6 @@ namespace PoshSec.Framework
             }
         }
 
-        private bool IsValidNetworkName(string networkname)
-        {
-            var rtn = true;
-            var idx = 0;
-            var rootnode = tvwNetworks.Nodes[0];
-            while (idx < rootnode.Nodes.Count && rtn)
-            {
-                var node = rootnode.Nodes[idx];
-                if (node.Text == networkname) rtn = false;
-                idx++;
-            }
-
-            return rtn;
-        }
-
         private void CheckSettings()
         {
             //Ensure we have settings and that if it's .\ to change to application path.
@@ -2638,12 +2605,11 @@ namespace PoshSec.Framework
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 var networkName = frm.NetworkName;
-                if (IsValidNetworkName(networkName))
-                    AddNetworkToTreeView(networkName, SystemType.Domain);
+                if (tvwNetworks.IsValid(networkName))
+                    tvwNetworks.Add(networkName, SystemType.Domain);
                 else
                     MessageBox.Show(StringValue.InvalidNetworkName);
             }
-
             frm.Dispose();
         }
 

@@ -83,7 +83,7 @@ namespace PoshSec.Framework
             this.btnShowAliases = new System.Windows.Forms.ToolStripButton();
             this.btnShowFunctions = new System.Windows.Forms.ToolStripButton();
             this.btnShowCmdlets = new System.Windows.Forms.ToolStripButton();
-            this.tvwNetworks = new System.Windows.Forms.TreeView();
+            this.tvwNetworks = new PoshSec.Framework.NetworksTreeView();
             this.tsNetworks = new System.Windows.Forms.ToolStrip();
             this.btnRefreshNetworks = new System.Windows.Forms.ToolStripButton();
             this.btnAddNetwork = new System.Windows.Forms.ToolStripButton();
@@ -1504,7 +1504,6 @@ namespace PoshSec.Framework
         private System.Windows.Forms.ToolStripMenuItem powerShellToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowsUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem waucheckps1ToolStripMenuItem;
-        private System.Windows.Forms.TreeView tvwNetworks;
         private System.Windows.Forms.ToolStrip tsNetworks;
         private System.Windows.Forms.ListView lvwAlerts;
         private System.Windows.Forms.ColumnHeader chSeverity;
@@ -1612,6 +1611,7 @@ namespace PoshSec.Framework
         private System.Windows.Forms.ContextMenuStrip cmnuNotify;
         private System.Windows.Forms.ToolStripMenuItem cmnuRestore;
         private System.Windows.Forms.ToolStripMenuItem cmnuExit;
+        private NetworksTreeView tvwNetworks;
     }
 }
 
