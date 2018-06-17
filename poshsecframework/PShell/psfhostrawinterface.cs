@@ -5,7 +5,7 @@ using System.Management.Automation.Host;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class psfhostrawinterface : PSHostRawUserInterface
     {

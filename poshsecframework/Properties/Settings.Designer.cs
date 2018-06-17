@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace poshsecframework.Properties {
+namespace PoshSec.Framework.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -302,9 +302,9 @@ namespace poshsecframework.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("System")]
-        public global::poshsecframework.ProxyPreference ProxyPreference {
+        public global::PoshSec.Framework.ProxyPreference ProxyPreference {
             get {
-                return ((global::poshsecframework.ProxyPreference)(this["ProxyPreference"]));
+                return ((global::PoshSec.Framework.ProxyPreference)(this["ProxyPreference"]));
             }
             set {
                 this["ProxyPreference"] = value;

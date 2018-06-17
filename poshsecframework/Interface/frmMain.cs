@@ -16,11 +16,15 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using poshsecframework.Strings;
-using poshsecframework.Enums;
 using System.Linq;
+using PoshSec.Framework.Enums;
+using PoshSec.Framework.Interface;
+using PoshSec.Framework.Network;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.PShell;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework
+namespace PoshSec.Framework
 {
     public partial class frmMain : Form
     {
@@ -109,7 +113,7 @@ namespace poshsecframework
 
                 spashScreen.SetStatus("Checking Settings, please wait...");
                 CheckSettings();
-                if (poshsecframework.Properties.Settings.Default.FirstTime)
+                if (Settings.Default.FirstTime)
                 {
                     restart = true;
                     spashScreen.Hide();
@@ -524,7 +528,7 @@ namespace poshsecframework
             thd.Start();
         }
 
-        private void scnr_ScanComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        private void scnr_ScanComplete(object sender, ScanEventArgs e)
         {
             if (this.InvokeRequired)
             {
@@ -957,7 +961,7 @@ namespace poshsecframework
             if (lvwActiveScripts.Items.Count == 0)
             {
                 schedule.Pause();
-                poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
+                frmSettings frm = new frmSettings();
                 System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
                 bool restart = frm.Restart;
                 frm.Dispose();
@@ -1631,40 +1635,40 @@ namespace poshsecframework
         private void CheckSettings()
         {
             //Ensure we have settings and that if it's .\ to change to application path.
-            String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
-            String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
-            String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
-            String ghapikey = poshsecframework.Properties.Settings.Default.GithubAPIKey;
-            String outputlog = poshsecframework.Properties.Settings.Default.OutputLogFile;
-            String alertlog = poshsecframework.Properties.Settings.Default.AlertLogFile;
+            String scrpath = Settings.Default.ScriptPath;
+            String modpath = Settings.Default.ModulePath;
+            String schpath = Settings.Default.ScheduleFile;
+            String ghapikey = Settings.Default.GithubAPIKey;
+            String outputlog = Settings.Default.OutputLogFile;
+            String alertlog = Settings.Default.AlertLogFile;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
+                Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
             }
             if (modpath.StartsWith(".") || modpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
+                Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
             }
             if (schpath.StartsWith(".") || modpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
+                Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
             }
             if (outputlog.StartsWith("."))
             {
-                poshsecframework.Properties.Settings.Default["OutputLogFile"] = Path.Combine(Application.StartupPath, outputlog).Replace("\\.\\", "\\");
+                Settings.Default["OutputLogFile"] = Path.Combine(Application.StartupPath, outputlog).Replace("\\.\\", "\\");
             }
             if (alertlog.StartsWith("."))
             {
-                poshsecframework.Properties.Settings.Default["AlertLogFile"] = Path.Combine(Application.StartupPath, alertlog).Replace("\\.\\", "\\");
+                Settings.Default["AlertLogFile"] = Path.Combine(Application.StartupPath, alertlog).Replace("\\.\\", "\\");
             }
             if(ghapikey.Contains("\\"))
             {
                 //Used to be Framework File path which is not needed.
                 ghapikey = "";
-                poshsecframework.Properties.Settings.Default["GithubAPIKey"] = "";
+                Settings.Default["GithubAPIKey"] = "";
             }
-            poshsecframework.Properties.Settings.Default.Save();
-            poshsecframework.Properties.Settings.Default.Reload();
+            Settings.Default.Save();
+            Settings.Default.Reload();
         }
 
         private void CheckPendingModules()
@@ -1932,7 +1936,7 @@ namespace poshsecframework
                 lvwScripts.BeginUpdate();
                 lvwScripts.Items.Clear();
                 lvwScripts_SelectedIndexChanged(null, null);
-                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
+                String scriptroot = Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
                     AddLibraryItem(scriptroot);
@@ -1999,7 +2003,7 @@ namespace poshsecframework
         #region Public Methods
 
         #region Interface
-        public System.Windows.Forms.DialogResult ShowParams(poshsecframework.PShell.psparamtype parm)
+        public System.Windows.Forms.DialogResult ShowParams(psparamtype parm)
         {
             if (this.InvokeRequired)
             {
@@ -2115,7 +2119,7 @@ namespace poshsecframework
 
         private void lvwScripts_DoubleClick(object sender, EventArgs e)
         {
-            switch (poshsecframework.Properties.Settings.Default.ScriptDefaultAction)
+            switch (Settings.Default.ScriptDefaultAction)
             {
                 case 0:
                     RunScript();

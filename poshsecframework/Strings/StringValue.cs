@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace poshsecframework.Strings
+namespace PoshSec.Framework.Strings
 {
     internal static class StringValue
     {

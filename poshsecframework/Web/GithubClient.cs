@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using poshsecframework.Strings;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Web
+namespace PoshSec.Framework.Web
 {
     /// <summary>
     /// A WebRequest wrapper class for the Github API.

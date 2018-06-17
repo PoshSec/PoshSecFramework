@@ -7,8 +7,9 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using PoshSec.Framework.Properties;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public partial class frmFirstTime : Form
     {
@@ -108,9 +109,9 @@ namespace poshsecframework.Interface
 
         private void btnDont_Click(object sender, EventArgs e)
         {
-            poshsecframework.Properties.Settings.Default["FirstTime"] = false;
-            poshsecframework.Properties.Settings.Default.Save();
-            poshsecframework.Properties.Settings.Default.Reload();
+            Settings.Default["FirstTime"] = false;
+            Settings.Default.Save();
+            Settings.Default.Reload();
             this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Close();
         }
@@ -147,9 +148,9 @@ namespace poshsecframework.Interface
                             lvwSteps.Items[idx].SubItems[1].Text = Strings.StringValue.StepFailed;
                         }
                     }
-                    poshsecframework.Properties.Settings.Default["FirstTime"] = false;
-                    poshsecframework.Properties.Settings.Default.Save();
-                    poshsecframework.Properties.Settings.Default.Reload();
+                    Settings.Default["FirstTime"] = false;
+                    Settings.Default.Save();
+                    Settings.Default.Reload();
                     btnContinue.Enabled = true;
                 }
                 else
@@ -210,7 +211,7 @@ namespace poshsecframework.Interface
 
         private void FixSettings(int idx)
         {
-            poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
+            frmSettings frm = new frmSettings();
             System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
             frm.Dispose();
             frm = null;
@@ -421,12 +422,12 @@ namespace poshsecframework.Interface
             bool rtn = true;
             string err = "";
             PShell.pscript ps = new PShell.pscript(parentform);
-            if (!ps.UnblockFiles(poshsecframework.Properties.Settings.Default.ScriptPath))
+            if (!ps.UnblockFiles(Settings.Default.ScriptPath))
             {
                 err = ps.Results;
                 rtn = rtn && false;
             }
-            if (!ps.UnblockFiles(poshsecframework.Properties.Settings.Default.ModulePath))
+            if (!ps.UnblockFiles(Settings.Default.ModulePath))
             {
                 err += "\r\n" + ps.Results;
                 rtn = rtn && false;

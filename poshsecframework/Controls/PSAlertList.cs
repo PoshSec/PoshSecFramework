@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.PShell;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Controls
+namespace PoshSec.Framework.Controls
 {
     public class PSAlertList : ListView
     {
@@ -21,12 +22,12 @@ namespace poshsecframework.Controls
         private Network.Syslog slog = null;
         private ToolStripLabel lblalertcount = new ToolStripLabel(String.Format(StringValue.AlertLabelFormat, "Alerts", 0));
         private int alertcount = 0;
-        poshsecframework.Controls.PSTabItem parent = null;
+        PSTabItem parent = null;
         private string tablabel = "";
         #endregion
 
         #region Public Methods
-        public PSAlertList(String ScriptName, poshsecframework.Controls.PSTabItem Parent)
+        public PSAlertList(String ScriptName, PSTabItem Parent)
         {
             scriptname = ScriptName;
             InitializeComponent();
@@ -88,7 +89,7 @@ namespace poshsecframework.Controls
             }
         }
 
-        private void Add(String message, poshsecframework.PShell.psmethods.PSAlert.AlertType alerttype)
+        private void Add(String message, psmethods.PSAlert.AlertType alerttype)
         {
             if (this.InvokeRequired)
             {

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class pscredentialeditor : System.Drawing.Design.UITypeEditor
     {

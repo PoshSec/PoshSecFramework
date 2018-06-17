@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace poshsecframework.Controls
+namespace PoshSec.Framework.Controls
 {
     class PSTextBox : TextBox
     {
