@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using poshsecframework.Strings;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Network
+namespace PoshSec.Framework.Network
 {
     class ScanIP
     {
         private String ipaddr = "";
-        poshsecframework.Network.NetworkBrowser scnr = null;
+        NetworkBrowser scnr = null;
         int idx = 0;
 
         public event EventHandler<ScanEventArgs> ScanIPComplete;
@@ -20,7 +20,7 @@ namespace poshsecframework.Network
             bool isup = false;
             if (ipaddr != "")
             {
-                scnr = new poshsecframework.Network.NetworkBrowser();
+                scnr = new NetworkBrowser();
                 if (scnr.Ping(ipaddr, 1, 100))
                 {
                     isup = true;

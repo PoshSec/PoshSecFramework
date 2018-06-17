@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     public class psparameter
     {
@@ -27,7 +27,7 @@ namespace poshsecframework.PShell
         public Boolean IsCredential { get; set; }
         private Type type;
 
-        [XmlIgnoreAttribute()]
+        [XmlIgnore()]
         public Type Type
         {
             get { return type; }

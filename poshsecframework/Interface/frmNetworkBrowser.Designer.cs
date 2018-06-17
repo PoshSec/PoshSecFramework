@@ -1,4 +1,4 @@
-﻿namespace poshsecframework.Interface
+﻿namespace PoshSec.Framework.Interface
 {
     partial class frmNetworkBrowser
     {
@@ -90,7 +90,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefresh.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefresh.Location = new System.Drawing.Point(212, 0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(25, 23);

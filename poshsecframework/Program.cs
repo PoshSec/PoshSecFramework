@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Net;
 
-namespace poshsecframework
+namespace PoshSec.Framework
 {
     static class Program
     {

@@ -8,9 +8,10 @@ using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Interface;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Network
+namespace PoshSec.Framework.Network
 {
     class NetworkBrowser
     {
@@ -25,9 +26,9 @@ namespace poshsecframework.Network
         #endregion
 
         #region Public Events
-        public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanComplete;
+        public event EventHandler<ScanEventArgs> ScanComplete;
         public event EventHandler<EventArgs> ScanCancelled;
-        public event EventHandler<poshsecframework.Network.ScanEventArgs> ScanUpdate;
+        public event EventHandler<ScanEventArgs> ScanUpdate;
         #endregion
 
         #region Initialize
@@ -76,7 +77,7 @@ namespace poshsecframework.Network
                         hostcnt++;
                         DirectoryEntry netPC = srslt.GetDirectoryEntry();
                         string scnmsg = "Scanning " + netPC.Name.Replace("CN=", "") + ", please wait...";
-                        OnScanUpdate(new poshsecframework.Network.ScanEventArgs(scnmsg, hostcnt, srslts.Count));
+                        OnScanUpdate(new ScanEventArgs(scnmsg, hostcnt, srslts.Count));
                         if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
                         {
                             Ping(netPC.Name.Replace("CN=", ""), 1, 100);
@@ -86,7 +87,7 @@ namespace poshsecframework.Network
                 }
                 BuildArpTable();
             }            
-            OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
+            OnScanComplete(new ScanEventArgs(systems));
         }
 
         public void ScanbyIP()
@@ -98,7 +99,7 @@ namespace poshsecframework.Network
             bool cancelled = false;
             if (localIPs.Length > 1)
             {
-                poshsecframework.Interface.frmScan frm = new poshsecframework.Interface.frmScan();
+                frmScan frm = new frmScan();
                 frm.IPs = localIPs;
                 frm.StartPosition = FormStartPosition.CenterScreen;
                 if (frm.ShowDialog() == DialogResult.OK)
@@ -126,7 +127,7 @@ namespace poshsecframework.Network
                         if (shstatus) { frm.SetStatus("Scanning " + host + ", please wait...");}
                         if (shstatus) { frm.SetProgress(ip, 255);}
 
-                        poshsecframework.Network.ScanIP scn = new poshsecframework.Network.ScanIP();
+                        ScanIP scn = new ScanIP();
                         scn.IPAddress = host;
                         scn.Index = ip;
                         scn.ScanIPComplete += scn_ScanIPComplete;
@@ -147,7 +148,7 @@ namespace poshsecframework.Network
                     if (shstatus) { frm.HideProgress();}
                     if (shstatus) { frm.SetStatus(StringValue.Ready);}
 
-                    OnScanComplete(new poshsecframework.Network.ScanEventArgs(systems));
+                    OnScanComplete(new ScanEventArgs(systems));
                 }
             }
             else
@@ -156,7 +157,7 @@ namespace poshsecframework.Network
             }
         }
 
-        void scn_ScanIPComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        void scn_ScanIPComplete(object sender, ScanEventArgs e)
         {
             if (e.IsUp)
             {
@@ -386,9 +387,9 @@ namespace poshsecframework.Network
         #endregion
 
         #region ScanUpdate
-        private void OnScanUpdate(poshsecframework.Network.ScanEventArgs e)
+        private void OnScanUpdate(ScanEventArgs e)
         {
-            EventHandler<poshsecframework.Network.ScanEventArgs> handler = ScanUpdate;
+            EventHandler<ScanEventArgs> handler = ScanUpdate;
             if (handler != null)
             {
                 handler(this, e);
@@ -397,9 +398,9 @@ namespace poshsecframework.Network
         #endregion
 
         #region ScanComplete
-        private void OnScanComplete(poshsecframework.Network.ScanEventArgs e)
+        private void OnScanComplete(ScanEventArgs e)
         {
-            EventHandler<poshsecframework.Network.ScanEventArgs> handler = ScanComplete;
+            EventHandler<ScanEventArgs> handler = ScanComplete;
             if (handler != null)
             {
                 handler(this, e);

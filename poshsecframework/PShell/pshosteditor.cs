@@ -8,7 +8,7 @@ using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class pshosteditor : System.Drawing.Design.UITypeEditor
     {

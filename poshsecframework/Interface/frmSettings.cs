@@ -8,9 +8,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public partial class frmSettings : Form
     {
@@ -477,9 +478,9 @@ namespace poshsecframework.Interface
                 {
                     foreach (ListViewItem itm in lvwModules.SelectedItems)
                     {
-                        if (Directory.Exists(poshsecframework.Properties.Settings.Default.ModulePath))
+                        if (Directory.Exists(Settings.Default.ModulePath))
                         {
-                            String path = Path.Combine(poshsecframework.Properties.Settings.Default.ModulePath, itm.Text);
+                            String path = Path.Combine(Settings.Default.ModulePath, itm.Text);
                             if (Directory.Exists(path))
                             {
                                 try

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class pseventargs : EventArgs
     {

@@ -7,9 +7,10 @@ using System.Management.Automation;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class pshell
     {
@@ -29,7 +30,7 @@ namespace poshsecframework.PShell
         {
             try
             {
-                pspath = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();                
+                pspath = Settings.Default["ScriptPath"].ToString();                
                 frm = ParentForm;
                 Open();
                 if (ps.LoadErrors != "")

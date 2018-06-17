@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Windows.Forms;
 
-namespace poshsecframework.Comparers
+namespace PoshSec.Framework.Comparers
 {
     class ListViewColumnSorter : IComparer
     {

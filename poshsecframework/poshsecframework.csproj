@@ -8,7 +8,7 @@
     <ProjectGuid>{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>poshsecframework</RootNamespace>
+    <RootNamespace>PoshSec.Framework</RootNamespace>
     <AssemblyName>poshsecframework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileUpgradeFlags>

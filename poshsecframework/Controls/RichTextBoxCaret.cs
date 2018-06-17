@@ -6,7 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace poshsecframework.Controls
+namespace PoshSec.Framework.Controls
 {
     class RichTextBoxCaret : RichTextBox
     {

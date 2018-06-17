@@ -1,4 +1,6 @@
-namespace poshsecframework
+using PoshSec.Framework.Controls;
+
+namespace PoshSec.Framework
 {
     partial class frmMain
     {
@@ -158,7 +160,7 @@ namespace poshsecframework
             this.cmnuNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmnuRestore = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtPShellOutput = new poshsecframework.Controls.RichTextBoxCaret();
+            this.txtPShellOutput = new RichTextBoxCaret();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -238,7 +240,7 @@ namespace poshsecframework
             // 
             // mnuOptions
             // 
-            this.mnuOptions.Image = global::poshsecframework.Properties.Resources.systemsettings;
+            this.mnuOptions.Image = global::PoshSec.Framework.Properties.Resources.systemsettings;
             this.mnuOptions.Name = "mnuOptions";
             this.mnuOptions.Size = new System.Drawing.Size(125, 22);
             this.mnuOptions.Text = "Options...";
@@ -311,7 +313,7 @@ namespace poshsecframework
             // btnOptions
             // 
             this.btnOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnOptions.Image = global::poshsecframework.Properties.Resources.systemsettings;
+            this.btnOptions.Image = global::PoshSec.Framework.Properties.Resources.systemsettings;
             this.btnOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOptions.Name = "btnOptions";
             this.btnOptions.Size = new System.Drawing.Size(23, 22);
@@ -321,7 +323,7 @@ namespace poshsecframework
             // btnLaunchCmd
             // 
             this.btnLaunchCmd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLaunchCmd.Image = global::poshsecframework.Properties.Resources.applicationxshellscript;
+            this.btnLaunchCmd.Image = global::PoshSec.Framework.Properties.Resources.applicationxshellscript;
             this.btnLaunchCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchCmd.Name = "btnLaunchCmd";
             this.btnLaunchCmd.Size = new System.Drawing.Size(23, 22);
@@ -331,7 +333,7 @@ namespace poshsecframework
             // btnLaunchPShellCmd
             // 
             this.btnLaunchPShellCmd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLaunchPShellCmd.Image = global::poshsecframework.Properties.Resources.applicationxpowershellscript;
+            this.btnLaunchPShellCmd.Image = global::PoshSec.Framework.Properties.Resources.applicationxpowershellscript;
             this.btnLaunchPShellCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchPShellCmd.Name = "btnLaunchPShellCmd";
             this.btnLaunchPShellCmd.Size = new System.Drawing.Size(23, 22);
@@ -470,7 +472,7 @@ namespace poshsecframework
             // btnRefreshScripts
             // 
             this.btnRefreshScripts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshScripts.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefreshScripts.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshScripts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshScripts.Name = "btnRefreshScripts";
             this.btnRefreshScripts.Size = new System.Drawing.Size(23, 22);
@@ -481,7 +483,7 @@ namespace poshsecframework
             // 
             this.btnRunScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnRunScript.Enabled = false;
-            this.btnRunScript.Image = global::poshsecframework.Properties.Resources.run;
+            this.btnRunScript.Image = global::PoshSec.Framework.Properties.Resources.run;
             this.btnRunScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRunScript.Name = "btnRunScript";
             this.btnRunScript.Size = new System.Drawing.Size(23, 22);
@@ -492,7 +494,7 @@ namespace poshsecframework
             // 
             this.btnViewScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnViewScript.Enabled = false;
-            this.btnViewScript.Image = global::poshsecframework.Properties.Resources.documentopen7;
+            this.btnViewScript.Image = global::PoshSec.Framework.Properties.Resources.documentopen7;
             this.btnViewScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnViewScript.Name = "btnViewScript";
             this.btnViewScript.Size = new System.Drawing.Size(23, 22);
@@ -503,7 +505,7 @@ namespace poshsecframework
             // 
             this.btnSchedScript.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnSchedScript.Enabled = false;
-            this.btnSchedScript.Image = global::poshsecframework.Properties.Resources.viewcalendartasks;
+            this.btnSchedScript.Image = global::PoshSec.Framework.Properties.Resources.viewcalendartasks;
             this.btnSchedScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSchedScript.Name = "btnSchedScript";
             this.btnSchedScript.Size = new System.Drawing.Size(23, 22);
@@ -621,7 +623,7 @@ namespace poshsecframework
             // 
             this.btnRefreshLibrary.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnRefreshLibrary.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnRefreshLibrary.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefreshLibrary.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshLibrary.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshLibrary.Name = "btnRefreshLibrary";
             this.btnRefreshLibrary.Size = new System.Drawing.Size(23, 22);
@@ -632,7 +634,7 @@ namespace poshsecframework
             // btnShowAliases
             // 
             this.btnShowAliases.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowAliases.Image = global::poshsecframework.Properties.Resources.tagred;
+            this.btnShowAliases.Image = global::PoshSec.Framework.Properties.Resources.tagred;
             this.btnShowAliases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowAliases.Name = "btnShowAliases";
             this.btnShowAliases.Size = new System.Drawing.Size(23, 22);
@@ -644,7 +646,7 @@ namespace poshsecframework
             this.btnShowFunctions.Checked = true;
             this.btnShowFunctions.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowFunctions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowFunctions.Image = global::poshsecframework.Properties.Resources.tagblue;
+            this.btnShowFunctions.Image = global::PoshSec.Framework.Properties.Resources.tagblue;
             this.btnShowFunctions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowFunctions.Name = "btnShowFunctions";
             this.btnShowFunctions.Size = new System.Drawing.Size(23, 22);
@@ -657,7 +659,7 @@ namespace poshsecframework
             this.btnShowCmdlets.Checked = true;
             this.btnShowCmdlets.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnShowCmdlets.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnShowCmdlets.Image = global::poshsecframework.Properties.Resources.taggreen;
+            this.btnShowCmdlets.Image = global::PoshSec.Framework.Properties.Resources.taggreen;
             this.btnShowCmdlets.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowCmdlets.Name = "btnShowCmdlets";
             this.btnShowCmdlets.Size = new System.Drawing.Size(23, 22);
@@ -708,7 +710,7 @@ namespace poshsecframework
             // btnRefreshNetworks
             // 
             this.btnRefreshNetworks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRefreshNetworks.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefreshNetworks.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshNetworks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshNetworks.Name = "btnRefreshNetworks";
             this.btnRefreshNetworks.Size = new System.Drawing.Size(23, 22);
@@ -718,7 +720,7 @@ namespace poshsecframework
             // btnAddNetwork
             // 
             this.btnAddNetwork.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddNetwork.Image = global::poshsecframework.Properties.Resources.Diagram;
+            this.btnAddNetwork.Image = global::PoshSec.Framework.Properties.Resources.Diagram;
             this.btnAddNetwork.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddNetwork.Name = "btnAddNetwork";
             this.btnAddNetwork.Size = new System.Drawing.Size(23, 22);
@@ -729,7 +731,7 @@ namespace poshsecframework
             // 
             this.btnRemoveNetwork.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnRemoveNetwork.Enabled = false;
-            this.btnRemoveNetwork.Image = global::poshsecframework.Properties.Resources.editdelete6;
+            this.btnRemoveNetwork.Image = global::PoshSec.Framework.Properties.Resources.editdelete6;
             this.btnRemoveNetwork.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveNetwork.Name = "btnRemoveNetwork";
             this.btnRemoveNetwork.Size = new System.Drawing.Size(23, 22);
@@ -740,7 +742,7 @@ namespace poshsecframework
             // 
             this.btnScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnScan.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.btnScan.Image = global::poshsecframework.Properties.Resources.networktransmitreceive2;
+            this.btnScan.Image = global::PoshSec.Framework.Properties.Resources.networktransmitreceive2;
             this.btnScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnScan.Name = "btnScan";
             this.btnScan.Size = new System.Drawing.Size(23, 22);
@@ -751,7 +753,7 @@ namespace poshsecframework
             // 
             this.btnCancelScan.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnCancelScan.Enabled = false;
-            this.btnCancelScan.Image = global::poshsecframework.Properties.Resources.dialogcancel;
+            this.btnCancelScan.Image = global::PoshSec.Framework.Properties.Resources.dialogcancel;
             this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
@@ -886,7 +888,7 @@ namespace poshsecframework
             // btnAddSystem
             // 
             this.btnAddSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddSystem.Image = global::poshsecframework.Properties.Resources.computeradd;
+            this.btnAddSystem.Image = global::PoshSec.Framework.Properties.Resources.computeradd;
             this.btnAddSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddSystem.Name = "btnAddSystem";
             this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
@@ -895,7 +897,7 @@ namespace poshsecframework
             // btnRemoveSystem
             // 
             this.btnRemoveSystem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRemoveSystem.Image = global::poshsecframework.Properties.Resources.computerdelete;
+            this.btnRemoveSystem.Image = global::PoshSec.Framework.Properties.Resources.computerdelete;
             this.btnRemoveSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveSystem.Name = "btnRemoveSystem";
             this.btnRemoveSystem.Size = new System.Drawing.Size(23, 22);
@@ -910,7 +912,7 @@ namespace poshsecframework
             // btnExportSystems
             // 
             this.btnExportSystems.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnExportSystems.Image = global::poshsecframework.Properties.Resources.documentexport4;
+            this.btnExportSystems.Image = global::PoshSec.Framework.Properties.Resources.documentexport4;
             this.btnExportSystems.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExportSystems.Name = "btnExportSystems";
             this.btnExportSystems.Size = new System.Drawing.Size(23, 22);
@@ -1166,7 +1168,7 @@ namespace poshsecframework
             // btnClearAlerts
             // 
             this.btnClearAlerts.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnClearAlerts.Image = global::poshsecframework.Properties.Resources.editclearlist;
+            this.btnClearAlerts.Image = global::PoshSec.Framework.Properties.Resources.editclearlist;
             this.btnClearAlerts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClearAlerts.Name = "btnClearAlerts";
             this.btnClearAlerts.Size = new System.Drawing.Size(23, 22);
@@ -1177,7 +1179,7 @@ namespace poshsecframework
             // btnAlert_MarkResolved
             // 
             this.btnAlert_MarkResolved.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_MarkResolved.Image = global::poshsecframework.Properties.Resources.dialogaccept;
+            this.btnAlert_MarkResolved.Image = global::PoshSec.Framework.Properties.Resources.dialogaccept;
             this.btnAlert_MarkResolved.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_MarkResolved.Name = "btnAlert_MarkResolved";
             this.btnAlert_MarkResolved.Size = new System.Drawing.Size(23, 22);
@@ -1201,7 +1203,7 @@ namespace poshsecframework
             this.btnAlert_Information.Checked = true;
             this.btnAlert_Information.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Information.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Information.Image = global::poshsecframework.Properties.Resources.dialoginformation4;
+            this.btnAlert_Information.Image = global::PoshSec.Framework.Properties.Resources.dialoginformation4;
             this.btnAlert_Information.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Information.Name = "btnAlert_Information";
             this.btnAlert_Information.Size = new System.Drawing.Size(23, 22);
@@ -1214,7 +1216,7 @@ namespace poshsecframework
             this.btnAlert_Error.Checked = true;
             this.btnAlert_Error.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Error.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Error.Image = global::poshsecframework.Properties.Resources.dialogerror4;
+            this.btnAlert_Error.Image = global::PoshSec.Framework.Properties.Resources.dialogerror4;
             this.btnAlert_Error.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Error.Name = "btnAlert_Error";
             this.btnAlert_Error.Size = new System.Drawing.Size(23, 22);
@@ -1228,7 +1230,7 @@ namespace poshsecframework
             this.btnAlert_Warning.Checked = true;
             this.btnAlert_Warning.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Warning.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Warning.Image = global::poshsecframework.Properties.Resources.dialogwarning3;
+            this.btnAlert_Warning.Image = global::PoshSec.Framework.Properties.Resources.dialogwarning3;
             this.btnAlert_Warning.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Warning.Name = "btnAlert_Warning";
             this.btnAlert_Warning.Size = new System.Drawing.Size(23, 22);
@@ -1242,7 +1244,7 @@ namespace poshsecframework
             this.btnAlert_Severe.Checked = true;
             this.btnAlert_Severe.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Severe.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Severe.Image = global::poshsecframework.Properties.Resources.dialogwarning2;
+            this.btnAlert_Severe.Image = global::PoshSec.Framework.Properties.Resources.dialogwarning2;
             this.btnAlert_Severe.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Severe.Name = "btnAlert_Severe";
             this.btnAlert_Severe.Size = new System.Drawing.Size(23, 22);
@@ -1256,7 +1258,7 @@ namespace poshsecframework
             this.btnAlert_Critical.Checked = true;
             this.btnAlert_Critical.CheckState = System.Windows.Forms.CheckState.Checked;
             this.btnAlert_Critical.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAlert_Critical.Image = global::poshsecframework.Properties.Resources.exclamation;
+            this.btnAlert_Critical.Image = global::PoshSec.Framework.Properties.Resources.exclamation;
             this.btnAlert_Critical.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Critical.Name = "btnAlert_Critical";
             this.btnAlert_Critical.Size = new System.Drawing.Size(23, 22);
@@ -1555,7 +1557,7 @@ namespace poshsecframework
         private System.Windows.Forms.ContextMenuStrip cmnuActiveScripts;
         private System.Windows.Forms.ToolStripMenuItem cmbtnCancelScript;
         //private System.Windows.Forms.RichTextBox txtPShellOutput;
-        private poshsecframework.Controls.RichTextBoxCaret txtPShellOutput;
+        private RichTextBoxCaret txtPShellOutput;
         private System.Windows.Forms.ToolStripButton btnRefreshScripts;
         private System.Windows.Forms.ToolStripButton btnViewScript;
         private System.Windows.Forms.ToolStripButton btnRunScript;
