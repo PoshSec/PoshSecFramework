@@ -387,7 +387,7 @@ namespace PoshSec.Framework
         private void LoadNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
-            tvwNetworks.Add(StringValue.LocalNetwork, SystemType.Local);
+            tvwNetworks.Add(StringValue.LocalNetwork, NetworkType.Local);
 
             try
             {
@@ -402,7 +402,7 @@ namespace PoshSec.Framework
                         Text = domain.Name,
                         SelectedImageIndex = 3,
                         ImageIndex = 3,
-                        Tag = SystemType.Domain
+                        Tag = NetworkType.Domain
                     };
                     var rootnode = tvwNetworks.Nodes[0];
                     rootnode.Nodes.Add(node);
@@ -471,14 +471,14 @@ namespace PoshSec.Framework
         {
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
-                SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
+                NetworkType typ = (NetworkType)Enum.Parse(typeof(NetworkType), tvwNetworks.SelectedNode.Tag.ToString());
                 this.UseWaitCursor = true;
                 switch (typ)
                 {
-                    case SystemType.Local:
+                    case NetworkType.Local:
                         ScanbyIP();
                         break;
-                    case SystemType.Domain:
+                    case NetworkType.Domain:
                         ScanAD();
                         break;
                 }
@@ -2164,7 +2164,8 @@ namespace PoshSec.Framework
         }
         #endregion
 
-        #region TreeNode
+        #region Networks Tree View
+
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Node.Parent != null && e.Node.Text != StringValue.LocalNetwork)
@@ -2176,6 +2177,7 @@ namespace PoshSec.Framework
                 btnRemoveNetwork.Enabled = false;
             }
         }
+
         #endregion
 
         #region TextBox
@@ -2606,7 +2608,7 @@ namespace PoshSec.Framework
             {
                 var networkName = frm.NetworkName;
                 if (tvwNetworks.IsValid(networkName))
-                    tvwNetworks.Add(networkName, SystemType.Domain);
+                    tvwNetworks.Add(networkName, NetworkType.Domain);
                 else
                     MessageBox.Show(StringValue.InvalidNetworkName);
             }

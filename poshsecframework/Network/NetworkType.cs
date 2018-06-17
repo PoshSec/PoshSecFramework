@@ -1,6 +1,6 @@
 ﻿namespace PoshSec.Framework
 {
-    public enum SystemType
+    public enum NetworkType
     { 
         Local = 1,
         Domain

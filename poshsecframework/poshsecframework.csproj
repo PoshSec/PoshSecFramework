@@ -141,7 +141,9 @@
     <Compile Include="Interface\frmStartup.Designer.cs">
       <DependentUpon>frmStartup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interface\NetworksTreeView.cs">
+    <Compile Include="Network\DomainNetworkTreeNode.cs" />
+    <Compile Include="Network\LocalNetworkTreeNode.cs" />
+    <Compile Include="Network\NetworksTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Interface\ProxyPreference.cs" />
@@ -151,7 +153,7 @@
     <Compile Include="Interface\ProxyPreferenceGroupBox.Designer.cs">
       <DependentUpon>ProxyPreferenceGroupBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interface\SystemType.cs" />
+    <Compile Include="Network\NetworkType.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Events\ScanEventArgs.cs" />
     <Compile Include="Network\ScanIP.cs" />
