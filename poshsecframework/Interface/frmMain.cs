@@ -537,27 +537,28 @@ namespace PoshSec.Framework
                     {
                         if (system != null)
                         {
-                            if (system.GetType() == typeof(String))
+                            if (system is string)
                             {
                                 string sys = (string)system;
                                 if (sys != null && sys != "")
                                 {
                                     ListViewItem lvwItm = new ListViewItem();
                                     String[] ipinfo = system.ToString().Split('|');
+
+                                    var systemListViewItem = new SystemListViewItem(ipinfo[2])
+                                    {
+                                        IpAddress = ipinfo[1],
+                                        MacAddress = scnr.GetMac(ipinfo[1]),
+                                        Description = "",
+                                        Status = StringValue.Up,
+                                        ClientInstalled = StringValue.NotInstalled,
+                                        Alerts = 0,
+                                        LastScanned = DateTime.Now
+                                    };
+                                    
                                     SetStatus("Adding " + ipinfo[2] + ", please wait...");
-
-                                    lvwItm.Text = ipinfo[2];
-                                    lvwItm.SubItems.Add(ipinfo[1]);
-                                    lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                                    lvwItm.SubItems.Add("");
-                                    lvwItm.SubItems.Add(StringValue.Up);
-                                    lvwItm.SubItems.Add(StringValue.NotInstalled);
-                                    lvwItm.SubItems.Add("0");
-                                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                                    lvwItm.ImageIndex = 2;
-                                    lvwSystems.Items.Add(lvwItm);
-                                    lvwSystems.Refresh();
+                                    
+                                    lvwSystems.Add(systemListViewItem);                                    
 
                                     pbStatus.Value += 1;
                                 }
@@ -598,11 +599,11 @@ namespace PoshSec.Framework
 
                                         lvwItm.ImageIndex = 2;
                                         lvwSystems.Items.Add(lvwItm);
-                                        lvwSystems.Refresh();
                                     }
                                 }
                                 pbStatus.Value += 1;
                             }
+                            lvwSystems.Refresh();
                         }                        
                     }
                     lvwSystems.EndUpdate();
@@ -2624,7 +2625,7 @@ namespace PoshSec.Framework
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(StringValue.NotImplemented);           
+            
         }
         
         private void btnLaunchPShellCmd_Click(object sender, EventArgs e)

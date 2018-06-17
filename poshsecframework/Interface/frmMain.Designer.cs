@@ -93,7 +93,7 @@ namespace PoshSec.Framework
             this.pnlSystems = new System.Windows.Forms.SplitContainer();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tbpSystems = new System.Windows.Forms.TabPage();
-            this.lvwSystems = new System.Windows.Forms.ListView();
+            this.lvwSystems = new SystemListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMAC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -893,6 +893,7 @@ namespace PoshSec.Framework
             this.btnAddSystem.Name = "btnAddSystem";
             this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
             this.btnAddSystem.Text = "Add System";
+            this.btnAddSystem.Click += new System.EventHandler(this.btnAddSystem_Click);
             // 
             // btnRemoveSystem
             // 
@@ -1513,7 +1514,7 @@ namespace PoshSec.Framework
         private System.Windows.Forms.ToolStripButton btnClearAlerts;
         private System.Windows.Forms.TabControl tcMain;
         private System.Windows.Forms.TabPage tbpSystems;
-        private System.Windows.Forms.ListView lvwSystems;
+        private SystemListView lvwSystems;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chIP;
         private System.Windows.Forms.ColumnHeader chMAC;
