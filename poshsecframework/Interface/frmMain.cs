@@ -2640,16 +2640,17 @@ namespace PoshSec.Framework
                 if (frm.ShowDialog() != DialogResult.OK) return;
                 var systemName = frm.SystemName;
 
-                var ipAddress = frm.IpAddress;
-                var description = frm.Description;
                 if (_lvwNetworkNodes.IsValid(systemName))
                 {
+                    var ipAddress = frm.IpAddress;
+                    var description = frm.Description;
                     var status = "Unknown";
                     if (IPAddress.TryParse(ipAddress, out var ip))
                     {
                         var ping = new Ping();
                         var reply = ping.Send(ip);
-                        status = reply?.Status == IPStatus.Success ? StringValue.Up : StringValue.Down;
+                        if (reply?.Status == IPStatus.Success)
+                            status = StringValue.Up;
                     }
                     _lvwNetworkNodes.Add(new NetworkNodeListViewItem(systemName)
                     {
