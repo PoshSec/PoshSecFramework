@@ -93,7 +93,7 @@ namespace PoshSec.Framework
             this.pnlSystems = new System.Windows.Forms.SplitContainer();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tbpSystems = new System.Windows.Forms.TabPage();
-            this.lvwSystems = new SystemListView();
+            this.lvwSystems = new PoshSec.Framework.SystemListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMAC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -198,13 +198,14 @@ namespace PoshSec.Framework
             // 
             // mnuMain
             // 
+            this.mnuMain.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.mnuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
             this.mnuTools,
             this.mnuHelp});
             this.mnuMain.Location = new System.Drawing.Point(0, 0);
             this.mnuMain.Name = "mnuMain";
-            this.mnuMain.Size = new System.Drawing.Size(1205, 24);
+            this.mnuMain.Size = new System.Drawing.Size(1205, 33);
             this.mnuMain.TabIndex = 0;
             // 
             // mnuFile
@@ -213,20 +214,20 @@ namespace PoshSec.Framework
             this.mnuScan,
             this.mnuExit});
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(37, 20);
+            this.mnuFile.Size = new System.Drawing.Size(50, 29);
             this.mnuFile.Text = "&File";
             // 
             // mnuScan
             // 
             this.mnuScan.Name = "mnuScan";
-            this.mnuScan.Size = new System.Drawing.Size(99, 22);
+            this.mnuScan.Size = new System.Drawing.Size(133, 30);
             this.mnuScan.Text = "Scan";
             this.mnuScan.Click += new System.EventHandler(this.mnuScan_Click);
             // 
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(99, 22);
+            this.mnuExit.Size = new System.Drawing.Size(133, 30);
             this.mnuExit.Text = "E&xit";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
             // 
@@ -235,14 +236,14 @@ namespace PoshSec.Framework
             this.mnuTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuOptions});
             this.mnuTools.Name = "mnuTools";
-            this.mnuTools.Size = new System.Drawing.Size(47, 20);
+            this.mnuTools.Size = new System.Drawing.Size(65, 29);
             this.mnuTools.Text = "&Tools";
             // 
             // mnuOptions
             // 
             this.mnuOptions.Image = global::PoshSec.Framework.Properties.Resources.systemsettings;
             this.mnuOptions.Name = "mnuOptions";
-            this.mnuOptions.Size = new System.Drawing.Size(125, 22);
+            this.mnuOptions.Size = new System.Drawing.Size(172, 30);
             this.mnuOptions.Text = "Options...";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
             // 
@@ -252,62 +253,64 @@ namespace PoshSec.Framework
             this.mnuCheckforUpdates,
             this.mnuPSFWiki});
             this.mnuHelp.Name = "mnuHelp";
-            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Size = new System.Drawing.Size(61, 29);
             this.mnuHelp.Text = "&Help";
             // 
             // mnuCheckforUpdates
             // 
             this.mnuCheckforUpdates.Name = "mnuCheckforUpdates";
-            this.mnuCheckforUpdates.Size = new System.Drawing.Size(206, 22);
+            this.mnuCheckforUpdates.Size = new System.Drawing.Size(293, 30);
             this.mnuCheckforUpdates.Text = "Check for Updates...";
             this.mnuCheckforUpdates.Click += new System.EventHandler(this.mnuCheckforUpdates_Click);
             // 
             // mnuPSFWiki
             // 
             this.mnuPSFWiki.Name = "mnuPSFWiki";
-            this.mnuPSFWiki.Size = new System.Drawing.Size(206, 22);
+            this.mnuPSFWiki.Size = new System.Drawing.Size(293, 30);
             this.mnuPSFWiki.Text = "PoshSec Framework Wiki";
             this.mnuPSFWiki.Click += new System.EventHandler(this.mnuPSFWiki_Click);
             // 
             // stsMain
             // 
+            this.stsMain.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.stsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.lblStatus,
             this.lblsbSpacer,
             this.pbStatus});
-            this.stsMain.Location = new System.Drawing.Point(0, 623);
+            this.stsMain.Location = new System.Drawing.Point(0, 615);
             this.stsMain.Name = "stsMain";
-            this.stsMain.Size = new System.Drawing.Size(1205, 22);
+            this.stsMain.Size = new System.Drawing.Size(1205, 30);
             this.stsMain.TabIndex = 1;
             this.stsMain.Text = "statusStrip1";
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(39, 17);
+            this.lblStatus.Size = new System.Drawing.Size(60, 25);
             this.lblStatus.Text = "Ready";
             // 
             // lblsbSpacer
             // 
             this.lblsbSpacer.Name = "lblsbSpacer";
-            this.lblsbSpacer.Size = new System.Drawing.Size(1151, 17);
+            this.lblsbSpacer.Size = new System.Drawing.Size(1130, 25);
             this.lblsbSpacer.Spring = true;
             // 
             // pbStatus
             // 
             this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(200, 16);
+            this.pbStatus.Size = new System.Drawing.Size(200, 24);
             this.pbStatus.Visible = false;
             // 
             // tbMain
             // 
+            this.tbMain.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tbMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnOptions,
             this.btnLaunchCmd,
             this.btnLaunchPShellCmd});
-            this.tbMain.Location = new System.Drawing.Point(0, 24);
+            this.tbMain.Location = new System.Drawing.Point(0, 33);
             this.tbMain.Name = "tbMain";
-            this.tbMain.Size = new System.Drawing.Size(1205, 25);
+            this.tbMain.Size = new System.Drawing.Size(1205, 31);
             this.tbMain.TabIndex = 2;
             // 
             // btnOptions
@@ -316,7 +319,7 @@ namespace PoshSec.Framework
             this.btnOptions.Image = global::PoshSec.Framework.Properties.Resources.systemsettings;
             this.btnOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnOptions.Name = "btnOptions";
-            this.btnOptions.Size = new System.Drawing.Size(23, 22);
+            this.btnOptions.Size = new System.Drawing.Size(28, 28);
             this.btnOptions.Text = "Options";
             this.btnOptions.Click += new System.EventHandler(this.btnOptions_Click);
             // 
@@ -326,7 +329,7 @@ namespace PoshSec.Framework
             this.btnLaunchCmd.Image = global::PoshSec.Framework.Properties.Resources.applicationxshellscript;
             this.btnLaunchCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchCmd.Name = "btnLaunchCmd";
-            this.btnLaunchCmd.Size = new System.Drawing.Size(23, 22);
+            this.btnLaunchCmd.Size = new System.Drawing.Size(28, 28);
             this.btnLaunchCmd.Text = "Launch Command Shell";
             this.btnLaunchCmd.Click += new System.EventHandler(this.btnLaunchCmd_Click);
             // 
@@ -336,7 +339,7 @@ namespace PoshSec.Framework
             this.btnLaunchPShellCmd.Image = global::PoshSec.Framework.Properties.Resources.applicationxpowershellscript;
             this.btnLaunchPShellCmd.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLaunchPShellCmd.Name = "btnLaunchPShellCmd";
-            this.btnLaunchPShellCmd.Size = new System.Drawing.Size(23, 22);
+            this.btnLaunchPShellCmd.Size = new System.Drawing.Size(28, 28);
             this.btnLaunchPShellCmd.Text = "Launch PowerShell Console";
             this.btnLaunchPShellCmd.Click += new System.EventHandler(this.btnLaunchPShellCmd_Click);
             // 
@@ -344,7 +347,7 @@ namespace PoshSec.Framework
             // 
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.pnlMain.Location = new System.Drawing.Point(0, 49);
+            this.pnlMain.Location = new System.Drawing.Point(0, 64);
             this.pnlMain.Name = "pnlMain";
             // 
             // pnlMain.Panel1
@@ -359,7 +362,7 @@ namespace PoshSec.Framework
             // pnlMain.Panel2
             // 
             this.pnlMain.Panel2.Controls.Add(this.pnlSystems);
-            this.pnlMain.Size = new System.Drawing.Size(1205, 574);
+            this.pnlMain.Size = new System.Drawing.Size(1205, 551);
             this.pnlMain.SplitterDistance = 245;
             this.pnlMain.TabIndex = 3;
             // 
@@ -368,9 +371,9 @@ namespace PoshSec.Framework
             this.panel1.Controls.Add(this.lvwScripts);
             this.panel1.Controls.Add(this.tsScripts);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 151);
+            this.panel1.Location = new System.Drawing.Point(0, 157);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(245, 235);
+            this.panel1.Size = new System.Drawing.Size(245, 206);
             this.panel1.TabIndex = 10;
             // 
             // lvwScripts
@@ -381,10 +384,10 @@ namespace PoshSec.Framework
             this.lvwScripts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwScripts.FullRowSelect = true;
             this.lvwScripts.HideSelection = false;
-            this.lvwScripts.Location = new System.Drawing.Point(0, 25);
+            this.lvwScripts.Location = new System.Drawing.Point(0, 31);
             this.lvwScripts.MultiSelect = false;
             this.lvwScripts.Name = "lvwScripts";
-            this.lvwScripts.Size = new System.Drawing.Size(245, 210);
+            this.lvwScripts.Size = new System.Drawing.Size(245, 175);
             this.lvwScripts.SmallImageList = this.imgList16;
             this.lvwScripts.TabIndex = 1;
             this.lvwScripts.UseCompatibleStateImageBehavior = false;
@@ -399,6 +402,7 @@ namespace PoshSec.Framework
             // 
             // cmnuScripts
             // 
+            this.cmnuScripts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuScripts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmbtnRunScript,
             this.cmbtnSchedScript,
@@ -406,39 +410,39 @@ namespace PoshSec.Framework
             this.mnuScrHyphen1,
             this.mnuScriptGetHelp});
             this.cmnuScripts.Name = "contextMenuStrip1";
-            this.cmnuScripts.Size = new System.Drawing.Size(156, 98);
+            this.cmnuScripts.Size = new System.Drawing.Size(206, 130);
             this.cmnuScripts.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuScripts_Opening);
             // 
             // cmbtnRunScript
             // 
             this.cmbtnRunScript.Name = "cmbtnRunScript";
-            this.cmbtnRunScript.Size = new System.Drawing.Size(155, 22);
+            this.cmbtnRunScript.Size = new System.Drawing.Size(205, 30);
             this.cmbtnRunScript.Text = "Run Script";
             this.cmbtnRunScript.Click += new System.EventHandler(this.cmbtnRunScript_Click);
             // 
             // cmbtnSchedScript
             // 
             this.cmbtnSchedScript.Name = "cmbtnSchedScript";
-            this.cmbtnSchedScript.Size = new System.Drawing.Size(155, 22);
+            this.cmbtnSchedScript.Size = new System.Drawing.Size(205, 30);
             this.cmbtnSchedScript.Text = "Schedule Script";
             this.cmbtnSchedScript.Click += new System.EventHandler(this.cmbtnSchedScript_Click);
             // 
             // cmbtnViewScript
             // 
             this.cmbtnViewScript.Name = "cmbtnViewScript";
-            this.cmbtnViewScript.Size = new System.Drawing.Size(155, 22);
+            this.cmbtnViewScript.Size = new System.Drawing.Size(205, 30);
             this.cmbtnViewScript.Text = "View Script";
             this.cmbtnViewScript.Click += new System.EventHandler(this.cmbtnViewScript_Click);
             // 
             // mnuScrHyphen1
             // 
             this.mnuScrHyphen1.Name = "mnuScrHyphen1";
-            this.mnuScrHyphen1.Size = new System.Drawing.Size(152, 6);
+            this.mnuScrHyphen1.Size = new System.Drawing.Size(202, 6);
             // 
             // mnuScriptGetHelp
             // 
             this.mnuScriptGetHelp.Name = "mnuScriptGetHelp";
-            this.mnuScriptGetHelp.Size = new System.Drawing.Size(155, 22);
+            this.mnuScriptGetHelp.Size = new System.Drawing.Size(205, 30);
             this.mnuScriptGetHelp.Text = "Get-Help";
             this.mnuScriptGetHelp.Click += new System.EventHandler(this.mnuScriptGetHelp_Click);
             // 
@@ -458,6 +462,7 @@ namespace PoshSec.Framework
             // 
             // tsScripts
             // 
+            this.tsScripts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsScripts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRefreshScripts,
             this.btnRunScript,
@@ -465,7 +470,7 @@ namespace PoshSec.Framework
             this.btnSchedScript});
             this.tsScripts.Location = new System.Drawing.Point(0, 0);
             this.tsScripts.Name = "tsScripts";
-            this.tsScripts.Size = new System.Drawing.Size(245, 25);
+            this.tsScripts.Size = new System.Drawing.Size(245, 31);
             this.tsScripts.TabIndex = 0;
             this.tsScripts.Text = "toolStrip4";
             // 
@@ -475,7 +480,7 @@ namespace PoshSec.Framework
             this.btnRefreshScripts.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshScripts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshScripts.Name = "btnRefreshScripts";
-            this.btnRefreshScripts.Size = new System.Drawing.Size(23, 22);
+            this.btnRefreshScripts.Size = new System.Drawing.Size(28, 28);
             this.btnRefreshScripts.ToolTipText = "Refresh Scripts";
             this.btnRefreshScripts.Click += new System.EventHandler(this.btnRefreshScripts_Click);
             // 
@@ -486,7 +491,7 @@ namespace PoshSec.Framework
             this.btnRunScript.Image = global::PoshSec.Framework.Properties.Resources.run;
             this.btnRunScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRunScript.Name = "btnRunScript";
-            this.btnRunScript.Size = new System.Drawing.Size(23, 22);
+            this.btnRunScript.Size = new System.Drawing.Size(28, 28);
             this.btnRunScript.ToolTipText = "Run Script";
             this.btnRunScript.Click += new System.EventHandler(this.btnRunScript_Click);
             // 
@@ -497,7 +502,7 @@ namespace PoshSec.Framework
             this.btnViewScript.Image = global::PoshSec.Framework.Properties.Resources.documentopen7;
             this.btnViewScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnViewScript.Name = "btnViewScript";
-            this.btnViewScript.Size = new System.Drawing.Size(23, 22);
+            this.btnViewScript.Size = new System.Drawing.Size(28, 28);
             this.btnViewScript.ToolTipText = "View Script";
             this.btnViewScript.Click += new System.EventHandler(this.btnViewScript_Click);
             // 
@@ -508,7 +513,7 @@ namespace PoshSec.Framework
             this.btnSchedScript.Image = global::PoshSec.Framework.Properties.Resources.viewcalendartasks;
             this.btnSchedScript.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSchedScript.Name = "btnSchedScript";
-            this.btnSchedScript.Size = new System.Drawing.Size(23, 22);
+            this.btnSchedScript.Size = new System.Drawing.Size(28, 28);
             this.btnSchedScript.Text = "toolStripButton1";
             this.btnSchedScript.ToolTipText = "Schedule Script";
             this.btnSchedScript.Click += new System.EventHandler(this.btnSchedScript_Click);
@@ -516,7 +521,7 @@ namespace PoshSec.Framework
             // splitter2
             // 
             this.splitter2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.splitter2.Location = new System.Drawing.Point(0, 144);
+            this.splitter2.Location = new System.Drawing.Point(0, 150);
             this.splitter2.Name = "splitter2";
             this.splitter2.Size = new System.Drawing.Size(245, 7);
             this.splitter2.TabIndex = 9;
@@ -525,7 +530,7 @@ namespace PoshSec.Framework
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 386);
+            this.splitter1.Location = new System.Drawing.Point(0, 363);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(245, 7);
             this.splitter1.TabIndex = 8;
@@ -536,7 +541,7 @@ namespace PoshSec.Framework
             this.panel2.Controls.Add(this.lvwCommands);
             this.panel2.Controls.Add(this.tsModules);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 393);
+            this.panel2.Location = new System.Drawing.Point(0, 370);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(245, 181);
             this.panel2.TabIndex = 7;
@@ -550,11 +555,11 @@ namespace PoshSec.Framework
             this.lvwCommands.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwCommands.FullRowSelect = true;
             this.lvwCommands.HideSelection = false;
-            this.lvwCommands.Location = new System.Drawing.Point(0, 25);
+            this.lvwCommands.Location = new System.Drawing.Point(0, 31);
             this.lvwCommands.MultiSelect = false;
             this.lvwCommands.Name = "lvwCommands";
             this.lvwCommands.ShowItemToolTips = true;
-            this.lvwCommands.Size = new System.Drawing.Size(245, 156);
+            this.lvwCommands.Size = new System.Drawing.Size(245, 150);
             this.lvwCommands.SmallImageList = this.imgListLibrary;
             this.lvwCommands.TabIndex = 2;
             this.lvwCommands.UseCompatibleStateImageBehavior = false;
@@ -573,15 +578,16 @@ namespace PoshSec.Framework
             // 
             // cmnuCommands
             // 
+            this.cmnuCommands.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuCommands.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuCmdGetHelp});
             this.cmnuCommands.Name = "cmnuCommands";
-            this.cmnuCommands.Size = new System.Drawing.Size(123, 26);
+            this.cmnuCommands.Size = new System.Drawing.Size(156, 34);
             // 
             // mnuCmdGetHelp
             // 
             this.mnuCmdGetHelp.Name = "mnuCmdGetHelp";
-            this.mnuCmdGetHelp.Size = new System.Drawing.Size(122, 22);
+            this.mnuCmdGetHelp.Size = new System.Drawing.Size(155, 30);
             this.mnuCmdGetHelp.Text = "Get-Help";
             this.mnuCmdGetHelp.Click += new System.EventHandler(this.mnuCmdGetHelp_Click);
             // 
@@ -596,6 +602,7 @@ namespace PoshSec.Framework
             // 
             // tsModules
             // 
+            this.tsModules.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsModules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.moduleFilterComboBox,
             this.btnRefreshLibrary,
@@ -604,7 +611,7 @@ namespace PoshSec.Framework
             this.btnShowCmdlets});
             this.tsModules.Location = new System.Drawing.Point(0, 0);
             this.tsModules.Name = "tsModules";
-            this.tsModules.Size = new System.Drawing.Size(245, 25);
+            this.tsModules.Size = new System.Drawing.Size(245, 31);
             this.tsModules.TabIndex = 1;
             this.tsModules.Text = "toolStrip2";
             // 
@@ -616,7 +623,7 @@ namespace PoshSec.Framework
             this.moduleFilterComboBox.Items.AddRange(new object[] {
             "All"});
             this.moduleFilterComboBox.Name = "moduleFilterComboBox";
-            this.moduleFilterComboBox.Size = new System.Drawing.Size(121, 25);
+            this.moduleFilterComboBox.Size = new System.Drawing.Size(121, 31);
             this.moduleFilterComboBox.SelectedIndexChanged += new System.EventHandler(this.cmbLibraryTypes_SelectedIndexChanged);
             // 
             // btnRefreshLibrary
@@ -626,7 +633,7 @@ namespace PoshSec.Framework
             this.btnRefreshLibrary.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshLibrary.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshLibrary.Name = "btnRefreshLibrary";
-            this.btnRefreshLibrary.Size = new System.Drawing.Size(23, 22);
+            this.btnRefreshLibrary.Size = new System.Drawing.Size(28, 28);
             this.btnRefreshLibrary.Text = "Refresh";
             this.btnRefreshLibrary.ToolTipText = "Refresh";
             this.btnRefreshLibrary.Click += new System.EventHandler(this.btnLibraryRefresh_Click);
@@ -637,7 +644,7 @@ namespace PoshSec.Framework
             this.btnShowAliases.Image = global::PoshSec.Framework.Properties.Resources.tagred;
             this.btnShowAliases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowAliases.Name = "btnShowAliases";
-            this.btnShowAliases.Size = new System.Drawing.Size(23, 22);
+            this.btnShowAliases.Size = new System.Drawing.Size(28, 28);
             this.btnShowAliases.ToolTipText = "Show Aliases";
             this.btnShowAliases.Click += new System.EventHandler(this.btnShowAliases_Click);
             // 
@@ -649,7 +656,7 @@ namespace PoshSec.Framework
             this.btnShowFunctions.Image = global::PoshSec.Framework.Properties.Resources.tagblue;
             this.btnShowFunctions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowFunctions.Name = "btnShowFunctions";
-            this.btnShowFunctions.Size = new System.Drawing.Size(23, 22);
+            this.btnShowFunctions.Size = new System.Drawing.Size(28, 28);
             this.btnShowFunctions.Text = "toolStripButton5";
             this.btnShowFunctions.ToolTipText = "Show Functions";
             this.btnShowFunctions.Click += new System.EventHandler(this.btnShowFunctions_Click);
@@ -662,7 +669,7 @@ namespace PoshSec.Framework
             this.btnShowCmdlets.Image = global::PoshSec.Framework.Properties.Resources.taggreen;
             this.btnShowCmdlets.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnShowCmdlets.Name = "btnShowCmdlets";
-            this.btnShowCmdlets.Size = new System.Drawing.Size(23, 22);
+            this.btnShowCmdlets.Size = new System.Drawing.Size(28, 28);
             this.btnShowCmdlets.Text = "toolStripButton6";
             this.btnShowCmdlets.ToolTipText = "Show Cmdlets";
             this.btnShowCmdlets.Click += new System.EventHandler(this.btnShowCmdlets_Click);
@@ -675,7 +682,7 @@ namespace PoshSec.Framework
             this.tvwNetworks.HideSelection = false;
             this.tvwNetworks.ImageIndex = 0;
             this.tvwNetworks.ImageList = this.imgList16;
-            this.tvwNetworks.Location = new System.Drawing.Point(0, 25);
+            this.tvwNetworks.Location = new System.Drawing.Point(0, 31);
             this.tvwNetworks.Name = "tvwNetworks";
             treeNode1.ImageKey = "Diagram.png";
             treeNode1.Name = "ndNone";
@@ -695,6 +702,7 @@ namespace PoshSec.Framework
             // 
             // tsNetworks
             // 
+            this.tsNetworks.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsNetworks.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnRefreshNetworks,
             this.btnAddNetwork,
@@ -703,7 +711,7 @@ namespace PoshSec.Framework
             this.btnCancelScan});
             this.tsNetworks.Location = new System.Drawing.Point(0, 0);
             this.tsNetworks.Name = "tsNetworks";
-            this.tsNetworks.Size = new System.Drawing.Size(245, 25);
+            this.tsNetworks.Size = new System.Drawing.Size(245, 31);
             this.tsNetworks.TabIndex = 4;
             this.tsNetworks.Text = "toolStrip1";
             // 
@@ -713,7 +721,7 @@ namespace PoshSec.Framework
             this.btnRefreshNetworks.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefreshNetworks.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRefreshNetworks.Name = "btnRefreshNetworks";
-            this.btnRefreshNetworks.Size = new System.Drawing.Size(23, 22);
+            this.btnRefreshNetworks.Size = new System.Drawing.Size(28, 28);
             this.btnRefreshNetworks.ToolTipText = "Refresh Networks";
             this.btnRefreshNetworks.Click += new System.EventHandler(this.btnRefreshNetworks_Click);
             // 
@@ -723,7 +731,7 @@ namespace PoshSec.Framework
             this.btnAddNetwork.Image = global::PoshSec.Framework.Properties.Resources.Diagram;
             this.btnAddNetwork.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddNetwork.Name = "btnAddNetwork";
-            this.btnAddNetwork.Size = new System.Drawing.Size(23, 22);
+            this.btnAddNetwork.Size = new System.Drawing.Size(28, 28);
             this.btnAddNetwork.ToolTipText = "Add Network";
             this.btnAddNetwork.Click += new System.EventHandler(this.btnAddNetwork_Click);
             // 
@@ -734,7 +742,7 @@ namespace PoshSec.Framework
             this.btnRemoveNetwork.Image = global::PoshSec.Framework.Properties.Resources.editdelete6;
             this.btnRemoveNetwork.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveNetwork.Name = "btnRemoveNetwork";
-            this.btnRemoveNetwork.Size = new System.Drawing.Size(23, 22);
+            this.btnRemoveNetwork.Size = new System.Drawing.Size(28, 28);
             this.btnRemoveNetwork.Text = "Remove Network";
             this.btnRemoveNetwork.Click += new System.EventHandler(this.btnRemoveNetwork_Click);
             // 
@@ -745,7 +753,7 @@ namespace PoshSec.Framework
             this.btnScan.Image = global::PoshSec.Framework.Properties.Resources.networktransmitreceive2;
             this.btnScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnScan.Name = "btnScan";
-            this.btnScan.Size = new System.Drawing.Size(23, 22);
+            this.btnScan.Size = new System.Drawing.Size(28, 28);
             this.btnScan.Text = "Scan";
             this.btnScan.Click += new System.EventHandler(this.btnScan_Click);
             // 
@@ -756,7 +764,7 @@ namespace PoshSec.Framework
             this.btnCancelScan.Image = global::PoshSec.Framework.Properties.Resources.dialogcancel;
             this.btnCancelScan.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCancelScan.Name = "btnCancelScan";
-            this.btnCancelScan.Size = new System.Drawing.Size(23, 22);
+            this.btnCancelScan.Size = new System.Drawing.Size(28, 28);
             this.btnCancelScan.ToolTipText = "Cancel Scan";
             this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
@@ -775,8 +783,8 @@ namespace PoshSec.Framework
             // pnlSystems.Panel2
             // 
             this.pnlSystems.Panel2.Controls.Add(this.tcSystem);
-            this.pnlSystems.Size = new System.Drawing.Size(956, 574);
-            this.pnlSystems.SplitterDistance = 340;
+            this.pnlSystems.Size = new System.Drawing.Size(956, 551);
+            this.pnlSystems.SplitterDistance = 317;
             this.pnlSystems.TabIndex = 0;
             // 
             // tcMain
@@ -789,7 +797,7 @@ namespace PoshSec.Framework
             this.tcMain.Location = new System.Drawing.Point(0, 0);
             this.tcMain.Name = "tcMain";
             this.tcMain.SelectedIndex = 0;
-            this.tcMain.Size = new System.Drawing.Size(956, 340);
+            this.tcMain.Size = new System.Drawing.Size(956, 317);
             this.tcMain.TabIndex = 0;
             this.tcMain.Selected += new System.Windows.Forms.TabControlEventHandler(this.tcMain_Selected);
             // 
@@ -798,10 +806,10 @@ namespace PoshSec.Framework
             this.tbpSystems.Controls.Add(this.lvwSystems);
             this.tbpSystems.Controls.Add(this.tsSystems);
             this.tbpSystems.ImageIndex = 7;
-            this.tbpSystems.Location = new System.Drawing.Point(4, 23);
+            this.tbpSystems.Location = new System.Drawing.Point(4, 30);
             this.tbpSystems.Name = "tbpSystems";
             this.tbpSystems.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSystems.Size = new System.Drawing.Size(948, 313);
+            this.tbpSystems.Size = new System.Drawing.Size(948, 283);
             this.tbpSystems.TabIndex = 0;
             this.tbpSystems.Text = "Systems";
             this.tbpSystems.UseVisualStyleBackColor = true;
@@ -822,9 +830,9 @@ namespace PoshSec.Framework
             this.lvwSystems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwSystems.FullRowSelect = true;
             this.lvwSystems.HideSelection = false;
-            this.lvwSystems.Location = new System.Drawing.Point(3, 28);
+            this.lvwSystems.Location = new System.Drawing.Point(3, 34);
             this.lvwSystems.Name = "lvwSystems";
-            this.lvwSystems.Size = new System.Drawing.Size(942, 282);
+            this.lvwSystems.Size = new System.Drawing.Size(942, 246);
             this.lvwSystems.SmallImageList = this.imgList16;
             this.lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvwSystems.TabIndex = 1;
@@ -873,6 +881,7 @@ namespace PoshSec.Framework
             // 
             // tsSystems
             // 
+            this.tsSystems.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsSystems.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddSystem,
             this.btnRemoveSystem,
@@ -881,7 +890,7 @@ namespace PoshSec.Framework
             this.tslSystemCount});
             this.tsSystems.Location = new System.Drawing.Point(3, 3);
             this.tsSystems.Name = "tsSystems";
-            this.tsSystems.Size = new System.Drawing.Size(942, 25);
+            this.tsSystems.Size = new System.Drawing.Size(942, 31);
             this.tsSystems.TabIndex = 2;
             this.tsSystems.Text = "toolStrip6";
             // 
@@ -891,7 +900,7 @@ namespace PoshSec.Framework
             this.btnAddSystem.Image = global::PoshSec.Framework.Properties.Resources.computeradd;
             this.btnAddSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddSystem.Name = "btnAddSystem";
-            this.btnAddSystem.Size = new System.Drawing.Size(23, 22);
+            this.btnAddSystem.Size = new System.Drawing.Size(28, 28);
             this.btnAddSystem.Text = "Add System";
             this.btnAddSystem.Click += new System.EventHandler(this.btnAddSystem_Click);
             // 
@@ -901,14 +910,14 @@ namespace PoshSec.Framework
             this.btnRemoveSystem.Image = global::PoshSec.Framework.Properties.Resources.computerdelete;
             this.btnRemoveSystem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnRemoveSystem.Name = "btnRemoveSystem";
-            this.btnRemoveSystem.Size = new System.Drawing.Size(23, 22);
+            this.btnRemoveSystem.Size = new System.Drawing.Size(28, 28);
             this.btnRemoveSystem.Text = "Remove System";
             this.btnRemoveSystem.Click += new System.EventHandler(this.btnRemoveSystem_Click);
             // 
             // tsSeparator
             // 
             this.tsSeparator.Name = "tsSeparator";
-            this.tsSeparator.Size = new System.Drawing.Size(6, 25);
+            this.tsSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // btnExportSystems
             // 
@@ -916,7 +925,7 @@ namespace PoshSec.Framework
             this.btnExportSystems.Image = global::PoshSec.Framework.Properties.Resources.documentexport4;
             this.btnExportSystems.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnExportSystems.Name = "btnExportSystems";
-            this.btnExportSystems.Size = new System.Drawing.Size(23, 22);
+            this.btnExportSystems.Size = new System.Drawing.Size(28, 28);
             this.btnExportSystems.Text = "Export Systems";
             this.btnExportSystems.Click += new System.EventHandler(this.btnExportSystems_Click);
             // 
@@ -925,7 +934,7 @@ namespace PoshSec.Framework
             this.tslSystemCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tslSystemCount.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tslSystemCount.Name = "tslSystemCount";
-            this.tslSystemCount.Size = new System.Drawing.Size(63, 22);
+            this.tslSystemCount.Size = new System.Drawing.Size(91, 28);
             this.tslSystemCount.Text = "0 Systems";
             // 
             // tbpPowerShell
@@ -933,10 +942,10 @@ namespace PoshSec.Framework
             this.tbpPowerShell.BackColor = System.Drawing.Color.SteelBlue;
             this.tbpPowerShell.Controls.Add(this.txtPShellOutput);
             this.tbpPowerShell.ImageIndex = 8;
-            this.tbpPowerShell.Location = new System.Drawing.Point(4, 23);
+            this.tbpPowerShell.Location = new System.Drawing.Point(4, 29);
             this.tbpPowerShell.Name = "tbpPowerShell";
             this.tbpPowerShell.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpPowerShell.Size = new System.Drawing.Size(948, 313);
+            this.tbpPowerShell.Size = new System.Drawing.Size(948, 307);
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
@@ -954,25 +963,26 @@ namespace PoshSec.Framework
             this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.txtPShellOutput.Name = "txtPShellOutput";
             this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 307);
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 301);
             this.txtPShellOutput.TabIndex = 0;
             this.txtPShellOutput.Text = "";
             this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
             // 
             // cmnuPSFConsole
             // 
+            this.cmnuPSFConsole.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuPSFConsole.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmbtnCopy,
             this.cmbtnPaste});
             this.cmnuPSFConsole.Name = "cmnuPSFConsole";
-            this.cmnuPSFConsole.Size = new System.Drawing.Size(103, 48);
+            this.cmnuPSFConsole.Size = new System.Drawing.Size(127, 64);
             this.cmnuPSFConsole.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuPSFConsole_Opening);
             // 
             // cmbtnCopy
             // 
             this.cmbtnCopy.Enabled = false;
             this.cmbtnCopy.Name = "cmbtnCopy";
-            this.cmbtnCopy.Size = new System.Drawing.Size(102, 22);
+            this.cmbtnCopy.Size = new System.Drawing.Size(126, 30);
             this.cmbtnCopy.Text = "Copy";
             this.cmbtnCopy.Click += new System.EventHandler(this.cmbtnCopy_Click);
             // 
@@ -980,7 +990,7 @@ namespace PoshSec.Framework
             // 
             this.cmbtnPaste.Enabled = false;
             this.cmbtnPaste.Name = "cmbtnPaste";
-            this.cmbtnPaste.Size = new System.Drawing.Size(102, 22);
+            this.cmbtnPaste.Size = new System.Drawing.Size(126, 30);
             this.cmbtnPaste.Text = "Paste";
             this.cmbtnPaste.Click += new System.EventHandler(this.cmbtnPaste_Click);
             // 
@@ -988,10 +998,10 @@ namespace PoshSec.Framework
             // 
             this.tbpSchedScripts.Controls.Add(this.lvwSchedule);
             this.tbpSchedScripts.ImageIndex = 5;
-            this.tbpSchedScripts.Location = new System.Drawing.Point(4, 23);
+            this.tbpSchedScripts.Location = new System.Drawing.Point(4, 29);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
             this.tbpSchedScripts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 313);
+            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 307);
             this.tbpSchedScripts.TabIndex = 2;
             this.tbpSchedScripts.Text = "Scheduled Scripts";
             this.tbpSchedScripts.UseVisualStyleBackColor = true;
@@ -1010,7 +1020,7 @@ namespace PoshSec.Framework
             this.lvwSchedule.FullRowSelect = true;
             this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
             this.lvwSchedule.Name = "lvwSchedule";
-            this.lvwSchedule.Size = new System.Drawing.Size(942, 307);
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 301);
             this.lvwSchedule.SmallImageList = this.imgList16;
             this.lvwSchedule.TabIndex = 0;
             this.lvwSchedule.UseCompatibleStateImageBehavior = false;
@@ -1049,24 +1059,25 @@ namespace PoshSec.Framework
             // 
             // cmnuScheduleCommands
             // 
+            this.cmnuScheduleCommands.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuScheduleCommands.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuScheduleItemRunNow,
             this.mnuDeleteScheduleItem});
             this.cmnuScheduleCommands.Name = "cmnuScheduleCommands";
-            this.cmnuScheduleCommands.Size = new System.Drawing.Size(124, 48);
+            this.cmnuScheduleCommands.Size = new System.Drawing.Size(158, 64);
             this.cmnuScheduleCommands.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuScheduleCommands_Opening);
             // 
             // mnuScheduleItemRunNow
             // 
             this.mnuScheduleItemRunNow.Name = "mnuScheduleItemRunNow";
-            this.mnuScheduleItemRunNow.Size = new System.Drawing.Size(123, 22);
+            this.mnuScheduleItemRunNow.Size = new System.Drawing.Size(157, 30);
             this.mnuScheduleItemRunNow.Text = "Run Now";
             this.mnuScheduleItemRunNow.Click += new System.EventHandler(this.mnuScheduleItemRunNow_Click);
             // 
             // mnuDeleteScheduleItem
             // 
             this.mnuDeleteScheduleItem.Name = "mnuDeleteScheduleItem";
-            this.mnuDeleteScheduleItem.Size = new System.Drawing.Size(123, 22);
+            this.mnuDeleteScheduleItem.Size = new System.Drawing.Size(157, 30);
             this.mnuDeleteScheduleItem.Text = "Delete";
             this.mnuDeleteScheduleItem.Click += new System.EventHandler(this.mnuDeleteScheduleItem_Click);
             // 
@@ -1089,7 +1100,7 @@ namespace PoshSec.Framework
             this.tbpAlerts.Location = new System.Drawing.Point(4, 4);
             this.tbpAlerts.Name = "tbpAlerts";
             this.tbpAlerts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpAlerts.Size = new System.Drawing.Size(948, 204);
+            this.tbpAlerts.Size = new System.Drawing.Size(948, 196);
             this.tbpAlerts.TabIndex = 1;
             this.tbpAlerts.Text = "Alerts (0)";
             this.tbpAlerts.UseVisualStyleBackColor = true;
@@ -1106,10 +1117,10 @@ namespace PoshSec.Framework
             this.lvwAlerts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvwAlerts.FullRowSelect = true;
             this.lvwAlerts.HideSelection = false;
-            this.lvwAlerts.Location = new System.Drawing.Point(3, 28);
+            this.lvwAlerts.Location = new System.Drawing.Point(3, 34);
             this.lvwAlerts.Name = "lvwAlerts";
             this.lvwAlerts.ShowItemToolTips = true;
-            this.lvwAlerts.Size = new System.Drawing.Size(942, 173);
+            this.lvwAlerts.Size = new System.Drawing.Size(942, 159);
             this.lvwAlerts.SmallImageList = this.imgListAlerts;
             this.lvwAlerts.TabIndex = 1;
             this.lvwAlerts.UseCompatibleStateImageBehavior = false;
@@ -1137,24 +1148,25 @@ namespace PoshSec.Framework
             // 
             // cmnuAlerts
             // 
+            this.cmnuAlerts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuAlerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmbtnCopyMessage,
             this.cmbtnCopyAlert});
             this.cmnuAlerts.Name = "cmnuAlerts";
-            this.cmnuAlerts.Size = new System.Drawing.Size(164, 48);
+            this.cmnuAlerts.Size = new System.Drawing.Size(218, 64);
             this.cmnuAlerts.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuAlerts_Opening);
             // 
             // cmbtnCopyMessage
             // 
             this.cmbtnCopyMessage.Name = "cmbtnCopyMessage";
-            this.cmbtnCopyMessage.Size = new System.Drawing.Size(163, 22);
+            this.cmbtnCopyMessage.Size = new System.Drawing.Size(217, 30);
             this.cmbtnCopyMessage.Text = "Copy Message";
             this.cmbtnCopyMessage.Click += new System.EventHandler(this.cmbtnCopyMessage_Click);
             // 
             // cmbtnCopyAlert
             // 
             this.cmbtnCopyAlert.Name = "cmbtnCopyAlert";
-            this.cmbtnCopyAlert.Size = new System.Drawing.Size(163, 22);
+            this.cmbtnCopyAlert.Size = new System.Drawing.Size(217, 30);
             this.cmbtnCopyAlert.Text = "Copy Entire Alert";
             this.cmbtnCopyAlert.Click += new System.EventHandler(this.cmbtnCopyAlert_Click);
             // 
@@ -1170,6 +1182,7 @@ namespace PoshSec.Framework
             // 
             // tsAlerts
             // 
+            this.tsAlerts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsAlerts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnClearAlerts,
             this.btnAlert_MarkResolved,
@@ -1182,7 +1195,7 @@ namespace PoshSec.Framework
             this.btnAlert_Critical});
             this.tsAlerts.Location = new System.Drawing.Point(3, 3);
             this.tsAlerts.Name = "tsAlerts";
-            this.tsAlerts.Size = new System.Drawing.Size(942, 25);
+            this.tsAlerts.Size = new System.Drawing.Size(942, 31);
             this.tsAlerts.TabIndex = 0;
             // 
             // btnClearAlerts
@@ -1191,7 +1204,7 @@ namespace PoshSec.Framework
             this.btnClearAlerts.Image = global::PoshSec.Framework.Properties.Resources.editclearlist;
             this.btnClearAlerts.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnClearAlerts.Name = "btnClearAlerts";
-            this.btnClearAlerts.Size = new System.Drawing.Size(23, 22);
+            this.btnClearAlerts.Size = new System.Drawing.Size(28, 28);
             this.btnClearAlerts.Text = "toolStripButton3";
             this.btnClearAlerts.ToolTipText = "Clear All Alerts";
             this.btnClearAlerts.Click += new System.EventHandler(this.btnClearAlerts_Click);
@@ -1202,7 +1215,7 @@ namespace PoshSec.Framework
             this.btnAlert_MarkResolved.Image = global::PoshSec.Framework.Properties.Resources.dialogaccept;
             this.btnAlert_MarkResolved.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_MarkResolved.Name = "btnAlert_MarkResolved";
-            this.btnAlert_MarkResolved.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_MarkResolved.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_MarkResolved.Text = "toolStripButton3";
             this.btnAlert_MarkResolved.ToolTipText = "Mark Resolved";
             this.btnAlert_MarkResolved.Click += new System.EventHandler(this.btnAlert_MarkResolved_Click);
@@ -1210,12 +1223,12 @@ namespace PoshSec.Framework
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // tslblDisplay
             // 
             this.tslblDisplay.Name = "tslblDisplay";
-            this.tslblDisplay.Size = new System.Drawing.Size(48, 22);
+            this.tslblDisplay.Size = new System.Drawing.Size(74, 28);
             this.tslblDisplay.Text = "Display:";
             // 
             // btnAlert_Information
@@ -1226,7 +1239,7 @@ namespace PoshSec.Framework
             this.btnAlert_Information.Image = global::PoshSec.Framework.Properties.Resources.dialoginformation4;
             this.btnAlert_Information.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Information.Name = "btnAlert_Information";
-            this.btnAlert_Information.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Information.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_Information.ToolTipText = "Show Information Alerts";
             this.btnAlert_Information.CheckedChanged += new System.EventHandler(this.btnAlert_Information_CheckedChanged);
             this.btnAlert_Information.Click += new System.EventHandler(this.btnAlert_Information_Click);
@@ -1239,7 +1252,7 @@ namespace PoshSec.Framework
             this.btnAlert_Error.Image = global::PoshSec.Framework.Properties.Resources.dialogerror4;
             this.btnAlert_Error.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Error.Name = "btnAlert_Error";
-            this.btnAlert_Error.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Error.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_Error.Text = "toolStripButton6";
             this.btnAlert_Error.ToolTipText = "Show Error Alerts";
             this.btnAlert_Error.CheckedChanged += new System.EventHandler(this.btnAlert_Error_CheckedChanged);
@@ -1253,7 +1266,7 @@ namespace PoshSec.Framework
             this.btnAlert_Warning.Image = global::PoshSec.Framework.Properties.Resources.dialogwarning3;
             this.btnAlert_Warning.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Warning.Name = "btnAlert_Warning";
-            this.btnAlert_Warning.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Warning.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_Warning.Text = "toolStripButton7";
             this.btnAlert_Warning.ToolTipText = "Show Warning Alerts";
             this.btnAlert_Warning.CheckedChanged += new System.EventHandler(this.btnAlert_Warning_CheckedChanged);
@@ -1267,7 +1280,7 @@ namespace PoshSec.Framework
             this.btnAlert_Severe.Image = global::PoshSec.Framework.Properties.Resources.dialogwarning2;
             this.btnAlert_Severe.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Severe.Name = "btnAlert_Severe";
-            this.btnAlert_Severe.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Severe.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_Severe.Text = "toolStripButton8";
             this.btnAlert_Severe.ToolTipText = "Show Severe Alerts";
             this.btnAlert_Severe.CheckedChanged += new System.EventHandler(this.btnAlert_Severe_CheckedChanged);
@@ -1281,7 +1294,7 @@ namespace PoshSec.Framework
             this.btnAlert_Critical.Image = global::PoshSec.Framework.Properties.Resources.exclamation;
             this.btnAlert_Critical.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAlert_Critical.Name = "btnAlert_Critical";
-            this.btnAlert_Critical.Size = new System.Drawing.Size(23, 22);
+            this.btnAlert_Critical.Size = new System.Drawing.Size(28, 28);
             this.btnAlert_Critical.ToolTipText = "Show Critical Alerts";
             this.btnAlert_Critical.CheckedChanged += new System.EventHandler(this.btnAlert_Critical_CheckedChanged);
             this.btnAlert_Critical.Click += new System.EventHandler(this.btnAlert_Critical_Click);
@@ -1294,7 +1307,7 @@ namespace PoshSec.Framework
             this.tbpScripts.Location = new System.Drawing.Point(4, 4);
             this.tbpScripts.Name = "tbpScripts";
             this.tbpScripts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpScripts.Size = new System.Drawing.Size(948, 204);
+            this.tbpScripts.Size = new System.Drawing.Size(948, 197);
             this.tbpScripts.TabIndex = 2;
             this.tbpScripts.Text = "Active Scripts (0)";
             // 
@@ -1310,7 +1323,7 @@ namespace PoshSec.Framework
             this.lvwActiveScripts.HideSelection = false;
             this.lvwActiveScripts.Location = new System.Drawing.Point(3, 28);
             this.lvwActiveScripts.Name = "lvwActiveScripts";
-            this.lvwActiveScripts.Size = new System.Drawing.Size(942, 173);
+            this.lvwActiveScripts.Size = new System.Drawing.Size(942, 166);
             this.lvwActiveScripts.SmallImageList = this.imgList16;
             this.lvwActiveScripts.TabIndex = 1;
             this.lvwActiveScripts.UseCompatibleStateImageBehavior = false;
@@ -1334,22 +1347,24 @@ namespace PoshSec.Framework
             // cmnuActiveScripts
             // 
             this.cmnuActiveScripts.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.cmnuActiveScripts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuActiveScripts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmbtnCancelScript});
             this.cmnuActiveScripts.Name = "cmnuActiveScripts";
-            this.cmnuActiveScripts.Size = new System.Drawing.Size(137, 26);
+            this.cmnuActiveScripts.Size = new System.Drawing.Size(177, 30);
             this.cmnuActiveScripts.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuActiveScripts_Opening);
             // 
             // cmbtnCancelScript
             // 
             this.cmbtnCancelScript.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.cmbtnCancelScript.Name = "cmbtnCancelScript";
-            this.cmbtnCancelScript.Size = new System.Drawing.Size(136, 22);
+            this.cmbtnCancelScript.Size = new System.Drawing.Size(176, 26);
             this.cmbtnCancelScript.Text = "Cancel Script";
             this.cmbtnCancelScript.Click += new System.EventHandler(this.cmbtnCancelScript_Click);
             // 
             // tsActiveScripts
             // 
+            this.tsActiveScripts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.tsActiveScripts.Location = new System.Drawing.Point(3, 3);
             this.tsActiveScripts.Name = "tsActiveScripts";
             this.tsActiveScripts.Size = new System.Drawing.Size(942, 25);
@@ -1358,17 +1373,18 @@ namespace PoshSec.Framework
             // 
             // cmnuHosts
             // 
+            this.cmnuHosts.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuHosts.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.powerShellToolStripMenuItem});
             this.cmnuHosts.Name = "cmnuHosts";
-            this.cmnuHosts.Size = new System.Drawing.Size(136, 26);
+            this.cmnuHosts.Size = new System.Drawing.Size(175, 34);
             // 
             // powerShellToolStripMenuItem
             // 
             this.powerShellToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.windowsUpdatesToolStripMenuItem});
             this.powerShellToolStripMenuItem.Name = "powerShellToolStripMenuItem";
-            this.powerShellToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.powerShellToolStripMenuItem.Size = new System.Drawing.Size(174, 30);
             this.powerShellToolStripMenuItem.Text = "Power Shell";
             // 
             // windowsUpdatesToolStripMenuItem
@@ -1376,13 +1392,13 @@ namespace PoshSec.Framework
             this.windowsUpdatesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.waucheckps1ToolStripMenuItem});
             this.windowsUpdatesToolStripMenuItem.Name = "windowsUpdatesToolStripMenuItem";
-            this.windowsUpdatesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.windowsUpdatesToolStripMenuItem.Size = new System.Drawing.Size(241, 30);
             this.windowsUpdatesToolStripMenuItem.Text = "Windows Updates";
             // 
             // waucheckps1ToolStripMenuItem
             // 
             this.waucheckps1ToolStripMenuItem.Name = "waucheckps1ToolStripMenuItem";
-            this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.waucheckps1ToolStripMenuItem.Size = new System.Drawing.Size(205, 30);
             this.waucheckps1ToolStripMenuItem.Text = "waucheck.ps1";
             // 
             // nimain
@@ -1394,29 +1410,30 @@ namespace PoshSec.Framework
             // 
             // cmnuNotify
             // 
+            this.cmnuNotify.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.cmnuNotify.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmnuRestore,
             this.cmnuExit});
             this.cmnuNotify.Name = "cmnuNotify";
-            this.cmnuNotify.Size = new System.Drawing.Size(114, 48);
+            this.cmnuNotify.Size = new System.Drawing.Size(144, 64);
             // 
             // cmnuRestore
             // 
             this.cmnuRestore.Name = "cmnuRestore";
-            this.cmnuRestore.Size = new System.Drawing.Size(113, 22);
+            this.cmnuRestore.Size = new System.Drawing.Size(143, 30);
             this.cmnuRestore.Text = "Restore";
             this.cmnuRestore.Click += new System.EventHandler(this.cmnuRestore_Click);
             // 
             // cmnuExit
             // 
             this.cmnuExit.Name = "cmnuExit";
-            this.cmnuExit.Size = new System.Drawing.Size(113, 22);
+            this.cmnuExit.Size = new System.Drawing.Size(143, 30);
             this.cmnuExit.Text = "Exit";
             this.cmnuExit.Click += new System.EventHandler(this.cmnuExit_Click);
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1205, 645);
             this.Controls.Add(this.pnlMain);

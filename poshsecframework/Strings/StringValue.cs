@@ -34,6 +34,7 @@ namespace PoshSec.Framework.Strings
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
         public const string InvalidNetworkName = "Please enter a unique and valid network name. (i.e. system.local)";
+        public const string InvalidSystemName = "Please enter a unique and valid system name. (i.e. PC123456)";
         public const string InvalidSyslog = "Please enter a valid host name or IP address for the syslog server.";
         public const string InvalidAlertType = "That is not a valid Alert Type. The valid alert types are ";
         public const string FileSavedSuccessfully = "File saved successfully.";

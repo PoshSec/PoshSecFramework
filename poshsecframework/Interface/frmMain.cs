@@ -2625,7 +2625,22 @@ namespace PoshSec.Framework
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            
+            using (var frm = new SystemForm())
+            {
+                if (frm.ShowDialog() != DialogResult.OK) return;
+                var systemName = frm.SystemName;
+
+                var ipAddress = frm.IpAddress;
+                var description = frm.Description;
+                if (lvwSystems.IsValid(systemName))
+                    lvwSystems.Add(new SystemListViewItem(systemName)
+                    {
+                        IpAddress = ipAddress,
+                        Description = description
+                    });
+                else
+                    MessageBox.Show(StringValue.InvalidSystemName);
+            }
         }
         
         private void btnLaunchPShellCmd_Click(object sender, EventArgs e)
