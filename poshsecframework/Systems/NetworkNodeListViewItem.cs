@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows.Forms;
 using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
-    public class SystemListViewItem : ListViewItem
+    public class NetworkNodeListViewItem : ListViewItem, INetworkNode
     {
-        public SystemListViewItem(string name) : base(name)
+        public NetworkNodeListViewItem(string name) : base(name)
         {
             ImageIndex = 2;
             Text = name;
