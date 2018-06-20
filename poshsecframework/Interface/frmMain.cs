@@ -16,7 +16,6 @@ using System.Net.NetworkInformation;
 using PoshSec.Framework.Comparers;
 using PoshSec.Framework.Enums;
 using PoshSec.Framework.Interface;
-using PoshSec.Framework.Network;
 using PoshSec.Framework.Properties;
 using PoshSec.Framework.PShell;
 using PoshSec.Framework.Strings;
@@ -28,6 +27,7 @@ namespace PoshSec.Framework
     public partial class frmMain : Form
     {
         private Collection<PSObject> _commands;
+        private List<string> _networks;
 
         private readonly NetworkBrowser _scnr = new NetworkBrowser();
         private frmStartup _spashScreen;
@@ -262,7 +262,7 @@ namespace PoshSec.Framework
                 {
                     if (_slog == null)
                     {
-                        _slog = new Network.Syslog(new IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
+                        _slog = new Syslog(new IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
                     }
                 }
                 else
@@ -466,11 +466,10 @@ namespace PoshSec.Framework
 
         private void Scan()
         {
-            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
+            if (tvwNetworks.SelectedNode?.Tag is NetworkType)
             {
-                NetworkType typ = (NetworkType)Enum.Parse(typeof(NetworkType), tvwNetworks.SelectedNode.Tag.ToString());
                 this.UseWaitCursor = true;
-                switch (typ)
+                switch ((NetworkType) tvwNetworks.SelectedNode.Tag)
                 {
                     case NetworkType.Local:
                         ScanbyIP();
@@ -694,7 +693,7 @@ namespace PoshSec.Framework
             }
         }
 
-        void scnr_ScanUpdate(object sender, Network.ScanEventArgs e)
+        void scnr_ScanUpdate(object sender, ScanEventArgs e)
         {
             if (this.InvokeRequired)
             {

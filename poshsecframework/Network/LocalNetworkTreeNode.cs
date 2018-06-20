@@ -9,7 +9,7 @@ namespace PoshSec.Framework
             Text = name;
             SelectedImageIndex = 3;
             ImageIndex = 3;
-            Tag = 1;
+            Tag = NetworkType.Local;
         }
     }
 }

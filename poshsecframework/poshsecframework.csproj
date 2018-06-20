@@ -161,7 +161,7 @@
     </Compile>
     <Compile Include="Network\NetworkType.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
-    <Compile Include="Events\ScanEventArgs.cs" />
+    <Compile Include="Network\ScanEventArgs.cs" />
     <Compile Include="Network\ScanIP.cs" />
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />

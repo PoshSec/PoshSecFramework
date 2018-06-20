@@ -12,7 +12,7 @@ using System.Net.Sockets;
 using System.Text;
 using PoshSec.Framework.Strings;
 
-namespace PoshSec.Framework.Network
+namespace PoshSec.Framework
 {
     class Syslog
     {
