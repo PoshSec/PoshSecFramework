@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Management.Automation.Runspaces;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class psexception
     {

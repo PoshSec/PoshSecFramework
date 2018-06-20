@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public partial class frmScan : Form
     {

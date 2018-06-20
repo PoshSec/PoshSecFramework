@@ -16,11 +16,16 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using poshsecframework.Strings;
-using poshsecframework.Enums;
 using System.Linq;
+using System.Net.NetworkInformation;
+using PoshSec.Framework.Enums;
+using PoshSec.Framework.Interface;
+using PoshSec.Framework.Network;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.PShell;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework
+namespace PoshSec.Framework
 {
     public partial class frmMain : Form
     {
@@ -48,14 +53,8 @@ namespace poshsecframework
         private FormWindowState lastwindowstate = FormWindowState.Normal;
         private System.Timers.Timer ghChecker = null;
 
-        enum SystemType
-        { 
-            Local = 1,
-            Domain
-        }
-
         enum LibraryImages
-        { 
+        {
             Function,
             Cmdlet,
             Command,
@@ -63,7 +62,7 @@ namespace poshsecframework
         }
 
         enum ScheduleColumns
-        { 
+        {
             ScriptName = 0,
             Parameters,
             Schedule,
@@ -77,7 +76,7 @@ namespace poshsecframework
         public frmMain()
         {
             InitializeComponent();
-            lvwSystems.ListViewItemSorter = lvwSorter;
+            _lvwNetworkNodes.ListViewItemSorter = lvwSorter;
             this.Enabled = false;
             if (IsRootDrive())
             {
@@ -109,7 +108,7 @@ namespace poshsecframework
 
                 spashScreen.SetStatus("Checking Settings, please wait...");
                 CheckSettings();
-                if (poshsecframework.Properties.Settings.Default.FirstTime)
+                if (Settings.Default.FirstTime)
                 {
                     restart = true;
                     spashScreen.Hide();
@@ -125,7 +124,7 @@ namespace poshsecframework
                     Initialize();
                     spashScreen.Show();
                     spashScreen.SetStatus("Loading Networks, please wait...");
-                    GetNetworks();
+                    LoadNetworks();
                     GetAlerts();
                 }
                 if (loaderrors != "")
@@ -164,7 +163,7 @@ namespace poshsecframework
                             {
                                 System.Threading.Thread.Sleep(1000);
                                 times++;
-                            } while ((thd.ThreadState != ThreadState.Aborted) && times <=5);
+                            } while ((thd.ThreadState != ThreadState.Aborted) && times <= 5);
                         }
                     }
                     else
@@ -211,11 +210,11 @@ namespace poshsecframework
             _commands = psf.GetCommand();
 
             if (spashScreen != null) { spashScreen.SetStatus("Looking for modules, please wait..."); }
-            CheckPendingModules();            
-            
+            CheckPendingModules();
+
             BuildModuleFilter();
             if (spashScreen != null) { spashScreen.SetStatus("Checking for updates, please wait..."); }
-            
+
             // Set up GitHub Timer for Checking for Updates
             ghChecker = new System.Timers.Timer();
             ghChecker.Interval = 3600000; //One Hour
@@ -225,7 +224,7 @@ namespace poshsecframework
             CheckLastModified();
             moduleFilterComboBox.SelectedIndex = 0;
 
-            scnr.ParentForm = this; 
+            scnr.ParentForm = this;
             if (psf.LoadErrors != "")
             {
                 loaderrors += psf.LoadErrors;
@@ -265,14 +264,14 @@ namespace poshsecframework
             {
                 if (Properties.Settings.Default.UseSyslog && Properties.Settings.Default.SyslogServer != "")
                 {
-                    if(slog == null)
+                    if (slog == null)
                     {
                         slog = new Network.Syslog(new IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
-                    }                
+                    }
                 }
                 else
                 {
-                    if(slog != null)
+                    if (slog != null)
                     {
                         slog.Close();
                         slog = null;
@@ -385,30 +384,28 @@ namespace poshsecframework
         }
 
         #region Network
-        private void GetNetworks()
+
+        private void LoadNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
-            TreeNode lnode = new TreeNode();
-            lnode.Text = StringValue.LocalNetwork;
-            lnode.ImageIndex = 3;
-            lnode.SelectedImageIndex = 3;
-            lnode.Tag = 1;
-            tvwNetworks.Nodes[0].Nodes.Add(lnode);
+            tvwNetworks.Add(StringValue.LocalNetwork, NetworkType.Local);
 
             try
             {
                 //Get Domain Name
-                Forest hostForest = Forest.GetCurrentForest();
-                DomainCollection domains = hostForest.Domains;
-                
+                var hostForest = Forest.GetCurrentForest();
+                var domains = hostForest.Domains;
+
                 foreach (Domain domain in domains)
                 {
-                    TreeNode node = new TreeNode();
-                    node.Text = domain.Name;
-                    node.SelectedImageIndex = 3;
-                    node.ImageIndex = 3;
-                    node.Tag = SystemType.Domain;
-                    TreeNode rootnode = tvwNetworks.Nodes[0];
+                    var node = new TreeNode
+                    {
+                        Text = domain.Name,
+                        SelectedImageIndex = 3,
+                        ImageIndex = 3,
+                        Tag = NetworkType.Domain
+                    };
+                    var rootnode = tvwNetworks.Nodes[0];
                     rootnode.Nodes.Add(node);
                 }
             }
@@ -417,24 +414,21 @@ namespace poshsecframework
                 //fail silently because it's not on A/D   
             }
 
-            if (Properties.Settings.Default.Systems != null && Properties.Settings.Default.Systems.Count > 0)
+            if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
             {
-                lvwSystems.Items.Clear();
-                foreach (String system in Properties.Settings.Default.Systems)
+                _lvwNetworkNodes.Items.Clear();
+                foreach (var system in Settings.Default.Systems)
                 {
-                    String[] systemparts = system.Split('|');
-                    if (systemparts.Length == lvwSystems.Columns.Count)
+                    var systemparts = system.Split('|');
+                    if (systemparts.Length == _lvwNetworkNodes.Columns.Count)
                     {
-                        ListViewItem lvwItm = new ListViewItem();
-                        lvwItm.Text = systemparts[0];
-                        for(int idx = 1; idx < systemparts.Length; idx++)
-                        {
-                            lvwItm.SubItems.Add(systemparts[idx]);
-                        }
+                        var lvwItm = new ListViewItem { Text = systemparts[0] };
+                        for (var idx = 1; idx < systemparts.Length; idx++) lvwItm.SubItems.Add(systemparts[idx]);
                         lvwItm.ImageIndex = 2;
-                        lvwSystems.Items.Add(lvwItm);
+                        _lvwNetworkNodes.Items.Add(lvwItm);
                     }
                 }
+
                 UpdateSystemCount();
             }
             else
@@ -442,12 +436,12 @@ namespace poshsecframework
                 try
                 {
                     //Add Local IP/Host to Local Network
-                    lvwSystems.Items.Clear();
-                    String localHost = Dns.GetHostName();
-                    String[] localIPs = scnr.GetIP(localHost).Split(',');
-                    foreach (String localIP in localIPs)
+                    _lvwNetworkNodes.Items.Clear();
+                    var localHost = Dns.GetHostName();
+                    var localIPs = scnr.GetIP(localHost).Split(',');
+                    foreach (var localIP in localIPs)
                     {
-                        ListViewItem lvwItm = new ListViewItem();
+                        var lvwItm = new ListViewItem();
 
                         lvwItm.Text = localHost;
                         lvwItm.SubItems.Add(localIP);
@@ -459,8 +453,9 @@ namespace poshsecframework
                         lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                         lvwItm.ImageIndex = 2;
-                        lvwSystems.Items.Add(lvwItm);
+                        _lvwNetworkNodes.Items.Add(lvwItm);
                     }
+
                     tvwNetworks.Nodes[0].Expand();
                     UpdateSystemCount();
                 }
@@ -469,25 +464,22 @@ namespace poshsecframework
                     MessageBox.Show(e.Message + Environment.NewLine + e.StackTrace);
                 }
             }
-            
-            if (tvwNetworks.Nodes[0].Nodes.Count > 0)
-            {
-                tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
-            }
+
+            if (tvwNetworks.Nodes[0].Nodes.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
         }
 
         private void Scan()
         {
             if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Tag != null)
             {
-                SystemType typ = (SystemType)Enum.Parse(typeof(SystemType), tvwNetworks.SelectedNode.Tag.ToString());
+                NetworkType typ = (NetworkType)Enum.Parse(typeof(NetworkType), tvwNetworks.SelectedNode.Tag.ToString());
                 this.UseWaitCursor = true;
                 switch (typ)
                 {
-                    case SystemType.Local:
+                    case NetworkType.Local:
                         ScanbyIP();
                         break;
-                    case SystemType.Domain:
+                    case NetworkType.Domain:
                         ScanAD();
                         break;
                 }
@@ -513,7 +505,7 @@ namespace poshsecframework
         }
 
         private void ScanbyIP()
-        {            
+        {
             btnCancelScan.Enabled = true;
             scnr.ParentForm = this;
             cancelscan = false;
@@ -524,7 +516,7 @@ namespace poshsecframework
             thd.Start();
         }
 
-        private void scnr_ScanComplete(object sender, poshsecframework.Network.ScanEventArgs e)
+        private void scnr_ScanComplete(object sender, ScanEventArgs e)
         {
             if (this.InvokeRequired)
             {
@@ -539,34 +531,35 @@ namespace poshsecframework
                 ArrayList rslts = e.Systems;
                 if (rslts.Count > 0 && !cancelscan)
                 {
-                    lvwSystems.Items.Clear();
+                    _lvwNetworkNodes.Items.Clear();
                     SetProgress(0, rslts.Count);
-                    lvwSystems.BeginUpdate();
+                    _lvwNetworkNodes.BeginUpdate();
                     foreach (Object system in rslts)
                     {
                         if (system != null)
                         {
-                            if (system.GetType() == typeof(String))
+                            if (system is string)
                             {
                                 string sys = (string)system;
                                 if (sys != null && sys != "")
                                 {
                                     ListViewItem lvwItm = new ListViewItem();
                                     String[] ipinfo = system.ToString().Split('|');
+
+                                    var systemListViewItem = new NetworkNodeListViewItem(ipinfo[2])
+                                    {
+                                        IpAddress = ipinfo[1],
+                                        MacAddress = scnr.GetMac(ipinfo[1]),
+                                        Description = "",
+                                        Status = StringValue.Up,
+                                        ClientInstalled = StringValue.NotInstalled,
+                                        Alerts = 0,
+                                        LastScanned = DateTime.Now
+                                    };
+
                                     SetStatus("Adding " + ipinfo[2] + ", please wait...");
 
-                                    lvwItm.Text = ipinfo[2];
-                                    lvwItm.SubItems.Add(ipinfo[1]);
-                                    lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                                    lvwItm.SubItems.Add("");
-                                    lvwItm.SubItems.Add(StringValue.Up);
-                                    lvwItm.SubItems.Add(StringValue.NotInstalled);
-                                    lvwItm.SubItems.Add("0");
-                                    lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                                    lvwItm.ImageIndex = 2;
-                                    lvwSystems.Items.Add(lvwItm);
-                                    lvwSystems.Refresh();
+                                    _lvwNetworkNodes.Add(systemListViewItem);
 
                                     pbStatus.Value += 1;
                                 }
@@ -576,9 +569,9 @@ namespace poshsecframework
                                 DirectoryEntry sys = (DirectoryEntry)system;
                                 String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
                                 String[] ips = ipadr.Split(',');
-                                if(ips != null && ips.Length > 0)
+                                if (ips != null && ips.Length > 0)
                                 {
-                                    foreach(String ip in ips)
+                                    foreach (String ip in ips)
                                     {
                                         ListViewItem lvwItm = new ListViewItem();
                                         SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
@@ -606,20 +599,20 @@ namespace poshsecframework
                                         lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                                         lvwItm.ImageIndex = 2;
-                                        lvwSystems.Items.Add(lvwItm);
-                                        lvwSystems.Refresh();
+                                        _lvwNetworkNodes.Items.Add(lvwItm);
                                     }
                                 }
                                 pbStatus.Value += 1;
                             }
-                        }                        
+                            _lvwNetworkNodes.Refresh();
+                        }
                     }
-                    lvwSystems.EndUpdate();
+                    _lvwNetworkNodes.EndUpdate();
                 }
                 rslts = null;
-                lvwSystems.Sorting = SortOrder.Ascending;
-                lvwSystems.Sort();
-                SaveSystems();                
+                _lvwNetworkNodes.Sorting = SortOrder.Ascending;
+                _lvwNetworkNodes.Sort();
+                SaveSystems();
                 btnCancelScan.Enabled = false;
                 btnScan.Enabled = true;
                 mnuScan.Enabled = true;
@@ -627,19 +620,19 @@ namespace poshsecframework
                 HideProgress();
                 UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
-            }            
+            }
         }
 
         private void SaveSystems()
         {
-            if (lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
+            if (_lvwNetworkNodes.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
             {
                 if (Properties.Settings.Default.Systems == null)
                 {
                     Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
                 }
                 ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
-                foreach (ListViewItem lvw in lvwSystems.Items)
+                foreach (ListViewItem lvw in _lvwNetworkNodes.Items)
                 {
                     String system = "";
                     foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
@@ -702,7 +695,7 @@ namespace poshsecframework
                 btnScan.Enabled = true;
                 UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
-            }            
+            }
         }
 
         void scnr_ScanUpdate(object sender, Network.ScanEventArgs e)
@@ -755,7 +748,7 @@ namespace poshsecframework
                     {
                         lvw.SubItems[(int)ScheduleColumns.LastRun].Text = e.Schedule.LastRunTime;
                     }
-                }                
+                }
             }
         }
 
@@ -849,7 +842,7 @@ namespace poshsecframework
                         }
                     }
                     sched = null;
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -865,7 +858,7 @@ namespace poshsecframework
                 foreach (ListViewItem itm in lvwSchedule.Items)
                 {
                     if ((int)itm.Tag > idx)
-                    { 
+                    {
                         idx = (int)itm.Tag;
                     }
                 }
@@ -875,13 +868,13 @@ namespace poshsecframework
         }
 
         private String GetScheduleText(Utility.ScheduleTime schedtime)
-        { 
+        {
             String rtn = "";
             if (schedtime.StartDate != null && schedtime.StartDate.ToString() != "")
             {
                 rtn = "Starting " + schedtime.StartDate.ToString("MM/dd/yyyy") + " ";
             }
-            switch(schedtime.Frequency)
+            switch (schedtime.Frequency)
             {
                 case Enums.EnumValues.TimeFrequency.Daily:
                     rtn += schedtime.Frequency.ToString();
@@ -938,14 +931,18 @@ namespace poshsecframework
         {
             String rtn = "th";
             switch (day)
-            { 
-                case 1: case 21: case 31:
+            {
+                case 1:
+                case 21:
+                case 31:
                     rtn = "st";
                     break;
-                case 2: case 22:
+                case 2:
+                case 22:
                     rtn = "nd";
                     break;
-                case 3: case 23:
+                case 3:
+                case 23:
                     rtn = "rd";
                     break;
             }
@@ -957,7 +954,7 @@ namespace poshsecframework
             if (lvwActiveScripts.Items.Count == 0)
             {
                 schedule.Pause();
-                poshsecframework.Interface.frmSettings frm = new poshsecframework.Interface.frmSettings();
+                frmSettings frm = new frmSettings();
                 System.Windows.Forms.DialogResult rslt = frm.ShowDialog();
                 bool restart = frm.Restart;
                 frm.Dispose();
@@ -1030,7 +1027,7 @@ namespace poshsecframework
                 else
                 {
                     ps.Run(lvw.Text);
-                }                
+                }
                 ps = null;
             }
         }
@@ -1106,7 +1103,7 @@ namespace poshsecframework
                 {
                     pbStatus.Value = Value;
                 }
-            }            
+            }
         }
 
         public void HideProgress()
@@ -1122,7 +1119,7 @@ namespace poshsecframework
             else
             {
                 pbStatus.Visible = false;
-            }            
+            }
         }
         #endregion
 
@@ -1184,7 +1181,7 @@ namespace poshsecframework
                 if (!closing)
                 {
                     this.Invoke(del);
-                }                
+                }
             }
             else
             {
@@ -1210,7 +1207,7 @@ namespace poshsecframework
                 }
                 RemoveActiveScript(lvw);
                 LogOutput(Environment.NewLine + output + StringValue.psf);
-            }            
+            }
         }
 
         public void AddTabPage(TabPage NewTabPage)
@@ -1233,7 +1230,7 @@ namespace poshsecframework
                 {
                     DisplayError(e);
                 }
-            }            
+            }
         }
 
         public void AddAlert(String message, PShell.psmethods.PSAlert.AlertType alerttype, String scriptname)
@@ -1246,7 +1243,7 @@ namespace poshsecframework
                 };
                 this.Invoke(del);
             }
-            else 
+            else
             {
                 try
                 {
@@ -1260,7 +1257,7 @@ namespace poshsecframework
                     if (AlertFilterActive(alerttype))
                     {
                         lvwAlerts.Items.Add(lvwitm);
-                    }                    
+                    }
                     alerts.Add(lvwitm);
                     lvwAlerts_Update();
                     lvwitm.EnsureVisible();
@@ -1271,14 +1268,14 @@ namespace poshsecframework
                     {
                         if (slog != null)
                         {
-                            slog.SendMessage(alerttype, scriptname, message);    
+                            slog.SendMessage(alerttype, scriptname, message);
                         }
-                    }                    
+                    }
                 }
                 catch (Exception e)
                 {
                     DisplayError(e);
-                }                
+                }
             }
         }
 
@@ -1329,29 +1326,29 @@ namespace poshsecframework
         }
 
         public Collection<PSObject> GetCheckedHosts()
-        {            
+        {
             if (this.InvokeRequired)
             {
-                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>) delegate 
-                {
-                    return GetCheckedHosts();
-                });
+                return (Collection<PSObject>)this.Invoke((Func<Collection<PSObject>>)delegate
+               {
+                   return GetCheckedHosts();
+               });
             }
             else
             {
                 Collection<PSObject> hosts = new Collection<PSObject>();
-                ListView.CheckedListViewItemCollection lvwitms = lvwSystems.CheckedItems;
+                ListView.CheckedListViewItemCollection lvwitms = _lvwNetworkNodes.CheckedItems;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
-                        }                        
+                        }
                         hosts.Add(pobj);
                     }
                 }
@@ -1371,14 +1368,14 @@ namespace poshsecframework
             else
             {
                 Collection<PSObject> hosts = new Collection<PSObject>();
-                ListView.ListViewItemCollection lvwitms = lvwSystems.Items;
+                ListView.ListViewItemCollection lvwitms = _lvwNetworkNodes.Items;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
@@ -1402,14 +1399,14 @@ namespace poshsecframework
             else
             {
                 List<PSObject> hosts = new List<PSObject>();
-                ListView.ListViewItemCollection lvwitms = lvwSystems.Items;
+                ListView.ListViewItemCollection lvwitms = _lvwNetworkNodes.Items;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in lvwSystems.Columns)
+                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
@@ -1463,11 +1460,12 @@ namespace poshsecframework
                 if (cmd.Trim() != "")
                 {
                     cmdhist.Add(cmd);
-                }                
+                }
                 cmdhistidx = cmdhist.Count;
                 switch (cmd.ToUpper())
-                { 
-                    case StringValue.CLS: case StringValue.Clear:
+                {
+                    case StringValue.CLS:
+                    case StringValue.Clear:
                         txtPShellOutput.Text = StringValue.psf;
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
@@ -1477,7 +1475,7 @@ namespace poshsecframework
                         txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                         mincurpos = txtPShellOutput.Text.Length;
                         ShellOpenCommand("wuapp");
-                        break; 
+                        break;
                     case StringValue.Reload:
                         if (lvwActiveScripts.Items.Count == 0)
                         {
@@ -1485,7 +1483,7 @@ namespace poshsecframework
                             Initialize();
                             this.UseWaitCursor = false;
                         }
-                        else 
+                        else
                         {
                             txtPShellOutput.AppendText(Environment.NewLine + StringValue.ReloadScriptsRunning + Environment.NewLine);
                             txtPShellOutput.AppendText(Environment.NewLine + StringValue.psf);
@@ -1552,7 +1550,7 @@ namespace poshsecframework
         {
             lvwAlerts.Items.Clear();
             foreach (ListViewItem lvw in alerts)
-            {                
+            {
                 if (AlertFilterActive((PShell.psmethods.PSAlert.AlertType)lvw.ImageIndex))
                 {
                     lvwAlerts.Items.Add(lvw);
@@ -1607,81 +1605,64 @@ namespace poshsecframework
                 if (schedule.LastException != null)
                 {
                     MessageBox.Show("Error loading schedule: " + schedule.LastException.Message);
-                }                
-            }
-        }
-
-        private bool ValidNetwork(String networkname)
-        {
-            bool rtn = true;
-            int idx = 0;
-            TreeNode rootnode = tvwNetworks.Nodes[0];
-            while (idx < rootnode.Nodes.Count && rtn)
-            {
-                TreeNode node = rootnode.Nodes[idx];
-                if (node.Text == networkname)
-                {
-                    rtn = false;
                 }
-                idx++;
             }
-            return rtn;
         }
 
         private void CheckSettings()
         {
             //Ensure we have settings and that if it's .\ to change to application path.
-            String scrpath = poshsecframework.Properties.Settings.Default.ScriptPath;
-            String modpath = poshsecframework.Properties.Settings.Default.ModulePath;
-            String schpath = poshsecframework.Properties.Settings.Default.ScheduleFile;
-            String ghapikey = poshsecframework.Properties.Settings.Default.GithubAPIKey;
-            String outputlog = poshsecframework.Properties.Settings.Default.OutputLogFile;
-            String alertlog = poshsecframework.Properties.Settings.Default.AlertLogFile;
+            String scrpath = Settings.Default.ScriptPath;
+            String modpath = Settings.Default.ModulePath;
+            String schpath = Settings.Default.ScheduleFile;
+            String ghapikey = Settings.Default.GithubAPIKey;
+            String outputlog = Settings.Default.OutputLogFile;
+            String alertlog = Settings.Default.AlertLogFile;
             if (scrpath.StartsWith(".") || scrpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
+                Settings.Default["ScriptPath"] = Path.Combine(Application.StartupPath, scrpath).Replace("\\.\\", "\\");
             }
             if (modpath.StartsWith(".") || modpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
+                Settings.Default["ModulePath"] = Path.Combine(Application.StartupPath, modpath).Replace("\\.\\", "\\");
             }
             if (schpath.StartsWith(".") || modpath.Trim() == "")
             {
-                poshsecframework.Properties.Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
+                Settings.Default["ScheduleFile"] = Path.Combine(Application.StartupPath, schpath).Replace("\\.\\", "\\");
             }
             if (outputlog.StartsWith("."))
             {
-                poshsecframework.Properties.Settings.Default["OutputLogFile"] = Path.Combine(Application.StartupPath, outputlog).Replace("\\.\\", "\\");
+                Settings.Default["OutputLogFile"] = Path.Combine(Application.StartupPath, outputlog).Replace("\\.\\", "\\");
             }
             if (alertlog.StartsWith("."))
             {
-                poshsecframework.Properties.Settings.Default["AlertLogFile"] = Path.Combine(Application.StartupPath, alertlog).Replace("\\.\\", "\\");
+                Settings.Default["AlertLogFile"] = Path.Combine(Application.StartupPath, alertlog).Replace("\\.\\", "\\");
             }
-            if(ghapikey.Contains("\\"))
+            if (ghapikey.Contains("\\"))
             {
                 //Used to be Framework File path which is not needed.
                 ghapikey = "";
-                poshsecframework.Properties.Settings.Default["GithubAPIKey"] = "";
+                Settings.Default["GithubAPIKey"] = "";
             }
-            poshsecframework.Properties.Settings.Default.Save();
-            poshsecframework.Properties.Settings.Default.Reload();
+            Settings.Default.Save();
+            Settings.Default.Reload();
         }
 
         private void CheckPendingModules()
         {
             try
-            { 
+            {
                 if (File.Exists(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename)))
-                { 
+                {
                     StreamReader rdr = File.OpenText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
                     String filcontents = rdr.ReadToEnd();
                     rdr.Close();
-                    if(filcontents.Trim() != "")
+                    if (filcontents.Trim() != "")
                     {
                         String[] movetos = filcontents.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-                        if(movetos != null && movetos.Length > 0)
+                        if (movetos != null && movetos.Length > 0)
                         {
-                            foreach(String moveto in movetos)
+                            foreach (String moveto in movetos)
                             {
                                 if (moveto.Trim() != "")
                                 {
@@ -1698,7 +1679,7 @@ namespace poshsecframework
                                         di.MoveTo(target);
                                     }
                                     else
-                                    { 
+                                    {
                                         //Just delete the path listed.
                                         if (Directory.Exists(Path.Combine(Properties.Settings.Default.ModulePath, moveto)))
                                         {
@@ -1712,7 +1693,7 @@ namespace poshsecframework
                                             }
                                         }
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
@@ -1730,13 +1711,13 @@ namespace poshsecframework
             moduleFilterComboBox.Items.Clear();
             moduleFilterComboBox.Items.Add("All");
             enabledmods.Clear();
-            
+
             var modules = _commands.Select(pso => pso.BaseObject).OfType<CommandInfo>().Select(cmd => cmd.ModuleName).Distinct();
             foreach (var module in modules)
             {
                 moduleFilterComboBox.Items.Add(module);
             }
-            
+
             //string modpath = Properties.Settings.Default.ModulePath;
             //if (Directory.Exists(modpath))
             //{
@@ -1847,7 +1828,7 @@ namespace poshsecframework
                     DisplayError(new Exception(err));
                 }
                 ghc = null;
-            }            
+            }
         }
 
         private void LoadCommands(Collection<PSObject> commands)
@@ -1932,13 +1913,13 @@ namespace poshsecframework
                 lvwScripts.BeginUpdate();
                 lvwScripts.Items.Clear();
                 lvwScripts_SelectedIndexChanged(null, null);
-                String scriptroot = poshsecframework.Properties.Settings.Default["ScriptPath"].ToString();
+                String scriptroot = Settings.Default["ScriptPath"].ToString();
                 if (Directory.Exists(scriptroot))
                 {
                     AddLibraryItem(scriptroot);
                 }
                 else
-                { 
+                {
                     AddAlert(StringValue.ScriptPathError, PShell.psmethods.PSAlert.AlertType.Error, StringValue.psftitle);
                 }
                 lvwScripts.EndUpdate();
@@ -1970,7 +1951,7 @@ namespace poshsecframework
             if (folders != null && folders.Length > 0)
             {
                 foreach (String folder in folders)
-                { 
+                {
                     DirectoryInfo diri = new DirectoryInfo(folder);
                     AddLibraryItem(folder, diri.Name);
                     diri = null;
@@ -1990,7 +1971,7 @@ namespace poshsecframework
         #region " Update System Count "
         private void UpdateSystemCount()
         {
-            tslSystemCount.Text = lvwSystems.Items.Count.ToString() + " Systems";
+            tslSystemCount.Text = _lvwNetworkNodes.Items.Count.ToString() + " Systems";
         }
         #endregion
 
@@ -1999,7 +1980,7 @@ namespace poshsecframework
         #region Public Methods
 
         #region Interface
-        public System.Windows.Forms.DialogResult ShowParams(poshsecframework.PShell.psparamtype parm)
+        public System.Windows.Forms.DialogResult ShowParams(psparamtype parm)
         {
             if (this.InvokeRequired)
             {
@@ -2028,7 +2009,7 @@ namespace poshsecframework
         {
             Close();
         }
-        
+
         private void mnuScan_Click(object sender, EventArgs e)
         {
             Scan();
@@ -2084,17 +2065,17 @@ namespace poshsecframework
                     {
                         if (lvw.Tag != null)
                         {
-                            if(schedule.ScheduleItems.Count > idx) 
+                            if (schedule.ScheduleItems.Count > idx)
                             {
                                 if ((int)lvw.Tag == schedule.ScheduleItems[idx].Index)
                                 {
                                     sched = schedule.ScheduleItems[idx];
                                     found = true;
                                 }
-                            }                            
+                            }
                         }
                         idx++;
-                    } while (idx < lvwSchedule.Items.Count && !found);                                        
+                    } while (idx < lvwSchedule.Items.Count && !found);
                     if (sched != null)
                     {
                         sched.LastRunTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
@@ -2115,7 +2096,7 @@ namespace poshsecframework
 
         private void lvwScripts_DoubleClick(object sender, EventArgs e)
         {
-            switch (poshsecframework.Properties.Settings.Default.ScriptDefaultAction)
+            switch (Settings.Default.ScriptDefaultAction)
             {
                 case 0:
                     RunScript();
@@ -2144,7 +2125,7 @@ namespace poshsecframework
                 lvwSorter.SortColumn = e.Column;
                 lvwSorter.Order = SortOrder.Ascending;
             }
-            lvwSystems.Sort();
+            _lvwNetworkNodes.Sort();
         }
 
         private void lvwCommands_DoubleClick(object sender, EventArgs e)
@@ -2162,7 +2143,7 @@ namespace poshsecframework
                 mincurpos = txtPShellOutput.Text.Length;
                 txtPShellOutput.SelectionStart = mincurpos;
                 tcMain.SelectedTab = tbpPowerShell;
-            } 
+            }
         }
 
         private void lvwScripts_SelectedIndexChanged(object sender, EventArgs e)
@@ -2190,7 +2171,8 @@ namespace poshsecframework
         }
         #endregion
 
-        #region TreeNode
+        #region Networks
+
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Node.Parent != null && e.Node.Text != StringValue.LocalNetwork)
@@ -2202,6 +2184,32 @@ namespace poshsecframework
                 btnRemoveNetwork.Enabled = false;
             }
         }
+
+        private void btnAddNetwork_Click(object sender, EventArgs e)
+        {
+            using (var frm = new frmAddNetwork())
+            {
+                if (frm.ShowDialog() != DialogResult.OK) return;
+                var networkName = frm.NetworkName;
+                if (tvwNetworks.IsValid(networkName))
+                    tvwNetworks.Add(networkName, NetworkType.Domain);
+                else
+                    MessageBox.Show(StringValue.InvalidNetworkName);
+            }
+        }
+
+        private void btnRemoveNetwork_Click(object sender, EventArgs e)
+        {
+            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Parent != null)
+            {
+                if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    tvwNetworks.SelectedNode.Remove();
+                }
+            }
+
+        }
+
         #endregion
 
         #region TextBox
@@ -2230,18 +2238,18 @@ namespace poshsecframework
                     {
                         e.Handled = true;
                         e.SuppressKeyPress = true;
-                        txtPShellOutput.SelectionStart = mincurpos;                    
+                        txtPShellOutput.SelectionStart = mincurpos;
                     }
                     break;
                 case Keys.Home:
                     e.Handled = true;
-                    e.SuppressKeyPress = true;                   
+                    e.SuppressKeyPress = true;
                     txtPShellOutput.SelectionStart = mincurpos;
                     txtPShellOutput.ScrollToCaret();
                     break;
                 case Keys.End:
                     e.Handled = true;
-                    e.SuppressKeyPress = true;                   
+                    e.SuppressKeyPress = true;
                     txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
                     txtPShellOutput.ScrollToCaret();
                     break;
@@ -2251,7 +2259,7 @@ namespace poshsecframework
                     if (!txtPShellOutput.ReadOnly)
                     {
                         String cmd = txtPShellOutput.Text.Substring(mincurpos, txtPShellOutput.Text.Length - mincurpos);
-                        
+
                         LogOutput(cmd);
                         if (cmd.Trim() != "")
                         {
@@ -2263,11 +2271,12 @@ namespace poshsecframework
                         }
                     }
                     break;
-                case Keys.ControlKey: case Keys.Alt:
+                case Keys.ControlKey:
+                case Keys.Alt:
                     e.SuppressKeyPress = false;
                     e.Handled = false;
                     break;
-                case Keys.Up:                    
+                case Keys.Up:
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     if (cmdhist != null && cmdhist.Count > 0)
@@ -2285,16 +2294,16 @@ namespace poshsecframework
                     e.Handled = true;
                     e.SuppressKeyPress = true;
                     if (cmdhist != null && cmdhist.Count > 0)
-                    {                       
+                    {
                         if (cmdhistidx >= 0 && cmdhistidx < cmdhist.Count - 1)
                         {
                             cmdhistidx += 1;
                             txtPShellOutput.Text = txtPShellOutput.Text.Substring(0, mincurpos);
                             txtPShellOutput.AppendText(cmdhist[cmdhistidx]);
                             txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
-                            
+
                         }
-                        else 
+                        else
                         {
                             txtPShellOutput.Text = txtPShellOutput.Text.Substring(0, mincurpos);
                             txtPShellOutput.SelectionStart = txtPShellOutput.Text.Length;
@@ -2302,7 +2311,10 @@ namespace poshsecframework
                         }
                     }
                     break;
-                case Keys.L: case Keys.C: case Keys.X: case Keys.V:
+                case Keys.L:
+                case Keys.C:
+                case Keys.X:
+                case Keys.V:
                     if (e.Control)
                     {
                         switch (e.KeyCode)
@@ -2351,6 +2363,7 @@ namespace poshsecframework
         #endregion
 
         #region Button Clicks
+
         private void btnAlert_Information_CheckedChanged(object sender, EventArgs e)
         {
             Utility.AlertFilter.Informational = btnAlert_Information.Checked;
@@ -2505,8 +2518,8 @@ namespace poshsecframework
         {
             string messages = "";
             if (lvwAlerts.SelectedItems.Count > 0)
-            { 
-                foreach(ListViewItem lvw in lvwAlerts.SelectedItems)
+            {
+                foreach (ListViewItem lvw in lvwAlerts.SelectedItems)
                 {
                     messages += lvw.SubItems[1].Text + Environment.NewLine;
                 }
@@ -2567,7 +2580,7 @@ namespace poshsecframework
                     lvwAlerts_Update();
                 }
             }
-            
+
         }
 
         private void btnScan_Click(object sender, EventArgs e)
@@ -2582,7 +2595,7 @@ namespace poshsecframework
 
         private void btnRefreshNetworks_Click(object sender, EventArgs e)
         {
-            GetNetworks();
+            LoadNetworks();
         }
 
         private void btnRefreshScripts_Click(object sender, EventArgs e)
@@ -2622,42 +2635,34 @@ namespace poshsecframework
 
         private void btnAddSystem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(StringValue.NotImplemented);           
-        }
-
-        private void btnAddNetwork_Click(object sender, EventArgs e)
-        {
-            Interface.frmAddNetwork frm = new Interface.frmAddNetwork();
-            if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (var frm = new SystemForm())
             {
-                if (ValidNetwork(frm.NetworkName))
+                if (frm.ShowDialog() != DialogResult.OK) return;
+                var systemName = frm.SystemName;
+
+                if (_lvwNetworkNodes.IsValid(systemName))
                 {
-                    TreeNode node = new TreeNode();
-                    node.Text = frm.NetworkName;
-                    node.SelectedImageIndex = 3;
-                    node.ImageIndex = 3;
-                    node.Tag = SystemType.Domain;
-                    tvwNetworks.Nodes[0].Nodes.Add(node);
+                    var ipAddress = frm.IpAddress;
+                    var description = frm.Description;
+                    var status = "Unknown";
+                    if (IPAddress.TryParse(ipAddress, out var ip))
+                    {
+                        var ping = new Ping();
+                        var reply = ping.Send(ip);
+                        if (reply?.Status == IPStatus.Success)
+                            status = StringValue.Up;
+                    }
+                    _lvwNetworkNodes.Add(new NetworkNodeListViewItem(systemName)
+                    {
+                        IpAddress = ipAddress,
+                        MacAddress = scnr.GetMac(ipAddress),
+                        Status = status,
+                        Description = description
+                    });
                 }
                 else
-                {
-                    MessageBox.Show(StringValue.InvalidNetworkName);
-                }
+                    MessageBox.Show(StringValue.InvalidSystemName);
             }
-            frm.Dispose();
-            frm = null;
-        }
-
-        private void btnRemoveNetwork_Click(object sender, EventArgs e)
-        {
-            if (tvwNetworks.SelectedNode != null && tvwNetworks.SelectedNode.Parent != null)
-            {
-                if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    tvwNetworks.SelectedNode.Remove();
-                }
-            }
-            
         }
 
         private void btnLaunchPShellCmd_Click(object sender, EventArgs e)
@@ -2730,7 +2735,7 @@ namespace poshsecframework
             if (lvwScripts.SelectedItems.Count > 0)
             {
                 ListViewItem lvw = lvwScripts.SelectedItems[0];
-                String ghcmd = StringValue.GetHelpFull.Replace("{0}","\"" + lvw.Tag + "\"");
+                String ghcmd = StringValue.GetHelpFull.Replace("{0}", "\"" + lvw.Tag + "\"");
                 txtPShellOutput.AppendText(ghcmd + Environment.NewLine);
                 txtPShellOutput.ReadOnly = true;
                 psf.Run(ghcmd, true, false, true);
@@ -2740,17 +2745,17 @@ namespace poshsecframework
 
         private void btnRemoveSystem_Click(object sender, EventArgs e)
         {
-            if (lvwSystems.SelectedItems.Count > 0)
+            if (_lvwNetworkNodes.SelectedItems.Count > 0)
             {
                 if (MessageBox.Show(StringValue.ConfirmRemoveSystem, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    lvwSystems.BeginUpdate();
-                    while (lvwSystems.SelectedItems.Count > 0)
+                    _lvwNetworkNodes.BeginUpdate();
+                    while (_lvwNetworkNodes.SelectedItems.Count > 0)
                     {
-                        ListViewItem lvw = lvwSystems.SelectedItems[0];
-                        lvwSystems.Items.Remove(lvw);
+                        ListViewItem lvw = _lvwNetworkNodes.SelectedItems[0];
+                        _lvwNetworkNodes.Items.Remove(lvw);
                     }
-                    lvwSystems.EndUpdate();
+                    _lvwNetworkNodes.EndUpdate();
                     SaveSystems();
                     UpdateSystemCount();
                 }
@@ -2765,7 +2770,7 @@ namespace poshsecframework
             {
                 LoadCommands(_commands);
             }
-            
+
         }
         #endregion
 
@@ -2823,7 +2828,7 @@ namespace poshsecframework
         {
             get { return cancelscan; }
         }
-        #endregion        
-        
+        #endregion
+
     }
 }

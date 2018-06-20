@@ -8,9 +8,10 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class pscript
     {
@@ -285,8 +286,8 @@ namespace poshsecframework.PShell
             cancel = false;
             results.Clear();
             InitializeSessionVars();
-            PSAlert.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
-            PSTab.ScriptName = scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, "");
+            PSAlert.ScriptName = scriptcommand.Replace(Settings.Default.ScriptPath, "");
+            PSTab.ScriptName = scriptcommand.Replace(Settings.Default.ScriptPath, "");
             Pipeline pline = null;
             bool cancelled = false;
             try
@@ -325,7 +326,7 @@ namespace poshsecframework.PShell
                     }
                     else
                     {
-                        results.AppendLine("Running script: " + scriptcommand.Replace(poshsecframework.Properties.Settings.Default.ScriptPath, ""));
+                        results.AppendLine("Running script: " + scriptcommand.Replace(Settings.Default.ScriptPath, ""));
                         pline.Commands.Add(pscmd);
                     }
                     Collection<PSObject> rslt = null;

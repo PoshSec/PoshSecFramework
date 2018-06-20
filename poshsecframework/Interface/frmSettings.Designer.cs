@@ -1,4 +1,4 @@
-﻿namespace poshsecframework.Interface
+﻿namespace PoshSec.Framework.Interface
 {
     partial class frmSettings
     {
@@ -109,7 +109,7 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.tabProxy = new System.Windows.Forms.TabPage();
-            this.proxyPreferenceGroupBox1 = new poshsecframework.Interface.ProxyPreferenceGroupBox();
+            this.proxyPreferenceGroupBox1 = new ProxyPreferenceGroupBox();
             this.radNoProxy = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
             this.radSystemProxy = new System.Windows.Forms.RadioButton();
@@ -233,7 +233,7 @@
             this.ckShowinTaskbar.Checked = true;
             this.ckShowinTaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckShowinTaskbar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ckShowinTaskbar.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckShowinTaskbar.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.ckShowinTaskbar.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckShowinTaskbar.Location = new System.Drawing.Point(118, 0);
             this.ckShowinTaskbar.Name = "ckShowinTaskbar";
@@ -271,7 +271,7 @@
             this.ckSaveSystems.Checked = true;
             this.ckSaveSystems.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckSaveSystems.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ckSaveSystems.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckSaveSystems.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.ckSaveSystems.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckSaveSystems.Location = new System.Drawing.Point(118, 0);
             this.ckSaveSystems.Name = "ckSaveSystems";
@@ -311,7 +311,7 @@
             this.ckNameCheck.Checked = true;
             this.ckNameCheck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckNameCheck.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ckNameCheck.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckNameCheck.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.ckNameCheck.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckNameCheck.Location = new System.Drawing.Point(118, 0);
             this.ckNameCheck.Margin = new System.Windows.Forms.Padding(0);
@@ -426,7 +426,7 @@
             // btnGithubHelp
             // 
             this.btnGithubHelp.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnGithubHelp.Image = global::poshsecframework.Properties.Resources.help;
+            this.btnGithubHelp.Image = global::PoshSec.Framework.Properties.Resources.help;
             this.btnGithubHelp.Location = new System.Drawing.Point(491, 0);
             this.btnGithubHelp.Name = "btnGithubHelp";
             this.btnGithubHelp.Size = new System.Drawing.Size(26, 26);
@@ -467,7 +467,7 @@
             // btnBrowsePSExec
             // 
             this.btnBrowsePSExec.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowsePSExec.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowsePSExec.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowsePSExec.Location = new System.Drawing.Point(491, 0);
             this.btnBrowsePSExec.Name = "btnBrowsePSExec";
             this.btnBrowsePSExec.Size = new System.Drawing.Size(26, 26);
@@ -507,7 +507,7 @@
             // btnBrowseSchFile
             // 
             this.btnBrowseSchFile.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseSchFile.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseSchFile.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowseSchFile.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseSchFile.Name = "btnBrowseSchFile";
             this.btnBrowseSchFile.Size = new System.Drawing.Size(26, 26);
@@ -547,7 +547,7 @@
             // btnBrowseModule
             // 
             this.btnBrowseModule.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseModule.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseModule.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowseModule.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseModule.Name = "btnBrowseModule";
             this.btnBrowseModule.Size = new System.Drawing.Size(26, 26);
@@ -587,7 +587,7 @@
             // btnBrowseScript
             // 
             this.btnBrowseScript.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseScript.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseScript.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowseScript.Location = new System.Drawing.Point(491, 0);
             this.btnBrowseScript.Name = "btnBrowseScript";
             this.btnBrowseScript.Size = new System.Drawing.Size(26, 26);
@@ -738,7 +738,7 @@
             // btnBrowseAlertLog
             // 
             this.btnBrowseAlertLog.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseAlertLog.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseAlertLog.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowseAlertLog.Location = new System.Drawing.Point(444, 0);
             this.btnBrowseAlertLog.Name = "btnBrowseAlertLog";
             this.btnBrowseAlertLog.Size = new System.Drawing.Size(26, 26);
@@ -762,7 +762,7 @@
             this.ckAlertLog.Checked = true;
             this.ckAlertLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckAlertLog.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ckAlertLog.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckAlertLog.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.ckAlertLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckAlertLog.Location = new System.Drawing.Point(470, 0);
             this.ckAlertLog.Name = "ckAlertLog";
@@ -796,7 +796,7 @@
             // btnBrowseOutputLog
             // 
             this.btnBrowseOutputLog.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnBrowseOutputLog.Image = global::poshsecframework.Properties.Resources.documentopenfolder;
+            this.btnBrowseOutputLog.Image = global::PoshSec.Framework.Properties.Resources.documentopenfolder;
             this.btnBrowseOutputLog.Location = new System.Drawing.Point(444, 0);
             this.btnBrowseOutputLog.Name = "btnBrowseOutputLog";
             this.btnBrowseOutputLog.Size = new System.Drawing.Size(26, 26);
@@ -820,7 +820,7 @@
             this.ckOutputLog.Checked = true;
             this.ckOutputLog.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ckOutputLog.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ckOutputLog.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.ckOutputLog.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.ckOutputLog.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ckOutputLog.Location = new System.Drawing.Point(470, 0);
             this.ckOutputLog.Name = "ckOutputLog";
@@ -910,7 +910,7 @@
             // btnAddModule
             // 
             this.btnAddModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnAddModule.Image = global::poshsecframework.Properties.Resources.pagewhiteadd;
+            this.btnAddModule.Image = global::PoshSec.Framework.Properties.Resources.pagewhiteadd;
             this.btnAddModule.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnAddModule.Name = "btnAddModule";
             this.btnAddModule.Size = new System.Drawing.Size(23, 22);
@@ -942,7 +942,7 @@
             // 
             this.btnEditModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnEditModule.Enabled = false;
-            this.btnEditModule.Image = global::poshsecframework.Properties.Resources.pagewhiteedit;
+            this.btnEditModule.Image = global::PoshSec.Framework.Properties.Resources.pagewhiteedit;
             this.btnEditModule.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnEditModule.Name = "btnEditModule";
             this.btnEditModule.Size = new System.Drawing.Size(23, 22);
@@ -953,7 +953,7 @@
             // 
             this.btnDeleteModule.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnDeleteModule.Enabled = false;
-            this.btnDeleteModule.Image = global::poshsecframework.Properties.Resources.pagewhitedelete;
+            this.btnDeleteModule.Image = global::PoshSec.Framework.Properties.Resources.pagewhitedelete;
             this.btnDeleteModule.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnDeleteModule.Name = "btnDeleteModule";
             this.btnDeleteModule.Size = new System.Drawing.Size(23, 22);
@@ -964,7 +964,7 @@
             // 
             this.btnCheckUpdates.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnCheckUpdates.Enabled = false;
-            this.btnCheckUpdates.Image = global::poshsecframework.Properties.Resources.pagewhiteget;
+            this.btnCheckUpdates.Image = global::PoshSec.Framework.Properties.Resources.pagewhiteget;
             this.btnCheckUpdates.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCheckUpdates.Name = "btnCheckUpdates";
             this.btnCheckUpdates.Size = new System.Drawing.Size(23, 22);
@@ -985,7 +985,7 @@
             // 
             // toolStripButton1
             // 
-            this.toolStripButton1.Image = global::poshsecframework.Properties.Resources.dialogyes;
+            this.toolStripButton1.Image = global::PoshSec.Framework.Properties.Resources.dialogyes;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(43, 22);
@@ -1013,7 +1013,7 @@
             this.proxyPreferenceGroupBox1.Controls.Add(this.txbProxyHost);
             this.proxyPreferenceGroupBox1.Location = new System.Drawing.Point(8, 6);
             this.proxyPreferenceGroupBox1.Name = "proxyPreferenceGroupBox1";
-            this.proxyPreferenceGroupBox1.Selected = poshsecframework.ProxyPreference.None;
+            this.proxyPreferenceGroupBox1.Selected = ProxyPreference.None;
             this.proxyPreferenceGroupBox1.Size = new System.Drawing.Size(347, 139);
             this.proxyPreferenceGroupBox1.TabIndex = 0;
             this.proxyPreferenceGroupBox1.TabStop = false;
@@ -1055,12 +1055,12 @@
             // 
             // txbProxyPort
             // 
-            this.txbProxyPort.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::poshsecframework.Properties.Settings.Default, "ProxyPort", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txbProxyPort.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::PoshSec.Framework.Properties.Settings.Default, "ProxyPort", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txbProxyPort.Location = new System.Drawing.Point(254, 97);
             this.txbProxyPort.Name = "txbProxyPort";
             this.txbProxyPort.Size = new System.Drawing.Size(62, 21);
             this.txbProxyPort.TabIndex = 6;
-            this.txbProxyPort.Text = global::poshsecframework.Properties.Settings.Default.ProxyHost;
+            this.txbProxyPort.Text = global::PoshSec.Framework.Properties.Settings.Default.ProxyHost;
             // 
             // radManualProxy
             // 
@@ -1085,12 +1085,12 @@
             // 
             // txbProxyHost
             // 
-            this.txbProxyHost.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::poshsecframework.Properties.Settings.Default, "ProxyHost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txbProxyHost.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::PoshSec.Framework.Properties.Settings.Default, "ProxyHost", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.txbProxyHost.Location = new System.Drawing.Point(95, 97);
             this.txbProxyHost.Name = "txbProxyHost";
             this.txbProxyHost.Size = new System.Drawing.Size(100, 21);
             this.txbProxyHost.TabIndex = 4;
-            this.txbProxyHost.Text = global::poshsecframework.Properties.Settings.Default.ProxyHost;
+            this.txbProxyHost.Text = global::PoshSec.Framework.Properties.Settings.Default.ProxyHost;
             // 
             // ttPSFHelp
             // 

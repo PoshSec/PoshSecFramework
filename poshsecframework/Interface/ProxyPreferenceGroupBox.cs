@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public class ProxyPreferenceGroupBox : GroupBox
     {

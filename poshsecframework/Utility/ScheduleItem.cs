@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using poshsecframework.Enums;
-using poshsecframework.PShell;
+using PoshSec.Framework.Enums;
+using PoshSec.Framework.PShell;
 
-namespace poshsecframework.Utility
+namespace PoshSec.Framework.Utility
 {
     public class ScheduleItem
     {
