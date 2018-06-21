@@ -461,7 +461,7 @@ namespace PoshSec.Framework
                 }
             }
 
-            if (tvwNetworks.Nodes[0].Nodes.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
+            if (tvwNetworks.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
         }
 
         private void Scan()
@@ -2171,6 +2171,8 @@ namespace PoshSec.Framework
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
             btnRemoveNetwork.Enabled = e.Node != tvwNetworks.Nodes[0] & !(e.Node is LocalNetworkTreeNode);
+
+            // TODO: Refresh systems (NetworkNodes)
         }
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
@@ -2179,7 +2181,7 @@ namespace PoshSec.Framework
             {
                 if (frm.ShowDialog() != DialogResult.OK) return;
                 var name = frm.NetworkName;
-                if (tvwNetworks.IsValid(name))
+                if (_networks.IsValid(name))
                 {
                     tvwNetworks.Add(name, NetworkType.Domain);
                     _networks.Add(new DomainNetwork(name));
