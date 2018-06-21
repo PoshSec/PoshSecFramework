@@ -1,5 +1,7 @@
 ﻿using System;
+using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Forms;
+using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
@@ -32,6 +34,23 @@ namespace PoshSec.Framework
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        public void Load(Networks networks)
+        {
+            Nodes[0].Nodes.Clear();
+            foreach (var network in networks)
+            {
+                switch (network)
+                {
+                    case LocalNetwork _:
+                        Add(network.Name, NetworkType.Local);
+                        break;
+                    case DomainNetwork _:
+                        Add(network.Name, NetworkType.Domain);
+                        break;
+                }
             }
         }
     }

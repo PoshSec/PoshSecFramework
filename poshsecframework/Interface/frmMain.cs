@@ -384,10 +384,10 @@ namespace PoshSec.Framework
 
         private void LoadNetworks()
         {
-            tvwNetworks.Nodes[0].Nodes.Clear();
-            _networks.Clear();
-            tvwNetworks.Add(StringValue.LocalNetwork, NetworkType.Local);
+            _networks.Clear();            
             _networks.Add(new LocalNetwork());
+
+            //Add(StringValue.LocalNetwork, NetworkType.Local);
 
             try
             {
@@ -397,9 +397,9 @@ namespace PoshSec.Framework
 
                 foreach (Domain domain in domains)
                 {
-                    var node = new DomainNetworkTreeNode(domain.Name);
-                    var rootnode = tvwNetworks.Nodes[0];
-                    rootnode.Nodes.Add(node);
+                    //var node = new DomainNetworkTreeNode(domain.Name);
+                    //var rootnode = tvwNetworks.Nodes[0];
+                    //rootnode.Nodes.Add(node);
                     _networks.Add(new DomainNetwork(domain.Name));
                 }
             }
@@ -408,6 +408,9 @@ namespace PoshSec.Framework
                 //fail silently because it's not on A/D   
             }
 
+            tvwNetworks.Load(_networks);
+
+            // TODO: load nodes of the currently selected Network
             if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
             {
                 _lvwNetworkNodes.Items.Clear();
@@ -435,9 +438,8 @@ namespace PoshSec.Framework
                     var localIPs = _scnr.GetIP(localHost).Split(',');
                     foreach (var localIP in localIPs)
                     {
-                        var lvwItm = new ListViewItem();
-
-                        lvwItm.Text = localHost;
+                        // TODO: Replace with strongly typed NetworkNodeListViewItem
+                        var lvwItm = new ListViewItem {Text = localHost};
                         lvwItm.SubItems.Add(localIP);
                         lvwItm.SubItems.Add(_scnr.GetMyMac(localIP));
                         lvwItm.SubItems.Add("");
