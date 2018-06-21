@@ -177,12 +177,16 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Strings\StringValue.cs" />
+    <Compile Include="Systems\DomainNetwork.cs" />
     <Compile Include="Systems\INetworkNode.cs" />
+    <Compile Include="Systems\LocalNetwork.cs" />
+    <Compile Include="Systems\Network.cs" />
     <Compile Include="Systems\NetworkNode.cs" />
     <Compile Include="Systems\NetworkNodeListView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Systems\NetworkNodeListViewItem.cs" />
+    <Compile Include="Systems\Networks.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />

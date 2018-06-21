@@ -27,7 +27,7 @@ namespace PoshSec.Framework
     public partial class frmMain : Form
     {
         private Collection<PSObject> _commands;
-        private List<string> _networks;
+        private Networks _networks = new Networks();
 
         private readonly NetworkBrowser _scnr = new NetworkBrowser();
         private frmStartup _spashScreen;
@@ -384,7 +384,9 @@ namespace PoshSec.Framework
         private void LoadNetworks()
         {
             tvwNetworks.Nodes[0].Nodes.Clear();
+            _networks.Clear();
             tvwNetworks.Add(StringValue.LocalNetwork, NetworkType.Local);
+            _networks.Add(new LocalNetwork());
 
             try
             {
@@ -394,15 +396,10 @@ namespace PoshSec.Framework
 
                 foreach (Domain domain in domains)
                 {
-                    var node = new TreeNode
-                    {
-                        Text = domain.Name,
-                        SelectedImageIndex = 3,
-                        ImageIndex = 3,
-                        Tag = NetworkType.Domain
-                    };
+                    var node = new DomainNetworkTreeNode(domain.Name);
                     var rootnode = tvwNetworks.Nodes[0];
                     rootnode.Nodes.Add(node);
+                    _networks.Add(new DomainNetwork(domain.Name));
                 }
             }
             catch
@@ -466,10 +463,10 @@ namespace PoshSec.Framework
 
         private void Scan()
         {
-            if (tvwNetworks.SelectedNode?.Tag is NetworkType)
+            if (tvwNetworks.SelectedNode?.Tag is NetworkType type)
             {
                 this.UseWaitCursor = true;
-                switch ((NetworkType) tvwNetworks.SelectedNode.Tag)
+                switch (type)
                 {
                     case NetworkType.Local:
                         ScanbyIP();
@@ -490,11 +487,11 @@ namespace PoshSec.Framework
             btnCancelScan.Enabled = true;
             _scnr.ParentForm = this;
             _cancelscan = false;
-            this.UseWaitCursor = true;
+            UseWaitCursor = true;
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
-            String domain = tvwNetworks.SelectedNode.Text;
-            Thread thd = new Thread(_scnr.ScanActiveDirectory);
+            var domain = tvwNetworks.SelectedNode.Text;
+            var thd = new Thread(_scnr.ScanActiveDirectory);
             _scnr.Domain = domain;
             thd.Start();
         }
@@ -2170,14 +2167,7 @@ namespace PoshSec.Framework
 
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Parent != null && e.Node.Text != StringValue.LocalNetwork)
-            {
-                btnRemoveNetwork.Enabled = true;
-            }
-            else
-            {
-                btnRemoveNetwork.Enabled = false;
-            }
+            btnRemoveNetwork.Enabled = e.Node != tvwNetworks.Nodes[0] & !(e.Node is LocalNetworkTreeNode);
         }
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
@@ -2185,9 +2175,12 @@ namespace PoshSec.Framework
             using (var frm = new frmAddNetwork())
             {
                 if (frm.ShowDialog() != DialogResult.OK) return;
-                var networkName = frm.NetworkName;
-                if (tvwNetworks.IsValid(networkName))
-                    tvwNetworks.Add(networkName, NetworkType.Domain);
+                var name = frm.NetworkName;
+                if (tvwNetworks.IsValid(name))
+                {
+                    tvwNetworks.Add(name, NetworkType.Domain);
+                    _networks.Add(new DomainNetwork(name));
+                }
                 else
                     MessageBox.Show(StringValue.InvalidNetworkName);
             }
@@ -2200,6 +2193,8 @@ namespace PoshSec.Framework
                 if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
                     tvwNetworks.SelectedNode.Remove();
+                    var name = tvwNetworks.SelectedNode.Name;
+                    _networks.Remove(_networks.SingleOrDefault(n => n.Name == name));
                 }
             }
 
