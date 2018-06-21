@@ -2183,8 +2183,8 @@ namespace PoshSec.Framework
                 var name = frm.NetworkName;
                 if (_networks.IsValid(name))
                 {
-                    tvwNetworks.Add(name, NetworkType.Domain);
                     _networks.Add(new DomainNetwork(name));
+                    tvwNetworks.Load(_networks);
                 }
                 else
                     MessageBox.Show(StringValue.InvalidNetworkName);
@@ -2197,9 +2197,9 @@ namespace PoshSec.Framework
             {
                 if (MessageBox.Show(StringValue.ConfirmNetworkDelete, "Confirm Delete", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    tvwNetworks.SelectedNode.Remove();
                     var name = tvwNetworks.SelectedNode.Name;
                     _networks.Remove(_networks.SingleOrDefault(n => n.Name == name));
+                    tvwNetworks.Load(_networks);
                 }
             }
         }

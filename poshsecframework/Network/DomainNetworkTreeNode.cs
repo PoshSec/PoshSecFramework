@@ -4,11 +4,9 @@ namespace PoshSec.Framework
 {
     public class DomainNetworkTreeNode : TreeNode
     {
-        public DomainNetworkTreeNode(string name)
+        public DomainNetworkTreeNode(string name) : base(name, 3, 3)
         {
-            Text = name;
-            SelectedImageIndex = 3;
-            ImageIndex = 3;
+            Name = name;
             Tag = NetworkType.Domain;
         }
     }

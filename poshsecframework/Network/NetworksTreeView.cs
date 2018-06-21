@@ -7,36 +7,29 @@ namespace PoshSec.Framework
 {
     public class NetworksTreeView : TreeView
     {
-        public void Add(string name, NetworkType type)
+        private void Add(TreeNode network)
         {
-            switch (type)
-            {
-                case NetworkType.Local:
-                    Nodes[0].Nodes.Add(new LocalNetworkTreeNode(name));
-                    break;
-                case NetworkType.Domain:
-                    Nodes[0].Nodes.Add(new DomainNetworkTreeNode(name));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            Nodes[0].Nodes.Add(network);
         }
 
         public void Load(Networks networks)
         {
+            SuspendLayout();
             Nodes[0].Nodes.Clear();
             foreach (var network in networks)
             {
+                var name = network.Name;
                 switch (network)
                 {
                     case LocalNetwork _:
-                        Add(network.Name, NetworkType.Local);
+                        Add(new LocalNetworkTreeNode(name));
                         break;
                     case DomainNetwork _:
-                        Add(network.Name, NetworkType.Domain);
+                        Add(new DomainNetworkTreeNode(name));
                         break;
                 }
             }
+            ResumeLayout(true);
         }
 
         public int Count => Nodes[0].Nodes.Count;
