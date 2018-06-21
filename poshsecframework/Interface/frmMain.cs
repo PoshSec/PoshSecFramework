@@ -27,7 +27,7 @@ namespace PoshSec.Framework
     public partial class frmMain : Form
     {
         private Collection<PSObject> _commands;
-        private Networks _networks = new Networks();
+        private readonly Networks _networks = new Networks();
 
         private readonly NetworkBrowser _scnr = new NetworkBrowser();
         private frmStartup _spashScreen;
@@ -72,6 +72,7 @@ namespace PoshSec.Framework
         public frmMain()
         {
             InitializeComponent();
+
             _lvwNetworkNodes.ListViewItemSorter = _lvwSorter;
             this.Enabled = false;
             if (IsRootDrive())
@@ -2197,7 +2198,6 @@ namespace PoshSec.Framework
                     _networks.Remove(_networks.SingleOrDefault(n => n.Name == name));
                 }
             }
-
         }
 
         #endregion
