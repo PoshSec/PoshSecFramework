@@ -513,7 +513,7 @@ namespace PoshSec.Framework
             thd.Start();
         }
 
-        private void scnr_ScanComplete(object sender, ScanEventArgs e)
+        private void scnr_ScanComplete(object sender, NetworkScanCompleteEventArgs e)
         {
             if (this.InvokeRequired)
             {
@@ -700,15 +700,15 @@ namespace PoshSec.Framework
             }
         }
 
-        void scnr_ScanUpdate(object sender, ScanEventArgs e)
+        void scnr_ScanUpdate(object sender, ScanStatusEventArgs e)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
                     scnr_ScanUpdate(sender, e);
                 };
-                this.Invoke(del);
+                Invoke(del);
             }
             else
             {

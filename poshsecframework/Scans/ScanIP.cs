@@ -1,23 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
-    class ScanIP
+    internal class ScanIP
     {
-        private String ipaddr = "";
-        NetworkBrowser scnr = null;
-        int idx = 0;
+        private int idx;
+        private string ipaddr = "";
+        private NetworkBrowser scnr;
 
-        public event EventHandler<ScanEventArgs> ScanIPComplete;
+        public string IPAddress
+        {
+            set => ipaddr = value;
+        }
+
+        public int Index
+        {
+            set => idx = value;
+        }
+
+        public event EventHandler<ScanIpEventArgs> ScanIPComplete;
 
         public void Scan()
         {
-            String host = StringValue.NAHost;
-            bool isup = false;
+            var host = StringValue.NAHost;
+            var isup = false;
             if (ipaddr != "")
             {
                 scnr = new NetworkBrowser();
@@ -26,28 +33,17 @@ namespace PoshSec.Framework
                     isup = true;
                     host = scnr.GetHostname(ipaddr);
                 }
-                scnr = null;                
+
+                scnr = null;
             }
-            OnScanIPComplete(new ScanEventArgs(ipaddr, host, isup, idx));
+
+            OnScanIPComplete(new ScanIpEventArgs(ipaddr, host, isup, idx));
         }
 
-        private void OnScanIPComplete(ScanEventArgs e)
+        private void OnScanIPComplete(ScanIpEventArgs e)
         {
-            EventHandler<ScanEventArgs> handler = ScanIPComplete;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        public String IPAddress
-        {
-            set { ipaddr = value; }
-        }
-
-        public int Index
-        {
-            set { idx = value; }
+            var handler = ScanIPComplete;
+            handler?.Invoke(this, e);
         }
     }
 }

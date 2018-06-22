@@ -25,11 +25,9 @@ namespace PoshSec.Framework
         bool shstatus = true;
         #endregion
 
-        #region Public Events
-        public event EventHandler<ScanEventArgs> ScanComplete;
+        public event EventHandler<NetworkScanCompleteEventArgs> ScanComplete;
         public event EventHandler<EventArgs> ScanCancelled;
-        public event EventHandler<ScanEventArgs> ScanUpdate;
-        #endregion
+        public event EventHandler<ScanStatusEventArgs> ScanUpdate;
 
         #region Initialize
         /// <summary>
@@ -47,7 +45,7 @@ namespace PoshSec.Framework
         public void ScanActiveDirectory()
         {
             systems.Clear();
-            if (domain != "" && domain != null)
+            if (!string.IsNullOrEmpty(domain))
             {
                 ClearArpTable();
                 DirectoryEntry hostPC = new DirectoryEntry();
@@ -77,7 +75,7 @@ namespace PoshSec.Framework
                         hostcnt++;
                         DirectoryEntry netPC = srslt.GetDirectoryEntry();
                         string scnmsg = "Scanning " + netPC.Name.Replace("CN=", "") + ", please wait...";
-                        OnScanUpdate(new ScanEventArgs(scnmsg, hostcnt, srslts.Count));
+                        OnScanUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, srslts.Count));
                         if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
                         {
                             Ping(netPC.Name.Replace("CN=", ""), 1, 100);
@@ -87,7 +85,7 @@ namespace PoshSec.Framework
                 }
                 BuildArpTable();
             }            
-            OnScanComplete(new ScanEventArgs(systems));
+            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(systems));
         }
 
         public void ScanbyIP()
@@ -127,9 +125,11 @@ namespace PoshSec.Framework
                         if (shstatus) { frm.SetStatus("Scanning " + host + ", please wait...");}
                         if (shstatus) { frm.SetProgress(ip, 255);}
 
-                        ScanIP scn = new ScanIP();
-                        scn.IPAddress = host;
-                        scn.Index = ip;
+                        var scn = new ScanIP
+                        {
+                            IPAddress = host,
+                            Index = ip
+                        };
                         scn.ScanIPComplete += scn_ScanIPComplete;
                         System.Threading.Thread thd = new System.Threading.Thread(scn.Scan);
                         thds.Add(thd);
@@ -148,7 +148,7 @@ namespace PoshSec.Framework
                     if (shstatus) { frm.HideProgress();}
                     if (shstatus) { frm.SetStatus(StringValue.Ready);}
 
-                    OnScanComplete(new ScanEventArgs(systems));
+                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(systems));
                 }
             }
             else
@@ -157,11 +157,11 @@ namespace PoshSec.Framework
             }
         }
 
-        void scn_ScanIPComplete(object sender, ScanEventArgs e)
+        void scn_ScanIPComplete(object sender, ScanIpEventArgs e)
         {
             if (e.IsUp)
             {
-                systems.Add(e.Index.ToString("000") + "|" + e.IPAddress + "|" + e.Hostname);
+                systems.Add(e.Index.ToString("000") + "|" + e.IpAddress + "|" + e.Hostname);
             }
         }
 
@@ -340,7 +340,6 @@ namespace PoshSec.Framework
 
         #endregion
 
-        #region Private Methods
 
         #region Arp
         private void ClearArpTable()
@@ -386,40 +385,23 @@ namespace PoshSec.Framework
         }
         #endregion
 
-        #region ScanUpdate
-        private void OnScanUpdate(ScanEventArgs e)
+        private void OnScanUpdate(ScanStatusEventArgs e)
         {
-            EventHandler<ScanEventArgs> handler = ScanUpdate;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            var handler = ScanUpdate;
+            handler?.Invoke(this, e);
         }
-        #endregion
 
-        #region ScanComplete
-        private void OnScanComplete(ScanEventArgs e)
+        private void OnNetworkScanComplete(NetworkScanCompleteEventArgs e)
         {
-            EventHandler<ScanEventArgs> handler = ScanComplete;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            var handler = ScanComplete;
+            handler?.Invoke(this, e);
         }
-        #endregion
 
-        #region ScanCancelled
         private void OnScanCancelled(EventArgs e)
         {
-            EventHandler<EventArgs> handler = ScanCancelled;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            var handler = ScanCancelled;
+            handler?.Invoke(this, e);
         }
-        #endregion
-
-        #endregion
 
         #region Public Properties
         public frmMain ParentForm

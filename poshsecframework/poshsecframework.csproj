@@ -159,7 +159,8 @@
     </Compile>
     <Compile Include="Network\NetworkType.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
-    <Compile Include="Scans\ScanEventArgs.cs" />
+    <Compile Include="Scans\NetworkScanCompleteEventArgs.cs" />
+    <Compile Include="Scans\ScanIpEventArgs.cs" />
     <Compile Include="Scans\ScanIP.cs" />
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="PShell\pshosteditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Scans\ScanStatusEventArgs.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Strings\StringValue.cs" />

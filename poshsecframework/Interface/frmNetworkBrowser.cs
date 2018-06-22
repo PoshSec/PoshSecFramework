@@ -37,7 +37,7 @@ namespace PoshSec.Framework.Interface
         #endregion
         
         #region Private Events
-        void scnr_ScanComplete(object sender, ScanEventArgs e)
+        void scnr_ScanComplete(object sender, NetworkScanCompleteEventArgs e)
         {
             if (this.InvokeRequired)
             {
