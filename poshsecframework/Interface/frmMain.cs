@@ -2177,9 +2177,21 @@ namespace PoshSec.Framework
 
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            btnRemoveNetwork.Enabled = e.Node != tvwNetworks.Nodes[0] & !(e.Node.Tag is NetworkType.Local);
+            var rootNode = tvwNetworks.Nodes[0];
+            var isRoot = e.Node == rootNode;
+
+            btnRemoveNetwork.Enabled = !isRoot & !(e.Node.Tag is NetworkType.Local);
 
             // TODO: Refresh systems (NetworkNodes)
+            var network = _networks.SingleOrDefault(n => !isRoot && n.Name == e.Node.Name);
+            if (network == null)
+            {
+                _lvwSystems.Items.Clear();
+            }
+            else
+            {
+                _lvwSystems.Load(network.Nodes);
+            }
         }
 
         private void btnAddNetwork_Click(object sender, EventArgs e)

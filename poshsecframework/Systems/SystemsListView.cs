@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -15,6 +16,11 @@ namespace PoshSec.Framework
         {
             var isUnique = Items.Cast<ListViewItem>().All(i => i.Text != systemName);
             return isUnique;
+        }
+
+        public void Load(List<NetworkNode> networkNodes)
+        {
+            // TODO: load network nodes
         }
     }
 }
