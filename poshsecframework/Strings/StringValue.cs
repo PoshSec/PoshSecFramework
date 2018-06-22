@@ -131,5 +131,6 @@ namespace PoshSec.Framework.Strings
         public const string SyslogFormat = "{0}{1} {2} : %{3}-{4}: {5}";
         public const string PriorityFormat = "<{0}>";
         public const string AlertLabelFormat = "{0} ({1})";
+        public const string NetworkSettingsPath = "networks.json";
     }
 }

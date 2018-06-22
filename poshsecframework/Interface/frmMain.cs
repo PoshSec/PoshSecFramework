@@ -169,6 +169,8 @@ namespace PoshSec.Framework
                         _closing = false;
                     }
                 }
+
+                SaveNetworks();
                 SaveSystems();
                 SaveAlerts();
                 Properties.Settings.Default.Save();
@@ -384,11 +386,12 @@ namespace PoshSec.Framework
 
         private void LoadNetworks()
         {
-            _networks.Clear();            
-            _networks.Add(new LocalNetwork());
-
-            //Add(StringValue.LocalNetwork, NetworkType.Local);
-
+            _networks.Clear();
+            var networks = AppSettings<Networks>.Load(StringValue.NetworkSettingsPath);
+            _networks.AddRange(networks);
+            if (!_networks.OfType<LocalNetwork>().Any())
+                _networks.Add(new LocalNetwork());
+            
             try
             {
                 //Get Domain Name
@@ -397,10 +400,9 @@ namespace PoshSec.Framework
 
                 foreach (Domain domain in domains)
                 {
-                    //var node = new DomainNetworkTreeNode(domain.Name);
-                    //var rootnode = tvwNetworks.Nodes[0];
-                    //rootnode.Nodes.Add(node);
-                    _networks.Add(new DomainNetwork(domain.Name));
+                    var name = domain.Name;
+                    if (_networks.All(n => n.Name != name))
+                        _networks.Add(new DomainNetwork(name));
                 }
             }
             catch
@@ -439,7 +441,7 @@ namespace PoshSec.Framework
                     foreach (var localIP in localIPs)
                     {
                         // TODO: Replace with strongly typed NetworkNodeListViewItem
-                        var lvwItm = new ListViewItem {Text = localHost};
+                        var lvwItm = new ListViewItem { Text = localHost };
                         lvwItm.SubItems.Add(localIP);
                         lvwItm.SubItems.Add(_scnr.GetMyMac(localIP));
                         lvwItm.SubItems.Add("");
@@ -616,6 +618,11 @@ namespace PoshSec.Framework
                 UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }
+        }
+
+        private void SaveNetworks()
+        {
+            AppSettings<Networks>.Save(_networks, StringValue.NetworkSettingsPath);
         }
 
         private void SaveSystems()
@@ -2170,7 +2177,7 @@ namespace PoshSec.Framework
 
         private void tvwNetworks_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            btnRemoveNetwork.Enabled = e.Node != tvwNetworks.Nodes[0] & !(e.Node is LocalNetworkTreeNode);
+            btnRemoveNetwork.Enabled = e.Node != tvwNetworks.Nodes[0] & !(e.Node.Tag is NetworkType.Local);
 
             // TODO: Refresh systems (NetworkNodes)
         }

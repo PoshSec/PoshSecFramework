@@ -1,14 +1,21 @@
 ﻿using System;
 using System.IO;
+using System.Management.Automation;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace PoshSec.Framework
 {
-    public class AppSettings<TSettings> where TSettings : new()
+    public class AppSettings<TSettings> where TSettings : class, new() 
     {
         private static string _settingsDirectory = Application.LocalUserAppDataPath;
         private static string _settingsFilename = "settings.json";
+
+        private static JsonSerializerSettings _serializerSettings = new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Formatting = Formatting.Indented
+        };
 
         public static string Path => System.IO.Path.Combine(_settingsDirectory, _settingsFilename);
 
@@ -17,11 +24,10 @@ namespace PoshSec.Framework
             path = HandlePath(path);
 
             if (!File.Exists(path))
-                throw new FileNotFoundException("Settings file not found.", path);
+                return new TSettings();
 
             var text = File.ReadAllText(path);
-            var settings = JsonConvert.DeserializeObject<TSettings>(text);
-
+            var settings = JsonConvert.DeserializeObject<TSettings>(text, _serializerSettings) ?? new TSettings();
             SavePath(path);
 
             return settings;
@@ -30,8 +36,7 @@ namespace PoshSec.Framework
         public static void Save(TSettings settings, string path = "")
         {
             path = HandlePath(path);
-
-            var text = JsonConvert.SerializeObject(settings);
+            var text = JsonConvert.SerializeObject(settings, _serializerSettings);
             File.WriteAllText(path, text);
 
             SavePath(path);
@@ -47,6 +52,13 @@ namespace PoshSec.Framework
         {
             if (string.IsNullOrWhiteSpace(path))
                 path = System.IO.Path.Combine(_settingsDirectory, _settingsFilename);
+            var filename = System.IO.Path.GetFileName(path);
+            if (string.IsNullOrWhiteSpace(filename))
+                filename = _settingsFilename;
+            var directory = System.IO.Path.GetDirectoryName(path) ?? _settingsDirectory;
+            if (string.IsNullOrWhiteSpace(directory))
+                directory = _settingsDirectory;
+            path = System.IO.Path.Combine(directory, filename);
             return path;
         }
     }
