@@ -73,7 +73,7 @@ namespace PoshSec.Framework
         {
             InitializeComponent();
 
-            _lvwNetworkNodes.ListViewItemSorter = _lvwSorter;
+            _lvwSystems.ListViewItemSorter = _lvwSorter;
             this.Enabled = false;
             if (IsRootDrive())
             {
@@ -391,7 +391,7 @@ namespace PoshSec.Framework
             _networks.AddRange(networks);
             if (!_networks.OfType<LocalNetwork>().Any())
                 _networks.Add(new LocalNetwork());
-            
+
             try
             {
                 //Get Domain Name
@@ -415,16 +415,16 @@ namespace PoshSec.Framework
             // TODO: load nodes of the currently selected Network
             if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
             {
-                _lvwNetworkNodes.Items.Clear();
+                _lvwSystems.Items.Clear();
                 foreach (var system in Settings.Default.Systems)
                 {
                     var systemparts = system.Split('|');
-                    if (systemparts.Length == _lvwNetworkNodes.Columns.Count)
+                    if (systemparts.Length == _lvwSystems.Columns.Count)
                     {
                         var lvwItm = new ListViewItem { Text = systemparts[0] };
                         for (var idx = 1; idx < systemparts.Length; idx++) lvwItm.SubItems.Add(systemparts[idx]);
                         lvwItm.ImageIndex = 2;
-                        _lvwNetworkNodes.Items.Add(lvwItm);
+                        _lvwSystems.Items.Add(lvwItm);
                     }
                 }
 
@@ -435,12 +435,12 @@ namespace PoshSec.Framework
                 try
                 {
                     //Add Local IP/Host to Local Network
-                    _lvwNetworkNodes.Items.Clear();
+                    _lvwSystems.Items.Clear();
                     var localHost = Dns.GetHostName();
                     var localIPs = _scnr.GetIP(localHost).Split(',');
                     foreach (var localIP in localIPs)
                     {
-                        // TODO: Replace with strongly typed NetworkNodeListViewItem
+                        // TODO: Replace with strongly typed SystemsListViewItem
                         var lvwItm = new ListViewItem { Text = localHost };
                         lvwItm.SubItems.Add(localIP);
                         lvwItm.SubItems.Add(_scnr.GetMyMac(localIP));
@@ -451,7 +451,7 @@ namespace PoshSec.Framework
                         lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                         lvwItm.ImageIndex = 2;
-                        _lvwNetworkNodes.Items.Add(lvwItm);
+                        _lvwSystems.Items.Add(lvwItm);
                     }
 
                     tvwNetworks.Nodes[0].Expand();
@@ -528,9 +528,9 @@ namespace PoshSec.Framework
                 ArrayList rslts = e.Systems;
                 if (rslts.Count > 0 && !_cancelscan)
                 {
-                    _lvwNetworkNodes.Items.Clear();
+                    _lvwSystems.Items.Clear();
                     SetProgress(0, rslts.Count);
-                    _lvwNetworkNodes.BeginUpdate();
+                    _lvwSystems.BeginUpdate();
                     foreach (Object system in rslts)
                     {
                         if (system != null)
@@ -543,7 +543,7 @@ namespace PoshSec.Framework
                                     ListViewItem lvwItm = new ListViewItem();
                                     String[] ipinfo = system.ToString().Split('|');
 
-                                    var systemListViewItem = new NetworkNodeListViewItem(ipinfo[2])
+                                    var systemListViewItem = new SystemsListViewItem(ipinfo[2])
                                     {
                                         IpAddress = ipinfo[1],
                                         MacAddress = _scnr.GetMac(ipinfo[1]),
@@ -556,7 +556,7 @@ namespace PoshSec.Framework
 
                                     SetStatus("Adding " + ipinfo[2] + ", please wait...");
 
-                                    _lvwNetworkNodes.Add(systemListViewItem);
+                                    _lvwSystems.Add(systemListViewItem);
 
                                     pbStatus.Value += 1;
                                 }
@@ -596,19 +596,19 @@ namespace PoshSec.Framework
                                         lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
 
                                         lvwItm.ImageIndex = 2;
-                                        _lvwNetworkNodes.Items.Add(lvwItm);
+                                        _lvwSystems.Items.Add(lvwItm);
                                     }
                                 }
                                 pbStatus.Value += 1;
                             }
-                            _lvwNetworkNodes.Refresh();
+                            _lvwSystems.Refresh();
                         }
                     }
-                    _lvwNetworkNodes.EndUpdate();
+                    _lvwSystems.EndUpdate();
                 }
                 rslts = null;
-                _lvwNetworkNodes.Sorting = SortOrder.Ascending;
-                _lvwNetworkNodes.Sort();
+                _lvwSystems.Sorting = SortOrder.Ascending;
+                _lvwSystems.Sort();
                 SaveSystems();
                 btnCancelScan.Enabled = false;
                 btnScan.Enabled = true;
@@ -627,14 +627,14 @@ namespace PoshSec.Framework
 
         private void SaveSystems()
         {
-            if (_lvwNetworkNodes.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
+            if (_lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
             {
                 if (Properties.Settings.Default.Systems == null)
                 {
                     Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
                 }
                 ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
-                foreach (ListViewItem lvw in _lvwNetworkNodes.Items)
+                foreach (ListViewItem lvw in _lvwSystems.Items)
                 {
                     String system = "";
                     foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
@@ -1339,14 +1339,14 @@ namespace PoshSec.Framework
             else
             {
                 Collection<PSObject> hosts = new Collection<PSObject>();
-                ListView.CheckedListViewItemCollection lvwitms = _lvwNetworkNodes.CheckedItems;
+                ListView.CheckedListViewItemCollection lvwitms = _lvwSystems.CheckedItems;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
+                        foreach (ColumnHeader col in _lvwSystems.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
@@ -1370,14 +1370,14 @@ namespace PoshSec.Framework
             else
             {
                 Collection<PSObject> hosts = new Collection<PSObject>();
-                ListView.ListViewItemCollection lvwitms = _lvwNetworkNodes.Items;
+                ListView.ListViewItemCollection lvwitms = _lvwSystems.Items;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
+                        foreach (ColumnHeader col in _lvwSystems.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
@@ -1401,14 +1401,14 @@ namespace PoshSec.Framework
             else
             {
                 List<PSObject> hosts = new List<PSObject>();
-                ListView.ListViewItemCollection lvwitms = _lvwNetworkNodes.Items;
+                ListView.ListViewItemCollection lvwitms = _lvwSystems.Items;
                 if (lvwitms != null && lvwitms.Count > 0)
                 {
                     foreach (ListViewItem lvw in lvwitms)
                     {
                         PSObject pobj = new PSObject();
                         int idx = -1;
-                        foreach (ColumnHeader col in _lvwNetworkNodes.Columns)
+                        foreach (ColumnHeader col in _lvwSystems.Columns)
                         {
                             idx++;
                             pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
@@ -1973,7 +1973,7 @@ namespace PoshSec.Framework
         #region " Update System Count "
         private void UpdateSystemCount()
         {
-            tslSystemCount.Text = _lvwNetworkNodes.Items.Count.ToString() + " Systems";
+            tslSystemCount.Text = _lvwSystems.Items.Count.ToString() + " Systems";
         }
         #endregion
 
@@ -2127,7 +2127,7 @@ namespace PoshSec.Framework
                 _lvwSorter.SortColumn = e.Column;
                 _lvwSorter.Order = SortOrder.Ascending;
             }
-            _lvwNetworkNodes.Sort();
+            _lvwSystems.Sort();
         }
 
         private void lvwCommands_DoubleClick(object sender, EventArgs e)
@@ -2641,7 +2641,7 @@ namespace PoshSec.Framework
                 if (frm.ShowDialog() != DialogResult.OK) return;
                 var systemName = frm.SystemName;
 
-                if (_lvwNetworkNodes.IsValid(systemName))
+                if (_lvwSystems.IsValid(systemName))
                 {
                     var ipAddress = frm.IpAddress;
                     var description = frm.Description;
@@ -2653,7 +2653,7 @@ namespace PoshSec.Framework
                         if (reply?.Status == IPStatus.Success)
                             status = StringValue.Up;
                     }
-                    _lvwNetworkNodes.Add(new NetworkNodeListViewItem(systemName)
+                    _lvwSystems.Add(new SystemsListViewItem(systemName)
                     {
                         IpAddress = ipAddress,
                         MacAddress = _scnr.GetMac(ipAddress),
@@ -2746,20 +2746,29 @@ namespace PoshSec.Framework
 
         private void btnRemoveSystem_Click(object sender, EventArgs e)
         {
-            if (_lvwNetworkNodes.SelectedItems.Count > 0)
+            var items = Enumerable.Empty<ListViewItem>().ToArray();
+            string checkedOrSelected = string.Empty;
+            if (_lvwSystems.CheckedItems.Count > 0)
             {
-                if (MessageBox.Show(StringValue.ConfirmRemoveSystem, "Confirm", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                items = _lvwSystems.CheckedItems.Cast<ListViewItem>().ToArray();
+                checkedOrSelected = "checked";
+            }
+            else if (_lvwSystems.SelectedItems.Count > 0)
+            {
+                items = _lvwSystems.SelectedItems.Cast<ListViewItem>().ToArray();
+                checkedOrSelected = "selected";
+            }
+            if (items.Any() && MessageBox.Show(string.Format(StringValue.ConfirmRemoveSystem, items.Length, checkedOrSelected), "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                _lvwSystems.BeginUpdate();
+                while (_lvwSystems.SelectedItems.Count > 0)
                 {
-                    _lvwNetworkNodes.BeginUpdate();
-                    while (_lvwNetworkNodes.SelectedItems.Count > 0)
-                    {
-                        ListViewItem lvw = _lvwNetworkNodes.SelectedItems[0];
-                        _lvwNetworkNodes.Items.Remove(lvw);
-                    }
-                    _lvwNetworkNodes.EndUpdate();
-                    SaveSystems();
-                    UpdateSystemCount();
+                    var listViewItem = _lvwSystems.SelectedItems[0];
+                    _lvwSystems.Items.Remove(listViewItem);
                 }
+                _lvwSystems.EndUpdate();
+                SaveSystems();
+                UpdateSystemCount();
             }
         }
         #endregion

@@ -124,7 +124,7 @@ namespace PoshSec.Framework.Strings
         public const string BranchNotFound = "The specified branch of {0} was not found as a valid branch for this repository.";
         public const string ModuleUptoDate = "That module is up to date. There are no updates available.";
         public const string ModuleUpdateAvailable = "This module was updated on {0}. Would you like to update your copy now?";
-        public const string ConfirmRemoveSystem = "Are you sure you want to remove the selected system(s)?";
+        public const string ConfirmRemoveSystem = "Are you sure you want to remove the ({0}) {1} system(s)?";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
         public const string OutputLogFormat = "[{0}:{1}] - {2}";

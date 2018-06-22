@@ -93,7 +93,7 @@ namespace PoshSec.Framework
             this.pnlSystems = new System.Windows.Forms.SplitContainer();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tbpSystems = new System.Windows.Forms.TabPage();
-            this._lvwNetworkNodes = new PoshSec.Framework.NetworkNodeListView();
+            this._lvwSystems = new PoshSec.Framework.SystemsListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMAC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -803,7 +803,7 @@ namespace PoshSec.Framework
             // 
             // tbpSystems
             // 
-            this.tbpSystems.Controls.Add(this._lvwNetworkNodes);
+            this.tbpSystems.Controls.Add(this._lvwSystems);
             this.tbpSystems.Controls.Add(this.tsSystems);
             this.tbpSystems.ImageIndex = 7;
             this.tbpSystems.Location = new System.Drawing.Point(4, 23);
@@ -814,11 +814,11 @@ namespace PoshSec.Framework
             this.tbpSystems.Text = "Systems";
             this.tbpSystems.UseVisualStyleBackColor = true;
             // 
-            // _lvwNetworkNodes
+            // _lvwSystems
             // 
-            this._lvwNetworkNodes.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this._lvwNetworkNodes.CheckBoxes = true;
-            this._lvwNetworkNodes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this._lvwSystems.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._lvwSystems.CheckBoxes = true;
+            this._lvwSystems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chIP,
             this.chMAC,
@@ -827,18 +827,19 @@ namespace PoshSec.Framework
             this.chClientInstalled,
             this.chAlerts,
             this.chLastScan});
-            this._lvwNetworkNodes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._lvwNetworkNodes.FullRowSelect = true;
-            this._lvwNetworkNodes.HideSelection = false;
-            this._lvwNetworkNodes.Location = new System.Drawing.Point(3, 34);
-            this._lvwNetworkNodes.Name = "_lvwNetworkNodes";
-            this._lvwNetworkNodes.Size = new System.Drawing.Size(942, 270);
-            this._lvwNetworkNodes.SmallImageList = this.imgList16;
-            this._lvwNetworkNodes.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this._lvwNetworkNodes.TabIndex = 1;
-            this._lvwNetworkNodes.UseCompatibleStateImageBehavior = false;
-            this._lvwNetworkNodes.View = System.Windows.Forms.View.Details;
-            this._lvwNetworkNodes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwSystems_ColumnClick);
+            this._lvwSystems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lvwSystems.FullRowSelect = true;
+            this._lvwSystems.HideSelection = false;
+            this._lvwSystems.Location = new System.Drawing.Point(3, 34);
+            this._lvwSystems.MultiSelect = false;
+            this._lvwSystems.Name = "_lvwSystems";
+            this._lvwSystems.Size = new System.Drawing.Size(942, 270);
+            this._lvwSystems.SmallImageList = this.imgList16;
+            this._lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this._lvwSystems.TabIndex = 1;
+            this._lvwSystems.UseCompatibleStateImageBehavior = false;
+            this._lvwSystems.View = System.Windows.Forms.View.Details;
+            this._lvwSystems.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwSystems_ColumnClick);
             // 
             // chName
             // 
@@ -1531,7 +1532,7 @@ namespace PoshSec.Framework
         private System.Windows.Forms.ToolStripButton btnClearAlerts;
         private System.Windows.Forms.TabControl tcMain;
         private System.Windows.Forms.TabPage tbpSystems;
-        private NetworkNodeListView _lvwNetworkNodes;
+        private SystemsListView _lvwSystems;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chIP;
         private System.Windows.Forms.ColumnHeader chMAC;

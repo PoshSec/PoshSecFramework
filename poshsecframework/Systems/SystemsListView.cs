@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace PoshSec.Framework
 {
-    public class NetworkNodeListView : ListView
+    public class SystemsListView : ListView
     {
-        public void Add(NetworkNodeListViewItem item)
+        public void Add(SystemsListViewItem item)
         {
             Items.Add(item);
         }

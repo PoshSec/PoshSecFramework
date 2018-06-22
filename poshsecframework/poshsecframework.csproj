@@ -180,10 +180,10 @@
     <Compile Include="Systems\LocalNetwork.cs" />
     <Compile Include="Systems\Network.cs" />
     <Compile Include="Systems\NetworkNode.cs" />
-    <Compile Include="Systems\NetworkNodeListView.cs">
+    <Compile Include="Systems\SystemsListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Systems\NetworkNodeListViewItem.cs" />
+    <Compile Include="Systems\SystemsListViewItem.cs" />
     <Compile Include="Systems\Networks.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />

@@ -4,9 +4,9 @@ using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
-    public class NetworkNodeListViewItem : ListViewItem, INetworkNode
+    public class SystemsListViewItem : ListViewItem, INetworkNode
     {
-        public NetworkNodeListViewItem(string name) : base(name)
+        public SystemsListViewItem(string name) : base(name)
         {
             ImageIndex = 2;
             Text = name;
