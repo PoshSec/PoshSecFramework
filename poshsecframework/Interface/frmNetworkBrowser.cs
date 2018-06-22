@@ -79,7 +79,7 @@ namespace PoshSec.Framework.Interface
                             else
                             {
                                 DirectoryEntry sys = (DirectoryEntry)system;
-                                String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
+                                String ipadr = NetworkBrowser.GetIp(sys.Name.Replace("CN=", ""));
                                 String[] ips = ipadr.Split(',');
                                 if(ips != null && ips.Length > 0)
                                 {

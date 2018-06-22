@@ -437,7 +437,7 @@ namespace PoshSec.Framework
                     //Add Local IP/Host to Local Network
                     _lvwSystems.Items.Clear();
                     var localHost = Dns.GetHostName();
-                    var localIPs = _scnr.GetIP(localHost).Split(',');
+                    var localIPs = NetworkBrowser.GetIp(localHost).Split(',');
                     foreach (var localIP in localIPs)
                     {
                         // TODO: Replace with strongly typed SystemsListViewItem
@@ -564,7 +564,7 @@ namespace PoshSec.Framework
                             else
                             {
                                 DirectoryEntry sys = (DirectoryEntry)system;
-                                String ipadr = _scnr.GetIP(sys.Name.Replace("CN=", ""));
+                                String ipadr = NetworkBrowser.GetIp(sys.Name.Replace("CN=", ""));
                                 String[] ips = ipadr.Split(',');
                                 if (ips != null && ips.Length > 0)
                                 {

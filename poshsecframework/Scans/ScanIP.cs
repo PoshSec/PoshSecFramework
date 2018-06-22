@@ -31,7 +31,7 @@ namespace PoshSec.Framework
                 if (NetworkBrowser.Ping(_ipaddr, 1, 100))
                 {
                     isup = true;
-                    host = _scnr.GetHostname(_ipaddr);
+                    host = NetworkBrowser.GetHostname(_ipaddr);
                 }
 
                 _scnr = null;
