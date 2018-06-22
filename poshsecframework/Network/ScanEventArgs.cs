@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PoshSec.Framework.Network
+namespace PoshSec.Framework
 {
     class ScanEventArgs : EventArgs
     {

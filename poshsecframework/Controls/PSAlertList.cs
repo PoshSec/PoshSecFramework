@@ -19,7 +19,7 @@ namespace PoshSec.Framework.Controls
         private string scriptname = "";
         private ImageList imgListAlerts;
         private System.ComponentModel.IContainer components;
-        private Network.Syslog slog = null;
+        private Syslog slog = null;
         private ToolStripLabel lblalertcount = new ToolStripLabel(String.Format(StringValue.AlertLabelFormat, "Alerts", 0));
         private int alertcount = 0;
         PSTabItem parent = null;
@@ -121,7 +121,7 @@ namespace PoshSec.Framework.Controls
                 {
                     if (slog == null)
                     {
-                        slog = new Network.Syslog(new System.Net.IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
+                        slog = new Syslog(new System.Net.IPEndPoint(System.Net.IPAddress.Parse(Properties.Settings.Default.SyslogServer), Properties.Settings.Default.SyslogPort));
                     }
                     slog.SendMessage(alerttype, scriptname, message);
                     slog.Close();

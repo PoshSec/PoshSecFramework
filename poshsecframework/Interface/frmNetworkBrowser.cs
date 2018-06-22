@@ -20,7 +20,7 @@ namespace PoshSec.Framework.Interface
     public partial class frmNetworkBrowser : Form
     {
         #region Private Variables
-        private Network.NetworkBrowser scnr = new Network.NetworkBrowser();
+        private NetworkBrowser scnr = new NetworkBrowser();
         private Collection<PSObject> hosts = new Collection<PSObject>();
         private String domain = "";
         #endregion
@@ -37,7 +37,7 @@ namespace PoshSec.Framework.Interface
         #endregion
         
         #region Private Events
-        void scnr_ScanComplete(object sender, Network.ScanEventArgs e)
+        void scnr_ScanComplete(object sender, ScanEventArgs e)
         {
             if (this.InvokeRequired)
             {

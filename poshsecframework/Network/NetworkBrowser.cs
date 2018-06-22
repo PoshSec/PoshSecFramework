@@ -11,7 +11,7 @@ using System.Windows.Forms;
 using PoshSec.Framework.Interface;
 using PoshSec.Framework.Strings;
 
-namespace PoshSec.Framework.Network
+namespace PoshSec.Framework
 {
     class NetworkBrowser
     {

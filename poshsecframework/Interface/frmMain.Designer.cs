@@ -687,7 +687,7 @@ namespace PoshSec.Framework
             treeNode1.ImageKey = "Diagram.png";
             treeNode1.Name = "ndNone";
             treeNode1.SelectedImageKey = "Diagram.png";
-            treeNode1.Tag = "1";
+            treeNode1.Tag = PoshSec.Framework.NetworkType.Local;
             treeNode1.Text = "Local Network";
             treeNode2.Name = "ndNetwork";
             treeNode2.Text = "Networks";
@@ -945,7 +945,7 @@ namespace PoshSec.Framework
             this.tbpPowerShell.Location = new System.Drawing.Point(4, 23);
             this.tbpPowerShell.Name = "tbpPowerShell";
             this.tbpPowerShell.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpPowerShell.Size = new System.Drawing.Size(948, 290);
+            this.tbpPowerShell.Size = new System.Drawing.Size(948, 307);
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
@@ -963,7 +963,7 @@ namespace PoshSec.Framework
             this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.txtPShellOutput.Name = "txtPShellOutput";
             this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 284);
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 301);
             this.txtPShellOutput.TabIndex = 0;
             this.txtPShellOutput.Text = "";
             this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
@@ -1001,7 +1001,7 @@ namespace PoshSec.Framework
             this.tbpSchedScripts.Location = new System.Drawing.Point(4, 23);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
             this.tbpSchedScripts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 290);
+            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 307);
             this.tbpSchedScripts.TabIndex = 2;
             this.tbpSchedScripts.Text = "Scheduled Scripts";
             this.tbpSchedScripts.UseVisualStyleBackColor = true;
@@ -1020,7 +1020,7 @@ namespace PoshSec.Framework
             this.lvwSchedule.FullRowSelect = true;
             this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
             this.lvwSchedule.Name = "lvwSchedule";
-            this.lvwSchedule.Size = new System.Drawing.Size(942, 284);
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 301);
             this.lvwSchedule.SmallImageList = this.imgList16;
             this.lvwSchedule.TabIndex = 0;
             this.lvwSchedule.UseCompatibleStateImageBehavior = false;
