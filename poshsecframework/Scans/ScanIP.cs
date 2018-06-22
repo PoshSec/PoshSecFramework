@@ -5,18 +5,18 @@ namespace PoshSec.Framework
 {
     internal class ScanIP
     {
-        private int idx;
-        private string ipaddr = "";
-        private NetworkBrowser scnr;
+        private int _idx;
+        private string _ipaddr = "";
+        private NetworkBrowser _scnr;
 
         public string IPAddress
         {
-            set => ipaddr = value;
+            set => _ipaddr = value;
         }
 
         public int Index
         {
-            set => idx = value;
+            set => _idx = value;
         }
 
         public event EventHandler<ScanIpEventArgs> ScanIPComplete;
@@ -25,19 +25,19 @@ namespace PoshSec.Framework
         {
             var host = StringValue.NAHost;
             var isup = false;
-            if (ipaddr != "")
+            if (_ipaddr != "")
             {
-                scnr = new NetworkBrowser();
-                if (scnr.Ping(ipaddr, 1, 100))
+                _scnr = new NetworkBrowser();
+                if (NetworkBrowser.Ping(_ipaddr, 1, 100))
                 {
                     isup = true;
-                    host = scnr.GetHostname(ipaddr);
+                    host = _scnr.GetHostname(_ipaddr);
                 }
 
-                scnr = null;
+                _scnr = null;
             }
 
-            OnScanIPComplete(new ScanIpEventArgs(ipaddr, host, isup, idx));
+            OnScanIPComplete(new ScanIpEventArgs(_ipaddr, host, isup, _idx));
         }
 
         private void OnScanIPComplete(ScanIpEventArgs e)

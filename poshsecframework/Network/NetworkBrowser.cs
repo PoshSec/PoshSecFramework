@@ -183,38 +183,31 @@ namespace PoshSec.Framework
 
         #region Public Functions
 
-        #region Ping
-        public bool Ping(string host, int attempts, int timeout)
+        public static bool Ping(string host, int attempts, int timeout)
         {
-            bool rsp = false;
+            var response = false;
             try
             {
-                System.Net.NetworkInformation.Ping ping = new System.Net.NetworkInformation.Ping();
-                System.Net.NetworkInformation.PingReply pingReply;
+                var ping = new Ping();
 
-                for (int atmpt = 0; atmpt < attempts; atmpt++)
-                {
+                for (var attempt = 0; attempt < attempts; attempt++)
                     try
                     {
-                        pingReply = ping.Send(host, timeout);
-                        if (pingReply != null && pingReply.Status == System.Net.NetworkInformation.IPStatus.Success)
-                        {
-                            rsp = true;
-                        }
+                        var pingReply = ping.Send(host, timeout);
+                        if (pingReply?.Status == IPStatus.Success) response = true;
                     }
                     catch
                     {
-                        rsp = false;
+                        response = false;
                     }
-                }
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
-            return rsp;
+
+            return response;
         }
-        #endregion
 
         #region GetIP
         public String GetIP(string host)
