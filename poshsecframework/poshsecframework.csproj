@@ -147,8 +147,6 @@
     <Compile Include="Interface\SystemForm.Designer.cs">
       <DependentUpon>SystemForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Network\DomainNetworkTreeNode.cs" />
-    <Compile Include="Network\LocalNetworkTreeNode.cs" />
     <Compile Include="Network\NetworksTreeView.cs">
       <SubType>Component</SubType>
     </Compile>

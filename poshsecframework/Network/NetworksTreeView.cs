@@ -33,5 +33,24 @@ namespace PoshSec.Framework
         }
 
         public int Count => Nodes[0].Nodes.Count;
+
+        private class LocalNetworkTreeNode : TreeNode
+        {
+            public LocalNetworkTreeNode(string name) : base(name, 3, 3)
+            {
+                Name = name;
+                Tag = NetworkType.Local;
+            }
+        }
+
+
+        private class DomainNetworkTreeNode : TreeNode
+        {
+            public DomainNetworkTreeNode(string name) : base(name, 3, 3)
+            {
+                Name = name;
+                Tag = NetworkType.Domain;
+            }
+        }
     }
 }
