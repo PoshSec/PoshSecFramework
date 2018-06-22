@@ -177,6 +177,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Strings\StringValue.cs" />
+    <Compile Include="Systems\CurrentNetworkChangedEventArgs.cs" />
     <Compile Include="Systems\DomainNetwork.cs" />
     <Compile Include="Systems\INetworkNode.cs" />
     <Compile Include="Systems\LocalNetwork.cs" />

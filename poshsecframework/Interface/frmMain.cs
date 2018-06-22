@@ -72,7 +72,7 @@ namespace PoshSec.Framework
         public frmMain()
         {
             InitializeComponent();
-
+            _networks.CurrentNetworkChanged += _networks_CurrentNetworkChanged;
             _lvwSystems.ListViewItemSorter = _lvwSorter;
             this.Enabled = false;
             if (IsRootDrive())
@@ -88,6 +88,19 @@ namespace PoshSec.Framework
                 _spashScreen = new Interface.frmStartup();
                 _spashScreen.Show();
                 _spashScreen.Refresh();
+            }
+        }
+
+        private void _networks_CurrentNetworkChanged(object sender, CurrentNetworkChangedEventArgs e)
+        {
+            var network = e.Network;
+            if (network == null)
+            {
+                _lvwSystems.Items.Clear();
+            }
+            else
+            {
+                _lvwSystems.Load(network.Nodes);
             }
         }
 
@@ -2182,17 +2195,8 @@ namespace PoshSec.Framework
 
             btnRemoveNetwork.Enabled = !isRoot & !(e.Node.Tag is NetworkType.Local);
 
-            // TODO: Refresh systems (NetworkNodes)
             var network = _networks.SingleOrDefault(n => !isRoot && n.Name == e.Node.Name);
             _networks.CurrentNetwork = network;
-            if (network == null)
-            {
-                _lvwSystems.Items.Clear();
-            }
-            else
-            {
-                _lvwSystems.Load(network.Nodes);
-            }
         }
 
         private void btnAddNetwork_Click(object sender, EventArgs e)
