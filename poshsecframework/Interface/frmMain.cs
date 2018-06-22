@@ -2184,6 +2184,7 @@ namespace PoshSec.Framework
 
             // TODO: Refresh systems (NetworkNodes)
             var network = _networks.SingleOrDefault(n => !isRoot && n.Name == e.Node.Name);
+            _networks.CurrentNetwork = network;
             if (network == null)
             {
                 _lvwSystems.Items.Clear();
