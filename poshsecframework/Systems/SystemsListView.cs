@@ -18,9 +18,14 @@ namespace PoshSec.Framework
             return isUnique;
         }
 
-        public void Load(List<NetworkNode> networkNodes)
+        public void Load(IEnumerable<NetworkNode> networkNodes)
         {
-            // TODO: load network nodes
+            Items.Clear();
+            foreach (var node in networkNodes)
+            {
+                var item = new SystemsListViewItem(node);
+                Items.Add(item);
+            }
         }
     }
 }

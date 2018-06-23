@@ -8,6 +8,11 @@ namespace PoshSec.Framework
     {
         private Network _currentNetwork;
 
+        public Networks()
+        {
+            _currentNetwork = Network.Empty;    
+        }
+
         public event EventHandler<CurrentNetworkChangedEventArgs> CurrentNetworkChanged;
 
         public Network CurrentNetwork
@@ -15,7 +20,7 @@ namespace PoshSec.Framework
             get => _currentNetwork;
             set
             {
-                _currentNetwork = value;
+                _currentNetwork = value ?? Network.Empty;
                 OnCurrentNetworkChanged(_currentNetwork);
 
             }

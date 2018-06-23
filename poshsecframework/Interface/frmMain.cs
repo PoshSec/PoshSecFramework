@@ -29,13 +29,12 @@ namespace PoshSec.Framework
         private Collection<PSObject> _commands;
         private readonly Networks _networks = new Networks();
 
-        private readonly NetworkBrowser _scnr = new NetworkBrowser();
+        private readonly NetworkBrowser _networkBrowser = new NetworkBrowser();
         private frmStartup _spashScreen;
         private int _mincurpos = 6;
         private readonly Collection<string> _cmdhist = new Collection<string>();
         private int _cmdhistidx = -1;
         private pshell _psf;
-        private bool _cancelscan;
         private bool _restart;
         private bool _shown;
         private readonly bool _cont = true;
@@ -109,9 +108,9 @@ namespace PoshSec.Framework
             if (_cont)
             {
                 _spashScreen.SetStatus("Initializing, please wait...");
-                _scnr.ScanComplete += scnr_ScanComplete;
-                _scnr.ScanCancelled += scnr_ScanCancelled;
-                _scnr.ScanUpdate += scnr_ScanUpdate;
+                _networkBrowser.ScanComplete += NetworkBrowserScanComplete;
+                _networkBrowser.ScanCancelled += NetworkBrowserScanCancelled;
+                _networkBrowser.ScanUpdate += NetworkBrowserScanUpdate;
                 _schedule.ItemUpdated += schedule_ItemUpdated;
                 _schedule.ScriptInvoked += schedule_ScriptInvoked;
                 _schedule.ScheduleRemoved += schedule_ScheduleRemoved;
@@ -236,7 +235,6 @@ namespace PoshSec.Framework
             CheckLastModified();
             moduleFilterComboBox.SelectedIndex = 0;
 
-            _scnr.ParentForm = this;
             if (_psf.LoadErrors != "")
             {
                 _loaderrors += _psf.LoadErrors;
@@ -456,7 +454,7 @@ namespace PoshSec.Framework
                         // TODO: Replace with strongly typed SystemsListViewItem
                         var lvwItm = new ListViewItem { Text = localHost };
                         lvwItm.SubItems.Add(localIP);
-                        lvwItm.SubItems.Add(_scnr.GetMyMac(localIP));
+                        lvwItm.SubItems.Add(_networkBrowser.GetMyMac(localIP));
                         lvwItm.SubItems.Add("");
                         lvwItm.SubItems.Add(StringValue.Up);
                         lvwItm.SubItems.Add(StringValue.NotInstalled);
@@ -481,70 +479,57 @@ namespace PoshSec.Framework
 
         private void Scan()
         {
-            if (tvwNetworks.SelectedNode?.Tag is NetworkType type)
-            {
-                this.UseWaitCursor = true;
-                switch (type)
-                {
-                    case NetworkType.Local:
-                        ScanbyIP();
-                        break;
-                    case NetworkType.Domain:
-                        ScanAD();
-                        break;
-                }
-            }
-            else
-            {
-                MessageBox.Show(StringValue.SelectNetwork);
-            }
-        }
-
-        private void ScanAD()
-        {
-            btnCancelScan.Enabled = true;
-            _scnr.ParentForm = this;
-            _cancelscan = false;
             UseWaitCursor = true;
-            btnScan.Enabled = false;
-            mnuScan.Enabled = false;
-            var domain = tvwNetworks.SelectedNode.Text;
-            var thd = new Thread(_scnr.ScanActiveDirectory);
-            _scnr.Domain = domain;
-            thd.Start();
-        }
-
-        private void ScanbyIP()
-        {
+            var network = _networks.CurrentNetwork;
             btnCancelScan.Enabled = true;
-            _scnr.ParentForm = this;
-            _cancelscan = false;
-            this.UseWaitCursor = true;
+            _networkBrowser.CancelIPScan = false;
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
-            Thread thd = new Thread(_scnr.ScanbyIP);
-            thd.Start();
+            switch (network)
+            {
+                case LocalNetwork _:
+                    ScanbyIP(network);
+                    break;
+                case DomainNetwork _:
+                    ScanAD(network);
+                    break;
+            }
+            UseWaitCursor = false;
         }
 
-        private void scnr_ScanComplete(object sender, NetworkScanCompleteEventArgs e)
+        private void ScanAD(Network network)
+        {
+            _networkBrowser.Domain = network.Name;
+            var thread = new Thread(_networkBrowser.ScanActiveDirectory);
+            thread.Start();
+        }
+
+        private void ScanbyIP(Network network)
+        {
+            var thread = new Thread(_networkBrowser.ScanbyIP);
+            thread.Start();
+        }
+
+        private void NetworkBrowserScanComplete(object sender, NetworkScanCompleteEventArgs e)
         {
             if (this.InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    scnr_ScanComplete(sender, e);
+                    NetworkBrowserScanComplete(sender, e);
                 };
                 this.Invoke(del);
             }
             else
             {
-                ArrayList rslts = e.Systems;
-                if (rslts.Count > 0 && !_cancelscan)
+                HideProgress();
+                var rslts = e.Systems;
+                if (rslts.Count > 0 && !_networkBrowser.CancelIPScan)
                 {
                     _lvwSystems.Items.Clear();
                     SetProgress(0, rslts.Count);
                     _lvwSystems.BeginUpdate();
-                    foreach (Object system in rslts)
+                    foreach (var system in rslts)
                     {
                         if (system != null)
                         {
@@ -556,10 +541,13 @@ namespace PoshSec.Framework
                                     ListViewItem lvwItm = new ListViewItem();
                                     String[] ipinfo = system.ToString().Split('|');
 
-                                    var systemListViewItem = new SystemsListViewItem(ipinfo[2])
+                                    SetStatus("Adding " + ipinfo[2] + ", please wait...");
+
+                                    var node = new NetworkNode
                                     {
+                                        Name = ipinfo[2],
                                         IpAddress = ipinfo[1],
-                                        MacAddress = _scnr.GetMac(ipinfo[1]),
+                                        MacAddress = _networkBrowser.GetMac(ipinfo[1]),
                                         Description = "",
                                         Status = StringValue.Up,
                                         ClientInstalled = StringValue.NotInstalled,
@@ -567,8 +555,8 @@ namespace PoshSec.Framework
                                         LastScanned = DateTime.Now
                                     };
 
-                                    SetStatus("Adding " + ipinfo[2] + ", please wait...");
-
+                                    // TODO: replace this 
+                                    var systemListViewItem = new SystemsListViewItem(node);
                                     _lvwSystems.Add(systemListViewItem);
 
                                     pbStatus.Value += 1;
@@ -588,7 +576,7 @@ namespace PoshSec.Framework
                                         lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
 
                                         lvwItm.SubItems.Add(ip);
-                                        string macaddr = _scnr.GetMac(ip);
+                                        string macaddr = _networkBrowser.GetMac(ip);
                                         lvwItm.SubItems.Add(macaddr);
                                         lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
                                         bool isup = false;
@@ -692,13 +680,13 @@ namespace PoshSec.Framework
             }
         }
 
-        private void scnr_ScanCancelled(object sender, EventArgs e)
+        private void NetworkBrowserScanCancelled(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    scnr_ScanCancelled(sender, e);
+                    NetworkBrowserScanCancelled(sender, e);
                 };
                 this.Invoke(del);
             }
@@ -713,13 +701,13 @@ namespace PoshSec.Framework
             }
         }
 
-        void scnr_ScanUpdate(object sender, ScanStatusEventArgs e)
+        void NetworkBrowserScanUpdate(object sender, ScanStatusEventArgs e)
         {
             if (InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    scnr_ScanUpdate(sender, e);
+                    NetworkBrowserScanUpdate(sender, e);
                 };
                 Invoke(del);
             }
@@ -2608,7 +2596,7 @@ namespace PoshSec.Framework
 
         private void btnCancelScan_Click(object sender, EventArgs e)
         {
-            _cancelscan = true;
+            _networkBrowser.CancelIPScan = true;
         }
 
         private void btnRefreshNetworks_Click(object sender, EventArgs e)
@@ -2670,13 +2658,18 @@ namespace PoshSec.Framework
                         if (reply?.Status == IPStatus.Success)
                             status = StringValue.Up;
                     }
-                    _lvwSystems.Add(new SystemsListViewItem(systemName)
+                    var system = new NetworkNode
                     {
+                        Name = systemName,
                         IpAddress = ipAddress,
-                        MacAddress = _scnr.GetMac(ipAddress),
+                        MacAddress = _networkBrowser.GetMac(ipAddress),
                         Status = status,
                         Description = description
-                    });
+                    };
+                    // TODO: Replace this with NetworkNode
+                    //_lvwSystems.Add(new SystemsListViewItem(system));
+                    _networks.CurrentNetwork.Nodes.Add(system);
+                    _lvwSystems.Load(_networks.CurrentNetwork.Nodes);
                 }
                 else
                     MessageBox.Show(StringValue.InvalidSystemName);
@@ -2850,12 +2843,6 @@ namespace PoshSec.Framework
 
         #endregion
 
-        #region Public Properties
-        public bool CancelIPScan
-        {
-            get { return _cancelscan; }
-        }
-        #endregion
 
     }
 }

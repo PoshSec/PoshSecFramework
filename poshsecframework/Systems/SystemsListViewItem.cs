@@ -6,10 +6,9 @@ namespace PoshSec.Framework
 {
     public class SystemsListViewItem : ListViewItem, INetworkNode
     {
-        public SystemsListViewItem(string name) : base(name)
+        private SystemsListViewItem() 
         {
-            ImageIndex = 2;
-            Text = name;
+            ImageIndex = 2;            
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "ip"}); 
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "mac"});
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "description"});
@@ -17,6 +16,19 @@ namespace PoshSec.Framework
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "installed"});
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "alerts"});
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "lastscanned"});
+        }
+
+        public SystemsListViewItem(INetworkNode node) : this()
+        {
+            Name = node.Name;
+            Text = node.Name;
+            IpAddress = node.IpAddress;
+            MacAddress = node.MacAddress;
+            Description = node.Description;
+            Status = node.Status;
+            ClientInstalled = node.ClientInstalled;
+            Alerts = node.Alerts;
+            LastScanned = node.LastScanned;
         }
 
         public string IpAddress

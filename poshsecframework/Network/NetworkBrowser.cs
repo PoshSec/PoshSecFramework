@@ -16,12 +16,13 @@ namespace PoshSec.Framework
 {
     internal class NetworkBrowser
     {
-        private frmMain _frmMain;
         private string _ipconfig = "";
         private string _arp = "";
         private readonly Collection<Thread> _threads = new Collection<Thread>();
         private string _domain = "";
         private bool _shstatus = true;
+
+        public bool CancelIPScan { get; set; }
 
         public event EventHandler<NetworkScanCompleteEventArgs> ScanComplete;
         public event EventHandler<EventArgs> ScanCancelled;
@@ -61,7 +62,7 @@ namespace PoshSec.Framework
                         hostcnt++;
                         var netPC = srslt.GetDirectoryEntry();
                         var scnmsg = "Scanning " + netPC.Name.Replace("CN=", "") + ", please wait...";
-                        OnScanUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, srslts.Count));
+                        OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, srslts.Count));
                         if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
                         {
                             Ping(netPC.Name.Replace("CN=", ""), 1, 100);
@@ -101,15 +102,17 @@ namespace PoshSec.Framework
                 var ipparts = localIP.Split('.');
                 if (ipparts.Length == 4)
                 {
-                    if (_shstatus) _frmMain.SetProgress(0, 255);
+                    if (_shstatus)
+                        OnStatusUpdate(new ScanStatusEventArgs("", 0, 255));
                     var ip = 1;
                     var cancel = false;
                     do
                     {
                         var host = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip;
-                        if (_shstatus) _frmMain.SetStatus("Scanning " + host + ", please wait...");
-                        if (_shstatus) _frmMain.SetProgress(ip, 255);
-
+                        if (_shstatus)
+                        {
+                            OnStatusUpdate(new ScanStatusEventArgs("Scanning " + host + ", please wait...", ip, 255));
+                        }
                         var scn = new ScanIP
                         {
                             IPAddress = host,
@@ -120,10 +123,11 @@ namespace PoshSec.Framework
                         _threads.Add(thd);
                         thd.Start();
                         ip++;
-                        if (_shstatus) cancel = _frmMain.CancelIPScan;
+                        if (_shstatus) cancel = CancelIPScan;
                     } while (ip < 255 && !cancel);
 
-                    if (_shstatus) _frmMain.SetStatus(StringValue.WaitingForHostResp);
+                    if (_shstatus)
+                        OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
                     do
                     {
                         Thread.Sleep(100);
@@ -132,8 +136,7 @@ namespace PoshSec.Framework
                     Systems.Sort();
                     BuildArpTable();
 
-                    if (_shstatus) _frmMain.HideProgress();
-                    if (_shstatus) _frmMain.SetStatus(StringValue.Ready);
+                    if (_shstatus) OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
                     OnNetworkScanComplete(new NetworkScanCompleteEventArgs(Systems));
                 }
@@ -335,7 +338,7 @@ namespace PoshSec.Framework
             }
         }
 
-        private void OnScanUpdate(ScanStatusEventArgs e)
+        private void OnStatusUpdate(ScanStatusEventArgs e)
         {
             var handler = ScanUpdate;
             handler?.Invoke(this, e);
@@ -351,11 +354,6 @@ namespace PoshSec.Framework
         {
             var handler = ScanCancelled;
             handler?.Invoke(this, e);
-        }
-
-        public frmMain ParentForm
-        {
-            set => _frmMain = value;
         }
 
         public bool ShowStatus
