@@ -13,6 +13,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using PoshSec.Framework.Comparers;
 using PoshSec.Framework.Enums;
 using PoshSec.Framework.Interface;
@@ -497,17 +498,17 @@ namespace PoshSec.Framework
             UseWaitCursor = false;
         }
 
+        // TODO: make asynchronous 
         private void ScanAD(Network network)
         {
             _networkBrowser.Domain = network.Name;
-            var thread = new Thread(_networkBrowser.ScanActiveDirectory);
-            thread.Start();
+            Task.Run(() => _networkBrowser.ScanActiveDirectory(network));
         }
 
+        // TODO: make asynchronous 
         private void ScanbyIP(Network network)
         {
-            var thread = new Thread(_networkBrowser.ScanbyIP);
-            thread.Start();
+            Task.Run(() => _networkBrowser.ScanbyIP(network));
         }
 
         private void NetworkBrowserScanComplete(object sender, NetworkScanCompleteEventArgs e)
@@ -522,103 +523,18 @@ namespace PoshSec.Framework
             }
             else
             {
-                HideProgress();
-                var rslts = e.Systems;
-                if (rslts.Count > 0 && !_networkBrowser.CancelIPScan)
-                {
-                    _lvwSystems.Items.Clear();
-                    SetProgress(0, rslts.Count);
-                    _lvwSystems.BeginUpdate();
-                    foreach (var system in rslts)
-                    {
-                        if (system != null)
-                        {
-                            if (system is string)
-                            {
-                                string sys = (string)system;
-                                if (sys != null && sys != "")
-                                {
-                                    ListViewItem lvwItm = new ListViewItem();
-                                    String[] ipinfo = system.ToString().Split('|');
-
-                                    SetStatus("Adding " + ipinfo[2] + ", please wait...");
-
-                                    var node = new NetworkNode
-                                    {
-                                        Name = ipinfo[2],
-                                        IpAddress = ipinfo[1],
-                                        MacAddress = _networkBrowser.GetMac(ipinfo[1]),
-                                        Description = "",
-                                        Status = StringValue.Up,
-                                        ClientInstalled = StringValue.NotInstalled,
-                                        Alerts = 0,
-                                        LastScanned = DateTime.Now
-                                    };
-
-                                    // TODO: replace this 
-                                    var systemListViewItem = new SystemsListViewItem(node);
-                                    _lvwSystems.Add(systemListViewItem);
-
-                                    pbStatus.Value += 1;
-                                }
-                            }
-                            else
-                            {
-                                DirectoryEntry sys = (DirectoryEntry)system;
-                                String ipadr = NetworkBrowser.GetIp(sys.Name.Replace("CN=", ""));
-                                String[] ips = ipadr.Split(',');
-                                if (ips != null && ips.Length > 0)
-                                {
-                                    foreach (String ip in ips)
-                                    {
-                                        ListViewItem lvwItm = new ListViewItem();
-                                        SetStatus("Adding " + sys.Name.Replace("CN=", "") + ", please wait...");
-                                        lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
-
-                                        lvwItm.SubItems.Add(ip);
-                                        string macaddr = _networkBrowser.GetMac(ip);
-                                        lvwItm.SubItems.Add(macaddr);
-                                        lvwItm.SubItems.Add((string)sys.Properties["description"].Value ?? "");
-                                        bool isup = false;
-                                        if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
-                                        {
-                                            isup = true;
-                                        }
-                                        if (isup)
-                                        {
-                                            lvwItm.SubItems.Add(StringValue.Up);
-                                        }
-                                        else
-                                        {
-                                            lvwItm.SubItems.Add(StringValue.Down);
-                                        }
-                                        lvwItm.SubItems.Add(StringValue.NotInstalled);
-                                        lvwItm.SubItems.Add("0");
-                                        lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                                        lvwItm.ImageIndex = 2;
-                                        _lvwSystems.Items.Add(lvwItm);
-                                    }
-                                }
-                                pbStatus.Value += 1;
-                            }
-                            _lvwSystems.Refresh();
-                        }
-                    }
-                    _lvwSystems.EndUpdate();
-                }
-                rslts = null;
+                var systems = e.Network.Nodes;
+                _lvwSystems.Load(systems);
                 _lvwSystems.Sorting = SortOrder.Ascending;
                 _lvwSystems.Sort();
-                SaveSystems();
-                btnCancelScan.Enabled = false;
-                btnScan.Enabled = true;
-                mnuScan.Enabled = true;
-                this.UseWaitCursor = false;
-                HideProgress();
-                UpdateSystemCount();
-                lblStatus.Text = StringValue.Ready;
             }
+            btnCancelScan.Enabled = false;
+            btnScan.Enabled = true;
+            mnuScan.Enabled = true;
+            UseWaitCursor = false;
+            HideProgress();
+            UpdateSystemCount();
+            lblStatus.Text = StringValue.Ready;
         }
 
         private void SaveNetworks()
@@ -626,6 +542,7 @@ namespace PoshSec.Framework
             AppSettings<Networks>.Save(_networks, StringValue.NetworkSettingsPath);
         }
 
+        [Obsolete]
         private void SaveSystems()
         {
             if (_lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)

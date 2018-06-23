@@ -23,5 +23,10 @@ namespace PoshSec.Framework
         private class EmptyNetwork : Network
         {
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

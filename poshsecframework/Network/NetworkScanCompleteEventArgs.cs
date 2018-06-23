@@ -5,11 +5,11 @@ namespace PoshSec.Framework
 {
     public class NetworkScanCompleteEventArgs : EventArgs
     {
-        public NetworkScanCompleteEventArgs(ArrayList systems)
+        public NetworkScanCompleteEventArgs(Network network)
         {
-            Systems = systems;
+            Network = network;
         }
 
-        public ArrayList Systems { get; } = null;
+        public Network Network { get; set; }
     }
 }

@@ -20,12 +20,15 @@ namespace PoshSec.Framework
 
         public void Load(IEnumerable<NetworkNode> networkNodes)
         {
+            BeginUpdate();
             Items.Clear();
             foreach (var node in networkNodes)
             {
                 var item = new SystemsListViewItem(node);
                 Items.Add(item);
             }
+            EndUpdate();
+            Refresh();
         }
     }
 }

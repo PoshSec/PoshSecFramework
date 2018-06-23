@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.DirectoryServices;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -16,9 +18,12 @@ namespace PoshSec.Framework
 {
     internal class NetworkBrowser
     {
+        private readonly Network _network;
         private string _ipconfig = "";
         private string _arp = "";
         private readonly Collection<Thread> _threads = new Collection<Thread>();
+
+        [Obsolete]
         private string _domain = "";
         private bool _shstatus = true;
 
@@ -28,18 +33,21 @@ namespace PoshSec.Framework
         public event EventHandler<EventArgs> ScanCancelled;
         public event EventHandler<ScanStatusEventArgs> ScanUpdate;
 
+        //public NetworkBrowser(Network network)
+        //{
+        //    _network = network;
+        //}
 
-        public void ScanActiveDirectory()
+        public void ScanActiveDirectory(Network network)
         {
-            Systems.Clear();
+            network.Nodes.Clear();
             if (!string.IsNullOrEmpty(_domain))
             {
                 ClearArpTable();
-                var hostPC = new DirectoryEntry();
-                hostPC.Path = "LDAP://" + _domain;
+                var hostPc = new DirectoryEntry { Path = "LDAP://" + _domain };
                 SearchResultCollection srslts = null;
 
-                using (var srch = new DirectorySearcher(hostPC))
+                using (var srch = new DirectorySearcher(hostPc))
                 {
                     srch.Filter = "(&(objectClass=computer))";
                     srch.SearchScope = SearchScope.Subtree;
@@ -60,13 +68,13 @@ namespace PoshSec.Framework
                     foreach (SearchResult srslt in srslts)
                     {
                         hostcnt++;
-                        var netPC = srslt.GetDirectoryEntry();
-                        var scnmsg = "Scanning " + netPC.Name.Replace("CN=", "") + ", please wait...";
+                        var directoryEntry = srslt.GetDirectoryEntry();
+                        var scnmsg = "Scanning " + directoryEntry.Name.Replace("CN=", "") + ", please wait...";
                         OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, srslts.Count));
-                        if (netPC.Name.Replace("CN=", "") != "Schema" && netPC.SchemaClassName == "computer")
+                        if (directoryEntry.Name.Replace("CN=", "") != "Schema" && directoryEntry.SchemaClassName == "computer")
                         {
-                            Ping(netPC.Name.Replace("CN=", ""), 1, 100);
-                            Systems.Add(netPC);
+                            Ping(directoryEntry.Name.Replace("CN=", ""), 1, 100);
+                            network.Nodes.AddRange(GetSystems(directoryEntry));
                         }
                     }
                 }
@@ -74,12 +82,40 @@ namespace PoshSec.Framework
                 BuildArpTable();
             }
 
-            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(Systems));
+            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(network));
         }
 
-        public void ScanbyIP()
+        private IEnumerable<NetworkNode> GetSystems(DirectoryEntry directoryEntry)
         {
-            Systems.Clear();
+            var nodes = new List<NetworkNode>();
+            var ipadr = GetIp(directoryEntry.Name.Replace("CN=", ""));
+            var ips = ipadr.Split(',');
+            if (!ips.Any()) return nodes;
+            foreach (var ip in ips)
+            {
+                OnStatusUpdate(new ScanStatusEventArgs("Adding " + directoryEntry.Name.Replace("CN=", "") + ", please wait...", 0, 255));
+
+                var macaddr = GetMac(ip);
+                var isup = ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC;
+                var node = new NetworkNode
+                {
+                    Name = directoryEntry.Name.Replace("CN=", ""),
+                    IpAddress = ip,
+                    MacAddress = macaddr,
+                    Description = (string)directoryEntry.Properties["description"].Value ?? "",
+                    Status = isup ? StringValue.Up : StringValue.Down,
+                    ClientInstalled = StringValue.NotInstalled,
+                    Alerts = 0,
+                    LastScanned = DateTime.Now
+                };
+                nodes.Add(node);
+            }
+            return nodes;
+        }
+
+        public void ScanbyIP(Network network)
+        {
+            network.Nodes.Clear();
             ClearArpTable();
             var localIPs = GetIp(Dns.GetHostName()).Split(',');
             var localIP = localIPs[0];
@@ -133,12 +169,11 @@ namespace PoshSec.Framework
                         Thread.Sleep(100);
                     } while (ThreadsActive());
 
-                    Systems.Sort();
                     BuildArpTable();
 
                     if (_shstatus) OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
-                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(Systems));
+                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(network));
                 }
             }
             else
@@ -149,7 +184,8 @@ namespace PoshSec.Framework
 
         private void scn_ScanIPComplete(object sender, ScanIpEventArgs e)
         {
-            if (e.IsUp) Systems.Add(e.Index.ToString("000") + "|" + e.IpAddress + "|" + e.Hostname);
+            Debugger.Break();
+            //if (e.IsUp) Systems.Add(e.Index.ToString("000") + "|" + e.IpAddress + "|" + e.Hostname);
         }
 
         private bool ThreadsActive()
@@ -361,11 +397,11 @@ namespace PoshSec.Framework
             set => _shstatus = value;
         }
 
+        [Obsolete]
         public string Domain
         {
             set => _domain = value;
         }
 
-        public ArrayList Systems { get; } = new ArrayList();
     }
 }
