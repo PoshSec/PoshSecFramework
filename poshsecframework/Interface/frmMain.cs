@@ -495,15 +495,16 @@ namespace PoshSec.Framework
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
 
-            networkBrowser.Scan();
+            networkBrowser.ScanAsync().ContinueWith(t =>
+            {
+                networkBrowser.ScanStatusUpdate -= NetworkBrowser_ScanStatusUpdate;
+                networkBrowser.NetworkScanComplete -= NetworkBrowser_ScanComplete;
+                networkBrowser.NetworkScanCancelled -= NetworkBrowser_ScanCancelled;
 
-            networkBrowser.ScanStatusUpdate -= NetworkBrowser_ScanStatusUpdate;
-            networkBrowser.NetworkScanComplete -= NetworkBrowser_ScanComplete;
-            networkBrowser.NetworkScanCancelled -= NetworkBrowser_ScanCancelled;
+                btnCancelScan.Click -= OnBtnCancelScanOnClick;
 
-            btnCancelScan.Click -= OnBtnCancelScanOnClick;
-
-            UseWaitCursor = false;
+                UseWaitCursor = false;
+            });
         }
 
         private void NetworkBrowser_ScanComplete(object sender, NetworkScanCompleteEventArgs e)

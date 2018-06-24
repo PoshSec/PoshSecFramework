@@ -153,9 +153,11 @@ namespace PoshSec.Framework.Interface
                 var networkBrowser = new NetworkBrowser(network);
                 networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
-                networkBrowser.Scan();
-                networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
-                networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
+                networkBrowser.ScanAsync().ContinueWith(t =>
+                {
+                    networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
+                    networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
+                });
             });
         }
 

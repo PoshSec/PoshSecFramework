@@ -102,7 +102,7 @@ namespace PoshSec.Framework
             return nodes;
         }
 
-        private void ScanLocalNetwork()
+        private async Task ScanLocalNetworkAsync()
         {
             if (_network == null)
                 return;
@@ -126,8 +126,8 @@ namespace PoshSec.Framework
 
             var tasks = new List<Task>();
 
-            var maxThread = new SemaphoreSlim(10);
-            
+            var maxThread = new SemaphoreSlim(20);
+
             var localIpBytes = localIP.GetAddressBytes();
             for (byte b = 1; b < 255; b++)
             {
@@ -135,14 +135,15 @@ namespace PoshSec.Framework
 
                 var scanIp = new IPAddress(new[] { localIpBytes[0], localIpBytes[1], localIpBytes[2], b });
 
-                OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b, 255));
-
+                var b2 = b;
                 var task = Task.Factory.StartNew(() =>
-                {
-                    var networkNode = Scan(scanIp);
-                    if (networkNode.Status == StringValue.Up)
-                        _network.Nodes.Add(networkNode);
-                }, TaskCreationOptions.LongRunning).ContinueWith(t=>maxThread.Release());
+                    {
+                        OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b2, 255));
+                        var networkNode = Scan(scanIp);
+                        if (networkNode.Status == StringValue.Up) _network.Nodes.Add(networkNode);
+                    }, TaskCreationOptions.LongRunning)
+                    .ContinueWith(t => maxThread.Release());
+
                 tasks.Add(task);
                 Application.DoEvents();
                 if (_cancellationTokenSource.IsCancellationRequested)
@@ -151,18 +152,12 @@ namespace PoshSec.Framework
 
             OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
 
-            try
+            await Task.WhenAll(tasks).ContinueWith(t =>
             {
-                Task.WaitAll(tasks.ToArray(), _cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
-            {
-                OnScanCancelled(EventArgs.Empty);
-            }
+                OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
-            OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
-
-            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
+                OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
+            });
         }
 
         private static IPAddress PromptUserToSelectIP(IEnumerable<IPAddress> ipAddresses)
@@ -177,12 +172,12 @@ namespace PoshSec.Framework
             }
         }
 
-        public void Scan()
+        public async Task ScanAsync()
         {
             switch (_network)
             {
                 case LocalNetwork _:
-                    ScanLocalNetwork();
+                    await ScanLocalNetworkAsync();
                     break;
                 case DomainNetwork _:
                     ScanActiveDirectory();
