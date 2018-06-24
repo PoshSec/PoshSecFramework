@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace PoshSec.Framework
 {
@@ -13,11 +14,11 @@ namespace PoshSec.Framework
 
         public string Name { get; set; }
 
-        public List<NetworkNode> Nodes { get; protected set; }
+        public ConcurrentBag<NetworkNode> Nodes { get; protected set; }
 
         protected Network()
         {
-            Nodes = new List<NetworkNode>();
+            Nodes = new ConcurrentBag<NetworkNode>();
         }
 
         private class EmptyNetwork : Network

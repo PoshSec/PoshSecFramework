@@ -13,7 +13,6 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using PoshSec.Framework.Comparers;
 using PoshSec.Framework.Enums;
 using PoshSec.Framework.Interface;
@@ -445,13 +444,14 @@ namespace PoshSec.Framework
                     //Add Local IP/Host to Local Network
                     _lvwSystems.Items.Clear();
                     var localHost = Dns.GetHostName();
-                    var localIPs = NetworkBrowser.GetIp(localHost).Split(',');
+                    var localIPs = NetworkBrowser.GetIPAddresses(localHost);
                     foreach (var localIP in localIPs)
                     {
+                        var ipaddr = localIP.ToString();
                         // TODO: Replace with strongly typed SystemsListViewItem
                         var lvwItm = new ListViewItem { Text = localHost };
-                        lvwItm.SubItems.Add(localIP);
-                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(localIP));
+                        lvwItm.SubItems.Add(ipaddr);
+                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(ipaddr));
                         lvwItm.SubItems.Add("");
                         lvwItm.SubItems.Add(StringValue.Up);
                         lvwItm.SubItems.Add(StringValue.NotInstalled);
@@ -2683,9 +2683,8 @@ namespace PoshSec.Framework
             if (items.Any() && MessageBox.Show(string.Format(StringValue.ConfirmRemoveSystem, items.Length, checkedOrSelected), "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 _lvwSystems.BeginUpdate();
-                while (_lvwSystems.SelectedItems.Count > 0)
+                foreach (var listViewItem in items)
                 {
-                    var listViewItem = _lvwSystems.SelectedItems[0];
                     _lvwSystems.Items.Remove(listViewItem);
                 }
                 _lvwSystems.EndUpdate();

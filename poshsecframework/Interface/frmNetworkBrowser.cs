@@ -163,10 +163,7 @@ namespace PoshSec.Framework.Interface
 
             Task.Run(() =>
             {
-                var networkBrowser = new NetworkBrowser(network)
-                {
-                    ShowStatus = false
-                };
+                var networkBrowser = new NetworkBrowser(network);
                 networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
                 networkBrowser.ScanbyIP();

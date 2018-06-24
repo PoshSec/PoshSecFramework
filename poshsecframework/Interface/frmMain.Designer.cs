@@ -830,7 +830,6 @@ namespace PoshSec.Framework
             this._lvwSystems.FullRowSelect = true;
             this._lvwSystems.HideSelection = false;
             this._lvwSystems.Location = new System.Drawing.Point(3, 34);
-            this._lvwSystems.MultiSelect = false;
             this._lvwSystems.Name = "_lvwSystems";
             this._lvwSystems.Size = new System.Drawing.Size(942, 270);
             this._lvwSystems.SmallImageList = this.imgList16;

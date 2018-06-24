@@ -19,16 +19,12 @@ namespace PoshSec.Framework
 {
     internal class NetworkBrowser
     {
-
         private readonly Network _network;
 
         private readonly List<Task> _tasks = new List<Task>();
 
-        private bool _showStatus = true;
-
         public bool CancelScan { get; set; }
 
-        public event EventHandler<ScanIpEventArgs> ScanIPComplete;
         public event EventHandler<NetworkScanCompleteEventArgs> NetworkScanComplete;
         public event EventHandler<EventArgs> NetworkScanCancelled;
         public event EventHandler<ScanStatusEventArgs> ScanStatusUpdate;
@@ -86,19 +82,17 @@ namespace PoshSec.Framework
         private IEnumerable<NetworkNode> GetSystems(DirectoryEntry directoryEntry)
         {
             var nodes = new List<NetworkNode>();
-            var ipadr = GetIp(directoryEntry.Name.Replace("CN=", ""));
-            var ips = ipadr.Split(',');
-            if (!ips.Any()) return nodes;
-            foreach (var ip in ips)
+            var ipAddresses = GetIPAddresses(directoryEntry.Name.Replace("CN=", ""));
+            foreach (var ip in ipAddresses)
             {
                 OnStatusUpdate(new ScanStatusEventArgs("Adding " + directoryEntry.Name.Replace("CN=", "") + ", please wait...", 0, 255));
-
-                var macaddr = GetMac(ip);
-                var isup = ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC;
+                var ipaddr = ip.ToString();
+                var macaddr = GetMac(ipaddr);
+                var isup = macaddr != StringValue.BlankMAC;
                 var node = new NetworkNode
                 {
                     Name = directoryEntry.Name.Replace("CN=", ""),
-                    IpAddress = ip,
+                    IpAddress = ipaddr,
                     MacAddress = macaddr,
                     Description = (string)directoryEntry.Properties["description"].Value ?? "",
                     Status = isup ? StringValue.Up : StringValue.Down,
@@ -117,73 +111,70 @@ namespace PoshSec.Framework
                 return;
             _network.Nodes.Clear();
             ClearArpTable();
-            var localIPs = GetIp(Dns.GetHostName()).Split(',');
-            var localIP = localIPs[0];
-            var cancelled = false;
+            var localIPs = GetIPAddresses(Dns.GetHostName()).ToArray();
+            var localIP = localIPs.First();
+
             if (localIPs.Length > 1)
-            {
-                using (var frm = new frmScan
-                {
-                    IPs = localIPs,
-                    StartPosition = FormStartPosition.CenterScreen
-                })
-                {
-                    if (frm.ShowDialog() == DialogResult.OK)
-                        localIP = frm.SelectedIP;
-                    else
-                        cancelled = true;
-                }
-            }
+                localIP = PromptUserToSelectIP(localIPs);
 
-            if (!string.IsNullOrEmpty(localIP) && !cancelled)
-            {
-                var ipparts = localIP.Split('.');
-                if (ipparts.Length == 4)
-                {
-                    if (_showStatus)
-                        OnStatusUpdate(new ScanStatusEventArgs("", 0, 255));
-                    var ip = 1;
-                    var cancel = false;
-                    do
-                    {
-                        var ipaddr = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip;
-                        if (_showStatus)
-                        {
-                            OnStatusUpdate(new ScanStatusEventArgs("Scanning " + ipaddr + ", please wait...", ip, 255));
-                        }
-                        ScanIPComplete += ScanIpComplete;
-                        var task = Task.Run(() =>
-                        {
-                            Scan(ipaddr);
-                        });
-                        _tasks.Add(task);
-                        ip++;
-                        if (_showStatus) cancel = CancelScan;
-                    } while (ip < 255 && !cancel);
-
-                    if (_showStatus)
-                        OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
-
-                    Task.WaitAll(_tasks.ToArray());
-                    
-                    BuildArpTable();
-
-                    if (_showStatus) OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
-
-                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
-                }
-            }
-            else
+            if (localIP == null)
             {
                 OnScanCancelled(new EventArgs());
+                return;
+            }
+
+            OnStatusUpdate(new ScanStatusEventArgs("", 0, 255));
+
+            var localIpBytes = localIP.GetAddressBytes();
+            for (byte index = 1; index < 255; index++)
+            {
+                var scanIp = new IPAddress(new[] { localIpBytes[0], localIpBytes[1], localIpBytes[2], index });
+
+                OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", index, 255));
+
+                var task = Task.Run(() =>
+                {
+                    var networkNode = GetNetworkNode(scanIp);
+                    if (networkNode.Status == StringValue.Up)
+                        _network.Nodes.Add(networkNode);
+                });
+                Application.DoEvents();
+                _tasks.Add(task);
+
+                if (CancelScan)
+                {
+                    OnScanCancelled(new EventArgs());
+                    break;
+                }
+            }
+
+            OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
+            Task.WaitAll(_tasks.ToArray());
+
+            BuildArpTable();
+
+            OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
+
+            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
+        }
+
+        private static IPAddress PromptUserToSelectIP(IEnumerable<IPAddress> ipAddresses)
+        {
+            using (var frm = new frmScan
+            {
+                IPs = ipAddresses.Select(ip => ip.ToString()).ToArray(),
+                StartPosition = FormStartPosition.CenterScreen
+            })
+            {
+                return frm.ShowDialog() == DialogResult.OK ? IPAddress.Parse(frm.SelectedIP) : null;
             }
         }
 
-
-        private void Scan(string ipaddr)
+        private NetworkNode GetNetworkNode(IPAddress ipAddress)
         {
             var host = StringValue.NAHost;
             var isup = false;
+            string ipaddr = ipAddress.ToString();
             if (ipaddr != "")
             {
                 if (Ping(ipaddr, 1, 100))
@@ -192,26 +183,13 @@ namespace PoshSec.Framework
                     host = GetHostname(ipaddr);
                 }
             }
-
-            OnScanIPComplete(new ScanIpEventArgs(ipaddr, host, isup, 1));  // TODO: fix index
-        }
-
-        private void OnScanIPComplete(ScanIpEventArgs e)
-        {
-            var handler = ScanIPComplete;
-            handler?.Invoke(this, e);
-        }
-
-        private void ScanIpComplete(object sender, ScanIpEventArgs e)
-        {
-            // TODO: what to do with index
             var networkNode = new NetworkNode
             {
-                IpAddress = e.IpAddress,
-                Name = e.Hostname,
-                Status = e.IsUp ? StringValue.Up : StringValue.Down
+                IpAddress = ipaddr,
+                Name = host,
+                Status = isup ? StringValue.Up : StringValue.Down
             };
-            _network.Nodes.Add(networkNode);
+            return networkNode;
         }
 
         public static bool Ping(string host, int attempts, int timeout)
@@ -240,9 +218,9 @@ namespace PoshSec.Framework
             return response;
         }
 
-        public static string GetIp(string host)
+        public static IEnumerable<IPAddress> GetIPAddresses(string host)
         {
-            var ipadr = "";
+            var addressList = new List<IPAddress>();
             try
             {
                 var ipentry = Dns.GetHostEntry(host.Replace("CN=", ""));
@@ -251,18 +229,16 @@ namespace PoshSec.Framework
                     //Limit to IPv4 for now
                     if (addr.AddressFamily == AddressFamily.InterNetwork)
                     {
-                        ipadr += addr + ",";
+                        addressList.Add(addr);
                         Application.DoEvents();
                     }
-
-                ipadr = ipadr.Substring(0, ipadr.Length - 1);
             }
             catch
             {
-                ipadr = StringValue.UnknownHost;
+                //ipadr = StringValue.UnknownHost;
             }
 
-            return ipadr;
+            return addressList;
         }
 
         public static string GetMac(string ipaddr)
@@ -414,11 +390,5 @@ namespace PoshSec.Framework
             var handler = NetworkScanCancelled;
             handler?.Invoke(this, e);
         }
-
-        public bool ShowStatus
-        {
-            set => _showStatus = value;
-        }
-
     }
 }
