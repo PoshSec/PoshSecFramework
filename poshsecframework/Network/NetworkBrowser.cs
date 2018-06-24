@@ -32,46 +32,55 @@ namespace PoshSec.Framework
             _network = network;
         }
 
-        private void ScanActiveDirectory()
+        private async Task ScanActiveDirectoryAsync()
         {
-            if (_network == null) return;
-
-            _network.Nodes.Clear();
-            ClearArpTable();
             var hostPc = new DirectoryEntry { Path = "LDAP://" + _network.Name };
             SearchResultCollection searchResults = null;
 
-            using (var srch = new DirectorySearcher(hostPc))
+            void SearchDirectory()
             {
-                srch.Filter = "(&(objectClass=computer))";
-                srch.SearchScope = SearchScope.Subtree;
-                srch.PropertiesToLoad.Add("description");
-                try
+                using (var directorySearcher = new DirectorySearcher(hostPc))
                 {
-                    searchResults = srch.FindAll();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message);
-                }
-            }
-
-            if (searchResults != null && searchResults.Count > 0)
-            {
-                var hostcnt = 0;
-                foreach (SearchResult result in searchResults)
-                {
-                    hostcnt++;
-                    var directoryEntry = result.GetDirectoryEntry();
-                    var scnmsg = "Scanning " + directoryEntry.Name.Replace("CN=", "") + ", please wait...";
-                    OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, searchResults.Count));
-                    if (directoryEntry.Name.Replace("CN=", "") != "Schema" && directoryEntry.SchemaClassName == "computer")
+                    directorySearcher.Filter = "(&(objectClass=computer))";
+                    directorySearcher.SearchScope = SearchScope.Subtree;
+                    directorySearcher.PropertiesToLoad.Add("description");
+                    try
                     {
-                        Ping(directoryEntry.Name.Replace("CN=", ""), 1, 100);
-                        _network.Nodes.AddRange(GetSystems(directoryEntry));
+                        searchResults = directorySearcher.FindAll();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
                     }
                 }
             }
+
+            void HandleResults(Task t)
+            {
+                if (searchResults != null && searchResults.Count > 0)
+                {
+                    var hostcnt = 0;
+                    foreach (SearchResult result in searchResults)
+                    {
+                        hostcnt++;
+                        var directoryEntry = result.GetDirectoryEntry();
+                        var scnmsg = "Scanning " + directoryEntry.Name.Replace("CN=", "") + ", please wait...";
+                        OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, searchResults.Count));
+                        Application.DoEvents();
+                        if (directoryEntry.Name.Replace("CN=", "") != "Schema" && directoryEntry.SchemaClassName == "computer")
+                        {
+                            Ping(directoryEntry.Name.Replace("CN=", ""), 1, 100);
+                            _network.Nodes.AddRange(GetSystems(directoryEntry));
+                        }
+                    }
+                }
+            }
+
+            var task = Task.Factory
+                .StartNew(SearchDirectory, TaskCreationOptions.LongRunning)
+                .ContinueWith(HandleResults);
+
+            await task;
 
             BuildArpTable();
             OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
@@ -104,10 +113,6 @@ namespace PoshSec.Framework
 
         private async Task ScanLocalNetworkAsync()
         {
-            if (_network == null)
-                return;
-            _network.Nodes.Clear();
-            ClearArpTable();
             var localIPs = GetIPAddresses(Dns.GetHostName()).ToArray();
             var localIP = localIPs.First();
 
@@ -141,7 +146,7 @@ namespace PoshSec.Framework
                         OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b2, 255));
                         var networkNode = Scan(scanIp);
                         if (networkNode.Status == StringValue.Up) _network.Nodes.Add(networkNode);
-                    }, TaskCreationOptions.LongRunning)
+                    }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, null)
                     .ContinueWith(t => maxThread.Release());
 
                 tasks.Add(task);
@@ -174,13 +179,17 @@ namespace PoshSec.Framework
 
         public async Task ScanAsync()
         {
+            if (_network == null) return;
+            _network.Nodes.Clear();
+            ClearArpTable();
+
             switch (_network)
             {
                 case LocalNetwork _:
                     await ScanLocalNetworkAsync();
                     break;
                 case DomainNetwork _:
-                    ScanActiveDirectory();
+                    await ScanActiveDirectoryAsync();
                     break;
             }
         }
@@ -222,7 +231,7 @@ namespace PoshSec.Framework
                         var pingReply = ping.Send(host, timeout);
                         if (pingReply?.Status == IPStatus.Success) response = true;
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         response = false;
                     }
@@ -244,9 +253,9 @@ namespace PoshSec.Framework
                 var addrs = ipentry.AddressList;
                 addressList.AddRange(addrs.Where(addr => addr.AddressFamily == AddressFamily.InterNetwork));
             }
-            catch
+            catch (Exception ex)
             {
-                //ipadr = StringValue.UnknownHost;
+                addressList.Add(IPAddress.Any);
             }
 
             return addressList;
