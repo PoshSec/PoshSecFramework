@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Windows.Forms;
 using PoshSec.Framework.Strings;
 
@@ -31,10 +32,10 @@ namespace PoshSec.Framework
             LastScanned = node.LastScanned;
         }
 
-        public string IpAddress
+        public IPAddress IpAddress
         {
-            get => SubItems["ip"].Text;
-            set => SubItems["ip"].Text = value;
+            get => IPAddress.TryParse(SubItems["ip"].Text, out var ipAddress) ? ipAddress : null;
+            set => SubItems["ip"].Text = value.ToString();
         }
 
         public string MacAddress

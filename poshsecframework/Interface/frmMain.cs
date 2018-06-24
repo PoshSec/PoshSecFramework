@@ -447,11 +447,10 @@ namespace PoshSec.Framework
                     var localIPs = NetworkBrowser.GetIPAddresses(localHost);
                     foreach (var localIP in localIPs)
                     {
-                        var ipaddr = localIP.ToString();
                         // TODO: Replace with strongly typed SystemsListViewItem
                         var lvwItm = new ListViewItem { Text = localHost };
-                        lvwItm.SubItems.Add(ipaddr);
-                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(ipaddr));
+                        lvwItm.SubItems.Add(localIP.ToString());
+                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(localIP));
                         lvwItm.SubItems.Add("");
                         lvwItm.SubItems.Add(StringValue.Up);
                         lvwItm.SubItems.Add(StringValue.NotInstalled);
@@ -497,7 +496,7 @@ namespace PoshSec.Framework
             switch (network)
             {
                 case LocalNetwork _:
-                    networkBrowser.ScanbyIP();
+                    networkBrowser.ScanByIP();
                     break;
                 case DomainNetwork _:
                     networkBrowser.ScanActiveDirectory();
@@ -2560,27 +2559,24 @@ namespace PoshSec.Framework
 
                 if (_lvwSystems.IsValid(systemName))
                 {
-                    var ipAddress = frm.IpAddress;
                     var description = frm.Description;
                     var status = "Unknown";
-                    if (IPAddress.TryParse(ipAddress, out var ip))
+                    if (IPAddress.TryParse(frm.IpAddress, out var ipAddress))
                     {
                         var ping = new Ping();
-                        var reply = ping.Send(ip);
+                        var reply = ping.Send(ipAddress);
                         if (reply?.Status == IPStatus.Success)
                             status = StringValue.Up;
+                        var system = new NetworkNode
+                        {
+                            Name = systemName,
+                            IpAddress = ipAddress,
+                            MacAddress = NetworkBrowser.GetMac(ipAddress),
+                            Status = status,
+                            Description = description
+                        };
+                        _networks.CurrentNetwork.Nodes.Add(system);
                     }
-                    var system = new NetworkNode
-                    {
-                        Name = systemName,
-                        IpAddress = ipAddress,
-                        MacAddress = NetworkBrowser.GetMac(ipAddress),
-                        Status = status,
-                        Description = description
-                    };
-                    // TODO: Replace this with NetworkNode
-                    //_lvwSystems.Add(new SystemsListViewItem(system));
-                    _networks.CurrentNetwork.Nodes.Add(system);
                     _lvwSystems.Load(_networks.CurrentNetwork.Nodes);
                 }
                 else

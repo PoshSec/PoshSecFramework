@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Net;
 
 namespace PoshSec.Framework
 {
     public interface INetworkNode
     {
         string Name { get; set; }
-        string IpAddress { get; set; }
+        IPAddress IpAddress { get; set; }
         string MacAddress { get; set; }
         string Description { get; set; }
         string Status { get; set; }

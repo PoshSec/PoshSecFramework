@@ -166,7 +166,7 @@ namespace PoshSec.Framework.Interface
                 var networkBrowser = new NetworkBrowser(network);
                 networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
-                networkBrowser.ScanbyIP();
+                networkBrowser.ScanByIP();
                 networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
             });

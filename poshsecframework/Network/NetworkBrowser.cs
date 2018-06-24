@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -22,6 +23,7 @@ namespace PoshSec.Framework
         private readonly Network _network;
 
         private readonly List<Task> _tasks = new List<Task>();
+        private static string _arp;
 
         public bool CancelScan { get; set; }
 
@@ -86,13 +88,12 @@ namespace PoshSec.Framework
             foreach (var ip in ipAddresses)
             {
                 OnStatusUpdate(new ScanStatusEventArgs("Adding " + directoryEntry.Name.Replace("CN=", "") + ", please wait...", 0, 255));
-                var ipaddr = ip.ToString();
-                var macaddr = GetMac(ipaddr);
+                var macaddr = GetMac(ip);
                 var isup = macaddr != StringValue.BlankMAC;
                 var node = new NetworkNode
                 {
                     Name = directoryEntry.Name.Replace("CN=", ""),
-                    IpAddress = ipaddr,
+                    IpAddress = ip,
                     MacAddress = macaddr,
                     Description = (string)directoryEntry.Properties["description"].Value ?? "",
                     Status = isup ? StringValue.Up : StringValue.Down,
@@ -105,7 +106,7 @@ namespace PoshSec.Framework
             return nodes;
         }
 
-        public void ScanbyIP()
+        public void ScanByIP()
         {
             if (_network == null)
                 return;
@@ -125,16 +126,18 @@ namespace PoshSec.Framework
 
             OnStatusUpdate(new ScanStatusEventArgs("", 0, 255));
 
-            var localIpBytes = localIP.GetAddressBytes();
-            for (byte index = 1; index < 255; index++)
-            {
-                var scanIp = new IPAddress(new[] { localIpBytes[0], localIpBytes[1], localIpBytes[2], index });
+            _arp = BuildArpTable();
 
-                OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", index, 255));
+            var localIpBytes = localIP.GetAddressBytes();
+            for (byte b = 1; b < 255; b++)
+            {
+                var scanIp = new IPAddress(new[] { localIpBytes[0], localIpBytes[1], localIpBytes[2], b });
+
+                OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b, 255));
 
                 var task = Task.Run(() =>
                 {
-                    var networkNode = GetNetworkNode(scanIp);
+                    var networkNode = Scan(scanIp);
                     if (networkNode.Status == StringValue.Up)
                         _network.Nodes.Add(networkNode);
                 });
@@ -150,8 +153,6 @@ namespace PoshSec.Framework
 
             OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
             Task.WaitAll(_tasks.ToArray());
-
-            BuildArpTable();
 
             OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
@@ -170,24 +171,26 @@ namespace PoshSec.Framework
             }
         }
 
-        private NetworkNode GetNetworkNode(IPAddress ipAddress)
+        private static NetworkNode Scan(IPAddress ipAddress)
         {
             var host = StringValue.NAHost;
             var isup = false;
-            string ipaddr = ipAddress.ToString();
+            var ipaddr = ipAddress.ToString();
             if (ipaddr != "")
             {
                 if (Ping(ipaddr, 1, 100))
                 {
                     isup = true;
-                    host = GetHostname(ipaddr);
+                    host = GetHostname(ipAddress);
                 }
             }
             var networkNode = new NetworkNode
             {
-                IpAddress = ipaddr,
+                IpAddress = ipAddress,
                 Name = host,
-                Status = isup ? StringValue.Up : StringValue.Down
+                MacAddress = GetMac(ipAddress),
+                Status = isup ? StringValue.Up : StringValue.Down,
+                LastScanned = DateTime.Now
             };
             return networkNode;
         }
@@ -241,26 +244,22 @@ namespace PoshSec.Framework
             return addressList;
         }
 
-        public static string GetMac(string ipaddr)
-        {
+        public static string GetMac(IPAddress ipAddress)
+        {            
             var rtn = "";
-            var arp = BuildArpTable();
-            if (!string.IsNullOrEmpty(arp))
+            if (!string.IsNullOrEmpty(_arp))
             {
-                var ips = ipaddr.Split(',');
-                foreach (var ip in ips)
+                string ip = ipAddress.ToString();
+                var ipidx = _arp.IndexOf(ip + " ", 0);
+                if (ipidx > -1)
                 {
-                    var ipidx = arp.IndexOf(ip + " ", 0);
-                    if (ipidx > -1)
-                    {
-                        var mac = arp.Substring(ipidx, 39).Replace(ip, "").Trim();
-                        if (mac.Contains("---")) mac = GetMyMac(ip);
-                        rtn += mac + ",";
-                    }
-                    else
-                    {
-                        rtn += GetMyMac(ip);
-                    }
+                    var mac = _arp.Substring(ipidx, 39).Replace(ip, "").Trim();
+                    if (mac.Contains("---")) mac = GetMyMac(ipAddress);
+                    rtn += mac + ",";
+                }
+                else
+                {
+                    rtn += GetMyMac(ipAddress);
                 }
 
                 if (rtn.EndsWith(",")) rtn = rtn.Substring(0, rtn.Length - 1);
@@ -270,7 +269,7 @@ namespace PoshSec.Framework
             return rtn;
         }
 
-        public static string GetMyMac(string ipaddr)
+        public static string GetMyMac(IPAddress ipAddress)
         {
             var mac = StringValue.BlankMAC;
             try
@@ -289,6 +288,7 @@ namespace PoshSec.Framework
 
                 if (!string.IsNullOrEmpty(ipconfig))
                 {
+                    var ipaddr = ipAddress.ToString();
                     var ipidx = ipconfig.IndexOf(ipaddr, 0, StringComparison.Ordinal);
                     if (ipidx > -1)
                     {
@@ -306,20 +306,17 @@ namespace PoshSec.Framework
             return mac;
         }
 
-        private static string GetHostname(string ip)
+        private static string GetHostname(IPAddress ipAddress)
         {
-            var host = "";
             try
             {
-                var ipentry = Dns.GetHostEntry(IPAddress.Parse(ip));
-                host = ipentry.HostName;
+                var ipentry = Dns.GetHostEntry(ipAddress);
+                return ipentry.HostName;
             }
             catch
             {
-                host = StringValue.NAHost;
+                return StringValue.NAHost;
             }
-
-            return host;
         }
 
         private static void ClearArpTable()
