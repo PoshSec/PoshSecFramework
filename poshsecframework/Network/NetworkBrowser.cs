@@ -372,12 +372,14 @@ namespace PoshSec.Framework
 
         private void OnStatusUpdate(ScanStatusEventArgs e)
         {
+            Trace.TraceInformation(e.Status);
             var handler = ScanStatusUpdate;
             handler?.Invoke(this, e);
         }
 
         private void OnNetworkScanComplete(NetworkScanCompleteEventArgs e)
         {
+            Trace.TraceInformation($"Scan of {e.Network.Name} complete.");
             var handler = NetworkScanComplete;
             handler?.Invoke(this, e);
         }
