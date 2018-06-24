@@ -30,7 +30,6 @@ namespace PoshSec.Framework
         private Collection<PSObject> _commands;
         private readonly Networks _networks = new Networks();
 
-        private readonly NetworkBrowser _networkBrowser = new NetworkBrowser();
         private frmStartup _spashScreen;
         private int _mincurpos = 6;
         private readonly Collection<string> _cmdhist = new Collection<string>();
@@ -109,9 +108,6 @@ namespace PoshSec.Framework
             if (_cont)
             {
                 _spashScreen.SetStatus("Initializing, please wait...");
-                _networkBrowser.ScanComplete += NetworkBrowserScanComplete;
-                _networkBrowser.ScanCancelled += NetworkBrowserScanCancelled;
-                _networkBrowser.ScanUpdate += NetworkBrowserScanUpdate;
                 _schedule.ItemUpdated += schedule_ItemUpdated;
                 _schedule.ScriptInvoked += schedule_ScriptInvoked;
                 _schedule.ScheduleRemoved += schedule_ScheduleRemoved;
@@ -455,7 +451,7 @@ namespace PoshSec.Framework
                         // TODO: Replace with strongly typed SystemsListViewItem
                         var lvwItm = new ListViewItem { Text = localHost };
                         lvwItm.SubItems.Add(localIP);
-                        lvwItm.SubItems.Add(_networkBrowser.GetMyMac(localIP));
+                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(localIP));
                         lvwItm.SubItems.Add("");
                         lvwItm.SubItems.Add(StringValue.Up);
                         lvwItm.SubItems.Add(StringValue.NotInstalled);
@@ -481,43 +477,47 @@ namespace PoshSec.Framework
         private void Scan()
         {
             UseWaitCursor = true;
+
             var network = _networks.CurrentNetwork;
+            var networkBrowser = new NetworkBrowser(network);
+
+            networkBrowser.ScanStatusUpdate += NetworkBrowser_ScanStatusUpdate;
+            networkBrowser.NetworkScanComplete += NetworkBrowser_ScanComplete;
+            networkBrowser.NetworkScanCancelled += NetworkBrowser_ScanCancelled;
+
+            btnCancelScan.Click += (sender, args) =>
+            {
+                networkBrowser.CancelScan = true;
+            };
+
             btnCancelScan.Enabled = true;
-            _networkBrowser.CancelIPScan = false;
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
+
             switch (network)
             {
                 case LocalNetwork _:
-                    ScanbyIP(network);
+                    networkBrowser.ScanbyIP();
                     break;
                 case DomainNetwork _:
-                    ScanAD(network);
+                    networkBrowser.ScanActiveDirectory();
                     break;
             }
+
+            networkBrowser.ScanStatusUpdate -= NetworkBrowser_ScanStatusUpdate;
+            networkBrowser.NetworkScanComplete -= NetworkBrowser_ScanComplete;
+            networkBrowser.NetworkScanCancelled -= NetworkBrowser_ScanCancelled;
+
             UseWaitCursor = false;
         }
 
-        // TODO: make asynchronous 
-        private void ScanAD(Network network)
-        {
-            _networkBrowser.Domain = network.Name;
-            Task.Run(() => _networkBrowser.ScanActiveDirectory(network));
-        }
-
-        // TODO: make asynchronous 
-        private void ScanbyIP(Network network)
-        {
-            Task.Run(() => _networkBrowser.ScanbyIP(network));
-        }
-
-        private void NetworkBrowserScanComplete(object sender, NetworkScanCompleteEventArgs e)
+        private void NetworkBrowser_ScanComplete(object sender, NetworkScanCompleteEventArgs e)
         {
             if (this.InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    NetworkBrowserScanComplete(sender, e);
+                    NetworkBrowser_ScanComplete(sender, e);
                 };
                 this.Invoke(del);
             }
@@ -597,13 +597,13 @@ namespace PoshSec.Framework
             }
         }
 
-        private void NetworkBrowserScanCancelled(object sender, EventArgs e)
+        private void NetworkBrowser_ScanCancelled(object sender, EventArgs e)
         {
             if (this.InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    NetworkBrowserScanCancelled(sender, e);
+                    NetworkBrowser_ScanCancelled(sender, e);
                 };
                 this.Invoke(del);
             }
@@ -618,13 +618,13 @@ namespace PoshSec.Framework
             }
         }
 
-        void NetworkBrowserScanUpdate(object sender, ScanStatusEventArgs e)
+        void NetworkBrowser_ScanStatusUpdate(object sender, ScanStatusEventArgs e)
         {
             if (InvokeRequired)
             {
                 MethodInvoker del = delegate
                 {
-                    NetworkBrowserScanUpdate(sender, e);
+                    NetworkBrowser_ScanStatusUpdate(sender, e);
                 };
                 Invoke(del);
             }
@@ -2511,11 +2511,6 @@ namespace PoshSec.Framework
             Scan();
         }
 
-        private void btnCancelScan_Click(object sender, EventArgs e)
-        {
-            _networkBrowser.CancelIPScan = true;
-        }
-
         private void btnRefreshNetworks_Click(object sender, EventArgs e)
         {
             LoadNetworks();
@@ -2579,7 +2574,7 @@ namespace PoshSec.Framework
                     {
                         Name = systemName,
                         IpAddress = ipAddress,
-                        MacAddress = _networkBrowser.GetMac(ipAddress),
+                        MacAddress = NetworkBrowser.GetMac(ipAddress),
                         Status = status,
                         Description = description
                     };

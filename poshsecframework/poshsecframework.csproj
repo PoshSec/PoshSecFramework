@@ -161,7 +161,6 @@
     <Compile Include="Network\NetworkBrowser.cs" />
     <Compile Include="Network\NetworkScanCompleteEventArgs.cs" />
     <Compile Include="Scans\ScanIpEventArgs.cs" />
-    <Compile Include="Scans\ScanIP.cs" />
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

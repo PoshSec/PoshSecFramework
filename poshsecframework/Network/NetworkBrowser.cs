@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoshSec.Framework.Interface;
 using PoshSec.Framework.Strings;
@@ -18,71 +19,68 @@ namespace PoshSec.Framework
 {
     internal class NetworkBrowser
     {
+
         private readonly Network _network;
-        private string _ipconfig = "";
-        private string _arp = "";
-        private readonly Collection<Thread> _threads = new Collection<Thread>();
 
-        [Obsolete]
-        private string _domain = "";
-        private bool _shstatus = true;
+        private readonly List<Task> _tasks = new List<Task>();
 
-        public bool CancelIPScan { get; set; }
+        private bool _showStatus = true;
 
-        public event EventHandler<NetworkScanCompleteEventArgs> ScanComplete;
-        public event EventHandler<EventArgs> ScanCancelled;
-        public event EventHandler<ScanStatusEventArgs> ScanUpdate;
+        public bool CancelScan { get; set; }
 
-        //public NetworkBrowser(Network network)
-        //{
-        //    _network = network;
-        //}
+        public event EventHandler<ScanIpEventArgs> ScanIPComplete;
+        public event EventHandler<NetworkScanCompleteEventArgs> NetworkScanComplete;
+        public event EventHandler<EventArgs> NetworkScanCancelled;
+        public event EventHandler<ScanStatusEventArgs> ScanStatusUpdate;
 
-        public void ScanActiveDirectory(Network network)
+        public NetworkBrowser(Network network)
         {
-            network.Nodes.Clear();
-            if (!string.IsNullOrEmpty(_domain))
+            _network = network;
+        }
+
+        public void ScanActiveDirectory()
+        {
+            if (_network == null) return;
+
+            _network.Nodes.Clear();
+            ClearArpTable();
+            var hostPc = new DirectoryEntry { Path = "LDAP://" + _network.Name };
+            SearchResultCollection searchResults = null;
+
+            using (var srch = new DirectorySearcher(hostPc))
             {
-                ClearArpTable();
-                var hostPc = new DirectoryEntry { Path = "LDAP://" + _domain };
-                SearchResultCollection srslts = null;
-
-                using (var srch = new DirectorySearcher(hostPc))
+                srch.Filter = "(&(objectClass=computer))";
+                srch.SearchScope = SearchScope.Subtree;
+                srch.PropertiesToLoad.Add("description");
+                try
                 {
-                    srch.Filter = "(&(objectClass=computer))";
-                    srch.SearchScope = SearchScope.Subtree;
-                    srch.PropertiesToLoad.Add("description");
-                    try
-                    {
-                        srslts = srch.FindAll();
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message);
-                    }
+                    searchResults = srch.FindAll();
                 }
-
-                if (srslts != null && srslts.Count > 0)
+                catch (Exception e)
                 {
-                    var hostcnt = 0;
-                    foreach (SearchResult srslt in srslts)
-                    {
-                        hostcnt++;
-                        var directoryEntry = srslt.GetDirectoryEntry();
-                        var scnmsg = "Scanning " + directoryEntry.Name.Replace("CN=", "") + ", please wait...";
-                        OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, srslts.Count));
-                        if (directoryEntry.Name.Replace("CN=", "") != "Schema" && directoryEntry.SchemaClassName == "computer")
-                        {
-                            Ping(directoryEntry.Name.Replace("CN=", ""), 1, 100);
-                            network.Nodes.AddRange(GetSystems(directoryEntry));
-                        }
-                    }
+                    MessageBox.Show(e.Message);
                 }
-
-                BuildArpTable();
             }
 
-            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(network));
+            if (searchResults != null && searchResults.Count > 0)
+            {
+                var hostcnt = 0;
+                foreach (SearchResult result in searchResults)
+                {
+                    hostcnt++;
+                    var directoryEntry = result.GetDirectoryEntry();
+                    var scnmsg = "Scanning " + directoryEntry.Name.Replace("CN=", "") + ", please wait...";
+                    OnStatusUpdate(new ScanStatusEventArgs(scnmsg, hostcnt, searchResults.Count));
+                    if (directoryEntry.Name.Replace("CN=", "") != "Schema" && directoryEntry.SchemaClassName == "computer")
+                    {
+                        Ping(directoryEntry.Name.Replace("CN=", ""), 1, 100);
+                        _network.Nodes.AddRange(GetSystems(directoryEntry));
+                    }
+                }
+            }
+
+            BuildArpTable();
+            OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
         }
 
         private IEnumerable<NetworkNode> GetSystems(DirectoryEntry directoryEntry)
@@ -113,24 +111,28 @@ namespace PoshSec.Framework
             return nodes;
         }
 
-        public void ScanbyIP(Network network)
+        public void ScanbyIP()
         {
-            network.Nodes.Clear();
+            if (_network == null)
+                return;
+            _network.Nodes.Clear();
             ClearArpTable();
             var localIPs = GetIp(Dns.GetHostName()).Split(',');
             var localIP = localIPs[0];
             var cancelled = false;
             if (localIPs.Length > 1)
             {
-                var frm = new frmScan();
-                frm.IPs = localIPs;
-                frm.StartPosition = FormStartPosition.CenterScreen;
-                if (frm.ShowDialog() == DialogResult.OK)
-                    localIP = frm.SelectedIP;
-                else
-                    cancelled = true;
-                frm.Dispose();
-                frm = null;
+                using (var frm = new frmScan
+                {
+                    IPs = localIPs,
+                    StartPosition = FormStartPosition.CenterScreen
+                })
+                {
+                    if (frm.ShowDialog() == DialogResult.OK)
+                        localIP = frm.SelectedIP;
+                    else
+                        cancelled = true;
+                }
             }
 
             if (!string.IsNullOrEmpty(localIP) && !cancelled)
@@ -138,42 +140,37 @@ namespace PoshSec.Framework
                 var ipparts = localIP.Split('.');
                 if (ipparts.Length == 4)
                 {
-                    if (_shstatus)
+                    if (_showStatus)
                         OnStatusUpdate(new ScanStatusEventArgs("", 0, 255));
                     var ip = 1;
                     var cancel = false;
                     do
                     {
-                        var host = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip;
-                        if (_shstatus)
+                        var ipaddr = ipparts[0] + "." + ipparts[1] + "." + ipparts[2] + "." + ip;
+                        if (_showStatus)
                         {
-                            OnStatusUpdate(new ScanStatusEventArgs("Scanning " + host + ", please wait...", ip, 255));
+                            OnStatusUpdate(new ScanStatusEventArgs("Scanning " + ipaddr + ", please wait...", ip, 255));
                         }
-                        var scn = new ScanIP
+                        ScanIPComplete += ScanIpComplete;
+                        var task = Task.Run(() =>
                         {
-                            IPAddress = host,
-                            Index = ip
-                        };
-                        scn.ScanIPComplete += scn_ScanIPComplete;
-                        var thd = new Thread(scn.Scan);
-                        _threads.Add(thd);
-                        thd.Start();
+                            Scan(ipaddr);
+                        });
+                        _tasks.Add(task);
                         ip++;
-                        if (_shstatus) cancel = CancelIPScan;
+                        if (_showStatus) cancel = CancelScan;
                     } while (ip < 255 && !cancel);
 
-                    if (_shstatus)
+                    if (_showStatus)
                         OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
-                    do
-                    {
-                        Thread.Sleep(100);
-                    } while (ThreadsActive());
 
+                    Task.WaitAll(_tasks.ToArray());
+                    
                     BuildArpTable();
 
-                    if (_shstatus) OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
+                    if (_showStatus) OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
-                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(network));
+                    OnNetworkScanComplete(new NetworkScanCompleteEventArgs(_network));
                 }
             }
             else
@@ -182,21 +179,40 @@ namespace PoshSec.Framework
             }
         }
 
-        private void scn_ScanIPComplete(object sender, ScanIpEventArgs e)
+
+        private void Scan(string ipaddr)
         {
-            Debugger.Break();
-            //if (e.IsUp) Systems.Add(e.Index.ToString("000") + "|" + e.IpAddress + "|" + e.Hostname);
+            var host = StringValue.NAHost;
+            var isup = false;
+            if (ipaddr != "")
+            {
+                if (Ping(ipaddr, 1, 100))
+                {
+                    isup = true;
+                    host = GetHostname(ipaddr);
+                }
+            }
+
+            OnScanIPComplete(new ScanIpEventArgs(ipaddr, host, isup, 1));  // TODO: fix index
         }
 
-        private bool ThreadsActive()
+        private void OnScanIPComplete(ScanIpEventArgs e)
         {
-            var rtn = false;
-            foreach (var thd in _threads)
-                if (thd.ThreadState != ThreadState.Stopped)
-                    rtn = true;
-            return rtn;
+            var handler = ScanIPComplete;
+            handler?.Invoke(this, e);
         }
 
+        private void ScanIpComplete(object sender, ScanIpEventArgs e)
+        {
+            // TODO: what to do with index
+            var networkNode = new NetworkNode
+            {
+                IpAddress = e.IpAddress,
+                Name = e.Hostname,
+                Status = e.IsUp ? StringValue.Up : StringValue.Down
+            };
+            _network.Nodes.Add(networkNode);
+        }
 
         public static bool Ping(string host, int attempts, int timeout)
         {
@@ -249,18 +265,19 @@ namespace PoshSec.Framework
             return ipadr;
         }
 
-        public string GetMac(string ipaddr)
+        public static string GetMac(string ipaddr)
         {
             var rtn = "";
-            if (!string.IsNullOrEmpty(_arp))
+            var arp = BuildArpTable();
+            if (!string.IsNullOrEmpty(arp))
             {
                 var ips = ipaddr.Split(',');
                 foreach (var ip in ips)
                 {
-                    var ipidx = _arp.IndexOf(ip + " ", 0);
+                    var ipidx = arp.IndexOf(ip + " ", 0);
                     if (ipidx > -1)
                     {
-                        var mac = _arp.Substring(ipidx, 39).Replace(ip, "").Trim();
+                        var mac = arp.Substring(ipidx, 39).Replace(ip, "").Trim();
                         if (mac.Contains("---")) mac = GetMyMac(ip);
                         rtn += mac + ",";
                     }
@@ -277,46 +294,43 @@ namespace PoshSec.Framework
             return rtn;
         }
 
-        public string GetMyMac(string ipaddr)
+        public static string GetMyMac(string ipaddr)
         {
-            var rtn = StringValue.BlankMAC;
+            var mac = StringValue.BlankMAC;
             try
             {
-                if (_ipconfig == "")
+                var psi = new ProcessStartInfo("ipconfig")
                 {
-                    var psi = new ProcessStartInfo("ipconfig");
-                    psi.UseShellExecute = false;
-                    psi.CreateNoWindow = true;
-                    psi.RedirectStandardOutput = true;
-                    psi.Arguments = "/all";
-                    var prc = new Process();
-                    prc.StartInfo = psi;
-                    prc.Start();
-                    _ipconfig = prc.StandardOutput.ReadToEnd();
-                    prc.WaitForExit();
-                    prc = null;
-                }
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    Arguments = "/all"
+                };
+                var prc = new Process { StartInfo = psi };
+                prc.Start();
+                var ipconfig = prc.StandardOutput.ReadToEnd();
+                prc.WaitForExit();
 
-                if (_ipconfig != null && _ipconfig != "")
+                if (!string.IsNullOrEmpty(ipconfig))
                 {
-                    var ipidx = _ipconfig.IndexOf(ipaddr, 0);
+                    var ipidx = ipconfig.IndexOf(ipaddr, 0, StringComparison.Ordinal);
                     if (ipidx > -1)
                     {
-                        var paidx = _ipconfig.ToLower().LastIndexOf("physical address", ipidx);
+                        var paidx = ipconfig.ToLower().LastIndexOf("physical address", ipidx, StringComparison.Ordinal);
                         if (paidx > -1)
-                            rtn = _ipconfig.Substring(paidx, 53).Replace("Physical Address. . . . . . . . . : ", "");
+                            mac = ipconfig.Substring(paidx, 53).Replace("Physical Address. . . . . . . . . : ", "");
                     }
                 }
             }
             catch (Exception)
             {
-                rtn = StringValue.BlankMAC;
+                mac = StringValue.BlankMAC;
             }
 
-            return rtn;
+            return mac;
         }
 
-        public static string GetHostname(string ip)
+        private static string GetHostname(string ip)
         {
             var host = "";
             try
@@ -336,15 +350,18 @@ namespace PoshSec.Framework
         {
             try
             {
-                var psi = new ProcessStartInfo("arp");
-                psi.UseShellExecute = false;
-                psi.CreateNoWindow = true;
-                psi.Arguments = "-d";
-                var prc = new Process();
-                prc.StartInfo = psi;
+                var psi = new ProcessStartInfo("arp")
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    Arguments = "-d"
+                };
+                var prc = new Process
+                {
+                    StartInfo = psi
+                };
                 prc.Start();
                 prc.WaitForExit();
-                prc = null;
             }
             catch (Exception)
             {
@@ -352,55 +369,55 @@ namespace PoshSec.Framework
             }
         }
 
-        private void BuildArpTable()
+        private static string BuildArpTable()
         {
             try
             {
-                var psi = new ProcessStartInfo("arp");
-                psi.UseShellExecute = false;
-                psi.CreateNoWindow = true;
-                psi.RedirectStandardOutput = true;
-                psi.Arguments = "-a";
-                var prc = new Process();
-                prc.StartInfo = psi;
+                var psi = new ProcessStartInfo("arp")
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    RedirectStandardOutput = true,
+                    Arguments = "-a"
+                };
+                var prc = new Process
+                {
+                    StartInfo = psi
+                };
                 prc.Start();
-                _arp = prc.StandardOutput.ReadToEnd();
+                var arp = prc.StandardOutput.ReadToEnd();
                 prc.WaitForExit();
-                prc = null;
+                return arp;
             }
             catch (Exception)
             {
                 //do nothing
             }
+
+            return null;
         }
 
         private void OnStatusUpdate(ScanStatusEventArgs e)
         {
-            var handler = ScanUpdate;
+            var handler = ScanStatusUpdate;
             handler?.Invoke(this, e);
         }
 
         private void OnNetworkScanComplete(NetworkScanCompleteEventArgs e)
         {
-            var handler = ScanComplete;
+            var handler = NetworkScanComplete;
             handler?.Invoke(this, e);
         }
 
         private void OnScanCancelled(EventArgs e)
         {
-            var handler = ScanCancelled;
+            var handler = NetworkScanCancelled;
             handler?.Invoke(this, e);
         }
 
         public bool ShowStatus
         {
-            set => _shstatus = value;
-        }
-
-        [Obsolete]
-        public string Domain
-        {
-            set => _domain = value;
+            set => _showStatus = value;
         }
 
     }

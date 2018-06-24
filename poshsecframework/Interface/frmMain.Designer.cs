@@ -766,7 +766,6 @@ namespace PoshSec.Framework
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(28, 28);
             this.btnCancelScan.ToolTipText = "Cancel Scan";
-            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
             // pnlSystems
             // 

@@ -15,7 +15,7 @@ namespace PoshSec.Framework.Interface
     public partial class frmNetworkBrowser : Form
     {
         private readonly Networks _networks = new Networks();
-        private readonly NetworkBrowser _networkBrowser = new NetworkBrowser();
+        //private readonly NetworkBrowser _networkBrowser = new NetworkBrowser();
         private readonly Collection<PSObject> _hosts = new Collection<PSObject>();
 
         [Obsolete]
@@ -24,8 +24,6 @@ namespace PoshSec.Framework.Interface
         public frmNetworkBrowser()
         {
             InitializeComponent();
-            _networkBrowser.ScanComplete += NetworkBrowserScanComplete;
-            _networkBrowser.ScanCancelled += NetworkBrowserScanCancelled;
             LoadNetworks();
             ListSystems();
         }
@@ -162,14 +160,33 @@ namespace PoshSec.Framework.Interface
         private void ScanbyIP(Network network)
         {
             _lvwSystems.UseWaitCursor = true;
-            _networkBrowser.ShowStatus = false;
-            Task.Run(() => _networkBrowser.ScanbyIP(network));
+
+            Task.Run(() =>
+            {
+                var networkBrowser = new NetworkBrowser(network)
+                {
+                    ShowStatus = false
+                };
+                networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
+                networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
+                networkBrowser.ScanbyIP();
+                networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
+                networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
+            });
         }
 
         private void ScanAD(Network network)
         {
-            _networkBrowser.Domain = _domain;
-            _networkBrowser.ScanActiveDirectory(network);
+
+            Task.Run(() =>
+            {
+                var networkBrowser = new NetworkBrowser(network);
+                networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
+                networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
+                networkBrowser.ScanActiveDirectory();
+                networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
+                networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
+            });
         }
 
         public string SerializedHosts => PSSerializer.Serialize(_hosts);

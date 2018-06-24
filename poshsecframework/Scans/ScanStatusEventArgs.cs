@@ -6,12 +6,12 @@ namespace PoshSec.Framework
     {
         public ScanStatusEventArgs(string status, int currentIndex, int maxIndex)
         {
-            this.Status = status;
-            this.CurrentIndex = currentIndex;
-            this.MaxIndex = maxIndex;
+            Status = status;
+            CurrentIndex = currentIndex;
+            MaxIndex = maxIndex;
         }
 
-        public string Status { get; } = "";
+        public string Status { get; }
 
         public int CurrentIndex { get; }
 
