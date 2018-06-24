@@ -480,32 +480,28 @@ namespace PoshSec.Framework
             var network = _networks.CurrentNetwork;
             var networkBrowser = new NetworkBrowser(network);
 
+            void OnBtnCancelScanOnClick(object sender, EventArgs e)
+            {
+                networkBrowser.CancelScan();
+            }
+
+            btnCancelScan.Click += OnBtnCancelScanOnClick;
+
             networkBrowser.ScanStatusUpdate += NetworkBrowser_ScanStatusUpdate;
             networkBrowser.NetworkScanComplete += NetworkBrowser_ScanComplete;
             networkBrowser.NetworkScanCancelled += NetworkBrowser_ScanCancelled;
-
-            btnCancelScan.Click += (sender, args) =>
-            {
-                networkBrowser.CancelScan = true;
-            };
 
             btnCancelScan.Enabled = true;
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
 
-            switch (network)
-            {
-                case LocalNetwork _:
-                    networkBrowser.ScanByIP();
-                    break;
-                case DomainNetwork _:
-                    networkBrowser.ScanActiveDirectory();
-                    break;
-            }
+            networkBrowser.Scan();
 
             networkBrowser.ScanStatusUpdate -= NetworkBrowser_ScanStatusUpdate;
             networkBrowser.NetworkScanComplete -= NetworkBrowser_ScanComplete;
             networkBrowser.NetworkScanCancelled -= NetworkBrowser_ScanCancelled;
+
+            btnCancelScan.Click -= OnBtnCancelScanOnClick;
 
             UseWaitCursor = false;
         }

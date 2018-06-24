@@ -15,11 +15,8 @@ namespace PoshSec.Framework.Interface
     public partial class frmNetworkBrowser : Form
     {
         private readonly Networks _networks = new Networks();
-        //private readonly NetworkBrowser _networkBrowser = new NetworkBrowser();
         private readonly Collection<PSObject> _hosts = new Collection<PSObject>();
 
-        [Obsolete]
-        private string _domain = "";
 
         public frmNetworkBrowser()
         {
@@ -59,17 +56,7 @@ namespace PoshSec.Framework.Interface
             btnOK.Enabled = false;
             btnCancel.Enabled = false;
             var selectedItem = cmbNetworks.SelectedItem;
-            switch (selectedItem)
-            {
-                case LocalNetwork localNetwork:
-                    Task.Run(() => ScanbyIP(localNetwork));
-                    break;
-                case DomainNetwork domainNetwork:
-                    _domain = domainNetwork.Name;
-                    _lvwSystems.UseWaitCursor = true;
-                    Task.Run(() => ScanAD(domainNetwork));
-                    break;
-            }
+            Scan((Network)selectedItem);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -157,7 +144,7 @@ namespace PoshSec.Framework.Interface
             }
         }
 
-        private void ScanbyIP(Network network)
+        private void Scan(Network network)
         {
             _lvwSystems.UseWaitCursor = true;
 
@@ -166,21 +153,7 @@ namespace PoshSec.Framework.Interface
                 var networkBrowser = new NetworkBrowser(network);
                 networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
-                networkBrowser.ScanByIP();
-                networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
-                networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
-            });
-        }
-
-        private void ScanAD(Network network)
-        {
-
-            Task.Run(() =>
-            {
-                var networkBrowser = new NetworkBrowser(network);
-                networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
-                networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
-                networkBrowser.ScanActiveDirectory();
+                networkBrowser.Scan();
                 networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
                 networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
             });

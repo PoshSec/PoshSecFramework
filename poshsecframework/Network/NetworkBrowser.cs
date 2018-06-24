@@ -1,20 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoshSec.Framework.Interface;
 using PoshSec.Framework.Strings;
-using ThreadState = System.Threading.ThreadState;
 
 namespace PoshSec.Framework
 {
@@ -22,10 +18,10 @@ namespace PoshSec.Framework
     {
         private readonly Network _network;
 
-        private readonly List<Task> _tasks = new List<Task>();
         private static string _arp;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        public bool CancelScan { get; set; }
+        //public bool CancelScan { get; set; }
 
         public event EventHandler<NetworkScanCompleteEventArgs> NetworkScanComplete;
         public event EventHandler<EventArgs> NetworkScanCancelled;
@@ -36,7 +32,7 @@ namespace PoshSec.Framework
             _network = network;
         }
 
-        public void ScanActiveDirectory()
+        private void ScanActiveDirectory()
         {
             if (_network == null) return;
 
@@ -106,7 +102,7 @@ namespace PoshSec.Framework
             return nodes;
         }
 
-        public void ScanByIP()
+        private void ScanLocalNetwork()
         {
             if (_network == null)
                 return;
@@ -128,31 +124,41 @@ namespace PoshSec.Framework
 
             _arp = BuildArpTable();
 
+            var tasks = new List<Task>();
+
+            var maxThread = new SemaphoreSlim(10);
+            
             var localIpBytes = localIP.GetAddressBytes();
             for (byte b = 1; b < 255; b++)
             {
+                maxThread.Wait(_cancellationTokenSource.Token);
+
                 var scanIp = new IPAddress(new[] { localIpBytes[0], localIpBytes[1], localIpBytes[2], b });
 
                 OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b, 255));
 
-                var task = Task.Run(() =>
+                var task = Task.Factory.StartNew(() =>
                 {
                     var networkNode = Scan(scanIp);
                     if (networkNode.Status == StringValue.Up)
                         _network.Nodes.Add(networkNode);
-                });
+                }, TaskCreationOptions.LongRunning).ContinueWith(t=>maxThread.Release());
+                tasks.Add(task);
                 Application.DoEvents();
-                _tasks.Add(task);
-
-                if (CancelScan)
-                {
-                    OnScanCancelled(new EventArgs());
+                if (_cancellationTokenSource.IsCancellationRequested)
                     break;
-                }
             }
 
             OnStatusUpdate(new ScanStatusEventArgs(StringValue.WaitingForHostResp, 255, 255));
-            Task.WaitAll(_tasks.ToArray());
+
+            try
+            {
+                Task.WaitAll(tasks.ToArray(), _cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                OnScanCancelled(EventArgs.Empty);
+            }
 
             OnStatusUpdate(new ScanStatusEventArgs(StringValue.Ready, 0, 255));
 
@@ -168,6 +174,19 @@ namespace PoshSec.Framework
             })
             {
                 return frm.ShowDialog() == DialogResult.OK ? IPAddress.Parse(frm.SelectedIP) : null;
+            }
+        }
+
+        public void Scan()
+        {
+            switch (_network)
+            {
+                case LocalNetwork _:
+                    ScanLocalNetwork();
+                    break;
+                case DomainNetwork _:
+                    ScanActiveDirectory();
+                    break;
             }
         }
 
@@ -228,13 +247,7 @@ namespace PoshSec.Framework
             {
                 var ipentry = Dns.GetHostEntry(host.Replace("CN=", ""));
                 var addrs = ipentry.AddressList;
-                foreach (var addr in addrs)
-                    //Limit to IPv4 for now
-                    if (addr.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        addressList.Add(addr);
-                        Application.DoEvents();
-                    }
+                addressList.AddRange(addrs.Where(addr => addr.AddressFamily == AddressFamily.InterNetwork));
             }
             catch
             {
@@ -245,7 +258,7 @@ namespace PoshSec.Framework
         }
 
         public static string GetMac(IPAddress ipAddress)
-        {            
+        {
             var rtn = "";
             if (!string.IsNullOrEmpty(_arp))
             {
@@ -388,6 +401,11 @@ namespace PoshSec.Framework
         {
             var handler = NetworkScanCancelled;
             handler?.Invoke(this, e);
+        }
+
+        public void CancelScan()
+        {
+            _cancellationTokenSource.Cancel();
         }
     }
 }
