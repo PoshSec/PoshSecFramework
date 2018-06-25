@@ -2472,9 +2472,16 @@ namespace PoshSec.Framework
                     if (IPAddress.TryParse(frm.IpAddress, out var ipAddress))
                     {
                         var ping = new Ping();
-                        var reply = ping.Send(ipAddress);
-                        if (reply?.Status == IPStatus.Success)
-                            status = StringValue.Up;
+                        try
+                        {
+                            var reply = ping.Send(ipAddress);
+                            if (reply?.Status == IPStatus.Success)
+                                status = StringValue.Up;
+                        }
+                        catch
+                        {
+                            status = StringValue.Down;
+                        }
                         var system = new NetworkNode
                         {
                             Name = systemName,
