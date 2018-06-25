@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,9 +8,9 @@
     <ProjectGuid>{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>poshsecframework</RootNamespace>
+    <RootNamespace>PoshSec.Framework</RootNamespace>
     <AssemblyName>poshsecframework</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -41,6 +41,9 @@
     <ApplicationIcon>Images\psficon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -78,6 +81,7 @@
     <Compile Include="Enums\EnumValues.cs" />
     <Compile Include="Events\WriteEventArgs.cs" />
     <Compile Include="Events\WriteProgressEventArgs.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Interface\frmAddNetwork.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,9 +142,26 @@
     <Compile Include="Interface\frmStartup.Designer.cs">
       <DependentUpon>frmStartup.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\SystemForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Interface\SystemForm.Designer.cs">
+      <DependentUpon>SystemForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Network\NetworksTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Interface\ProxyPreference.cs" />
+    <Compile Include="Interface\ProxyPreferenceGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Interface\ProxyPreferenceGroupBox.Designer.cs">
+      <DependentUpon>ProxyPreferenceGroupBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Network\NetworkType.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
-    <Compile Include="Events\ScanEventArgs.cs" />
-    <Compile Include="Network\ScanIP.cs" />
+    <Compile Include="Network\NetworkScanCompleteEventArgs.cs" />
+    <Compile Include="Scans\ScanIpEventArgs.cs" />
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,7 +173,23 @@
     <Compile Include="PShell\pshosteditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Scans\ScanStatusEventArgs.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Strings\StringValue.cs" />
+    <Compile Include="Systems\CurrentNetworkChangedEventArgs.cs" />
+    <Compile Include="Systems\DomainNetwork.cs" />
+    <Compile Include="Systems\INetworkNode.cs" />
+    <Compile Include="Systems\IPAddressConverter.cs" />
+    <Compile Include="Systems\LocalNetwork.cs" />
+    <Compile Include="Systems\Network.cs" />
+    <Compile Include="Systems\NetworkNode.cs" />
+    <Compile Include="Systems\SystemsAddedEventArgs.cs" />
+    <Compile Include="Systems\SystemsListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Systems\SystemsListViewItem.cs" />
+    <Compile Include="Systems\Networks.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />
@@ -198,6 +235,9 @@
     <EmbeddedResource Include="Interface\frmStartup.resx">
       <DependentUpon>frmStartup.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Interface\SystemForm.resx">
+      <DependentUpon>SystemForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -209,6 +249,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

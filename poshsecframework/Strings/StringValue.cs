@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace poshsecframework.Strings
+namespace PoshSec.Framework.Strings
 {
     internal static class StringValue
     {
@@ -34,6 +34,7 @@ namespace poshsecframework.Strings
         public const string SelectMonths = "Please select the months of the year and the dates to schedule this script.";
         public const string SelectSystems = "Please select some systems first.";
         public const string InvalidNetworkName = "Please enter a unique and valid network name. (i.e. system.local)";
+        public const string InvalidSystemName = "Please enter a unique and valid system name. (i.e. PC123456)";
         public const string InvalidSyslog = "Please enter a valid host name or IP address for the syslog server.";
         public const string InvalidAlertType = "That is not a valid Alert Type. The valid alert types are ";
         public const string FileSavedSuccessfully = "File saved successfully.";
@@ -123,12 +124,13 @@ namespace poshsecframework.Strings
         public const string BranchNotFound = "The specified branch of {0} was not found as a valid branch for this repository.";
         public const string ModuleUptoDate = "That module is up to date. There are no updates available.";
         public const string ModuleUpdateAvailable = "This module was updated on {0}. Would you like to update your copy now?";
-        public const string ConfirmRemoveSystem = "Are you sure you want to remove the selected system(s)?";
+        public const string ConfirmRemoveSystem = "Are you sure you want to remove the ({0}) {1} system(s)?";
 
         public const string ExportFormats = "Extensible Markup Language (*.xml)|*.xml|Comma Separate Values (*.csv)|*.csv|Tabbed Delimited (*.txt)|*.txt";
         public const string OutputLogFormat = "[{0}:{1}] - {2}";
         public const string SyslogFormat = "{0}{1} {2} : %{3}-{4}: {5}";
         public const string PriorityFormat = "<{0}>";
         public const string AlertLabelFormat = "{0} ({1})";
+        public const string NetworkSettingsPath = "networks.json";
     }
 }

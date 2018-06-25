@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace poshsecframework.Enums
+namespace PoshSec.Framework.Enums
 {
     public static class EnumValues
     {

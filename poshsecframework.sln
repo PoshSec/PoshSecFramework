@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2015
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "poshsecframework", "poshsecframework\poshsecframework.csproj", "{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoshSec.Framework.Test", "PoshSec.Framework.Test\PoshSec.Framework.Test.csproj", "{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

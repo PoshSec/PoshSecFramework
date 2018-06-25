@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace poshsecframework.Properties {
+namespace PoshSec.Framework.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -278,12 +278,12 @@ namespace poshsecframework.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ProxyAddress {
+        public string ProxyHost {
             get {
-                return ((string)(this["ProxyAddress"]));
+                return ((string)(this["ProxyHost"]));
             }
             set {
-                this["ProxyAddress"] = value;
+                this["ProxyHost"] = value;
             }
         }
         
@@ -296,6 +296,18 @@ namespace poshsecframework.Properties {
             }
             set {
                 this["ProxyPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("System")]
+        public global::PoshSec.Framework.ProxyPreference ProxyPreference {
+            get {
+                return ((global::PoshSec.Framework.ProxyPreference)(this["ProxyPreference"]));
+            }
+            set {
+                this["ProxyPreference"] = value;
             }
         }
     }

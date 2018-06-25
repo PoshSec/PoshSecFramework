@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 using System.Text;
+using PoshSec.Framework.Properties;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     class psvariables
     {
         public class PSRoot : PSVariable
         {
-            private String psroot = poshsecframework.Properties.Settings.Default.ScriptPath;
+            private String psroot = Settings.Default.ScriptPath;
 
             public PSRoot(string name): base(name) { }
 
@@ -22,7 +23,7 @@ namespace poshsecframework.PShell
 
         public class PSModRoot : PSVariable
         {
-            private String psmodroot = poshsecframework.Properties.Settings.Default.ModulePath;
+            private String psmodroot = Settings.Default.ModulePath;
 
             public PSModRoot(string name) : base(name) { }
 
@@ -34,7 +35,7 @@ namespace poshsecframework.PShell
 
         public class PSFramework : PSVariable
         {
-            private String psf = poshsecframework.Properties.Settings.Default.GithubAPIKey;
+            private String psf = Settings.Default.GithubAPIKey;
 
             public PSFramework(string name) : base(name) { }
 
@@ -46,7 +47,7 @@ namespace poshsecframework.PShell
 
         public class PSExec : PSVariable
         {
-            private String psexec = poshsecframework.Properties.Settings.Default.PSExecPath;
+            private String psexec = Settings.Default.PSExecPath;
 
             public PSExec(string name) : base(name) { }
 
@@ -58,7 +59,7 @@ namespace poshsecframework.PShell
 
         public class PSScheduleFile : PSVariable
         {
-            private String schedulefile = poshsecframework.Properties.Settings.Default.ScheduleFile;
+            private String schedulefile = Settings.Default.ScheduleFile;
 
             public PSScheduleFile(string name) : base(name) { }
 

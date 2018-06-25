@@ -5,10 +5,10 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
-using poshsecframework.Strings;
-using poshsecframework.Enums;
+using PoshSec.Framework.Enums;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Controls
+namespace PoshSec.Framework.Controls
 {
     class PSObjectGrid : ListView
     {

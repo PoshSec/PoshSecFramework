@@ -1,4 +1,4 @@
-﻿namespace poshsecframework.Interface
+﻿namespace PoshSec.Framework.Interface
 {
     partial class frmRepository
     {
@@ -200,7 +200,7 @@
             // 
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnRefresh.Enabled = false;
-            this.btnRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefresh.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefresh.Location = new System.Drawing.Point(240, 0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(35, 26);

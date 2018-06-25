@@ -1,4 +1,4 @@
-﻿namespace poshsecframework.Interface
+﻿namespace PoshSec.Framework.Interface
 {
     partial class frmParams
     {

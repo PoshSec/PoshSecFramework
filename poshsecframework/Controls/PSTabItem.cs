@@ -6,7 +6,7 @@ using System.Management.Automation;
 using System.Text;
 using System.Windows.Forms;
 
-namespace poshsecframework.Controls
+namespace PoshSec.Framework.Controls
 {
     public class PSTabItem : TabPage
     {
