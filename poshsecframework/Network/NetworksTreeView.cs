@@ -29,7 +29,10 @@ namespace PoshSec.Framework
                         break;
                 }
             }
+
+            Nodes[0].Expand();
             ResumeLayout(true);
+            Refresh();
         }
 
         public int Count => Nodes[0].Nodes.Count;

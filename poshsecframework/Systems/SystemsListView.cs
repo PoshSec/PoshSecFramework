@@ -7,9 +7,20 @@ namespace PoshSec.Framework
 {
     public class SystemsListView : ListView
     {
-        public void Add(SystemsListViewItem item)
+        public event EventHandler<SystemsAddedEventArgs> SystemsAdded;
+        private bool _loadExecuting;
+
+        private void Add(SystemsListViewItem item)
         {
             Items.Add(item);
+            if (!_loadExecuting)
+                OnSystemsAdded();
+        }
+
+        public void Add(NetworkNode system)
+        {
+            var item = new SystemsListViewItem(system);
+            Add(item);
         }
 
         public bool IsValid(string systemName)
@@ -20,15 +31,22 @@ namespace PoshSec.Framework
 
         public void Load(IEnumerable<NetworkNode> networkNodes)
         {
+            _loadExecuting = true;
             BeginUpdate();
             Items.Clear();
             foreach (var node in networkNodes)
             {
-                var item = new SystemsListViewItem(node);
-                Items.Add(item);
+                Add(node);
             }
             EndUpdate();
             Refresh();
+            OnSystemsAdded();
+            _loadExecuting = false;
+        }
+
+        protected virtual void OnSystemsAdded()
+        {
+            SystemsAdded?.Invoke(this, new SystemsAddedEventArgs(Items.OfType<SystemsListViewItem>()));
         }
     }
 }

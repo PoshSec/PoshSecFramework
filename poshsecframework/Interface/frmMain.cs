@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Management.Automation;
@@ -13,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using PoshSec.Framework.Comparers;
 using PoshSec.Framework.Enums;
 using PoshSec.Framework.Interface;
@@ -72,6 +71,7 @@ namespace PoshSec.Framework
             InitializeComponent();
             _networks.CurrentNetworkChanged += _networks_CurrentNetworkChanged;
             _lvwSystems.ListViewItemSorter = _lvwSorter;
+            _lvwSystems.SystemsAdded += _lvwSystems_SystemsAdded;
             this.Enabled = false;
             if (IsRootDrive())
             {
@@ -87,6 +87,11 @@ namespace PoshSec.Framework
                 _spashScreen.Show();
                 _spashScreen.Refresh();
             }
+        }
+
+        private void _lvwSystems_SystemsAdded(object sender, SystemsAddedEventArgs e)
+        {
+            tslSystemCount.Text = e.Items.Count() + " Systems";
         }
 
         private void _networks_CurrentNetworkChanged(object sender, CurrentNetworkChangedEventArgs e)
@@ -179,7 +184,6 @@ namespace PoshSec.Framework
                 }
 
                 SaveNetworks();
-                SaveSystems();
                 SaveAlerts();
                 Properties.Settings.Default.Save();
             }
@@ -391,89 +395,8 @@ namespace PoshSec.Framework
 
         #region Network
 
-        private void LoadNetworks()
-        {
-            _networks.Clear();
-            var networks = AppSettings<Networks>.Load(StringValue.NetworkSettingsPath);
-            _networks.AddRange(networks);
-            if (!_networks.OfType<LocalNetwork>().Any())
-                _networks.Add(new LocalNetwork());
 
-            try
-            {
-                //Get Domain Name
-                var hostForest = Forest.GetCurrentForest();
-                var domains = hostForest.Domains;
-
-                foreach (Domain domain in domains)
-                {
-                    var name = domain.Name;
-                    if (_networks.All(n => n.Name != name))
-                        _networks.Add(new DomainNetwork(name));
-                }
-            }
-            catch
-            {
-                //fail silently because it's not on A/D   
-            }
-
-            tvwNetworks.Load(_networks);
-
-            // TODO: load nodes of the currently selected Network
-            if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
-            {
-                _lvwSystems.Items.Clear();
-                foreach (var system in Settings.Default.Systems)
-                {
-                    var systemparts = system.Split('|');
-                    if (systemparts.Length == _lvwSystems.Columns.Count)
-                    {
-                        var lvwItm = new ListViewItem { Text = systemparts[0] };
-                        for (var idx = 1; idx < systemparts.Length; idx++) lvwItm.SubItems.Add(systemparts[idx]);
-                        lvwItm.ImageIndex = 2;
-                        _lvwSystems.Items.Add(lvwItm);
-                    }
-                }
-
-                UpdateSystemCount();
-            }
-            else
-            {
-                try
-                {
-                    //Add Local IP/Host to Local Network
-                    _lvwSystems.Items.Clear();
-                    var localHost = Dns.GetHostName();
-                    var localIPs = NetworkBrowser.GetIPAddresses(localHost);
-                    foreach (var localIP in localIPs)
-                    {
-                        // TODO: Replace with strongly typed SystemsListViewItem
-                        var lvwItm = new ListViewItem { Text = localHost };
-                        lvwItm.SubItems.Add(localIP.ToString());
-                        lvwItm.SubItems.Add(NetworkBrowser.GetMyMac(localIP));
-                        lvwItm.SubItems.Add("");
-                        lvwItm.SubItems.Add(StringValue.Up);
-                        lvwItm.SubItems.Add(StringValue.NotInstalled);
-                        lvwItm.SubItems.Add("0");
-                        lvwItm.SubItems.Add(DateTime.Now.ToString(StringValue.TimeFormat));
-
-                        lvwItm.ImageIndex = 2;
-                        _lvwSystems.Items.Add(lvwItm);
-                    }
-
-                    tvwNetworks.Nodes[0].Expand();
-                    UpdateSystemCount();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message + Environment.NewLine + e.StackTrace);
-                }
-            }
-
-            if (tvwNetworks.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
-        }
-
-        private void Scan()
+        private async Task ScanAsync()
         {
             UseWaitCursor = true;
 
@@ -495,7 +418,7 @@ namespace PoshSec.Framework
             btnScan.Enabled = false;
             mnuScan.Enabled = false;
 
-            networkBrowser.ScanAsync().ContinueWith(t =>
+            var task = networkBrowser.ScanAsync().ContinueWith(t =>
             {
                 networkBrowser.ScanStatusUpdate -= NetworkBrowser_ScanStatusUpdate;
                 networkBrowser.NetworkScanComplete -= NetworkBrowser_ScanComplete;
@@ -505,6 +428,7 @@ namespace PoshSec.Framework
 
                 UseWaitCursor = false;
             });
+            await task;
         }
 
         private void NetworkBrowser_ScanComplete(object sender, NetworkScanCompleteEventArgs e)
@@ -529,7 +453,6 @@ namespace PoshSec.Framework
             mnuScan.Enabled = true;
             UseWaitCursor = false;
             HideProgress();
-            UpdateSystemCount();
             lblStatus.Text = StringValue.Ready;
         }
 
@@ -538,32 +461,18 @@ namespace PoshSec.Framework
             AppSettings<Networks>.Save(_networks, StringValue.NetworkSettingsPath);
         }
 
-        [Obsolete]
-        private void SaveSystems()
+        private void LoadNetworks()
         {
-            if (_lvwSystems.Items.Count > 0 && Properties.Settings.Default.SaveSystems)
-            {
-                if (Properties.Settings.Default.Systems == null)
-                {
-                    Properties.Settings.Default["Systems"] = new System.Collections.Specialized.StringCollection();
-                }
-                ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Clear();
-                foreach (ListViewItem lvw in _lvwSystems.Items)
-                {
-                    String system = "";
-                    foreach (ListViewItem.ListViewSubItem lvwsub in lvw.SubItems)
-                    {
-                        system += lvwsub.Text + "|";
-                    }
-                    if (system != "")
-                    {
-                        system = system.Substring(0, system.Length - 1);
-                        ((System.Collections.Specialized.StringCollection)Properties.Settings.Default["Systems"]).Add(system);
-                    }
-                }
-                Properties.Settings.Default.Save();
-                Properties.Settings.Default.Reload();
-            }
+            _networks.Clear();
+            var networks = AppSettings<Networks>.Load(StringValue.NetworkSettingsPath);
+            _networks.AddRange(networks);
+
+            if (!_networks.OfType<LocalNetwork>().Any())
+                _networks.Add(new LocalNetwork());
+
+            tvwNetworks.Load(_networks);
+
+            if (tvwNetworks.Count > 0) tvwNetworks.SelectedNode = tvwNetworks.Nodes[0].Nodes[0];
         }
 
         private void SaveAlerts()
@@ -609,7 +518,6 @@ namespace PoshSec.Framework
                 btnCancelScan.Enabled = false;
                 this.UseWaitCursor = false;
                 btnScan.Enabled = true;
-                UpdateSystemCount();
                 lblStatus.Text = StringValue.Ready;
             }
         }
@@ -1883,14 +1791,7 @@ namespace PoshSec.Framework
             tcMain.SelectedTab = tbpPowerShell;
         }
         #endregion
-
-        #region " Update System Count "
-        private void UpdateSystemCount()
-        {
-            tslSystemCount.Text = _lvwSystems.Items.Count.ToString() + " Systems";
-        }
-        #endregion
-
+        
         #endregion
 
         #region Public Methods
@@ -1926,9 +1827,9 @@ namespace PoshSec.Framework
             Close();
         }
 
-        private void mnuScan_Click(object sender, EventArgs e)
+        private async void mnuScan_Click(object sender, EventArgs e)
         {
-            Scan();
+            await ScanAsync();
         }
 
         private void mnuCheckforUpdates_Click(object sender, EventArgs e)
@@ -2502,9 +2403,9 @@ namespace PoshSec.Framework
 
         }
 
-        private void btnScan_Click(object sender, EventArgs e)
+        private async void btnScan_Click(object sender, EventArgs e)
         {
-            Scan();
+            await ScanAsync();
         }
 
         private void btnRefreshNetworks_Click(object sender, EventArgs e)
@@ -2573,8 +2474,8 @@ namespace PoshSec.Framework
                             Description = description
                         };
                         _networks.CurrentNetwork.Nodes.Add(system);
+                        _lvwSystems.Add(system);
                     }
-                    _lvwSystems.Load(_networks.CurrentNetwork.Nodes);
                 }
                 else
                     MessageBox.Show(StringValue.InvalidSystemName);
@@ -2681,8 +2582,6 @@ namespace PoshSec.Framework
                     _lvwSystems.Items.Remove(listViewItem);
                 }
                 _lvwSystems.EndUpdate();
-                SaveSystems();
-                UpdateSystemCount();
             }
         }
         #endregion

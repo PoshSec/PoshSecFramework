@@ -146,7 +146,7 @@ namespace PoshSec.Framework
                         OnStatusUpdate(new ScanStatusEventArgs("Scanning " + scanIp + ", please wait...", b2, 255));
                         var networkNode = Scan(scanIp);
                         if (networkNode.Status == StringValue.Up) _network.Nodes.Add(networkNode);
-                    }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, null)
+                    }, _cancellationTokenSource.Token, TaskCreationOptions.LongRunning, TaskScheduler.Default)
                     .ContinueWith(t => maxThread.Release());
 
                 tasks.Add(task);

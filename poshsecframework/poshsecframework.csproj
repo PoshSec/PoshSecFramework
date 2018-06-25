@@ -183,6 +183,7 @@
     <Compile Include="Systems\LocalNetwork.cs" />
     <Compile Include="Systems\Network.cs" />
     <Compile Include="Systems\NetworkNode.cs" />
+    <Compile Include="Systems\SystemsAddedEventArgs.cs" />
     <Compile Include="Systems\SystemsListView.cs">
       <SubType>Component</SubType>
     </Compile>
