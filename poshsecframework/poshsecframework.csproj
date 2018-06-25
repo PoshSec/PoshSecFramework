@@ -180,6 +180,7 @@
     <Compile Include="Systems\CurrentNetworkChangedEventArgs.cs" />
     <Compile Include="Systems\DomainNetwork.cs" />
     <Compile Include="Systems\INetworkNode.cs" />
+    <Compile Include="Systems\IPAddressConverter.cs" />
     <Compile Include="Systems\LocalNetwork.cs" />
     <Compile Include="Systems\Network.cs" />
     <Compile Include="Systems\NetworkNode.cs" />

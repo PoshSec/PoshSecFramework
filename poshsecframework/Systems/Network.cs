@@ -1,8 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PoshSec.Framework
 {
+    [JsonObject]
     public abstract class Network
     {
         public static Network Empty { get; }
@@ -12,13 +14,15 @@ namespace PoshSec.Framework
             Empty = new EmptyNetwork();
         }
 
+        [JsonProperty("Name")]
         public string Name { get; set; }
 
-        public ConcurrentBag<NetworkNode> Nodes { get; protected set; }
+        [JsonProperty("Nodes")]
+        public ConcurrentBag<INetworkNode> Nodes { get; protected set; }
 
         protected Network()
         {
-            Nodes = new ConcurrentBag<NetworkNode>();
+            Nodes = new ConcurrentBag<INetworkNode>();
         }
 
         private class EmptyNetwork : Network

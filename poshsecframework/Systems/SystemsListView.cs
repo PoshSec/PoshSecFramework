@@ -17,7 +17,7 @@ namespace PoshSec.Framework
                 OnSystemsAdded();
         }
 
-        public void Add(NetworkNode system)
+        public void Add(INetworkNode system)
         {
             var item = new SystemsListViewItem(system);
             Add(item);
@@ -29,7 +29,7 @@ namespace PoshSec.Framework
             return isUnique;
         }
 
-        public void Load(IEnumerable<NetworkNode> networkNodes)
+        public void Load(IEnumerable<INetworkNode> networkNodes)
         {
             _loadExecuting = true;
             BeginUpdate();

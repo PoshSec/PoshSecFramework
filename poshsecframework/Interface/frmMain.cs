@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
 using System.Management.Automation;
@@ -19,6 +20,7 @@ using PoshSec.Framework.Properties;
 using PoshSec.Framework.PShell;
 using PoshSec.Framework.Strings;
 using PoshSec.Framework.Utility;
+using ThreadState = System.Threading.ThreadState;
 using Timer = System.Timers.Timer;
 
 namespace PoshSec.Framework
@@ -187,8 +189,9 @@ namespace PoshSec.Framework
                 SaveAlerts();
                 Properties.Settings.Default.Save();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Trace.TraceError(ex.Message);
                 e.Cancel = false;
                 _closing = true;
             }
@@ -458,7 +461,14 @@ namespace PoshSec.Framework
 
         private void SaveNetworks()
         {
-            AppSettings<Networks>.Save(_networks, StringValue.NetworkSettingsPath);
+            try
+            {
+                AppSettings<Networks>.Save(_networks, StringValue.NetworkSettingsPath);
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError(e.Message);
+            }
         }
 
         private void LoadNetworks()
