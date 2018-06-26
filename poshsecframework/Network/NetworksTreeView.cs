@@ -1,37 +1,58 @@
 ﻿using System;
+using System.DirectoryServices.ActiveDirectory;
 using System.Windows.Forms;
+using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
     public class NetworksTreeView : TreeView
     {
-        public bool IsValid(string name)
+        private void Add(TreeNode network)
         {
-            var rtn = true;
-            var idx = 0;
-            var rootnode = Nodes[0];
-            while (idx < rootnode.Nodes.Count && rtn)
-            {
-                var node = rootnode.Nodes[idx];
-                if (node.Text == name) rtn = false;
-                idx++;
-            }
-
-            return rtn;
+            Nodes[0].Nodes.Add(network);
         }
 
-        public void Add(string name, NetworkType type)
+        public void Load(Networks networks)
         {
-            switch (type)
+            SuspendLayout();
+            Nodes[0].Nodes.Clear();
+            foreach (var network in networks)
             {
-                case NetworkType.Local:
-                    Nodes[0].Nodes.Add(new LocalNetworkTreeNode(name));
-                    break;
-                case NetworkType.Domain:
-                    Nodes[0].Nodes.Add(new DomainNetworkTreeNode(name));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                var name = network.Name;
+                switch (network)
+                {
+                    case LocalNetwork _:
+                        Add(new LocalNetworkTreeNode(name));
+                        break;
+                    case DomainNetwork _:
+                        Add(new DomainNetworkTreeNode(name));
+                        break;
+                }
+            }
+
+            Nodes[0].Expand();
+            ResumeLayout(true);
+            Refresh();
+        }
+
+        public int Count => Nodes[0].Nodes.Count;
+
+        private class LocalNetworkTreeNode : TreeNode
+        {
+            public LocalNetworkTreeNode(string name) : base(name, 3, 3)
+            {
+                Name = name;
+                Tag = NetworkType.Local;
+            }
+        }
+
+
+        private class DomainNetworkTreeNode : TreeNode
+        {
+            public DomainNetworkTreeNode(string name) : base(name, 3, 3)
+            {
+                Name = name;
+                Tag = NetworkType.Domain;
             }
         }
     }

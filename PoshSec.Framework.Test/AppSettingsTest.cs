@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PoshSec.Framework.Test
 {
-    [TestClass]
     public class AppSettingsTest
     {
         class MySettings
@@ -19,23 +18,54 @@ namespace PoshSec.Framework.Test
             public List<string> ListOfStringsSetting { get; }
         }
 
-        [TestMethod]
-        public void SaveSettingsTest()
+        [TestClass]
+        public class Save
         {
-            var settings = new MySettings();
-            settings.IntegerSetting = 3;
-            settings.StringSetting = "four";
-            settings.ListOfStringsSetting.AddRange(new[] { "five", "six" });
+            [TestMethod]
+            public void SaveSettings_ToDefaultPath_FileExists()
+            {
+                var settings = new MySettings
+                {
+                    IntegerSetting = 3,
+                    StringSetting = "four"
+                };
+                settings.ListOfStringsSetting.AddRange(new[] { "five", "six" });
 
-            AppSettings<MySettings>.Save(settings);
-            Assert.IsTrue(File.Exists("settings.json"));
+                AppSettings<MySettings>.Save(settings);
+                Assert.IsTrue(File.Exists(AppSettings<MySettings>.Path));
+            }
+
+            [TestMethod]
+            public void SaveSettings_ToSpecificPath_FileExists()
+            {
+                var settings = new MySettings
+                {
+                    IntegerSetting = 3,
+                    StringSetting = "four"
+                };
+                settings.ListOfStringsSetting.AddRange(new[] { "five", "six" });
+
+                AppSettings<MySettings>.Save(settings, "mysettings.json");
+                Assert.IsTrue(File.Exists(AppSettings<MySettings>.Path));
+            }
         }
 
-        [TestMethod]
-        public void LoadSettingsTest()
+        [TestClass]
+        public class Load
         {
-            var settings = AppSettings<MySettings>.Load();
-            Assert.IsNotNull(settings);
+            [TestMethod]
+            public void LoadSettings_FromDefaultPath_SettingsNotNull()
+            {
+                var settings = AppSettings<MySettings>.Load();
+                Assert.IsNotNull(settings);
+            }
+
+            [TestMethod]
+            public void LoadSettings_FromSpecificPath_SettingsNotNull()
+            {
+                var settings = AppSettings<MySettings>.Load("mysettings.json");
+                Assert.IsNotNull(settings);
+            }
         }
     }
 }

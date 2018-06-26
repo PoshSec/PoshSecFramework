@@ -93,7 +93,7 @@ namespace PoshSec.Framework
             this.pnlSystems = new System.Windows.Forms.SplitContainer();
             this.tcMain = new System.Windows.Forms.TabControl();
             this.tbpSystems = new System.Windows.Forms.TabPage();
-            this._lvwNetworkNodes = new PoshSec.Framework.NetworkNodeListView();
+            this._lvwSystems = new PoshSec.Framework.SystemsListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMAC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -687,7 +687,7 @@ namespace PoshSec.Framework
             treeNode1.ImageKey = "Diagram.png";
             treeNode1.Name = "ndNone";
             treeNode1.SelectedImageKey = "Diagram.png";
-            treeNode1.Tag = "1";
+            treeNode1.Tag = PoshSec.Framework.NetworkType.Local;
             treeNode1.Text = "Local Network";
             treeNode2.Name = "ndNetwork";
             treeNode2.Text = "Networks";
@@ -766,7 +766,6 @@ namespace PoshSec.Framework
             this.btnCancelScan.Name = "btnCancelScan";
             this.btnCancelScan.Size = new System.Drawing.Size(28, 28);
             this.btnCancelScan.ToolTipText = "Cancel Scan";
-            this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
             // pnlSystems
             // 
@@ -803,7 +802,7 @@ namespace PoshSec.Framework
             // 
             // tbpSystems
             // 
-            this.tbpSystems.Controls.Add(this._lvwNetworkNodes);
+            this.tbpSystems.Controls.Add(this._lvwSystems);
             this.tbpSystems.Controls.Add(this.tsSystems);
             this.tbpSystems.ImageIndex = 7;
             this.tbpSystems.Location = new System.Drawing.Point(4, 23);
@@ -814,11 +813,11 @@ namespace PoshSec.Framework
             this.tbpSystems.Text = "Systems";
             this.tbpSystems.UseVisualStyleBackColor = true;
             // 
-            // _lvwNetworkNodes
+            // _lvwSystems
             // 
-            this._lvwNetworkNodes.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this._lvwNetworkNodes.CheckBoxes = true;
-            this._lvwNetworkNodes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this._lvwSystems.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._lvwSystems.CheckBoxes = true;
+            this._lvwSystems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chIP,
             this.chMAC,
@@ -827,18 +826,18 @@ namespace PoshSec.Framework
             this.chClientInstalled,
             this.chAlerts,
             this.chLastScan});
-            this._lvwNetworkNodes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._lvwNetworkNodes.FullRowSelect = true;
-            this._lvwNetworkNodes.HideSelection = false;
-            this._lvwNetworkNodes.Location = new System.Drawing.Point(3, 34);
-            this._lvwNetworkNodes.Name = "_lvwNetworkNodes";
-            this._lvwNetworkNodes.Size = new System.Drawing.Size(942, 270);
-            this._lvwNetworkNodes.SmallImageList = this.imgList16;
-            this._lvwNetworkNodes.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this._lvwNetworkNodes.TabIndex = 1;
-            this._lvwNetworkNodes.UseCompatibleStateImageBehavior = false;
-            this._lvwNetworkNodes.View = System.Windows.Forms.View.Details;
-            this._lvwNetworkNodes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwSystems_ColumnClick);
+            this._lvwSystems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lvwSystems.FullRowSelect = true;
+            this._lvwSystems.HideSelection = false;
+            this._lvwSystems.Location = new System.Drawing.Point(3, 34);
+            this._lvwSystems.Name = "_lvwSystems";
+            this._lvwSystems.Size = new System.Drawing.Size(942, 270);
+            this._lvwSystems.SmallImageList = this.imgList16;
+            this._lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this._lvwSystems.TabIndex = 1;
+            this._lvwSystems.UseCompatibleStateImageBehavior = false;
+            this._lvwSystems.View = System.Windows.Forms.View.Details;
+            this._lvwSystems.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvwSystems_ColumnClick);
             // 
             // chName
             // 
@@ -945,7 +944,7 @@ namespace PoshSec.Framework
             this.tbpPowerShell.Location = new System.Drawing.Point(4, 23);
             this.tbpPowerShell.Name = "tbpPowerShell";
             this.tbpPowerShell.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpPowerShell.Size = new System.Drawing.Size(948, 290);
+            this.tbpPowerShell.Size = new System.Drawing.Size(948, 307);
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
@@ -963,7 +962,7 @@ namespace PoshSec.Framework
             this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.txtPShellOutput.Name = "txtPShellOutput";
             this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 284);
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 301);
             this.txtPShellOutput.TabIndex = 0;
             this.txtPShellOutput.Text = "";
             this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
@@ -1001,7 +1000,7 @@ namespace PoshSec.Framework
             this.tbpSchedScripts.Location = new System.Drawing.Point(4, 23);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
             this.tbpSchedScripts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 290);
+            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 307);
             this.tbpSchedScripts.TabIndex = 2;
             this.tbpSchedScripts.Text = "Scheduled Scripts";
             this.tbpSchedScripts.UseVisualStyleBackColor = true;
@@ -1020,7 +1019,7 @@ namespace PoshSec.Framework
             this.lvwSchedule.FullRowSelect = true;
             this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
             this.lvwSchedule.Name = "lvwSchedule";
-            this.lvwSchedule.Size = new System.Drawing.Size(942, 284);
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 301);
             this.lvwSchedule.SmallImageList = this.imgList16;
             this.lvwSchedule.TabIndex = 0;
             this.lvwSchedule.UseCompatibleStateImageBehavior = false;
@@ -1531,7 +1530,7 @@ namespace PoshSec.Framework
         private System.Windows.Forms.ToolStripButton btnClearAlerts;
         private System.Windows.Forms.TabControl tcMain;
         private System.Windows.Forms.TabPage tbpSystems;
-        private NetworkNodeListView _lvwNetworkNodes;
+        private SystemsListView _lvwSystems;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chIP;
         private System.Windows.Forms.ColumnHeader chMAC;

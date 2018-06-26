@@ -81,6 +81,7 @@
     <Compile Include="Enums\EnumValues.cs" />
     <Compile Include="Events\WriteEventArgs.cs" />
     <Compile Include="Events\WriteProgressEventArgs.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Interface\frmAddNetwork.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,8 +148,6 @@
     <Compile Include="Interface\SystemForm.Designer.cs">
       <DependentUpon>SystemForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Network\DomainNetworkTreeNode.cs" />
-    <Compile Include="Network\LocalNetworkTreeNode.cs" />
     <Compile Include="Network\NetworksTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -161,8 +160,8 @@
     </Compile>
     <Compile Include="Network\NetworkType.cs" />
     <Compile Include="Network\NetworkBrowser.cs" />
-    <Compile Include="Events\ScanEventArgs.cs" />
-    <Compile Include="Network\ScanIP.cs" />
+    <Compile Include="Network\NetworkScanCompleteEventArgs.cs" />
+    <Compile Include="Scans\ScanIpEventArgs.cs" />
     <Compile Include="Network\Syslog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -174,15 +173,23 @@
     <Compile Include="PShell\pshosteditor.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Scans\ScanStatusEventArgs.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Strings\StringValue.cs" />
+    <Compile Include="Systems\CurrentNetworkChangedEventArgs.cs" />
+    <Compile Include="Systems\DomainNetwork.cs" />
     <Compile Include="Systems\INetworkNode.cs" />
+    <Compile Include="Systems\IPAddressConverter.cs" />
+    <Compile Include="Systems\LocalNetwork.cs" />
+    <Compile Include="Systems\Network.cs" />
     <Compile Include="Systems\NetworkNode.cs" />
-    <Compile Include="Systems\NetworkNodeListView.cs">
+    <Compile Include="Systems\SystemsAddedEventArgs.cs" />
+    <Compile Include="Systems\SystemsListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Systems\NetworkNodeListViewItem.cs" />
+    <Compile Include="Systems\SystemsListViewItem.cs" />
+    <Compile Include="Systems\Networks.cs" />
     <Compile Include="Utility\AlertFilter.cs" />
     <Compile Include="Utility\ExportObject.cs" />
     <Compile Include="Utility\Schedule.cs" />
