@@ -17,11 +17,11 @@ namespace PoshSec.Framework
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
             SetDefaultWebProxy();
 
+            try
+            {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new frmMain());
-            try
-            {
             }
             catch (Exception e)
             {
