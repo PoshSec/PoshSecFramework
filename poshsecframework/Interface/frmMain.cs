@@ -2659,10 +2659,16 @@ namespace PoshSec.Framework
         {
             this.WindowState = _lastwindowstate;
         }
-        #endregion
 
         #endregion
 
+        #endregion
 
+        private void mnuRunFirstTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.Default.FirstTime = true;
+            Settings.Default.Save();
+            Application.Restart();
+        }
     }
 }
