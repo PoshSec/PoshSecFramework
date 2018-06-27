@@ -126,8 +126,9 @@ namespace PoshSec.Framework.PShell
             }
         }
 
-        private void InvokeCommand(string command)
+        private StringBuilder InvokeCommand(string command)
         {
+            var results = new StringBuilder();
             using (var pipeline = rspace.CreatePipeline())
             {
                 pipeline.Commands.AddScript(command);
@@ -148,7 +149,7 @@ namespace PoshSec.Framework.PShell
                 }
                 catch (Exception e)
                 {
-                    _results.AppendLine(e.Message);
+                    results.AppendLine(e.Message);
                 }
                 finally
                 {
@@ -157,11 +158,12 @@ namespace PoshSec.Framework.PShell
                     {
                         foreach (var po in psObjects)
                             if (po != null)
-                                _results.AppendLine(po.ToString());
+                                results.AppendLine(po.ToString());
                     }
                 }
             }
             GC.Collect();
+            return results;
         }
 
         public pscript(frmMain ParentForm)
@@ -237,7 +239,8 @@ namespace PoshSec.Framework.PShell
                     {
                         script += "Unblock-File -path \"" + file + "\"\r\n";
                     }
-                    InvokeCommand(script);
+                    var results = InvokeCommand(script);
+                    _results.Append(results);
                     if (_results.ToString().Trim() != "")
                     {
                         rtn = false;
@@ -255,7 +258,8 @@ namespace PoshSec.Framework.PShell
         public bool SetExecutionPolicy()
         {
             bool rtn = false;
-            InvokeCommand(StringValue.SetExecutionPolicy);
+            var results = InvokeCommand(StringValue.SetExecutionPolicy);
+            _results.Append(results);
             if (_results.ToString().Trim() == "")
             {
                 rtn = true;
@@ -266,7 +270,8 @@ namespace PoshSec.Framework.PShell
         public bool UpdateHelp()
         {
             var rtn = false;
-            InvokeCommand(StringValue.UpdateHelp);
+            var results = InvokeCommand(StringValue.UpdateHelp);
+            _results.Append(results);
             if (_results.ToString().Trim() == "")
             {
                 rtn = true;
