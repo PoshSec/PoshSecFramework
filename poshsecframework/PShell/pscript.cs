@@ -25,7 +25,7 @@ namespace PoshSec.Framework.PShell
         private bool clicked = true;
         private bool scheduled = false;
         private List<psparameter> scriptparams = new List<psparameter>();
-        private StringBuilder results = new StringBuilder();
+        private StringBuilder _results = new StringBuilder();
         private psexception psexec = new psexception();
         private bool cancel = false;
         private frmMain frm = null;
@@ -46,7 +46,6 @@ namespace PoshSec.Framework.PShell
         public EventHandler<pseventargs> ScriptCompleted;
         #endregion
 
-        #region " Private Methods "
         private void InitializeScript()
         {
             rspaceconfig = RunspaceConfiguration.Create();
@@ -122,50 +121,44 @@ namespace PoshSec.Framework.PShell
                     {
                         if (po != null)
                         {
-                            results.AppendLine(po.ToString());
+                            _results.AppendLine(po.ToString());
                         }
                     }
-                    loaderrors += results.ToString();
+                    loaderrors += _results.ToString();
                 }
-            }           
+            }
         }
 
         private void InvokeCommand(string command)
         {
-            Collection<PSObject> rslt = null;
-            Pipeline pline = rspace.CreatePipeline();
-            pline.Commands.AddScript(command);           
-            try
+            using (var pline = rspace.CreatePipeline())
             {
-                rslt = pline.Invoke();
-            }
-            catch (Exception e)
-            {
-                results.AppendLine(e.Message);
-            }
-            finally
-            {
-                HandleWarningsErrors(pline.Error);
-                pline.Dispose();
-                pline = null;
-                if (rslt != null)
+                pline.Commands.AddScript(command);
+                Collection<PSObject> psObjects = null;
+                try
                 {
-                    foreach (PSObject po in rslt)
+                    psObjects = pline.Invoke();
+                }
+                catch (Exception e)
+                {
+                    _results.AppendLine(e.Message);
+                }
+                finally
+                {
+                    HandleWarningsErrors(pline.Error);
+                    if (psObjects != null)
                     {
-                        if (po != null)
-                        {
-                            results.AppendLine(po.ToString());
-                        }
+                        foreach (var po in psObjects)
+                            if (po != null)
+                                _results.AppendLine(po.ToString());
                     }
                 }
-                GC.Collect();
-            }            
+            }
+            GC.Collect();
         }
-        #endregion
 
-        #region " Public Methods "
         public pscript(frmMain ParentForm)
-        {            
+        {
             try
             {
                 frm = ParentForm;
@@ -175,12 +168,12 @@ namespace PoshSec.Framework.PShell
             {
                 //Base Exception Handler
                 OnScriptComplete(new pseventargs(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
-            } 
+            }
         }
-        
+
         public Collection<PSObject> GetCommand()
         {
-            results.Clear();
+            _results.Clear();
             Collection<PSObject> psObjects = null;
             String scrpt = "";
             Pipeline pipline = rspace.CreatePipeline();
@@ -192,7 +185,7 @@ namespace PoshSec.Framework.PShell
             }
             catch (Exception e)
             {
-                results.AppendLine(e.Message);
+                _results.AppendLine(e.Message);
             }
             finally
             {
@@ -205,19 +198,19 @@ namespace PoshSec.Framework.PShell
                     {
                         if (po != null)
                         {
-                            results.AppendLine(po.ToString());
+                            _results.AppendLine(po.ToString());
                         }
                     }
                 }
                 GC.Collect();
-            }                        
+            }
             return psObjects;
         }
 
         public bool UnblockFiles(string FolderPath)
         {
             bool rtn = true;
-            results.Clear();
+            _results.Clear();
 
             if (Directory.Exists(FolderPath))
             {
@@ -228,7 +221,7 @@ namespace PoshSec.Framework.PShell
                 }
                 catch (Exception e)
                 {
-                    results.AppendLine(e.Message);
+                    _results.AppendLine(e.Message);
                 }
                 if (files != null && files.Count() > 0)
                 {
@@ -238,7 +231,7 @@ namespace PoshSec.Framework.PShell
                         script += "Unblock-File -path \"" + file + "\"\r\n";
                     }
                     InvokeCommand(script);
-                    if (results.ToString().Trim() != "")
+                    if (_results.ToString().Trim() != "")
                     {
                         rtn = false;
                     }
@@ -246,7 +239,7 @@ namespace PoshSec.Framework.PShell
             }
             else
             {
-                results.AppendLine("The path " + FolderPath + " does not exist.");
+                _results.AppendLine("The path " + FolderPath + " does not exist.");
                 rtn = false;
             }
             return rtn;
@@ -256,7 +249,7 @@ namespace PoshSec.Framework.PShell
         {
             bool rtn = false;
             InvokeCommand(StringValue.SetExecutionPolicy);
-            if (results.ToString().Trim() == "")
+            if (_results.ToString().Trim() == "")
             {
                 rtn = true;
             }
@@ -265,9 +258,9 @@ namespace PoshSec.Framework.PShell
 
         public bool UpdateHelp()
         {
-            bool rtn = false;
+            var rtn = false;
             InvokeCommand(StringValue.UpdateHelp);
-            if (results.ToString().Trim() == "")
+            if (_results.ToString().Trim() == "")
             {
                 rtn = true;
             }
@@ -277,7 +270,7 @@ namespace PoshSec.Framework.PShell
         public void RunScript()
         {
             cancel = false;
-            results.Clear();
+            _results.Clear();
             InitializeSessionVars();
             PSAlert.ScriptName = scriptcommand.Replace(Settings.Default.ScriptPath, "");
             PSTab.ScriptName = scriptcommand.Replace(Settings.Default.ScriptPath, "");
@@ -312,14 +305,14 @@ namespace PoshSec.Framework.PShell
                         String cmdscript = scriptcommand + cmdparams;
                         if (clicked)
                         {
-                            results.AppendLine(scriptcommand + cmdparams);
+                            _results.AppendLine(scriptcommand + cmdparams);
                         }
                         pline.Commands.AddScript(cmdscript);
                         pline.Commands.Add(StringValue.OutString);
                     }
                     else
                     {
-                        results.AppendLine("Running script: " + scriptcommand.Replace(Settings.Default.ScriptPath, ""));
+                        _results.AppendLine("Running script: " + scriptcommand.Replace(Settings.Default.ScriptPath, ""));
                         pline.Commands.Add(pscmd);
                     }
                     Collection<PSObject> rslt = null;
@@ -336,16 +329,16 @@ namespace PoshSec.Framework.PShell
                         cancelled = true;
                         if (iscommand)
                         {
-                            results.AppendLine(StringValue.CommandCancelled);
+                            _results.AppendLine(StringValue.CommandCancelled);
                         }
                         else
                         {
-                            results.AppendLine(StringValue.ScriptCancelled);
+                            _results.AppendLine(StringValue.ScriptCancelled);
                         }
                     }
                     catch (Exception pex)
                     {
-                        results.AppendLine(psexec.psexceptionhandler(pex, iscommand, pline.Commands));
+                        _results.AppendLine(psexec.psexceptionhandler(pex, iscommand, pline.Commands));
                     }
                     HandleWarningsErrors(pline.Error);
                     pline.Dispose();
@@ -356,14 +349,14 @@ namespace PoshSec.Framework.PShell
                         {
                             if (po != null)
                             {
-                                results.AppendLine(po.ToString());
+                                _results.AppendLine(po.ToString());
                             }
                         }
                     }
                 }
                 else
                 {
-                    results.AppendLine(StringValue.ScriptCancelled);
+                    _results.AppendLine(StringValue.ScriptCancelled);
                 }
             }
             catch (System.Threading.ThreadAbortException)
@@ -381,8 +374,8 @@ namespace PoshSec.Framework.PShell
                 if (pline != null)
                 {
                     HandleWarningsErrors(pline.Error);
-                }                
-                results.AppendLine(psexec.psexceptionhandler(e, iscommand));
+                }
+                _results.AppendLine(psexec.psexceptionhandler(e, iscommand));
             }
             finally
             {
@@ -392,9 +385,9 @@ namespace PoshSec.Framework.PShell
                 }
                 pline = null;
                 GC.Collect();
-                OnScriptComplete(new pseventargs(results.ToString(), scriptlvw, cancelled));
-                results.Clear();
-            }            
+                OnScriptComplete(new pseventargs(_results.ToString(), scriptlvw, cancelled));
+                _results.Clear();
+            }
         }
 
         public List<psparameter> CheckForParams(String scriptcommand)
@@ -429,7 +422,7 @@ namespace PoshSec.Framework.PShell
                         int idx = 0;
                         bool found = false;
                         List<String> fileparams = GetEditorParams(rslt[0].ToString(), "psfilename");
-                        List<String> hostparams = GetEditorParams(rslt[0].ToString(), "pshosts");                        
+                        List<String> hostparams = GetEditorParams(rslt[0].ToString(), "pshosts");
                         do
                         {
                             String line = lines[idx];
@@ -531,7 +524,6 @@ namespace PoshSec.Framework.PShell
             }
             return parms;
         }
-        #endregion
 
         #region " Private Methods "
         private void HandleWarningsErrors(PipelineReader<object> pipelineerrors)
@@ -559,14 +551,14 @@ namespace PoshSec.Framework.PShell
 
         private void WriteUpdate(object sender, Events.WriteEventArgs e)
         {
-            results.AppendLine(e.Message);
+            _results.AppendLine(e.Message);
         }
 
         private Type GetTypeFromString(String typename)
         {
             Type rtn = null;
             switch (typename.ToLower())
-            { 
+            {
                 case "<string>":
                     rtn = typeof(string);
                     break;
@@ -627,7 +619,7 @@ namespace PoshSec.Framework.PShell
         #region " Public Properties "
         public String Script
         {
-            set { this.scriptcommand = value;  }
+            set { this.scriptcommand = value; }
         }
 
         public bool IsCommand
@@ -653,7 +645,7 @@ namespace PoshSec.Framework.PShell
 
         public String Results
         {
-            get { return this.results.ToString(); }
+            get { return this._results.ToString(); }
         }
 
         public frmMain ParentForm
