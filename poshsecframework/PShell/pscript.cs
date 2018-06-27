@@ -132,20 +132,15 @@ namespace PoshSec.Framework.PShell
             using (var pipeline = rspace.CreatePipeline())
             {
                 pipeline.Commands.AddScript(command);
-                Collection<PSObject> psObjects = null;
                 try
                 {
-                    pipeline.InvokeAsync();
-
-                    do
+                    var psObjects = pipeline.Invoke();
+                    if (psObjects != null)
                     {
-                        if (pipeline.PipelineStateInfo.State == PipelineState.Completed)
-                        {
-                            psObjects = pipeline.Output.ReadToEnd();
-                            break;
-                        }
-                        Task.Delay(100);
-                    } while (pipeline.PipelineStateInfo.State == PipelineState.Running);
+                        foreach (var po in psObjects)
+                            if (po != null)
+                                results.AppendLine(po.ToString());
+                    }
                 }
                 catch (Exception e)
                 {
@@ -154,12 +149,6 @@ namespace PoshSec.Framework.PShell
                 finally
                 {
                     HandleWarningsErrors(pipeline.Error);
-                    if (psObjects != null)
-                    {
-                        foreach (var po in psObjects)
-                            if (po != null)
-                                results.AppendLine(po.ToString());
-                    }
                 }
             }
             GC.Collect();
