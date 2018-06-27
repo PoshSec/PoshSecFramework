@@ -41,6 +41,7 @@ namespace PoshSec.Framework
             this.mnuExit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuTools = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuRunFirstTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuCheckforUpdates = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuPSFWiki = new System.Windows.Forms.ToolStripMenuItem();
@@ -161,7 +162,6 @@ namespace PoshSec.Framework
             this.cmnuNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmnuRestore = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuRunFirstTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuMain.SuspendLayout();
             this.stsMain.SuspendLayout();
             this.tbMain.SuspendLayout();
@@ -221,14 +221,14 @@ namespace PoshSec.Framework
             // mnuScan
             // 
             this.mnuScan.Name = "mnuScan";
-            this.mnuScan.Size = new System.Drawing.Size(252, 30);
+            this.mnuScan.Size = new System.Drawing.Size(133, 30);
             this.mnuScan.Text = "Scan";
             this.mnuScan.Click += new System.EventHandler(this.mnuScan_Click);
             // 
             // mnuExit
             // 
             this.mnuExit.Name = "mnuExit";
-            this.mnuExit.Size = new System.Drawing.Size(252, 30);
+            this.mnuExit.Size = new System.Drawing.Size(133, 30);
             this.mnuExit.Text = "E&xit";
             this.mnuExit.Click += new System.EventHandler(this.mnuExit_Click);
             // 
@@ -248,6 +248,13 @@ namespace PoshSec.Framework
             this.mnuOptions.Size = new System.Drawing.Size(259, 30);
             this.mnuOptions.Text = "Options...";
             this.mnuOptions.Click += new System.EventHandler(this.mnuOptions_Click);
+            // 
+            // mnuRunFirstTimeToolStripMenuItem
+            // 
+            this.mnuRunFirstTimeToolStripMenuItem.Name = "mnuRunFirstTimeToolStripMenuItem";
+            this.mnuRunFirstTimeToolStripMenuItem.Size = new System.Drawing.Size(259, 30);
+            this.mnuRunFirstTimeToolStripMenuItem.Text = "Run First Time Setup";
+            this.mnuRunFirstTimeToolStripMenuItem.Click += new System.EventHandler(this.mnuRunFirstTimeToolStripMenuItem_Click);
             // 
             // mnuHelp
             // 
@@ -946,7 +953,7 @@ namespace PoshSec.Framework
             this.tbpPowerShell.Location = new System.Drawing.Point(4, 29);
             this.tbpPowerShell.Name = "tbpPowerShell";
             this.tbpPowerShell.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpPowerShell.Size = new System.Drawing.Size(948, 301);
+            this.tbpPowerShell.Size = new System.Drawing.Size(948, 284);
             this.tbpPowerShell.TabIndex = 1;
             this.tbpPowerShell.Text = "PowerShell";
             // 
@@ -964,7 +971,7 @@ namespace PoshSec.Framework
             this.txtPShellOutput.Margin = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.txtPShellOutput.Name = "txtPShellOutput";
             this.txtPShellOutput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.txtPShellOutput.Size = new System.Drawing.Size(942, 295);
+            this.txtPShellOutput.Size = new System.Drawing.Size(942, 278);
             this.txtPShellOutput.TabIndex = 0;
             this.txtPShellOutput.Text = "";
             this.txtPShellOutput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPShellOutput_KeyDown);
@@ -1002,7 +1009,7 @@ namespace PoshSec.Framework
             this.tbpSchedScripts.Location = new System.Drawing.Point(4, 29);
             this.tbpSchedScripts.Name = "tbpSchedScripts";
             this.tbpSchedScripts.Padding = new System.Windows.Forms.Padding(3);
-            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 301);
+            this.tbpSchedScripts.Size = new System.Drawing.Size(948, 284);
             this.tbpSchedScripts.TabIndex = 2;
             this.tbpSchedScripts.Text = "Scheduled Scripts";
             this.tbpSchedScripts.UseVisualStyleBackColor = true;
@@ -1021,7 +1028,7 @@ namespace PoshSec.Framework
             this.lvwSchedule.FullRowSelect = true;
             this.lvwSchedule.Location = new System.Drawing.Point(3, 3);
             this.lvwSchedule.Name = "lvwSchedule";
-            this.lvwSchedule.Size = new System.Drawing.Size(942, 295);
+            this.lvwSchedule.Size = new System.Drawing.Size(942, 278);
             this.lvwSchedule.SmallImageList = this.imgList16;
             this.lvwSchedule.TabIndex = 0;
             this.lvwSchedule.UseCompatibleStateImageBehavior = false;
@@ -1431,13 +1438,6 @@ namespace PoshSec.Framework
             this.cmnuExit.Size = new System.Drawing.Size(143, 30);
             this.cmnuExit.Text = "Exit";
             this.cmnuExit.Click += new System.EventHandler(this.cmnuExit_Click);
-            // 
-            // mnuRunFirstTimeToolStripMenuItem
-            // 
-            this.mnuRunFirstTimeToolStripMenuItem.Name = "mnuRunFirstTimeToolStripMenuItem";
-            this.mnuRunFirstTimeToolStripMenuItem.Size = new System.Drawing.Size(259, 30);
-            this.mnuRunFirstTimeToolStripMenuItem.Text = "Run First Time Setup";
-            this.mnuRunFirstTimeToolStripMenuItem.Click += new System.EventHandler(this.mnuRunFirstTimeToolStripMenuItem_Click);
             // 
             // frmMain
             // 

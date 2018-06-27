@@ -1,4 +1,4 @@
-﻿namespace PoshSec.Framework.Interface
+﻿namespace PoshSec.Framework.FirstTimeSetup
 {
     partial class frmFirstTime
     {

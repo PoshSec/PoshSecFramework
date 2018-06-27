@@ -82,16 +82,17 @@
     <Compile Include="Events\WriteEventArgs.cs" />
     <Compile Include="Events\WriteProgressEventArgs.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FirstTimeSetup\Steps.cs" />
     <Compile Include="Interface\frmAddNetwork.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Interface\frmAddNetwork.Designer.cs">
       <DependentUpon>frmAddNetwork.cs</DependentUpon>
     </Compile>
-    <Compile Include="Interface\frmFirstTime.cs">
+    <Compile Include="FirstTimeSetup\frmFirstTime.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Interface\frmFirstTime.Designer.cs">
+    <Compile Include="FirstTimeSetup\frmFirstTime.Designer.cs">
       <DependentUpon>frmFirstTime.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\frmMain.cs">
@@ -207,7 +208,7 @@
     <EmbeddedResource Include="Interface\frmAddNetwork.resx">
       <DependentUpon>frmAddNetwork.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Interface\frmFirstTime.resx">
+    <EmbeddedResource Include="FirstTimeSetup\frmFirstTime.resx">
       <DependentUpon>frmFirstTime.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Interface\frmMain.resx">

@@ -15,6 +15,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using PoshSec.Framework.Comparers;
 using PoshSec.Framework.Enums;
+using PoshSec.Framework.FirstTimeSetup;
 using PoshSec.Framework.Interface;
 using PoshSec.Framework.Properties;
 using PoshSec.Framework.PShell;
@@ -357,7 +358,7 @@ namespace PoshSec.Framework
 
         private void FirstTimeSetup()
         {
-            Interface.frmFirstTime frm = new Interface.frmFirstTime(this);
+            frmFirstTime frm = new frmFirstTime(this);
             if (frm.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             {
                 _restart = false;
