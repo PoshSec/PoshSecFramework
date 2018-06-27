@@ -13,7 +13,7 @@ using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework.PShell
 {
-    class pscript
+    class pscript : IDisposable
     {
         #region " Private Variables "
         private RunspaceConfiguration rspaceconfig;
@@ -177,14 +177,7 @@ namespace PoshSec.Framework.PShell
                 OnScriptComplete(new pseventargs(StringValue.UnhandledException + Environment.NewLine + e.Message + Environment.NewLine + "Stack Trace:" + Environment.NewLine + e.StackTrace, null, false));
             } 
         }
-
-        public void Dispose()
-        {
-            rspace.Close();
-            rspace.Dispose();
-            rspace = null;
-        }
-
+        
         public Collection<PSObject> GetCommand()
         {
             results.Clear();
@@ -683,5 +676,10 @@ namespace PoshSec.Framework.PShell
             get { return loaderrors; }
         }
         #endregion
+
+        public void Dispose()
+        {
+            rspace?.Dispose();
+        }
     }
 }

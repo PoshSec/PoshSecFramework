@@ -14,7 +14,7 @@ namespace PoshSec.Framework.FirstTimeSetup
 {
     public partial class frmFirstTime : Form
     {
-        private readonly string[] Message =
+        private readonly string[] _message =
         {
             StringValue.FTCheckSettings,
             StringValue.FTInitialDownload,
@@ -24,7 +24,7 @@ namespace PoshSec.Framework.FirstTimeSetup
         };
 
 
-        private readonly string[] Errors =
+        private readonly string[] _errors =
         {
             StringValue.StepSuccessDescription,
             StringValue.StepSuccessDescription,
@@ -33,13 +33,13 @@ namespace PoshSec.Framework.FirstTimeSetup
             StringValue.StepSuccessDescription
         };
 
-        private bool showerrors;
-        private int contcount;
-        private readonly frmMain parentform;
+        private bool _showerrors;
+        private int _contcount;
+        private readonly frmMain _parentform;
 
-        public frmFirstTime(frmMain Parent)
+        public frmFirstTime(frmMain parent)
         {
-            parentform = Parent;
+            _parentform = parent;
             InitializeComponent();
             if (TestPSEnvironment())
             {
@@ -66,26 +66,26 @@ namespace PoshSec.Framework.FirstTimeSetup
         {
             if (lvwSteps.SelectedIndices.Count > 0)
             {
-                if (showerrors)
+                if (_showerrors)
                 {
                     btnFix.Enabled = false;
-                    if (lvwSteps.SelectedIndices[0] < Errors.Length)
+                    if (lvwSteps.SelectedIndices[0] < _errors.Length)
                     {
-                        txtDescription.Text = Errors[lvwSteps.SelectedIndices[0]];
+                        txtDescription.Text = _errors[lvwSteps.SelectedIndices[0]];
                         if (lvwSteps.SelectedItems[0].ImageIndex == 1)
                             btnFix.Enabled = true;
                     }
                 }
                 else
                 {
-                    if (lvwSteps.SelectedIndices[0] < Message.Length)
-                        txtDescription.Text = Message[lvwSteps.SelectedIndices[0]];
+                    if (lvwSteps.SelectedIndices[0] < _message.Length)
+                        txtDescription.Text = _message[lvwSteps.SelectedIndices[0]];
                 }
             }
             else
             {
-                txtDescription.Text = showerrors 
-                    ? StringValue.StepCompleteDescription 
+                txtDescription.Text = _showerrors
+                    ? StringValue.StepCompleteDescription
                     : StringValue.StepSelectDescription;
             }
         }
@@ -101,14 +101,14 @@ namespace PoshSec.Framework.FirstTimeSetup
 
         private void btnContinue_Click(object sender, EventArgs e)
         {
-            contcount++;
-            if (contcount == 1)
+            _contcount++;
+            if (_contcount == 1)
             {
                 lvwSteps.SelectedItems.Clear();
                 txtDescription.Text = StringValue.StepCompleteDescription;
                 if (lvwSteps.CheckedIndices.Count > 0)
                 {
-                    showerrors = true;
+                    _showerrors = true;
                     pnlFix.Visible = true;
                     btnFix.Enabled = false;
                     btnDont.Enabled = false;
@@ -153,7 +153,7 @@ namespace PoshSec.Framework.FirstTimeSetup
             if (lvwSteps.SelectedItems.Count > 0)
             {
                 var idx = lvwSteps.SelectedIndices[0];
-                switch ((Steps) idx)
+                switch ((Steps)idx)
                 {
                     case Steps.Check_Settings:
                         FixSettings(idx);
@@ -173,7 +173,7 @@ namespace PoshSec.Framework.FirstTimeSetup
             var rtn = true;
             try
             {
-                var ps = new pscript(parentform);
+                var ps = new pscript(_parentform);
             }
             catch (Exception)
             {
@@ -187,7 +187,7 @@ namespace PoshSec.Framework.FirstTimeSetup
         {
             lvwSteps.Items[index].ImageIndex = 0;
             lvwSteps.Items[index].SubItems[1].Text = StringValue.StepSuccess;
-            Errors[index] = StringValue.StepSuccessDescription;
+            _errors[index] = StringValue.StepSuccessDescription;
             lvwSteps.SelectedItems.Clear();
         }
 
@@ -208,7 +208,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                 lvwSteps.Items[idx].SubItems[1].Text = StringValue.StepRunning;
                 lvwSteps.Items[idx].ImageIndex = 3;
                 lvwSteps.Update();
-                if (PerformStep((int) Steps.Set_Execution_Policy))
+                if (PerformStep((int)Steps.Set_Execution_Policy))
                 {
                     SetStepFixed(idx);
                 }
@@ -228,7 +228,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                 lvwSteps.Items[idx].SubItems[1].Text = StringValue.StepRunning;
                 lvwSteps.Items[idx].ImageIndex = 3;
                 lvwSteps.Update();
-                if (PerformStep((int) Steps.Unblock_Files))
+                if (PerformStep((int)Steps.Unblock_Files))
                 {
                     SetStepFixed(idx);
                 }
@@ -255,7 +255,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                 {
                     lvw.ImageIndex = 2;
                     lvw.SubItems[1].Text = StringValue.StepIgnored;
-                    Errors[index] = StringValue.StepIgnoredDescription;
+                    _errors[index] = StringValue.StepIgnoredDescription;
                 }
             }
             lvwSteps.CheckBoxes = false;
@@ -266,7 +266,7 @@ namespace PoshSec.Framework.FirstTimeSetup
         private bool PerformStep(int idx)
         {
             var rtn = false;
-            switch ((Steps) idx)
+            switch ((Steps)idx)
             {
                 case Steps.Check_Settings:
                     rtn = CheckSettings();
@@ -312,7 +312,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                     rtn = false;
                 }
             if (!rtn)
-                Errors[(int) Steps.Check_Settings] = err;
+                _errors[(int)Steps.Check_Settings] = err;
             return rtn;
         }
 
@@ -384,7 +384,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                 }
             }
             if (!rtn)
-                Errors[(int) Steps.InitialDownload] = err;
+                _errors[(int)Steps.InitialDownload] = err;
             return rtn;
         }
 
@@ -392,7 +392,7 @@ namespace PoshSec.Framework.FirstTimeSetup
         {
             var rtn = true;
             var err = "";
-            var ps = new pscript(parentform);
+            var ps = new pscript(_parentform);
             if (!ps.UnblockFiles(Settings.Default.ScriptPath))
             {
                 err = ps.Results;
@@ -410,17 +410,17 @@ namespace PoshSec.Framework.FirstTimeSetup
             }
             ps.Dispose();
             if (!rtn)
-                Errors[(int) Steps.Unblock_Files] = err + StringValue.TNUnblockFile;
+                _errors[(int)Steps.Unblock_Files] = err + StringValue.TNUnblockFile;
             return rtn;
         }
 
         private bool SetExecutionPolicy()
         {
             var rtn = false;
-            var ps = new pscript(parentform);
+            var ps = new pscript(_parentform);
             rtn = ps.SetExecutionPolicy();
             if (!rtn)
-                Errors[(int) Steps.Set_Execution_Policy] = ps.Results + StringValue.TNSetExecutionPolicy;
+                _errors[(int)Steps.Set_Execution_Policy] = ps.Results + StringValue.TNSetExecutionPolicy;
             ps.Dispose();
             ps = null;
             return rtn;
@@ -428,14 +428,13 @@ namespace PoshSec.Framework.FirstTimeSetup
 
         private bool UpdateHelp()
         {
-            var rtn = false;
-            var ps = new pscript(parentform);
-            rtn = ps.UpdateHelp();
-            if (!rtn)
-                Errors[(int) Steps.Update_Help] = ps.Results + StringValue.TNUpdateHelp;
-            ps.Dispose();
-            ps = null;
-            return rtn;
+            using (var ps = new pscript(_parentform))
+            {
+                var rtn = ps.UpdateHelp();
+                if (!rtn)
+                    _errors[(int)Steps.Update_Help] = ps.Results + StringValue.TNUpdateHelp;
+                return rtn;
+            }
         }
     }
 }
