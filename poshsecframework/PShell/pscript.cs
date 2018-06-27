@@ -7,6 +7,7 @@ using System.Management.Automation.Runspaces;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoshSec.Framework.Properties;
 using PoshSec.Framework.Strings;
@@ -15,7 +16,6 @@ namespace PoshSec.Framework.PShell
 {
     class pscript : IDisposable
     {
-        #region " Private Variables "
         private RunspaceConfiguration rspaceconfig;
         private Runspace rspace;
         private psfhost host;
@@ -40,11 +40,8 @@ namespace PoshSec.Framework.PShell
         private psmethods.PSHosts PSHosts;
         private psmethods.PSTab PSTab;
         private String loaderrors = "";
-        #endregion
 
-        #region " Public Events "
         public EventHandler<pseventargs> ScriptCompleted;
-        #endregion
 
         private void InitializeScript()
         {
@@ -88,7 +85,7 @@ namespace PoshSec.Framework.PShell
             rspace.Close();
             do
             {
-                System.Threading.Thread.Sleep(100);
+                Thread.Sleep(100);
             } while (rspace.RunspaceStateInfo.State != RunspaceState.Closed);
             rspace.Dispose();
             rspace = null;
@@ -97,7 +94,7 @@ namespace PoshSec.Framework.PShell
 
         public void ImportPSModules(Collection<String> enabledmods)
         {
-            if (enabledmods != null & enabledmods.Count() > 0)
+            if (enabledmods != null & enabledmods.Any())
             {
                 Pipeline pline = rspace.CreatePipeline();
                 String script = "";
@@ -131,13 +128,23 @@ namespace PoshSec.Framework.PShell
 
         private void InvokeCommand(string command)
         {
-            using (var pline = rspace.CreatePipeline())
+            using (var pipeline = rspace.CreatePipeline())
             {
-                pline.Commands.AddScript(command);
+                pipeline.Commands.AddScript(command);
                 Collection<PSObject> psObjects = null;
                 try
                 {
-                    psObjects = pline.Invoke();
+                    pipeline.InvokeAsync();
+
+                    do
+                    {
+                        if (pipeline.PipelineStateInfo.State == PipelineState.Completed)
+                        {
+                            psObjects = pipeline.Output.ReadToEnd();
+                            break;
+                        }
+                        Task.Delay(100);
+                    } while (pipeline.PipelineStateInfo.State == PipelineState.Running);
                 }
                 catch (Exception e)
                 {
@@ -145,7 +152,7 @@ namespace PoshSec.Framework.PShell
                 }
                 finally
                 {
-                    HandleWarningsErrors(pline.Error);
+                    HandleWarningsErrors(pipeline.Error);
                     if (psObjects != null)
                     {
                         foreach (var po in psObjects)
@@ -223,7 +230,7 @@ namespace PoshSec.Framework.PShell
                 {
                     _results.AppendLine(e.Message);
                 }
-                if (files != null && files.Count() > 0)
+                if (files != null && files.Any())
                 {
                     string script = "";
                     foreach (string file in files)
