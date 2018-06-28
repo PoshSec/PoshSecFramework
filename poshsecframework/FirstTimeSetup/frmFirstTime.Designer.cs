@@ -78,7 +78,6 @@
             this.btnContinue.TabIndex = 3;
             this.btnContinue.Text = "&Continue";
             this.btnContinue.UseVisualStyleBackColor = true;
-            this.btnContinue.Click += new System.EventHandler(this.btnContinue_Click);
             // 
             // lblInstructions
             // 
@@ -184,7 +183,7 @@
             // 
             // frmFirstTime
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(722, 348);
             this.ControlBox = false;

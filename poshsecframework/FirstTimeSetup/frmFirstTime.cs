@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoshSec.Framework.Interface;
@@ -15,6 +17,7 @@ namespace PoshSec.Framework.FirstTimeSetup
 {
     public partial class frmFirstTime : Form
     {
+
         private readonly string[] _message =
         {
             StringValue.FTCheckSettings,
@@ -35,7 +38,6 @@ namespace PoshSec.Framework.FirstTimeSetup
         };
 
         private bool _showerrors;
-        private int _contcount;
         private readonly frmMain _parentform;
 
         public frmFirstTime(frmMain parent)
@@ -61,6 +63,8 @@ namespace PoshSec.Framework.FirstTimeSetup
             {
                 MessageBox.Show(StringValue.PSRequirements);
             }
+            btnContinue.Text = "Start";
+            btnContinue.Click += StartClick;
         }
 
         private void lvwSteps_SelectedIndexChanged(object sender, EventArgs e)
@@ -100,62 +104,101 @@ namespace PoshSec.Framework.FirstTimeSetup
             Close();
         }
 
-        private async void btnContinue_Click(object sender, EventArgs e)
+        private async void StartClick(object sender, EventArgs e)
         {
-            _contcount++;
-            if (_contcount == 1)
+
+            lvwSteps.SelectedItems.Clear();
+            txtDescription.Text = StringValue.StepCompleteDescription;
+            if (lvwSteps.CheckedIndices.Count > 0)
             {
-                lvwSteps.SelectedItems.Clear();
-                txtDescription.Text = StringValue.StepCompleteDescription;
-                if (lvwSteps.CheckedIndices.Count > 0)
+                var cancellationTokenSource = new CancellationTokenSource();
+                void CancelClick(object control, EventArgs e2)
                 {
-                    _showerrors = true;
-                    pnlFix.Visible = true;
-                    btnFix.Enabled = false;
-                    btnDont.Enabled = false;
-                    btnContinue.Enabled = false;
-                    var steps = PrepListBox();
-                    var tasks = new List<Task>();
-                    foreach (var step in steps)
-                    {
-                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepRunning;
-                        lvwSteps.Items[step].ImageIndex = 3;
-                        lvwSteps.Update();
-                        var task = Task<bool>.Factory
-                            .StartNew(() => PerformStep(step), TaskCreationOptions.LongRunning)
-                            .ContinueWith(t =>
-                                {
-                                    var success = t.Result;
-                                    if (success)
-                                    {
-                                        lvwSteps.Items[step].ImageIndex = 0;
-                                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepSuccess;
-                                    }
-                                    else
-                                    {
-                                        lvwSteps.Items[step].ImageIndex = 1;
-                                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepFailed;
-                                    }
-                                });
-                        tasks.Add(task);
-                    }
+                    cancellationTokenSource.Cancel();
+                }
+
+                btnContinue.Enabled = false;
+                btnContinue.Click -= StartClick;
+                btnContinue.Text = "Cancel";
+                btnContinue.Click += CancelClick;
+                btnContinue.Enabled = true;
+
+                _showerrors = true;
+                pnlFix.Visible = true;
+                btnFix.Enabled = false;
+                btnDont.Enabled = false;
+                var steps = PrepListBox();
+                var tasks = new List<Task>();
+                foreach (var step in steps)
+                {
+                    lvwSteps.Items[step].SubItems[1].Text = StringValue.StepRunning;
+                    lvwSteps.Items[step].ImageIndex = 3;
+                    lvwSteps.Update();
+                    var task = Task<bool>.Factory
+                        .StartNew(() => PerformStep(step),
+                            cancellationTokenSource.Token,
+                            TaskCreationOptions.LongRunning,
+                            TaskScheduler.Default)
+                        .ContinueWith(t =>
+                        {
+                            var success = t.Result;
+                            UpdateStepStatus(step, success);
+                        }, cancellationTokenSource.Token);
+                    tasks.Add(task);
+                    if (cancellationTokenSource.IsCancellationRequested)
+                        break;
+                }
+                try
+                {
                     await Task.WhenAll(tasks).ContinueWith(t =>
                     {
                         Settings.Default["FirstTime"] = false;
-                        Settings.Default.Save();
-                        Settings.Default.Reload();
-                        btnContinue.Enabled = true;
-                    });
+                    }, cancellationTokenSource.Token);
                 }
-                else
+                catch (TaskCanceledException)
                 {
-                    MessageBox.Show(StringValue.MustSelectStep);
+                    Settings.Default["FirstTime"] = true;
+                }
+                finally
+                {
+                    Settings.Default.Save();
+                    Settings.Default.Reload();
+
+                    void FinishClick(object control, EventArgs e2)
+                    {
+                        DialogResult = DialogResult.OK;
+                        Close();
+                    }
+
+                    btnContinue.Enabled = false;
+                    btnContinue.Click -= CancelClick;
+                    btnContinue.Text = "Finish";
+                    btnContinue.Click += FinishClick;
+                    btnContinue.Enabled = true;
                 }
             }
             else
             {
-                DialogResult = DialogResult.OK;
-                Close();
+                MessageBox.Show(StringValue.MustSelectStep);
+            }
+        }
+
+        private void UpdateStepStatus(int step, bool success)
+        {
+            if (lvwSteps.InvokeRequired)
+            {
+                MethodInvoker del = delegate { UpdateStepStatus(step, success); };
+                lvwSteps.Invoke(del);
+            }
+            else if (success)
+            {
+                lvwSteps.Items[step].ImageIndex = 0;
+                lvwSteps.Items[step].SubItems[1].Text = StringValue.StepSuccess;
+            }
+            else
+            {
+                lvwSteps.Items[step].ImageIndex = 1;
+                lvwSteps.Items[step].SubItems[1].Text = StringValue.StepFailed;
             }
         }
 
@@ -447,5 +490,7 @@ namespace PoshSec.Framework.FirstTimeSetup
                 return rtn;
             }
         }
+
     }
 }
+
