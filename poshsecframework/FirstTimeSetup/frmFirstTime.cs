@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoshSec.Framework.Interface;
 using PoshSec.Framework.Properties;
@@ -99,7 +100,7 @@ namespace PoshSec.Framework.FirstTimeSetup
             Close();
         }
 
-        private void btnContinue_Click(object sender, EventArgs e)
+        private async void btnContinue_Click(object sender, EventArgs e)
         {
             _contcount++;
             if (_contcount == 1)
@@ -113,28 +114,38 @@ namespace PoshSec.Framework.FirstTimeSetup
                     btnFix.Enabled = false;
                     btnDont.Enabled = false;
                     btnContinue.Enabled = false;
-                    var indexes = PrepListBox();
-                    foreach (var idx in indexes)
+                    var steps = PrepListBox();
+                    var tasks = new List<Task>();
+                    foreach (var step in steps)
                     {
-                        lvwSteps.Items[idx].SubItems[1].Text = StringValue.StepRunning;
-                        lvwSteps.Items[idx].ImageIndex = 3;
+                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepRunning;
+                        lvwSteps.Items[step].ImageIndex = 3;
                         lvwSteps.Update();
-                        var rslt = PerformStep(idx);
-                        if (rslt)
-                        {
-                            lvwSteps.Items[idx].ImageIndex = 0;
-                            lvwSteps.Items[idx].SubItems[1].Text = StringValue.StepSuccess;
-                        }
-                        else
-                        {
-                            lvwSteps.Items[idx].ImageIndex = 1;
-                            lvwSteps.Items[idx].SubItems[1].Text = StringValue.StepFailed;
-                        }
+                        var task = Task<bool>.Factory
+                            .StartNew(() => PerformStep(step), TaskCreationOptions.LongRunning)
+                            .ContinueWith(t =>
+                                {
+                                    var success = t.Result;
+                                    if (success)
+                                    {
+                                        lvwSteps.Items[step].ImageIndex = 0;
+                                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepSuccess;
+                                    }
+                                    else
+                                    {
+                                        lvwSteps.Items[step].ImageIndex = 1;
+                                        lvwSteps.Items[step].SubItems[1].Text = StringValue.StepFailed;
+                                    }
+                                });
+                        tasks.Add(task);
                     }
-                    Settings.Default["FirstTime"] = false;
-                    Settings.Default.Save();
-                    Settings.Default.Reload();
-                    btnContinue.Enabled = true;
+                    await Task.WhenAll(tasks).ContinueWith(t =>
+                    {
+                        Settings.Default["FirstTime"] = false;
+                        Settings.Default.Save();
+                        Settings.Default.Reload();
+                        btnContinue.Enabled = true;
+                    });
                 }
                 else
                 {
@@ -263,28 +274,28 @@ namespace PoshSec.Framework.FirstTimeSetup
             return indexes;
         }
 
-        private bool PerformStep(int idx)
+        private bool PerformStep(int step)
         {
-            var rtn = false;
-            switch ((Steps)idx)
+            var success = false;
+            switch ((Steps)step)
             {
                 case Steps.Check_Settings:
-                    rtn = CheckSettings();
+                    success = CheckSettings();
                     break;
                 case Steps.InitialDownload:
-                    rtn = InitialDownload();
+                    success = InitialDownload();
                     break;
                 case Steps.Set_Execution_Policy:
-                    rtn = SetExecutionPolicy();
+                    success = SetExecutionPolicy();
                     break;
                 case Steps.Unblock_Files:
-                    rtn = UnblockFiles();
+                    success = UnblockFiles();
                     break;
                 case Steps.Update_Help:
-                    rtn = UpdateHelp();
+                    success = UpdateHelp();
                     break;
             }
-            return rtn;
+            return success;
         }
 
         private bool CheckSettings()
