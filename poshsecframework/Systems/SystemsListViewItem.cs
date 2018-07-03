@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Net;
 using System.Windows.Forms;
 using PoshSec.Framework.Strings;
 
 namespace PoshSec.Framework
 {
-    public class NetworkNodeListViewItem : ListViewItem, INetworkNode
+    public class SystemsListViewItem : ListViewItem, INetworkNode
     {
-        public NetworkNodeListViewItem(string name) : base(name)
+        private SystemsListViewItem() 
         {
-            ImageIndex = 2;
-            Text = name;
+            ImageIndex = 2;            
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "ip"}); 
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "mac"});
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "description"});
@@ -19,10 +19,23 @@ namespace PoshSec.Framework
             SubItems.Add(new ListViewSubItem(this,string.Empty){Name = "lastscanned"});
         }
 
-        public string IpAddress
+        public SystemsListViewItem(INetworkNode node) : this()
         {
-            get => SubItems["ip"].Text;
-            set => SubItems["ip"].Text = value;
+            Name = node.Name;
+            Text = node.Name;
+            IpAddress = node.IpAddress;
+            MacAddress = node.MacAddress;
+            Description = node.Description;
+            Status = node.Status;
+            ClientInstalled = node.ClientInstalled;
+            Alerts = node.Alerts;
+            LastScanned = node.LastScanned;
+        }
+
+        public IPAddress IpAddress
+        {
+            get => IPAddress.TryParse(SubItems["ip"].Text, out var ipAddress) ? ipAddress : null;
+            set => SubItems["ip"].Text = value.ToString();
         }
 
         public string MacAddress
