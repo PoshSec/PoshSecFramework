@@ -60,32 +60,32 @@ namespace PoshSec.Framework.Web
         /// <summary>
         /// Downloads the zipball of the specified repository and branch and unzips it to the Module Directory.
         /// </summary>
-        /// <param name="OwnerName">The owner of the repository.</param>
-        /// <param name="RepositoryName">The name of the repository.</param>
-        /// <param name="BranchName">The selected branch item.</param>
-        /// <param name="ModuleDirectory">The target directory for the zipball to be extracted into.</param>
-        public void GetArchive(String OwnerName, String RepositoryName, String BranchName, String ModuleDirectory)
+        /// <param name="ownerName">The owner of the repository.</param>
+        /// <param name="repositoryName">The name of the repository.</param>
+        /// <param name="branchName">The selected branch item.</param>
+        /// <param name="moduleDirectory">The target directory for the zipball to be extracted into.</param>
+        public void GetArchive(string ownerName, string repositoryName, string branchName, string moduleDirectory)
         {
-            String tmpfile = Path.GetTempFileName();
-            FileInfo savedfile = Download(Path.Combine(StringValue.GithubURI, String.Format(StringValue.ArchiveFormat, System.Net.WebUtility.UrlEncode(OwnerName), System.Net.WebUtility.UrlEncode(RepositoryName), BranchName) + _token), tmpfile);
+            var tmpfile = Path.GetTempFileName();
+            var savedfile = Download(Path.Combine(StringValue.GithubURI, string.Format(StringValue.ArchiveFormat, WebUtility.UrlEncode(ownerName), WebUtility.UrlEncode(repositoryName), branchName) + _token), tmpfile);
             if (savedfile != null)
             {
                 try
                 {
-                    String target = Path.Combine(ModuleDirectory, RepositoryName);
-                    System.IO.Compression.ZipArchive za = System.IO.Compression.ZipFile.Open(savedfile.FullName, System.IO.Compression.ZipArchiveMode.Read);
-                    if (za != null && za.Entries.Count() > 0)
+                    var target = Path.Combine(moduleDirectory, repositoryName);
+                    var za = System.IO.Compression.ZipFile.Open(savedfile.FullName, System.IO.Compression.ZipArchiveMode.Read);
+                    if (za != null && za.Entries.Any())
                     {
                         using (za)
                         {
                             if (IsValidPSModule(za))
                             {
-                                String parentfolder = za.Entries[0].FullName;
-                                System.IO.Compression.ZipFile.ExtractToDirectory(savedfile.FullName, ModuleDirectory);
-                                String newfolder = Path.Combine(ModuleDirectory, parentfolder);
+                                var parentfolder = za.Entries[0].FullName;
+                                System.IO.Compression.ZipFile.ExtractToDirectory(savedfile.FullName, moduleDirectory);
+                                var newfolder = Path.Combine(moduleDirectory, parentfolder);
                                 if (Directory.Exists(newfolder))
                                 {
-                                    DirectoryInfo di = new DirectoryInfo(newfolder);
+                                    var di = new DirectoryInfo(newfolder);
                                     _restart = false;
                                     try
                                     {
@@ -104,21 +104,19 @@ namespace PoshSec.Framework.Web
                                     }
                                     else
                                     {
-                                        StreamWriter wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
-                                        wtr.WriteLine(parentfolder + ">>" + RepositoryName);
+                                        var wtr = File.AppendText(Path.Combine(Properties.Settings.Default.ModulePath, StringValue.ModRestartFilename));
+                                        wtr.WriteLine(parentfolder + ">>" + repositoryName);
                                         wtr.Flush();
                                         wtr.Close();
                                     }
-                                    di = null;
                                 }
                             }
                             else
                             {
-                                _errors.Add(String.Format(StringValue.InvalidPSModule, RepositoryName, BranchName));
+                                _errors.Add(string.Format(StringValue.InvalidPSModule, repositoryName, branchName));
                             }
                         }
                     }
-                    za = null;
                 }
                 catch (Exception ex)
                 {
@@ -134,7 +132,6 @@ namespace PoshSec.Framework.Web
                 _errors.Add(dex.Message);
 
             }
-            savedfile = null;
         }
 
         public void GetPSFScripts(String ScriptDirectory)

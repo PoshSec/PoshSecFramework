@@ -1,29 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using PoshSec.Framework.Properties;
 using PoshSec.Framework.Strings;
+using PoshSec.Framework.Web;
 
 namespace PoshSec.Framework.Interface
 {
     public partial class frmRepository : Form
     {
-        private Web.GithubClient ghc = new Web.GithubClient();
-        private String RepoOwner = "";
-        private String Repository = "";
-        private String curl = "";
-        private Web.GithubJsonItem branch = null;
-        private Collection<Web.GithubJsonItem> branches = null;
-        private bool restart = false;
-        private string lastmodified = "";
-        private string curBranch = "";
-        private bool update = false;
+        private readonly GithubClient ghc = new GithubClient();
+        private string _repoOwner = "";
+        private string _curl = "";
+        private GithubJsonItem _branch;
+        private Collection<GithubJsonItem> _branches;
+        private string _curBranch = "";
+        private bool _update;
 
         public frmRepository()
         {
@@ -32,15 +26,16 @@ namespace PoshSec.Framework.Interface
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (txtURL.Text.Replace("www.", "").Length > StringValue.GithubURL.Length && txtURL.Text.Replace("www.", "").Substring(0, StringValue.GithubURL.Length) == StringValue.GithubURL)
+            if (txtURL.Text.Replace("www.", "").Length > StringValue.GithubURL.Length &&
+                txtURL.Text.Replace("www.", "").Substring(0, StringValue.GithubURL.Length) == StringValue.GithubURL)
             {
                 if (cmbBranch.SelectedIndex > -1)
                 {
                     btnOK.Enabled = false;
-                    if (GetRepository() == true)
+                    if (GetRepository())
                     {
-                        this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                        this.Close();
+                        DialogResult = DialogResult.OK;
+                        Close();
                     }
                     else
                     {
@@ -54,35 +49,31 @@ namespace PoshSec.Framework.Interface
             }
         }
 
-        private void ListBranches(String GithubUrl)
+        private void ListBranches(string GithubUrl)
         {
             ghc.Errors.Clear();
-            String[] urlparts = GithubUrl.Replace("https://", "").Replace("http://", "").Replace("/", "|").Split('|');
+            var urlparts = GithubUrl.Replace("https://", "").Replace("http://", "").Replace("/", "|").Split('|');
             if (urlparts != null && urlparts.Length >= 3)
             {
-                RepoOwner = urlparts[1];
-                Repository = urlparts[2];
-                branches = GetBranches(ghc, RepoOwner, Repository);
-                if (branches != null && branches.Count() > 0)
+                _repoOwner = urlparts[1];
+                RepositoryName = urlparts[2];
+                _branches = GetBranches(ghc, _repoOwner, RepositoryName);
+                if (_branches != null && _branches.Count() > 0)
                 {
-                    int idx = -1;
-                    int selidx = -1;
-                    if (curBranch == "")
-                    {
+                    var idx = -1;
+                    var selidx = -1;
+                    if (_curBranch == "")
                         selidx = 0;
-                    }
-                    foreach (Web.GithubJsonItem branchitem in branches)
+                    foreach (var branchitem in _branches)
                     {
                         idx++;
                         cmbBranch.Items.Add(branchitem.Name);
-                        if (curBranch != "" && branchitem.Name == curBranch)
-                        {
+                        if (_curBranch != "" && branchitem.Name == _curBranch)
                             selidx = idx;
-                        }
                     }
-                    if (curBranch != "" && selidx == -1)
+                    if (_curBranch != "" && selidx == -1)
                     {
-                        MessageBox.Show(String.Format(StringValue.BranchNotFound, curBranch));
+                        MessageBox.Show(string.Format(StringValue.BranchNotFound, _curBranch));
                         selidx = 0;
                     }
                     cmbBranch.SelectedIndex = selidx;
@@ -105,30 +96,30 @@ namespace PoshSec.Framework.Interface
 
         private bool GetRepository()
         {
-            bool rtn = true;
+            var rtn = true;
             ghc.Errors.Clear();
-            branch = branches[cmbBranch.SelectedIndex];
+            _branch = _branches[cmbBranch.SelectedIndex];
             lblStatus.Text = "Downloading Repository, please wait...";
             Application.DoEvents();
             pbMain.Visible = true;
-            ghc.GetArchive(RepoOwner, Repository, branch.Name, Properties.Settings.Default.ModulePath);
+            ghc.GetArchive(_repoOwner, RepositoryName, _branch.Name, Settings.Default.ModulePath);
             if (ghc.Errors.Count > 0)
             {
                 rtn = false;
-                MessageBox.Show(String.Join(Environment.NewLine, ghc.Errors.ToArray()));
+                MessageBox.Show(string.Join(Environment.NewLine, ghc.Errors.ToArray()));
             }
-            restart = ghc.Restart;
+            Restart = ghc.Restart;
             lblStatus.Text = StringValue.Ready;
             lblRateLimit.Text = ghc.RateLimitRemaining.ToString();
-            lastmodified = ghc.LastModified;
+            LastModified = ghc.LastModified;
             return rtn;
         }
 
-        private Collection<Web.GithubJsonItem> GetBranches(Web.GithubClient ghc, String Owner, String Repository)
+        private Collection<GithubJsonItem> GetBranches(GithubClient ghc, string Owner, string Repository)
         {
             lblStatus.Text = "Getting branches, please wait...";
             Application.DoEvents();
-            Collection<Web.GithubJsonItem> rtn = null;
+            Collection<GithubJsonItem> rtn = null;
             rtn = ghc.GetBranches(Owner, Repository);
             lblRateLimit.Text = ghc.RateLimitRemaining.ToString();
             return rtn;
@@ -136,13 +127,9 @@ namespace PoshSec.Framework.Interface
 
         private void txtURL_Leave(object sender, EventArgs e)
         {
-            if (curl != txtURL.Text.Trim())
-            {
+            if (_curl != txtURL.Text.Trim())
                 if (!btnCancel.Focused)
-                {
                     InitListBatches();
-                }                
-            }
         }
 
         private void InitListBatches()
@@ -152,9 +139,10 @@ namespace PoshSec.Framework.Interface
             cmbBranch.Items.Clear();
             cmbBranch.Text = "";
             btnRefresh.Enabled = false;
-            if (txtURL.Text.Replace("www.", "").Length > StringValue.GithubURL.Length && txtURL.Text.Replace("www.", "").Substring(0, StringValue.GithubURL.Length) == StringValue.GithubURL)
+            if (txtURL.Text.Replace("www.", "").Length > StringValue.GithubURL.Length &&
+                txtURL.Text.Replace("www.", "").Substring(0, StringValue.GithubURL.Length) == StringValue.GithubURL)
             {
-                curl = txtURL.Text.Trim();
+                _curl = txtURL.Text.Trim();
                 ListBranches(txtURL.Text.Trim());
             }
             else
@@ -176,10 +164,10 @@ namespace PoshSec.Framework.Interface
         {
             try
             {
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(StringValue.RateLimitURL);
+                var psi = new ProcessStartInfo(StringValue.RateLimitURL);
                 psi.UseShellExecute = true;
                 psi.Verb = "open";
-                System.Diagnostics.Process prc = new System.Diagnostics.Process();
+                var prc = new Process();
                 prc.StartInfo = psi;
                 prc.Start();
                 prc = null;
@@ -195,70 +183,52 @@ namespace PoshSec.Framework.Interface
             InitListBatches();
         }
 
-        public bool Restart
+        public bool Restart { get; private set; }
+
+        public string RepositoryName { get; private set; } = "";
+
+        public string LocationName => _repoOwner + "/" + RepositoryName;
+
+        public string Url
         {
-            get { return restart; }
+            set => txtURL.Text = value;
         }
 
-        public String RepositoryName
+        public string Branch
         {
-            get { return Repository; }
-        }
-
-        public String LocationName
-        {
-            get { return RepoOwner + "/" + Repository; }
-        }
-
-        public String Url
-        {
-            set { txtURL.Text = value; }
-        }
-
-        public String Branch
-        {
-            get { return branch.Name; }
-            set 
-            { 
+            get => _branch.Name;
+            set
+            {
                 cmbBranch.Text = value;
-                curBranch = value;
+                _curBranch = value;
             }
         }
 
-        public String LastModified
-        {
-            get { return lastmodified; }
-        }
+        public string LastModified { get; private set; } = "";
 
         public bool DoUpdate
         {
-            set { update = value; }
+            set => _update = value;
         }
 
         private void frmRepository_Shown(object sender, EventArgs e)
         {
-            if (update)
+            if (_update)
             {
                 txtURL.Enabled = false;
                 btnOK.Enabled = false;
                 btnCancel.Enabled = false;
                 cmbBranch.Enabled = false;
-                if (GetRepository() == true)
-                {
-                    this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                }
+                if (GetRepository())
+                    DialogResult = DialogResult.OK;
                 else
-                {
-                    this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-                }
-                this.Close();
+                    DialogResult = DialogResult.Cancel;
+                Close();
             }
             else
             {
-                if (curBranch != "")
-                {
+                if (_curBranch != "")
                     cmbBranch.Enabled = true;
-                }
             }
         }
     }
