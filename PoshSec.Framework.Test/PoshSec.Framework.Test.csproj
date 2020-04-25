@@ -55,9 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\poshsecframework\poshsecframework.csproj">
+    <ProjectReference Include="..\poshsecframework\PoshSec.Framework.Forms.csproj">
       <Project>{156f1b6c-69b5-44e5-bd5e-ee19516f9d4a}</Project>
-      <Name>poshsecframework</Name>
+      <Name>PoshSec.Framework.Forms</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

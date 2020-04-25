@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2015
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "poshsecframework", "poshsecframework\poshsecframework.csproj", "{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoshSec.Framework.Forms", "poshsecframework\PoshSec.Framework.Forms.csproj", "{156F1B6C-69B5-44E5-BD5E-EE19516F9D4A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoshSec.Framework.Test", "PoshSec.Framework.Test\PoshSec.Framework.Test.csproj", "{B1AC6AA0-2F1A-4696-BF4B-0E41CF2F4B6B}"
 EndProject
