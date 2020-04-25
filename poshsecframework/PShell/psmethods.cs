@@ -6,8 +6,9 @@ using System.Management.Automation;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using PoshSec.Framework.Controls;
 
-namespace poshsecframework.PShell
+namespace PoshSec.Framework.PShell
 {
     public class psmethods
     {
@@ -228,7 +229,7 @@ namespace poshsecframework.PShell
             {
                 if (frm != null)
                 {
-                    poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                    PSTabItem ptitm = new PSTabItem();
                     ptitm.Text = TabTitle;
                     ptitm.AddGrid(CustomObject);
                     frm.AddTabPage(ptitm);
@@ -241,17 +242,17 @@ namespace poshsecframework.PShell
 
             public void AddText(String Text, String TabTitle)
             {
-                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                PSTabItem ptitm = new PSTabItem();
                 ptitm.Text = TabTitle;
                 ptitm.AddText(Text);
                 frm.AddTabPage(ptitm);
             }
 
-            public poshsecframework.Controls.PSAlertList AddAlerts(String TabTitle)
+            public PSAlertList AddAlerts(String TabTitle)
             {
-                poshsecframework.Controls.PSTabItem ptitm = new poshsecframework.Controls.PSTabItem();
+                PSTabItem ptitm = new PSTabItem();
                 ptitm.Text = TabTitle;
-                poshsecframework.Controls.PSAlertList rtn = ptitm.CreateAlertTab(scriptname);
+                PSAlertList rtn = ptitm.CreateAlertTab(scriptname);
                 frm.AddTabPage(ptitm);
                 return rtn;
             }

@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using poshsecframework.Strings;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Network
+namespace PoshSec.Framework
 {
     class Syslog
     {

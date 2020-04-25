@@ -1,4 +1,4 @@
-﻿namespace poshsecframework.Interface
+﻿namespace PoshSec.Framework.Interface
 {
     partial class frmNetworkBrowser
     {
@@ -37,7 +37,7 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.cmbNetworks = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.lvwSystems = new System.Windows.Forms.ListView();
+            this._lvwSystems = new SystemsListView();
             this.chName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chIP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMAC = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -90,7 +90,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Image = global::poshsecframework.Properties.Resources.viewrefresh7;
+            this.btnRefresh.Image = global::PoshSec.Framework.Properties.Resources.viewrefresh7;
             this.btnRefresh.Location = new System.Drawing.Point(212, 0);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(25, 23);
@@ -118,26 +118,26 @@
             this.label1.Text = "Network:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lvwSystems
+            // _lvwSystems
             // 
-            this.lvwSystems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvwSystems.CheckBoxes = true;
-            this.lvwSystems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this._lvwSystems.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._lvwSystems.CheckBoxes = true;
+            this._lvwSystems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chName,
             this.chIP,
             this.chMAC,
             this.chStatus});
-            this.lvwSystems.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvwSystems.FullRowSelect = true;
-            this.lvwSystems.HideSelection = false;
-            this.lvwSystems.Location = new System.Drawing.Point(0, 23);
-            this.lvwSystems.Name = "lvwSystems";
-            this.lvwSystems.Size = new System.Drawing.Size(458, 243);
-            this.lvwSystems.SmallImageList = this.imgList16;
-            this.lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lvwSystems.TabIndex = 3;
-            this.lvwSystems.UseCompatibleStateImageBehavior = false;
-            this.lvwSystems.View = System.Windows.Forms.View.Details;
+            this._lvwSystems.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._lvwSystems.FullRowSelect = true;
+            this._lvwSystems.HideSelection = false;
+            this._lvwSystems.Location = new System.Drawing.Point(0, 23);
+            this._lvwSystems.Name = "_lvwSystems";
+            this._lvwSystems.Size = new System.Drawing.Size(458, 243);
+            this._lvwSystems.SmallImageList = this.imgList16;
+            this._lvwSystems.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this._lvwSystems.TabIndex = 3;
+            this._lvwSystems.UseCompatibleStateImageBehavior = false;
+            this._lvwSystems.View = System.Windows.Forms.View.Details;
             // 
             // chName
             // 
@@ -171,7 +171,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(458, 301);
             this.ControlBox = false;
-            this.Controls.Add(this.lvwSystems);
+            this.Controls.Add(this._lvwSystems);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
@@ -197,7 +197,7 @@
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.ComboBox cmbNetworks;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lvwSystems;
+        private SystemsListView _lvwSystems;
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chIP;
         private System.Windows.Forms.ColumnHeader chMAC;

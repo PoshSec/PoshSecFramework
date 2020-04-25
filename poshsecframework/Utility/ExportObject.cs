@@ -7,9 +7,9 @@ using System.Management.Automation;
 using System.Xml;
 using System.Text;
 using System.Windows.Forms;
-using poshsecframework.Enums;
+using PoshSec.Framework.Enums;
 
-namespace poshsecframework.Utility
+namespace PoshSec.Framework.Utility
 {
     class ExportObject
     {

@@ -1,126 +1,50 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
-using System.Drawing;
 using System.Linq;
 using System.Management.Automation;
-using System.Net;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using poshsecframework.Strings;
+using PoshSec.Framework.Properties;
+using PoshSec.Framework.Strings;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public partial class frmNetworkBrowser : Form
     {
-        #region Private Variables
-        private Network.NetworkBrowser scnr = new Network.NetworkBrowser();
-        private Collection<PSObject> hosts = new Collection<PSObject>();
-        private String domain = "";
-        #endregion
+        private readonly Networks _networks = new Networks();
+        private readonly Collection<PSObject> _hosts = new Collection<PSObject>();
 
-        #region Public Methods
+
         public frmNetworkBrowser()
         {
             InitializeComponent();
-            scnr.ScanComplete += scnr_ScanComplete;
-            scnr.ScanCancelled += scnr_ScanCancelled;
-            GetNetworks();
+            LoadNetworks();
             ListSystems();
         }
-        #endregion
-        
-        #region Private Events
-        void scnr_ScanComplete(object sender, Network.ScanEventArgs e)
+
+        private void NetworkBrowserScanComplete(object sender, NetworkScanCompleteEventArgs e)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                MethodInvoker del = delegate
-                {
-                    scnr_ScanComplete(sender, e);
-                };
-                this.Invoke(del);
+                MethodInvoker del = delegate { NetworkBrowserScanComplete(sender, e); };
+                Invoke(del);
             }
             else
             {
-                ArrayList rslts = e.Systems;
-                if (rslts.Count > 0)
-                {
-                    lvwSystems.Items.Clear();
-                    lvwSystems.BeginUpdate();
-                    foreach (Object system in rslts)
-                    {
-                        if (system != null)
-                        {
-                            if (system.GetType() == typeof(String))
-                            {
-                                string sys = (string)system;
-                                if (sys != null && sys != "")
-                                {
-                                    ListViewItem lvwItm = new ListViewItem();
-                                    String[] ipinfo = system.ToString().Split('|');
 
-                                    lvwItm.Text = ipinfo[2];
-                                    lvwItm.SubItems.Add(ipinfo[1]);
-                                    lvwItm.SubItems.Add(scnr.GetMac(ipinfo[1]));
-                                    lvwItm.SubItems.Add(StringValue.Up);
+                var systems = e.Network.Nodes;
+                _lvwSystems.Load(systems);
+                _lvwSystems.Sorting = SortOrder.Ascending;
+                _lvwSystems.Sort();
 
-                                    lvwItm.ImageIndex = 2;
-                                    lvwSystems.Items.Add(lvwItm);
-                                    lvwSystems.Refresh();
-                                }
-                            }
-                            else
-                            {
-                                DirectoryEntry sys = (DirectoryEntry)system;
-                                String ipadr = scnr.GetIP(sys.Name.Replace("CN=", ""));
-                                String[] ips = ipadr.Split(',');
-                                if(ips != null && ips.Length > 0)
-                                {
-                                    foreach(String ip in ips)
-                                    {
-                                        ListViewItem lvwItm = new ListViewItem();
-                                        lvwItm.Text = sys.Name.Replace("CN=", "").ToString();
-
-                                        lvwItm.SubItems.Add(ip);
-                                        string macaddr = scnr.GetMac(ip);
-                                        lvwItm.SubItems.Add(macaddr);
-                                        bool isup = false;
-                                        if (ipadr != StringValue.UnknownHost && macaddr != StringValue.BlankMAC)
-                                        {
-                                            isup = true;
-                                        }
-                                        if (isup)
-                                        {
-                                            lvwItm.SubItems.Add(StringValue.Up);
-                                        }
-                                        else
-                                        {
-                                            lvwItm.SubItems.Add(StringValue.Down);
-                                        }
-
-                                        lvwItm.ImageIndex = 2;
-                                        lvwSystems.Items.Add(lvwItm);
-                                        lvwSystems.Refresh();
-                                    }
-                                }
-                            }
-                        }                        
-                    }
-                    lvwSystems.EndUpdate();
-                    lvwSystems.Sort();
-                }
                 EnableControls();
             }
         }
 
-        void scnr_ScanCancelled(object sender, EventArgs e)
+        private void NetworkBrowserScanCancelled(object sender, EventArgs e)
         {
             EnableControls();
         }
@@ -131,99 +55,88 @@ namespace poshsecframework.Interface
             btnRefresh.Enabled = false;
             btnOK.Enabled = false;
             btnCancel.Enabled = false;
-            if (cmbNetworks.SelectedIndex == 0)
-            {
-                ScanbyIP();
-            }
-            else
-            {
-                domain = cmbNetworks.Text;
-                lvwSystems.UseWaitCursor = true;
-                Thread thd = new Thread(ScanAD);
-                thd.Start();
-            }
+            var selectedItem = cmbNetworks.SelectedItem;
+            Scan((Network)selectedItem);
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (lvwSystems.CheckedItems.Count > 0)
+            if (_lvwSystems.CheckedItems.Count > 0)
             {
-                ListView.CheckedListViewItemCollection lvwitms = lvwSystems.CheckedItems;
+                var lvwitms = _lvwSystems.CheckedItems;
                 foreach (ListViewItem lvw in lvwitms)
                 {
-                    PSObject pobj = new PSObject();
-                    int idx = -1;
-                    foreach (ColumnHeader col in lvwSystems.Columns)
+                    var pobj = new PSObject();
+                    var idx = -1;
+                    foreach (ColumnHeader col in _lvwSystems.Columns)
                     {
                         idx++;
                         pobj.Properties.Add(new PSNoteProperty(col.Text.Replace(" ", "_"), lvw.SubItems[idx].Text));
                     }
-                    hosts.Add(pobj);
+
+                    _hosts.Add(pobj);
                 }
-                this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                this.Close();
+
+                DialogResult = DialogResult.OK;
+                Close();
             }
             else
             {
                 MessageBox.Show(StringValue.SelectSystems);
             }
         }
-        #endregion
 
-        #region Private Methods
-        private void GetNetworks()
+        private void LoadNetworks()
         {
             cmbNetworks.Items.Clear();
             cmbNetworks.Items.Add(StringValue.LocalNetwork);
             try
             {
                 //Get Domain Name
-                Forest hostForest = Forest.GetCurrentForest();
-                DomainCollection domains = hostForest.Domains;
+                var hostForest = Forest.GetCurrentForest();
+                var domains = hostForest.Domains;
 
                 foreach (Domain domain in domains)
                 {
-                    cmbNetworks.Items.Add(domain.Name);
+                    var network = new DomainNetwork(domain.Name);
+                    cmbNetworks.Items.Add(domain);
                 }
             }
             catch
             {
                 //fail silently because it's not on A/D   
-            }            
+            }
         }
 
         private void ListSystems()
         {
-            if (Properties.Settings.Default.Systems != null && Properties.Settings.Default.Systems.Count > 0)
+            if (Settings.Default.Systems != null && Settings.Default.Systems.Count > 0)
             {
-                lvwSystems.Items.Clear();
-                foreach (String system in Properties.Settings.Default.Systems)
+                _lvwSystems.Items.Clear();
+                foreach (var system in Settings.Default.Systems)
                 {
-                    String[] systemparts = system.Split('|');
-                    ListViewItem lvwItm = new ListViewItem();
+                    var systemparts = system.Split('|');
+                    var lvwItm = new ListViewItem();
                     lvwItm.Text = systemparts[0];
                     lvwItm.SubItems.Add(systemparts[1]);
                     lvwItm.SubItems.Add(systemparts[2]);
                     lvwItm.SubItems.Add(systemparts[4]);
                     lvwItm.ImageIndex = 2;
-                    lvwSystems.Items.Add(lvwItm);
+                    _lvwSystems.Items.Add(lvwItm);
                 }
             }
         }
 
         private void EnableControls()
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                MethodInvoker del = delegate
-                {
-                    EnableControls();
-                };
-                this.Invoke(del);
+                MethodInvoker del = delegate { EnableControls(); };
+                Invoke(del);
             }
             else
             {
-                lvwSystems.UseWaitCursor = false;
+                _lvwSystems.UseWaitCursor = false;
                 cmbNetworks.Enabled = true;
                 btnRefresh.Enabled = true;
                 btnOK.Enabled = true;
@@ -231,31 +144,23 @@ namespace poshsecframework.Interface
             }
         }
 
-        private void ScanbyIP()
+        private void Scan(Network network)
         {
-            lvwSystems.UseWaitCursor = true;
-            scnr.ShowStatus = false;
-            Thread thd = new Thread(scnr.ScanbyIP);
-            thd.Start();
+            _lvwSystems.UseWaitCursor = true;
+
+            Task.Run(() =>
+            {
+                var networkBrowser = new NetworkBrowser(network);
+                networkBrowser.NetworkScanComplete += NetworkBrowserScanComplete;
+                networkBrowser.NetworkScanCancelled += NetworkBrowserScanCancelled;
+                networkBrowser.ScanAsync().ContinueWith(t =>
+                {
+                    networkBrowser.NetworkScanComplete -= NetworkBrowserScanComplete;
+                    networkBrowser.NetworkScanCancelled -= NetworkBrowserScanCancelled;
+                });
+            });
         }
 
-        private void ScanAD()
-        {
-            scnr.Domain = domain;
-            scnr.ScanActiveDirectory();
-        }
-        #endregion
-
-        #region Public Property
-        public Collection<PSObject> SelectedHosts
-        {
-            get { return hosts; }
-        }
-
-        public String SerializedHosts
-        {
-            get { return PSSerializer.Serialize(hosts); }
-        }
-        #endregion
+        public string SerializedHosts => PSSerializer.Serialize(_hosts);
     }
 }

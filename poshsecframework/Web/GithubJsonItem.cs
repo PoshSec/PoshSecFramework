@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 
-namespace poshsecframework.Web
+namespace PoshSec.Framework.Web
 {
     class GithubJsonItem
     {

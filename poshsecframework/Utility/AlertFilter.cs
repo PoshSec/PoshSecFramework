@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poshsecframework.Utility
+namespace PoshSec.Framework.Utility
 {
     internal static class AlertFilter
     {

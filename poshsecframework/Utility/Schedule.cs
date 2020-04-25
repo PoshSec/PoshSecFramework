@@ -6,8 +6,9 @@ using System.Text;
 using System.Timers;
 using System.Xml;
 using System.Xml.Serialization;
+using PoshSec.Framework.Properties;
 
-namespace poshsecframework.Utility
+namespace PoshSec.Framework.Utility
 {
     [XmlRoot("Schedule", Namespace = "poshsecframework.Utility", IsNullable = false)]
     public class Schedule
@@ -59,7 +60,7 @@ namespace poshsecframework.Utility
         public bool Save()
         {
             bool rtn = false;
-            String schfile = poshsecframework.Properties.Settings.Default.ScheduleFile;
+            String schfile = Settings.Default.ScheduleFile;
             FileInfo finfo = new FileInfo(schfile);
             try
             {
@@ -67,7 +68,7 @@ namespace poshsecframework.Utility
                 {
                     Directory.CreateDirectory(finfo.DirectoryName);
                 }
-                using (TextWriter txtwtr = new StreamWriter(poshsecframework.Properties.Settings.Default.ScheduleFile))
+                using (TextWriter txtwtr = new StreamWriter(Settings.Default.ScheduleFile))
                 {
                     System.Xml.Serialization.XmlSerializer xmlser = new System.Xml.Serialization.XmlSerializer(typeof(Utility.Schedule));
                     xmlser.Serialize(txtwtr, this);
@@ -86,7 +87,7 @@ namespace poshsecframework.Utility
         {
             tmr.Enabled = false;
             bool rtn = false;
-            String schfile = poshsecframework.Properties.Settings.Default.ScheduleFile;
+            String schfile = Settings.Default.ScheduleFile;
             if (File.Exists(schfile))
             {
                 try
@@ -94,7 +95,7 @@ namespace poshsecframework.Utility
                     using (TextReader txtrdr = new StreamReader(schfile))
                     {
                         System.Xml.Serialization.XmlSerializer xmlser = new System.Xml.Serialization.XmlSerializer(typeof(Utility.Schedule));
-                        Schedule tmp = xmlser.Deserialize(txtrdr) as poshsecframework.Utility.Schedule;
+                        Schedule tmp = xmlser.Deserialize(txtrdr) as Schedule;
                         this.ScheduleItems = tmp.ScheduleItems;
                         rtn = true;
                     }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace poshsecframework.Interface
+namespace PoshSec.Framework.Interface
 {
     public partial class frmStartup : Form
     {
